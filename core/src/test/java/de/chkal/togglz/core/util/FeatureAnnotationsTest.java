@@ -39,11 +39,6 @@ public class FeatureAnnotationsTest {
         FEATURE_ENABLED_BY_DEFAULT;
         
         @Override
-        public boolean isEnabled() {
-            return false;
-        }
-
-        @Override
         public String label() {
             return FeatureAnnotations.getLabel(this);
         }

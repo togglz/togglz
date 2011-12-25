@@ -4,8 +4,6 @@ public interface Feature {
 
     String name();
 
-    boolean isEnabled();
-    
     String label();
     
     boolean enabledByDefault();

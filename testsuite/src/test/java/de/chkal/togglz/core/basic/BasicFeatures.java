@@ -8,8 +8,7 @@ public enum BasicFeatures implements Feature {
     FEATURE1,
     FEATURE2;
 
-    @Override
-    public boolean isEnabled() {
+    public boolean isActive() {
         return FeatureManagerHolder.getFeatureManager().isActive(this, null);
     }
 

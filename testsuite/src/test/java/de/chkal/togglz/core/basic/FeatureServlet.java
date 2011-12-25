@@ -8,8 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.chkal.togglz.core.Feature;
-
 @WebServlet(urlPatterns = "/features")
 public class FeatureServlet extends HttpServlet {
 
@@ -20,8 +18,8 @@ public class FeatureServlet extends HttpServlet {
 
         StringBuilder builder = new StringBuilder();
 
-        for (Feature f : BasicFeatures.values()) {
-            builder.append(f.name() + " = " + f.isEnabled() + "\n");
+        for (BasicFeatures f : BasicFeatures.values()) {
+            builder.append(f.name() + " = " + f.isActive() + "\n");
         }
 
         resp.getOutputStream().write(builder.toString().getBytes());
