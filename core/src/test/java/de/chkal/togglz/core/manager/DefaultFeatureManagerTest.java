@@ -92,6 +92,16 @@ public class DefaultFeatureManagerTest {
             // we don't care
             return false;
         }
+
+        @Override
+        public String label() {
+            return null;
+        }
+
+        @Override
+        public boolean enabledByDefault() {
+            return false;
+        }
         
     }
 

@@ -12,5 +12,15 @@ public enum BasicFeatures implements Feature {
     public boolean isEnabled() {
         return FeatureManagerHolder.getFeatureManager().isActive(this, null);
     }
+
+    @Override
+    public String label() {
+        return name();
+    }
+
+    @Override
+    public boolean enabledByDefault() {
+        return false;
+    }
     
 }

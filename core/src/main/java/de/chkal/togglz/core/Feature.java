@@ -6,4 +6,8 @@ public interface Feature {
 
     boolean isEnabled();
     
+    String label();
+    
+    boolean enabledByDefault();
+    
 }
