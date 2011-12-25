@@ -23,6 +23,7 @@
   <modules>
     <module>core</module>
     <module>servlet</module>
+    <module>testsuite</module>
   </modules>
   
   <dependencyManagement>
