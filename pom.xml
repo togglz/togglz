@@ -24,6 +24,7 @@
     <module>core</module>
     <module>servlet</module>
     <module>cdi</module>
+    <module>spring</module>
     <module>testsuite</module>
   </modules>
 
