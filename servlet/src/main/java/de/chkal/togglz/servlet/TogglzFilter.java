@@ -15,11 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.chkal.togglz.core.config.FeatureManagerConfiguration;
 import de.chkal.togglz.core.holder.FeatureManagerHolder;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureManagerFactory;
-import de.chkal.togglz.core.util.ClassUtils;
 import de.chkal.togglz.servlet.admin.AdminPageHandler;
 
 public class TogglzFilter implements Filter {
@@ -33,14 +31,7 @@ public class TogglzFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         servletContext = filterConfig.getServletContext();
 
-        FeatureManagerConfiguration configuration = null;
-
-        String className = servletContext.getInitParameter(FeatureManagerConfiguration.class.getName());
-        if (className != null && className.trim().length() > 0) {
-            configuration = ClassUtils.createInstance(className, FeatureManagerConfiguration.class);
-        }
-
-        FeatureManager featureManager = new FeatureManagerFactory().build(configuration);
+        FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
 
         featureAdminPage = new AdminPageHandler(featureManager, filterConfig.getServletContext(), "togglz");
 
