@@ -23,38 +23,45 @@
   <modules>
     <module>core</module>
     <module>servlet</module>
+    <module>cdi</module>
     <module>testsuite</module>
   </modules>
-  
+
   <dependencyManagement>
     <dependencies>
-    
+
       <dependency>
         <groupId>de.chkal.togglz</groupId>
         <artifactId>togglz-core</artifactId>
         <version>${project.version}</version>
       </dependency>
-    
+
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>1.6.1</version>
       </dependency>
-    
+
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
         <version>2.5</version>
         <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.10</version>
         <scope>test</scope>
       </dependency>
-    
+
+      <dependency>
+        <groupId>javax.enterprise</groupId>
+        <artifactId>cdi-api</artifactId>
+        <version>1.0-SP4</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
