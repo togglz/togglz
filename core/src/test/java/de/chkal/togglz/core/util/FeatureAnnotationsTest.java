@@ -13,17 +13,17 @@ public class FeatureAnnotationsTest {
     @Test
     public void testGetLabel() {
         
-        assertEquals("Some feature with a label", MyFeature.FEATURE_WITH_LABEL.label());
-        assertEquals("FEATURE_WITHOUT_LABEL", MyFeature.FEATURE_WITHOUT_LABEL.label());
+        assertEquals("Some feature with a label", FeatureAnnotations.getLabel(MyFeature.FEATURE_WITH_LABEL));
+        assertEquals("FEATURE_WITHOUT_LABEL", FeatureAnnotations.getLabel(MyFeature.FEATURE_WITHOUT_LABEL));
         
     }
     
     @Test
     public void testIsEnabledByDefault() {
         
-        assertEquals(false, MyFeature.FEATURE_WITH_LABEL.enabledByDefault());
-        assertEquals(false, MyFeature.FEATURE_WITHOUT_LABEL.enabledByDefault());
-        assertEquals(true, MyFeature.FEATURE_ENABLED_BY_DEFAULT.enabledByDefault());
+        assertEquals(false, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITH_LABEL));
+        assertEquals(false, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITHOUT_LABEL));
+        assertEquals(true, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_ENABLED_BY_DEFAULT));
         
     }
     
@@ -37,16 +37,6 @@ public class FeatureAnnotationsTest {
 
         @EnabledByDefault
         FEATURE_ENABLED_BY_DEFAULT;
-        
-        @Override
-        public String label() {
-            return FeatureAnnotations.getLabel(this);
-        }
-
-        @Override
-        public boolean enabledByDefault() {
-            return FeatureAnnotations.isEnabledByDefault(this);
-        }
         
     }
 

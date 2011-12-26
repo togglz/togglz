@@ -86,20 +86,6 @@ public class FileBasedRepositoryTest {
 
         FEATURE1, FEATURE2, FEATURE3;
 
-        public boolean isEnabled() {
-            return false;
-        }
-
-        @Override
-        public String label() {
-            return null;
-        }
-
-        @Override
-        public boolean enabledByDefault() {
-            return false;
-        }
-
     }
 
 }

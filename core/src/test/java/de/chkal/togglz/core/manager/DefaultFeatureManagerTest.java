@@ -1,6 +1,6 @@
 package de.chkal.togglz.core.manager;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
@@ -10,9 +10,6 @@ import org.junit.Test;
 
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.config.FeatureManagerConfiguration;
-import de.chkal.togglz.core.manager.DefaultFeatureManager;
-import de.chkal.togglz.core.manager.FeatureManager;
-import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.repository.mem.InMemoryRepository;
 import de.chkal.togglz.core.user.SimpleFeatureUser;
@@ -87,22 +84,7 @@ public class DefaultFeatureManagerTest {
     private static enum MyFeatures implements Feature {
         
         DELETE_USERS, EXPERIMENTAL;
-        
-        public boolean isEnabled() {
-            // we don't care
-            return false;
-        }
 
-        @Override
-        public String label() {
-            return null;
-        }
-
-        @Override
-        public boolean enabledByDefault() {
-            return false;
-        }
-        
     }
 
 }
