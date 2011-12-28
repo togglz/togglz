@@ -52,7 +52,12 @@ public class DefaultFeatureManager implements FeatureManager {
     }
 
     public FeatureState getFeatureState(Feature feature) {
-        return featureStore.getFeatureState(feature);
+        FeatureState state = featureStore.getFeatureState(feature);
+        if (state == null) {
+            FeatureMetaData metaData = new FeatureMetaData(feature);
+            state = new FeatureState(feature, metaData.isEnabledByDefault());
+        }
+        return state;
     }
 
     public void setFeatureState(FeatureState state) {
