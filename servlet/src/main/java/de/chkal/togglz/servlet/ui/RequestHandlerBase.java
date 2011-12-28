@@ -13,12 +13,10 @@ public abstract class RequestHandlerBase implements RequestHandler {
 
     private final Charset UTF8 = Charset.forName("UTF8");
 
-    public void writeResponse(HttpServletResponse response, String body) throws IOException {
+    protected void writeResponse(HttpServletResponse response, String body) throws IOException {
 
         // load the template
-        String templateName = RequestHandler.class.getPackage().getName().replace('.', '/') + "/template.html";
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream templateStream = classLoader.getResourceAsStream(templateName);
+        InputStream templateStream = loadResource("template.html");
         BufferedReader templateReader = new BufferedReader(new InputStreamReader(templateStream));
 
         // prepare the response
@@ -31,10 +29,16 @@ public abstract class RequestHandlerBase implements RequestHandler {
             String outputLine = templateLine.replace("%CONTENT%", body);
             outputStream.write(outputLine.getBytes(UTF8));
         }
-        
+
         // finished
         response.flushBuffer();
 
+    }
+
+    protected InputStream loadResource(String name) {
+        String templateName = RequestHandler.class.getPackage().getName().replace('.', '/') + "/" + name;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return classLoader.getResourceAsStream(templateName);
     }
 
 }
