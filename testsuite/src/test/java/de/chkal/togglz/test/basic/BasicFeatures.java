@@ -1,4 +1,4 @@
-package de.chkal.togglz.core.basic;
+package de.chkal.togglz.test.basic;
 
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.holder.FeatureManagerHolder;

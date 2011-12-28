@@ -1,4 +1,4 @@
-package de.chkal.togglz.core.basic;
+package de.chkal.togglz.test.basic;
 
 import java.io.IOException;
 
@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 @WebServlet(urlPatterns = "/features")
 public class FeatureServlet extends HttpServlet {

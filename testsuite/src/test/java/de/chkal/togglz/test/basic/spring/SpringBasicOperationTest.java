@@ -1,4 +1,4 @@
-package de.chkal.togglz.core.basic;
+package de.chkal.togglz.test.basic.spring;
 
 import static org.junit.Assert.assertTrue;
 
@@ -21,8 +21,11 @@ import org.junit.runner.RunWith;
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 
+import de.chkal.togglz.test.basic.FeatureServlet;
+import de.chkal.togglz.test.basic.BasicFeatures;
+
 @RunWith(Arquillian.class)
-public class BasicOperationTest {
+public class SpringBasicOperationTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
@@ -32,6 +35,9 @@ public class BasicOperationTest {
                         ShrinkWrap.create(ZipImporter.class, "togglz-core.jar")
                                 .importFrom(new File("../core/target/togglz-core-1.0-SNAPSHOT.jar"))
                                 .as(JavaArchive.class),
+                        ShrinkWrap.create(ZipImporter.class, "togglz-spring.jar")
+                                .importFrom(new File("../spring/target/togglz-spring-1.0-SNAPSHOT.jar"))
+                                .as(JavaArchive.class),
                         ShrinkWrap.create(ZipImporter.class, "togglz-servlet.jar")
                                 .importFrom(new File("../servlet/target/togglz-servlet-1.0-SNAPSHOT.jar"))
                                 .as(JavaArchive.class))
@@ -39,10 +45,16 @@ public class BasicOperationTest {
                         DependencyResolvers.use(MavenDependencyResolver.class)
                                 .artifact("org.slf4j:slf4j-jdk14:1.6.4")
                                 .resolveAs(JavaArchive.class))
-                .addClass(BasicFeatureConfiguration.class)
+                .addAsLibraries(
+                        DependencyResolvers.use(MavenDependencyResolver.class)
+                                .artifact("org.springframework:spring-web:3.0.7.RELEASE")
+                                .resolveAs(JavaArchive.class))
+                .addClass(SpringFeatureConfiguration.class)
                 .addClass(FeatureServlet.class)
                 .addClass(BasicFeatures.class)
-                .setWebXML("basic/basic-web.xml");
+                .addAsWebInfResource("common/spring/applicationContext.xml")
+                .setWebXML("common/spring/spring-web.xml")
+                ;
     }
     
     @ArquillianResource
