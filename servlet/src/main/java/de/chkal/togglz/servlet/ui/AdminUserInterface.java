@@ -1,31 +1,34 @@
-package de.chkal.togglz.servlet.admin;
+package de.chkal.togglz.servlet.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.chkal.togglz.core.manager.FeatureManager;
-import de.chkal.togglz.servlet.admin.pages.FeatureListPage;
-import de.chkal.togglz.servlet.admin.pages.RedirectPage;
 
-public class AdminPageHandler {
+public class AdminUserInterface {
 
-    private List<AdminPage> pages = new ArrayList<AdminPage>();
+    private List<RequestHandler> handlers = new ArrayList<RequestHandler>();
 
     private String prefix;
 
-    public AdminPageHandler(FeatureManager featureManager, ServletContext servletContext, String dir) {
+    public AdminUserInterface(FeatureManager featureManager, ServletContext servletContext, String dir) {
 
         // example: /myapp/togglez
         this.prefix = servletContext.getContextPath() + "/" + dir;
 
-        // register pages
-        this.pages.add(new RedirectPage());
-        this.pages.add(new FeatureListPage(featureManager));
+        // request handkers
+        Iterator<RequestHandler> handlerIterator = ServiceLoader.load(RequestHandler.class).iterator();
+        while (handlerIterator.hasNext()) {
+            handlers.add((RequestHandler) handlerIterator.next());
+        }
+
     }
 
     public boolean process(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -34,7 +37,7 @@ public class AdminPageHandler {
 
             String path = request.getRequestURI().substring(prefix.length());
 
-            for (AdminPage page : pages) {
+            for (RequestHandler page : handlers) {
 
                 if (page.handles(path)) {
                     page.process(request, response);

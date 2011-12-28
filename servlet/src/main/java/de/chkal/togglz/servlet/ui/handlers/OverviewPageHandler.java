@@ -1,4 +1,4 @@
-package de.chkal.togglz.servlet.admin.pages;
+package de.chkal.togglz.servlet.ui.handlers;
 
 import java.io.IOException;
 
@@ -7,17 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.FeatureMetaData;
+import de.chkal.togglz.core.holder.FeatureManagerHolder;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureState;
-import de.chkal.togglz.servlet.admin.AdminPage;
+import de.chkal.togglz.servlet.ui.RequestHandlerBase;
 
-public class FeatureListPage extends AdminPage {
-
-    private final FeatureManager featureManager;
-
-    public FeatureListPage(FeatureManager featureManager) {
-        this.featureManager = featureManager;
-    }
+public class OverviewPageHandler extends RequestHandlerBase {
 
     @Override
     public boolean handles(String path) {
@@ -25,7 +20,8 @@ public class FeatureListPage extends AdminPage {
     }
 
     @Override
-    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void process(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
         StringBuilder body = new StringBuilder();
 
@@ -37,10 +33,12 @@ public class FeatureListPage extends AdminPage {
         body.append("<tr><th>Feature</th><th>Status</th></tr>");
         body.append("</thead>");
 
+        FeatureManager featureManager = FeatureManagerHolder.getFeatureManager();
+        
         for (Feature f : featureManager.getFeatures()) {
 
             FeatureMetaData metaData = new FeatureMetaData(f);
-            
+
             body.append("<tr>");
 
             body.append("<td>");

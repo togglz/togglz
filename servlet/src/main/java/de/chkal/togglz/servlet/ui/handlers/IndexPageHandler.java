@@ -1,13 +1,13 @@
-package de.chkal.togglz.servlet.admin.pages;
+package de.chkal.togglz.servlet.ui.handlers;
 
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.chkal.togglz.servlet.admin.AdminPage;
+import de.chkal.togglz.servlet.ui.RequestHandler;
 
-public class RedirectPage extends AdminPage {
+public class IndexPageHandler implements RequestHandler {
 
     @Override
     public boolean handles(String path) {
