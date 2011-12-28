@@ -12,8 +12,8 @@ import de.chkal.togglz.test.basic.BasicFeatures;
 public class CDIFeatureConfiguration implements FeatureManagerConfiguration {
 
     @Override
-    public Feature[] getFeatures() {
-        return BasicFeatures.values();
+    public Class<? extends Feature> getFeatureClass() {
+        return BasicFeatures.class;
     }
 
     @Override

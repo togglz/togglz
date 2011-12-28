@@ -12,7 +12,7 @@ public class DefaultFeatureManager implements FeatureManager {
     private final Feature[] features;
 
     public DefaultFeatureManager(FeatureManagerConfiguration config) {
-        this.features = config.getFeatures();
+        this.features = config.getFeatureClass().getEnumConstants();
         this.featureStore = config.getFeatureStateRepository();
     }
 

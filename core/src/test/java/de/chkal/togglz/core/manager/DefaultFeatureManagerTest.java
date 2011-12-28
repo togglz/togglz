@@ -68,8 +68,8 @@ public class DefaultFeatureManagerTest {
      */
     private final class MyConfiguration implements FeatureManagerConfiguration {
 
-        public Feature[] getFeatures() {
-            return MyFeatures.values();
+        public Class<? extends Feature> getFeatureClass() {
+            return MyFeatures.class;
         }
 
         public FeatureStateRepository getFeatureStateRepository() {

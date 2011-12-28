@@ -5,7 +5,7 @@ import de.chkal.togglz.core.repository.FeatureStateRepository;
 
 public interface FeatureManagerConfiguration {
 
-    Feature[] getFeatures();
+    Class<? extends Feature> getFeatureClass();
     
     FeatureStateRepository getFeatureStateRepository();
     
