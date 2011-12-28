@@ -2,8 +2,10 @@ package de.chkal.togglz.test;
 
 import java.io.File;
 
+import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -44,26 +46,26 @@ public class Deployments {
     }
     
     private static JavaArchive getTogglzSerlvetArchive() {
-        return ShrinkWrap.create(ZipImporter.class, "togglz-servlet.jar")
-                .importFrom(new File("../servlet/target/togglz-servlet-1.0-SNAPSHOT.jar"))
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-servlet.jar")
+                .importDirectory("../servlet/target/classes")
                 .as(JavaArchive.class);
     }
     
     private static JavaArchive getTogglzCoreArchive() {
-        return ShrinkWrap.create(ZipImporter.class, "togglz-core.jar")
-                .importFrom(new File("../core/target/togglz-core-1.0-SNAPSHOT.jar"))
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-core.jar")
+                .importDirectory("../core/target/classes")
                 .as(JavaArchive.class);
     }
 
     private static JavaArchive getTogglzSpringArchive() {
-        return ShrinkWrap.create(ZipImporter.class, "togglz-spring.jar")
-                .importFrom(new File("../spring/target/togglz-spring-1.0-SNAPSHOT.jar"))
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-spring.jar")
+                .importDirectory("../spring/target/classes")
                 .as(JavaArchive.class);
     }
 
     private static JavaArchive getTogglzCDIArchive() {
-        return ShrinkWrap.create(ZipImporter.class, "togglz-cdi.jar")
-                .importFrom(new File("../cdi/target/togglz-cdi-1.0-SNAPSHOT.jar"))
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-cdi.jar")
+                .importDirectory("../cdi/target/classes")
                 .as(JavaArchive.class);
     }
     
