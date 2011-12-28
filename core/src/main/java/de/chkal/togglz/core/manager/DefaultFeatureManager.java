@@ -1,6 +1,7 @@
 package de.chkal.togglz.core.manager;
 
 import de.chkal.togglz.core.Feature;
+import de.chkal.togglz.core.FeatureMetaData;
 import de.chkal.togglz.core.config.FeatureManagerConfiguration;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.user.FeatureUser;
@@ -22,6 +23,11 @@ public class DefaultFeatureManager implements FeatureManager {
     public boolean isActive(Feature feature, FeatureUser user) {
 
         FeatureState state = featureStore.getFeatureState(feature);
+        
+        if(state == null) {
+            FeatureMetaData metaData = new FeatureMetaData(feature);
+            return metaData.isEnabledByDefault();
+        }
 
         // disabled features are never active
         if (!state.isEnabled()) {

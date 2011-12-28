@@ -29,10 +29,13 @@ public class FileBasedRepository implements FeatureStateRepository {
         fileContent.reloadIfUpdated();
 
         // feature enabled?
-        boolean enabled = isTrue(fileContent.getValue(getEnabledPropertyName(feature), "false"));
-        List<String> users = toList(fileContent.getValue(getUsersPropertyName(feature), null));
+        String enabledAsStr = fileContent.getValue(getEnabledPropertyName(feature), null);
+        if(enabledAsStr != null) {
+            List<String> users = toList(fileContent.getValue(getUsersPropertyName(feature), null));
+            return new FeatureState(feature, isTrue(enabledAsStr), users);
+        }
         
-        return new FeatureState(feature, enabled, users);
+        return null;
 
     }
 

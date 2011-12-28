@@ -12,16 +12,11 @@ public class InMemoryRepository implements FeatureStateRepository {
     private final Map<Feature, FeatureState> states = new HashMap<Feature, FeatureState>();
 
     public FeatureState getFeatureState(Feature feature) {
-        FeatureState featureState = states.get(feature);
-        if (featureState == null) {
-            featureState = new FeatureState(feature, false);
-        }
-        return featureState;
+        return states.get(feature);
     }
 
     public void setFeatureState(FeatureState featureState) {
         states.put(featureState.getFeature(), featureState);
-
     }
 
 }

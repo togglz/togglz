@@ -60,6 +60,9 @@ public class FileBasedRepositoryTest {
         assertEquals(true, state3.isEnabled());
         assertEquals(Collections.emptyList(), state3.getUsers());
 
+        FeatureState state4 = repo.getFeatureState(MyFeature.FEATURE4);
+        assertNull(state4);
+        
     }
 
     @Test
@@ -84,7 +87,7 @@ public class FileBasedRepositoryTest {
 
     private static enum MyFeature implements Feature {
 
-        FEATURE1, FEATURE2, FEATURE3;
+        FEATURE1, FEATURE2, FEATURE3, FEATURE4;
 
     }
 
