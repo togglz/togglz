@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.chkal.togglz.core.Feature;
+import de.chkal.togglz.core.FeatureMetaData;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.servlet.admin.AdminPage;
@@ -38,10 +39,12 @@ public class FeatureListPage extends AdminPage {
 
         for (Feature f : featureManager.getFeatures()) {
 
+            FeatureMetaData metaData = new FeatureMetaData(f);
+            
             body.append("<tr>");
 
             body.append("<td>");
-            body.append(f.name());
+            body.append(metaData.getLabel());
             body.append("</td>");
 
             body.append("<td>");
