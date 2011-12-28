@@ -3,12 +3,12 @@ package de.chkal.togglz.test;
 import java.io.File;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.importer.ZipImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-
 
 public class Deployments {
 
@@ -24,11 +24,16 @@ public class Deployments {
                                 .resolveAs(JavaArchive.class))
                 .addClass(FeatureServlet.class);
     }
-    
+
+    public static WebArchive getCDIArchive() {
+        return getServletArchive()
+                .addAsLibrary(getTogglzCDIArchive())
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
     public static WebArchive getSpringArchive() {
         return getServletArchive()
-                .addAsLibraries(
-                        getTogglzSpringArchive())
+                .addAsLibrary(getTogglzSpringArchive())
                 .addAsLibraries(
                         DependencyResolvers.use(MavenDependencyResolver.class)
                                 .artifact("org.springframework:spring-web:3.0.7.RELEASE")
@@ -53,6 +58,12 @@ public class Deployments {
     private static JavaArchive getTogglzSpringArchive() {
         return ShrinkWrap.create(ZipImporter.class, "togglz-spring.jar")
                 .importFrom(new File("../spring/target/togglz-spring-1.0-SNAPSHOT.jar"))
+                .as(JavaArchive.class);
+    }
+
+    private static JavaArchive getTogglzCDIArchive() {
+        return ShrinkWrap.create(ZipImporter.class, "togglz-cdi.jar")
+                .importFrom(new File("../cdi/target/togglz-cdi-1.0-SNAPSHOT.jar"))
                 .as(JavaArchive.class);
     }
     
