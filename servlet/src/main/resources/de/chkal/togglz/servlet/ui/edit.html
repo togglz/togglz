@@ -1,0 +1,36 @@
+<form action="edit" method="post">
+
+    <fieldset>
+
+        <legend>%LABEL%</legend>
+
+        <div class="clearfix">
+            <label for="enabled">Enabled</label>
+            <div class="input">
+                <ul class="inputs-list">
+                    <li>
+                        <label>
+                            <input id="enabled" type="checkbox" name="enabled" value="enabled">
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <label for="users">Feature Users</label>
+            <div class="input">
+                <textarea class="xxlarge" id="users" name="users" rows="3"></textarea>
+                <span class="help-block">A list of users for which the feature should be active.</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <input type="submit" class="btn primary" value="Save changes">&nbsp;
+            <button type="reset" class="btn">Cancel</button>
+        </div>
+
+    </fieldset>
+
+
+</form>
