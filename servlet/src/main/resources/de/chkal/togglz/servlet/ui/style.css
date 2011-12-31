@@ -1,0 +1,19 @@
+table.feature-overview {
+	width: 100%;
+}
+
+table.feature-overview td.feature-label, table.feature-overview th.feature-label {
+	text-align: left;
+}
+
+table.feature-overview td.feature-status, table.feature-overview th.feature-status {
+	text-align: center;
+}
+
+table.feature-overview td.feature-users, table.feature-overview th.feature-users {
+	text-align: left;
+}
+
+table.feature-overview td.feature-actions, table.feature-overview th.feature-actions {
+	text-align: center;
+}

@@ -2,7 +2,6 @@ package de.chkal.togglz.servlet.ui.handlers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.chkal.togglz.servlet.ui.RequestHandlerBase;
 
-public class ResourceRequestHandler extends RequestHandlerBase {
+public class ResourceHandler extends RequestHandlerBase {
 
     private final Pattern PATTERN = Pattern.compile(".*/(\\w+)\\.(css|js|png)$");
 
@@ -47,14 +46,6 @@ public class ResourceRequestHandler extends RequestHandlerBase {
 
         }
 
-    }
-
-    private void copy(InputStream input, OutputStream output) throws IOException {
-        byte[] buffer = new byte[1024];
-        int n = 0;
-        while (-1 != (n = input.read(buffer))) {
-            output.write(buffer, 0, n);
-        }
     }
 
 }

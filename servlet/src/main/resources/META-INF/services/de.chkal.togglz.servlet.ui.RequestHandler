@@ -1,3 +1,3 @@
 de.chkal.togglz.servlet.ui.handlers.IndexPageHandler
-de.chkal.togglz.servlet.ui.handlers.OverviewPageHandler
-de.chkal.togglz.servlet.ui.handlers.ResourceRequestHandler
+de.chkal.togglz.servlet.ui.handlers.InitialRedirectHandler
+de.chkal.togglz.servlet.ui.handlers.ResourceHandler
