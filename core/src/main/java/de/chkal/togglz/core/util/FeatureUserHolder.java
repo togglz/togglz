@@ -1,4 +1,4 @@
-package de.chkal.togglz.core.holder;
+package de.chkal.togglz.core.util;
 
 import de.chkal.togglz.core.user.FeatureUser;
 

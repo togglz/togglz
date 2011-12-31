@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.chkal.togglz.core.holder.FeatureManagerHolder;
+import de.chkal.togglz.core.context.FeatureContext;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureManagerFactory;
 import de.chkal.togglz.servlet.ui.AdminUserInterface;
@@ -33,9 +33,12 @@ public class TogglzFilter implements Filter {
 
         FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
 
-        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), "togglz");
+        FeatureContext.bindFeatureManager(featureManager);
 
         servletContext.setAttribute(FeatureManager.class.getName(), featureManager);
+
+        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), "togglz");
+
         log.info("FeatureFilter started!");
 
     }
@@ -43,27 +46,17 @@ public class TogglzFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
 
-        FeatureManager featureManager = (FeatureManager) servletContext.getAttribute(FeatureManager.class.getName());
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        FeatureManagerHolder.setFeatureManager(featureManager);
-
-        try {
-
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-            if (!featureAdminPage.process(httpRequest, httpResponse)) {
-                chain.doFilter(request, response);
-            }
-
-        } finally {
-            FeatureManagerHolder.setFeatureManager(null);
+        if (!featureAdminPage.process(httpRequest, httpResponse)) {
+            chain.doFilter(request, response);
         }
 
     }
 
     public void destroy() {
-        // nothing to do
+        FeatureContext.unbindFeatureManager();
     }
 
 }

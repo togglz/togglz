@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.FeatureMetaData;
-import de.chkal.togglz.core.holder.FeatureManagerHolder;
+import de.chkal.togglz.core.context.FeatureContext;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.servlet.ui.RequestHandlerBase;
@@ -33,7 +33,7 @@ public class OverviewPageHandler extends RequestHandlerBase {
         body.append("<tr><th>Feature</th><th>Status</th></tr>");
         body.append("</thead>");
 
-        FeatureManager featureManager = FeatureManagerHolder.getFeatureManager();
+        FeatureManager featureManager = FeatureContext.getFeatureManager();
         
         for (Feature f : featureManager.getFeatures()) {
 
