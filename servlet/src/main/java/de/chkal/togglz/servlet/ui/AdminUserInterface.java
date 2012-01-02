@@ -23,7 +23,7 @@ public class AdminUserInterface {
         // example: /myapp/togglez
         this.prefix = servletContext.getContextPath() + "/" + dir;
 
-        // request handkers
+        // request handlers
         Iterator<RequestHandler> handlerIterator = ServiceLoader.load(RequestHandler.class).iterator();
         while (handlerIterator.hasNext()) {
             handlers.add((RequestHandler) handlerIterator.next());

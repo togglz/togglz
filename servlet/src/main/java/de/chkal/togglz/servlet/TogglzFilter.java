@@ -38,12 +38,12 @@ public class TogglzFilter implements Filter {
 
         servletContext.setAttribute(FeatureManager.class.getName(), featureManager);
 
-        String adminPath = servletContext.getInitParameter("de.chkal.togglz.ADMIN_PATH");
-        if(Strings.isBlank(adminPath)) {
-            adminPath = "togglz";
+        String prefix = servletContext.getInitParameter("de.chkal.togglz.ADMIN_PATH");
+        if(Strings.isBlank(prefix)) {
+            prefix = "togglz";
         }
         
-        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), adminPath);
+        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), prefix);
 
         log.info("FeatureFilter started!");
 
