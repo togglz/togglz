@@ -10,11 +10,19 @@ public class Strings {
         Iterator<String> it = col.iterator();
         while (it.hasNext()) {
             result.append(it.next());
-            if(it.hasNext()) {
+            if (it.hasNext()) {
                 result.append(separator);
             }
         }
         return result.toString();
     }
-    
+
+    public static boolean isBlank(String s) {
+        return s == null || s.trim().length() == 0;
+    }
+
+    public static boolean isNotBlank(String s) {
+        return s != null && s.trim().length() > 0;
+    }
+
 }

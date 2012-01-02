@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import de.chkal.togglz.core.context.FeatureContext;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureManagerFactory;
+import de.chkal.togglz.core.util.Strings;
 import de.chkal.togglz.servlet.ui.AdminUserInterface;
 
 public class TogglzFilter implements Filter {
@@ -37,7 +38,12 @@ public class TogglzFilter implements Filter {
 
         servletContext.setAttribute(FeatureManager.class.getName(), featureManager);
 
-        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), "togglz");
+        String adminPath = servletContext.getInitParameter("de.chkal.togglz.ADMIN_PATH");
+        if(Strings.isBlank(adminPath)) {
+            adminPath = "togglz";
+        }
+        
+        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), adminPath);
 
         log.info("FeatureFilter started!");
 
