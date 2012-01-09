@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.chkal.togglz.test.basic.BasicFeatures;
+import de.chkal.togglz.core.Feature;
+import de.chkal.togglz.core.context.FeatureContext;
+import de.chkal.togglz.core.manager.FeatureManager;
 
 
 @WebServlet(urlPatterns = "/features")
@@ -19,10 +21,12 @@ public class FeatureServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        FeatureManager featureManager = FeatureContext.getFeatureManager();
+        
         StringBuilder builder = new StringBuilder();
 
-        for (BasicFeatures f : BasicFeatures.values()) {
-            builder.append(f.name() + " = " + f.isActive() + "\n");
+        for (Feature f : featureManager.getFeatures()) {
+            builder.append(f.name() + " = " + featureManager.isActive(f) + "\n");
         }
 
         resp.getOutputStream().write(builder.toString().getBytes());
