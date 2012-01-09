@@ -12,7 +12,8 @@ import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.config.FeatureManagerConfiguration;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.repository.mem.InMemoryRepository;
-import de.chkal.togglz.core.user.SimpleFeatureUser;
+import de.chkal.togglz.core.user.provider.FeatureUserProvider;
+import de.chkal.togglz.core.user.provider.NoOpFeatureUserProvider;
 
 public class DefaultFeatureManagerTest {
 
@@ -44,12 +45,12 @@ public class DefaultFeatureManagerTest {
     public void testIsActive() {
 
         // DELETE_USERS only active for admin
-        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS, null));
-        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS, new SimpleFeatureUser("guest")));
-        assertEquals(true, manager.isActive(MyFeatures.DELETE_USERS, new SimpleFeatureUser("admin")));
+        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS));
+        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS));
+        assertEquals(true, manager.isActive(MyFeatures.DELETE_USERS));
 
         // EXPERIMENTAL disabled for all
-        assertEquals(false, manager.isActive(MyFeatures.EXPERIMENTAL, new SimpleFeatureUser("admin")));
+        assertEquals(false, manager.isActive(MyFeatures.EXPERIMENTAL));
 
     }
 
@@ -74,6 +75,11 @@ public class DefaultFeatureManagerTest {
 
         public FeatureStateRepository getFeatureStateRepository() {
             return repository;
+        }
+
+        @Override
+        public FeatureUserProvider getFeatureUserProvider() {
+            return new NoOpFeatureUserProvider();
         }
 
     }

@@ -12,7 +12,7 @@ public enum BasicFeatures implements Feature {
     FEATURE2;
 
     public boolean isActive() {
-        return FeatureContext.getFeatureManager().isActive(this, null);
+        return FeatureContext.getFeatureManager().isActive(this);
     }
 
 }
