@@ -1,6 +1,7 @@
-package de.chkal.togglz.core.user.provider;
+package de.chkal.togglz.core.user.thread;
 
 import de.chkal.togglz.core.user.FeatureUser;
+import de.chkal.togglz.core.user.FeatureUserProvider;
 
 public class ThreadLocalFeatureUserProvider implements FeatureUserProvider {
 

@@ -9,8 +9,8 @@ import de.chkal.togglz.core.config.FeatureManagerConfiguration;
 import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.repository.mem.InMemoryRepository;
-import de.chkal.togglz.core.user.provider.FeatureUserProvider;
-import de.chkal.togglz.core.user.provider.ThreadLocalFeatureUserProvider;
+import de.chkal.togglz.core.user.FeatureUserProvider;
+import de.chkal.togglz.core.user.thread.ThreadLocalFeatureUserProvider;
 
 @ApplicationScoped
 public class ThreadBasedUsersConfiguration implements FeatureManagerConfiguration {

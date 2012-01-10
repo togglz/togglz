@@ -5,7 +5,7 @@ import de.chkal.togglz.core.FeatureMetaData;
 import de.chkal.togglz.core.config.FeatureManagerConfiguration;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.user.FeatureUser;
-import de.chkal.togglz.core.user.provider.FeatureUserProvider;
+import de.chkal.togglz.core.user.FeatureUserProvider;
 
 public class DefaultFeatureManager implements FeatureManager {
 

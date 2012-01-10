@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
 import de.chkal.togglz.core.user.SimpleFeatureUser;
-import de.chkal.togglz.core.user.provider.ThreadLocalFeatureUserProvider;
+import de.chkal.togglz.core.user.thread.ThreadLocalFeatureUserProvider;
 
 @WebFilter(urlPatterns = "/*")
 public class ThreadBasedUsersFilter implements Filter {

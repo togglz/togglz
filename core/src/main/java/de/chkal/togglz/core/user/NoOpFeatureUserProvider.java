@@ -1,6 +1,5 @@
-package de.chkal.togglz.core.user.provider;
+package de.chkal.togglz.core.user;
 
-import de.chkal.togglz.core.user.FeatureUser;
 
 public class NoOpFeatureUserProvider implements FeatureUserProvider {
 
