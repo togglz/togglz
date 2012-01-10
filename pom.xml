@@ -12,6 +12,13 @@
     <url>https://github.com/chkal/togglz</url>
   </scm>
 
+  <distributionManagement>
+    <repository>
+      <id>gh-pages</id>
+      <url>file:///${basedir}/../togglz-pages/repository/</url>
+    </repository>
+  </distributionManagement>
+
   <build>
     <plugins>
 
