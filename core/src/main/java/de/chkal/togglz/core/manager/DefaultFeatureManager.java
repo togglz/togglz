@@ -68,4 +68,9 @@ public class DefaultFeatureManager implements FeatureManager {
         featureStore.setFeatureState(state);
     }
 
+    @Override
+    public FeatureUser getCurrentFeatureUser() {
+        return featureUserProvider.getCurrentUser();
+    }
+
 }

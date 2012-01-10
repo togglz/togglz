@@ -24,5 +24,9 @@ public class Strings {
     public static boolean isNotBlank(String s) {
         return s != null && s.trim().length() > 0;
     }
+    
+    public static boolean equalsIgnoreCase(String s, String v) {
+        return s != null && s.trim().equalsIgnoreCase(v);
+    }
 
 }

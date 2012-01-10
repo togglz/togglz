@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import de.chkal.togglz.core.context.FeatureContext;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureManagerFactory;
+import de.chkal.togglz.core.user.FeatureUser;
 import de.chkal.togglz.core.util.Strings;
 import de.chkal.togglz.servlet.ui.AdminUserInterface;
 
@@ -25,25 +26,29 @@ public class TogglzFilter implements Filter {
 
     private final Logger log = LoggerFactory.getLogger(TogglzFilter.class);
 
-    private ServletContext servletContext;
-
     private AdminUserInterface featureAdminPage;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        servletContext = filterConfig.getServletContext();
 
+        ServletContext servletContext = filterConfig.getServletContext();
+
+        // create FeatureManager
         FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
-
         FeatureContext.bindFeatureManager(featureManager);
 
-        servletContext.setAttribute(FeatureManager.class.getName(), featureManager);
+        // enable admin interface
+        String adminInterfaceEnabled = servletContext.getInitParameter("de.chkal.togglz.ENABLE_ADMIN_UI");
+        if (Strings.equalsIgnoreCase(adminInterfaceEnabled, "true")) {
 
-        String prefix = servletContext.getInitParameter("de.chkal.togglz.ADMIN_PATH");
-        if(Strings.isBlank(prefix)) {
-            prefix = "togglz";
+            // custom prefix for the admin UI
+            String prefix = servletContext.getInitParameter("de.chkal.togglz.ADMIN_UI_PATH");
+            if (Strings.isBlank(prefix)) {
+                prefix = "togglz";
+            }
+
+            featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), prefix);
+
         }
-        
-        featureAdminPage = new AdminUserInterface(featureManager, filterConfig.getServletContext(), prefix);
 
         log.info("FeatureFilter started!");
 
@@ -55,7 +60,23 @@ public class TogglzFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        if (!featureAdminPage.process(httpRequest, httpResponse)) {
+        // try to process request if admin UI is enabled
+        boolean processedByAdminUi = false;
+        if (featureAdminPage != null) {
+
+            // try to get the current FeatureUser
+            FeatureManager featureManager = FeatureContext.getFeatureManager();
+            FeatureUser user = featureManager.getCurrentFeatureUser();
+
+            // only authorized users are allowed to access the admin pages
+            if (user != null && user.isFeatureAdmin()) {
+                processedByAdminUi = featureAdminPage.process(httpRequest, httpResponse);
+            }
+
+        }
+
+        // process chain
+        if (!processedByAdminUi) {
             chain.doFilter(request, response);
         }
 
