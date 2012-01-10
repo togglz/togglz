@@ -3,15 +3,16 @@ package de.chkal.togglz.core.user;
 public class SimpleFeatureUser implements FeatureUser {
 
     private final String name;
-    private final boolean featureAdmin;
+    private final PermissionEvaluator permissionEvaluator;
 
-    public SimpleFeatureUser(String name) {
-        this(name, false);
+    public SimpleFeatureUser(String name, PermissionEvaluator permissionEvaluator) {
+        this.name = name;
+        this.permissionEvaluator = permissionEvaluator;
     }
 
     public SimpleFeatureUser(String name, boolean featureAdmin) {
         this.name = name;
-        this.featureAdmin = featureAdmin;
+        this.permissionEvaluator = new ConstantPermissionEvaluator(featureAdmin);
     }
 
     public String getName() {
@@ -19,7 +20,7 @@ public class SimpleFeatureUser implements FeatureUser {
     }
 
     public boolean isFeatureAdmin() {
-        return featureAdmin;
+        return permissionEvaluator.isFeatureAdmin(this);
     }
 
 }
