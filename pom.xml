@@ -60,6 +60,7 @@
         <module>servlet</module>
         <module>cdi</module>
         <module>spring</module>
+        <module>jsf</module>
       </modules>
     </profile>
 
@@ -70,6 +71,7 @@
         <module>servlet</module>
         <module>cdi</module>
         <module>spring</module>
+        <module>jsf</module>
         <module>testsuite</module>
       </modules>
     </profile>
@@ -91,6 +93,12 @@
       <dependency>
         <groupId>de.chkal.togglz</groupId>
         <artifactId>togglz-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>de.chkal.togglz</groupId>
+        <artifactId>togglz-servlet</artifactId>
         <version>${project.version}</version>
       </dependency>
 
