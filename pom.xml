@@ -61,6 +61,7 @@
         <module>cdi</module>
         <module>spring</module>
         <module>jsf</module>
+        <module>seam-security</module>
       </modules>
     </profile>
 
@@ -72,6 +73,7 @@
         <module>cdi</module>
         <module>spring</module>
         <module>jsf</module>
+        <module>seam-security</module>
         <module>testsuite</module>
       </modules>
     </profile>
