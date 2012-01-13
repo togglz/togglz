@@ -60,4 +60,20 @@ public class ThreadBasedUsersTest {
         assertTrue(page.getContent().contains("ENABLED_FOR_CK = false"));
     }
 
+    @Test
+    public void testFeatureAdminFlagForAdminUser() throws IOException {
+        WebClient client = new WebClient();
+        TextPage userPage = client.getPage(url + "user?user=ck");
+        assertTrue(userPage.getContent().contains("USER = ck"));
+        assertTrue(userPage.getContent().contains("ADMIN = true"));
+    }
+
+    @Test
+    public void testFeatureAdminFlagForOtherUser() throws IOException {
+        WebClient client = new WebClient();
+        TextPage userPage = client.getPage(url + "user?user=other");
+        assertTrue(userPage.getContent().contains("USER = other"));
+        assertTrue(userPage.getContent().contains("ADMIN = false"));
+    }
+
 }
