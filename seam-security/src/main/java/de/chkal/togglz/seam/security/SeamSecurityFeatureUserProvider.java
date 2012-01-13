@@ -18,11 +18,11 @@ public class SeamSecurityFeatureUserProvider implements FeatureUserProvider {
 
     @Inject
     private PermissionTester permissionTester;
-    
+
     @Override
     public FeatureUser getCurrentUser() {
 
-        if (identity != null) {
+        if (identity != null && identity.getUser() != null) {
             return new SimpleFeatureUser(identity.getUser().getId(), isFeatureAdmin());
         }
 

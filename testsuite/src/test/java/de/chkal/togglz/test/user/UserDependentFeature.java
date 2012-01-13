@@ -1,4 +1,4 @@
-package de.chkal.togglz.test.user.thread;
+package de.chkal.togglz.test.user;
 
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.context.FeatureContext;

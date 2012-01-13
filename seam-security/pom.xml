@@ -30,8 +30,7 @@
 
     <dependency>
       <groupId>org.jboss.seam.security</groupId>
-      <artifactId>seam-security-api</artifactId>
-      <version>3.0.0.Final</version>
+      <artifactId>seam-security</artifactId>
       <scope>provided</scope>
     </dependency>
 

@@ -19,6 +19,17 @@
     </dependency>
 
     <dependency>
+      <groupId>de.chkal.togglz</groupId>
+      <artifactId>togglz-seam-security</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.seam.security</groupId>
+      <artifactId>seam-security</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>

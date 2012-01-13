@@ -26,7 +26,17 @@ public class Deployments {
     public static WebArchive getCDIArchive() {
         return getServletArchive()
                 .addAsLibrary(getTogglzCDIArchive())
+                .addAsLibraries(getTogglzSeamSecurityArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+    }
+
+    public static WebArchive getSeamSecurityArchive() {
+        return getCDIArchive()
+                .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
+                        .artifact("org.jboss.seam.security:seam-security:3.1.0.Final")
+                        .artifact("joda-time:joda-time:1.6.2")
+                        .resolveAs(JavaArchive.class))
+                .addAsLibraries(getTogglzSeamSecurityArchive());
     }
 
     public static WebArchive getJSFArchive() {
@@ -75,6 +85,12 @@ public class Deployments {
     private static JavaArchive getTogglzJSFArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsf.jar")
                 .importDirectory("../jsf/target/classes")
+                .as(JavaArchive.class);
+    }
+
+    private static JavaArchive getTogglzSeamSecurityArchive() {
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-seam-security.jar")
+                .importDirectory("../seam-security/target/classes")
                 .as(JavaArchive.class);
     }
 

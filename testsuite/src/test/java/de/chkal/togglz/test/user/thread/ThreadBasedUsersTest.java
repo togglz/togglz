@@ -16,6 +16,7 @@ import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 import de.chkal.togglz.test.Deployments;
+import de.chkal.togglz.test.user.UserDependentFeature;
 
 @RunWith(Arquillian.class)
 public class ThreadBasedUsersTest {

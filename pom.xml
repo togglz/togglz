@@ -130,6 +130,12 @@
         <version>1.0-SP4</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.jboss.seam.security</groupId>
+        <artifactId>seam-security</artifactId>
+        <version>3.1.0.Final</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

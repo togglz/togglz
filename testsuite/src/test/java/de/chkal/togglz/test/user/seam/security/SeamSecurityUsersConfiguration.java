@@ -1,8 +1,8 @@
-package de.chkal.togglz.test.user.thread;
+package de.chkal.togglz.test.user.seam.security;
 
 import java.util.Arrays;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.config.FeatureManagerConfiguration;
@@ -10,11 +10,13 @@ import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.repository.mem.InMemoryRepository;
 import de.chkal.togglz.core.user.FeatureUserProvider;
-import de.chkal.togglz.core.user.thread.ThreadLocalFeatureUserProvider;
+import de.chkal.togglz.seam.security.SeamSecurityFeatureUserProvider;
 import de.chkal.togglz.test.user.UserDependentFeature;
 
-@ApplicationScoped
-public class ThreadBasedUsersConfiguration implements FeatureManagerConfiguration {
+public class SeamSecurityUsersConfiguration implements FeatureManagerConfiguration {
+
+    @Inject
+    private SeamSecurityFeatureUserProvider featureUserProvider;
 
     @Override
     public Class<? extends Feature> getFeatureClass() {
@@ -32,7 +34,7 @@ public class ThreadBasedUsersConfiguration implements FeatureManagerConfiguratio
 
     @Override
     public FeatureUserProvider getFeatureUserProvider() {
-        return new ThreadLocalFeatureUserProvider();
+        return featureUserProvider;
     }
 
 }
