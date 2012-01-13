@@ -3,6 +3,7 @@ package de.chkal.togglz.seam.security;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.jboss.seam.security.AuthorizationException;
 import org.jboss.seam.security.Identity;
 
 import de.chkal.togglz.core.user.FeatureUser;
@@ -15,31 +16,26 @@ public class SeamSecurityFeatureUserProvider implements FeatureUserProvider {
     @Inject
     private Identity identity;
 
-    private final String role;
-
-    private final String group;
-
-    private final String groupType;
-
-    public SeamSecurityFeatureUserProvider(String role, String group, String groupType) {
-        this.role = role;
-        this.group = group;
-        this.groupType = groupType;
-    }
-
+    @Inject
+    private PermissionTester permissionTester;
+    
     @Override
     public FeatureUser getCurrentUser() {
 
         if (identity != null) {
-
-            String name = identity.getUser().getId();
-            boolean featureAdmin = identity.hasRole(role, group, groupType);
-
-            return new SimpleFeatureUser(name, featureAdmin);
-
+            return new SimpleFeatureUser(identity.getUser().getId(), isFeatureAdmin());
         }
 
         return null;
 
+    }
+
+    private boolean isFeatureAdmin() {
+        try {
+            permissionTester.testFeatureAdminPermission();
+            return true;
+        } catch (AuthorizationException e) {
+            return false;
+        }
     }
 }
