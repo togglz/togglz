@@ -48,6 +48,60 @@ public class SeamSecurityUsersTest {
         assertTrue(page.getContent().contains("ENABLED_FOR_ALL = true"));
         assertTrue(page.getContent().contains("ENABLED_FOR_CK = false"));
 
+        TextPage userPage = client.getPage(url + "user");
+        assertTrue(userPage.getContent().contains("USER = null"));
+        assertTrue(userPage.getContent().contains("ADMIN = null"));
+
+    }
+
+    @Test
+    public void testSeamSecurityFeatureAdminFlagAdminUser() throws Exception {
+
+        WebClient client = new WebClient();
+
+        TextPage beforeLogin = client.getPage(url + "user");
+        assertTrue(beforeLogin.getContent().contains("USER = null"));
+        assertTrue(beforeLogin.getContent().contains("ADMIN = null"));
+
+        TextPage loginPage = client.getPage(url + "login?user=ck");
+        assertTrue(loginPage.getContent().contains("SUCCESS"));
+
+        TextPage afterLogin = client.getPage(url + "user");
+        assertTrue(afterLogin.getContent().contains("USER = ck"));
+        assertTrue(afterLogin.getContent().contains("ADMIN = true"));
+
+        TextPage logoutPage = client.getPage(url + "logout");
+        assertTrue(logoutPage.getContent().contains("SUCCESS"));
+
+        TextPage afterLogout = client.getPage(url + "user");
+        assertTrue(afterLogout.getContent().contains("USER = null"));
+        assertTrue(afterLogout.getContent().contains("ADMIN = null"));
+
+    }
+
+    @Test
+    public void testSeamSecurityFeatureAdminFlagOtherUser() throws Exception {
+
+        WebClient client = new WebClient();
+
+        TextPage beforeLogin = client.getPage(url + "user");
+        assertTrue(beforeLogin.getContent().contains("USER = null"));
+        assertTrue(beforeLogin.getContent().contains("ADMIN = null"));
+
+        TextPage loginPage = client.getPage(url + "login?user=somebody");
+        assertTrue(loginPage.getContent().contains("SUCCESS"));
+
+        TextPage afterLogin = client.getPage(url + "user");
+        assertTrue(afterLogin.getContent().contains("USER = somebody"));
+        assertTrue(afterLogin.getContent().contains("ADMIN = false"));
+
+        TextPage logoutPage = client.getPage(url + "logout");
+        assertTrue(logoutPage.getContent().contains("SUCCESS"));
+
+        TextPage afterLogout = client.getPage(url + "user");
+        assertTrue(afterLogout.getContent().contains("USER = null"));
+        assertTrue(afterLogout.getContent().contains("ADMIN = null"));
+
     }
 
     @Test

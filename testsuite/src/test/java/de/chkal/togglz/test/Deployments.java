@@ -20,13 +20,13 @@ public class Deployments {
                         DependencyResolvers.use(MavenDependencyResolver.class)
                                 .artifact("org.slf4j:slf4j-jdk14:1.6.4")
                                 .resolveAs(JavaArchive.class))
-                .addClass(FeatureServlet.class);
+                .addClass(FeatureServlet.class)
+                .addClass(UserServlet.class);
     }
 
     public static WebArchive getCDIArchive() {
         return getServletArchive()
                 .addAsLibrary(getTogglzCDIArchive())
-                .addAsLibraries(getTogglzSeamSecurityArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
