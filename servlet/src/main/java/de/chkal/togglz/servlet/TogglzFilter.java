@@ -21,6 +21,7 @@ import de.chkal.togglz.core.manager.FeatureManagerFactory;
 import de.chkal.togglz.core.user.FeatureUser;
 import de.chkal.togglz.core.util.Strings;
 import de.chkal.togglz.servlet.ui.AdminUserInterface;
+import de.chkal.togglz.servlet.util.HttpServletRequestHolder;
 
 public class TogglzFilter implements Filter {
 
@@ -54,30 +55,40 @@ public class TogglzFilter implements Filter {
 
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
             ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
 
-        // try to process request if admin UI is enabled
-        boolean processedByAdminUi = false;
-        if (featureAdminPage != null) {
+        try {
 
-            // try to get the current FeatureUser
-            FeatureManager featureManager = FeatureContext.getFeatureManager();
-            FeatureUser user = featureManager.getCurrentFeatureUser();
+            // store the request in a thread local
+            HttpServletRequestHolder.set(request);
 
-            // only authorized users are allowed to access the admin pages
-            if (user != null && user.isFeatureAdmin()) {
-                processedByAdminUi = featureAdminPage.process(httpRequest, httpResponse);
+            // try to process request if admin UI is enabled
+            boolean processedByAdminUi = false;
+            if (featureAdminPage != null) {
+
+                // try to get the current FeatureUser
+                FeatureManager featureManager = FeatureContext.getFeatureManager();
+                FeatureUser user = featureManager.getCurrentFeatureUser();
+
+                // only authorized users are allowed to access the admin pages
+                if (user != null && user.isFeatureAdmin()) {
+                    processedByAdminUi = featureAdminPage.process(request, response);
+                }
+
             }
 
-        }
+            // process chain
+            if (!processedByAdminUi) {
+                chain.doFilter(req, resp);
+            }
 
-        // process chain
-        if (!processedByAdminUi) {
-            chain.doFilter(request, response);
+        } finally {
+            // remove the request from the thread local
+            HttpServletRequestHolder.set(null);
         }
 
     }
