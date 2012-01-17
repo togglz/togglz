@@ -29,7 +29,7 @@ public class JDBCRepositoryConfiguration implements FeatureManagerConfiguration 
             throw new IllegalStateException("No datasource found");
         }
 
-        return new JDBCFeatureStateRepository(dataSource);
+        return new JDBCFeatureStateRepository(dataSource, "MYTABLE");
 
     }
 

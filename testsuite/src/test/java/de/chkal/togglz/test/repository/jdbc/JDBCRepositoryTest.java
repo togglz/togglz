@@ -51,7 +51,7 @@ public class JDBCRepositoryTest {
         assertEquals(false, stateNoEntry.isEnabled());
         assertEquals(0, stateNoEntry.getUsers().size());
 
-        executeUpdate("INSERT INTO TOGGLZ (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES ('F1', 1, 'A,B')");
+        executeUpdate("INSERT INTO MYTABLE (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES ('F1', 1, 'A,B')");
 
         FeatureState stateEnabled = featureManager.getFeatureState(JDBCFeatures.F1);
         assertEquals(true, stateEnabled.isEnabled());
@@ -59,7 +59,7 @@ public class JDBCRepositoryTest {
         assertEquals("A", stateEnabled.getUsers().get(0));
         assertEquals("B", stateEnabled.getUsers().get(1));
 
-        executeUpdate("UPDATE TOGGLZ SET FEATURE_ENABLED = 0, FEATURE_USERS = 'A, X, Y'  WHERE FEATURE_NAME = 'F1'");
+        executeUpdate("UPDATE MYTABLE SET FEATURE_ENABLED = 0, FEATURE_USERS = 'A, X, Y'  WHERE FEATURE_NAME = 'F1'");
 
         FeatureState stateDisabled = featureManager.getFeatureState(JDBCFeatures.F1);
         assertEquals(false, stateDisabled.isEnabled());
@@ -76,17 +76,17 @@ public class JDBCRepositoryTest {
         assertNotNull(featureManager);
         assertNotNull(dataSource);
 
-        assertEquals(0l, executeQuery("SELECT COUNT(*) FROM TOGGLZ WHERE FEATURE_NAME = 'F2'"));
+        assertEquals(0l, executeQuery("SELECT COUNT(*) FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
         featureManager.setFeatureState(new FeatureState(JDBCFeatures.F2, true, Arrays.asList("A", "B")));
 
-        assertEquals(1, executeQuery("SELECT FEATURE_ENABLED FROM TOGGLZ WHERE FEATURE_NAME = 'F2'"));
-        assertEquals("A, B", executeQuery("SELECT FEATURE_USERS FROM TOGGLZ WHERE FEATURE_NAME = 'F2'"));
+        assertEquals(1, executeQuery("SELECT FEATURE_ENABLED FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals("A, B", executeQuery("SELECT FEATURE_USERS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
         featureManager.setFeatureState(new FeatureState(JDBCFeatures.F2, false, Arrays.asList("X")));
 
-        assertEquals(0, executeQuery("SELECT FEATURE_ENABLED FROM TOGGLZ WHERE FEATURE_NAME = 'F2'"));
-        assertEquals("X", executeQuery("SELECT FEATURE_USERS FROM TOGGLZ WHERE FEATURE_NAME = 'F2'"));
+        assertEquals(0, executeQuery("SELECT FEATURE_ENABLED FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals("X", executeQuery("SELECT FEATURE_USERS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
     }
 

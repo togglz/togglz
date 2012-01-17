@@ -25,20 +25,25 @@ import de.chkal.togglz.core.util.Strings;
  */
 public class JDBCFeatureStateRepository implements FeatureStateRepository {
 
-    private static final String TABLE_DDL = "CREATE TABLE TOGGLZ (FEATURE_NAME CHAR(100), FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
+    private static final String TABLE_DDL = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100), FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
 
-    private static final String TABLE_NAME = "TOGGLZ";
-
-    private static final String GET_STATE_QUERY = "SELECT FEATURE_ENABLED, FEATURE_USERS FROM TOGGLZ WHERE FEATURE_NAME = ?";
-    private static final String SET_STATE_UPDATE = "UPDATE TOGGLZ SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
-    private static final String SET_STATE_INSERT = "INSERT INTO TOGGLZ (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
+    private static final String GET_STATE_QUERY = "SELECT FEATURE_ENABLED, FEATURE_USERS FROM %TABLE% WHERE FEATURE_NAME = ?";
+    private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
+    private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
 
     private final Logger log = LoggerFactory.getLogger(JDBCFeatureStateRepository.class);
 
     private final DataSource dataSource;
 
+    private final String tableName;
+
     public JDBCFeatureStateRepository(DataSource dataSource) {
+        this(dataSource, "TOGGLZ");
+    }
+
+    public JDBCFeatureStateRepository(DataSource dataSource, String tableName) {
         this.dataSource = dataSource;
+        this.tableName = tableName;
         init();
     }
 
@@ -54,7 +59,7 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                 DatabaseMetaData metaData = connection.getMetaData();
                 String catalog = connection.getCatalog();
 
-                ResultSet resultSet = metaData.getTables(catalog, null, TABLE_NAME, new String[] { "TABLE" });
+                ResultSet resultSet = metaData.getTables(catalog, null, tableName, new String[] { "TABLE" });
                 try {
                     togglzTableExists = resultSet.next();
                 } finally {
@@ -66,16 +71,16 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                     Statement statement = connection.createStatement();
                     try {
 
-                        statement.executeUpdate(TABLE_DDL);
+                        statement.executeUpdate(insertTableName(TABLE_DDL));
 
-                        log.info("Database table {} has been created successfully", TABLE_NAME);
+                        log.info("Database table {} has been created successfully", tableName);
 
                     } finally {
                         DbUtils.closeQuietly(statement);
                     }
 
                 } else {
-                    log.debug("Found existing table {} in database.", TABLE_NAME);
+                    log.debug("Found existing table {} in database.", tableName);
                 }
 
             } finally {
@@ -96,7 +101,7 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                PreparedStatement statement = connection.prepareStatement(GET_STATE_QUERY);
+                PreparedStatement statement = connection.prepareStatement(insertTableName(GET_STATE_QUERY));
                 try {
 
                     statement.setString(1, feature.name());
@@ -144,7 +149,7 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                 /*
                  * First try to update an existing row
                  */
-                PreparedStatement updateStatement = connection.prepareStatement(SET_STATE_UPDATE);
+                PreparedStatement updateStatement = connection.prepareStatement(insertTableName(SET_STATE_UPDATE));
                 try {
 
                     updateStatement.setInt(1, featureState.isEnabled() ? 1 : 0);
@@ -161,7 +166,7 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                  */
                 if (updatedRows == 0) {
 
-                    PreparedStatement insertStatement = connection.prepareStatement(SET_STATE_INSERT);
+                    PreparedStatement insertStatement = connection.prepareStatement(insertTableName(SET_STATE_INSERT));
                     try {
 
                         insertStatement.setString(1, featureState.getFeature().name());
@@ -183,6 +188,10 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
             log.error("Failed", e);
         }
 
+    }
+
+    private String insertTableName(String s) {
+        return s.replace("%TABLE%", tableName);
     }
 
     private String createUserList(List<String> users) {
