@@ -54,15 +54,15 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                         }
 
                     } finally {
-                        DbUtils.closeQuitly(resultSet);
+                        DbUtils.closeQuietly(resultSet);
                     }
 
                 } finally {
-                    DbUtils.closeQuitly(statement);
+                    DbUtils.closeQuietly(statement);
                 }
 
             } finally {
-                DbUtils.closeQuitly(connection);
+                DbUtils.closeQuietly(connection);
             }
 
         } catch (SQLException e) {
@@ -93,7 +93,7 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                     updatedRows = updateStatement.executeUpdate();
 
                 } finally {
-                    DbUtils.closeQuitly(updateStatement);
+                    DbUtils.closeQuietly(updateStatement);
                 }
 
 
@@ -110,13 +110,13 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                         insertStatement.executeUpdate();
 
                     } finally {
-                        DbUtils.closeQuitly(insertStatement);
+                        DbUtils.closeQuietly(insertStatement);
                     }
 
                 }
 
             } finally {
-                DbUtils.closeQuitly(connection);
+                DbUtils.closeQuietly(connection);
             }
 
         } catch (SQLException e) {

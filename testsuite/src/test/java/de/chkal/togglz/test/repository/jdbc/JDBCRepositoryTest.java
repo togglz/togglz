@@ -107,15 +107,15 @@ public class JDBCRepositoryTest {
                         return null;
 
                     } finally {
-                        DbUtils.closeQuitly(resultSet);
+                        DbUtils.closeQuietly(resultSet);
                     }
 
                 } finally {
-                    DbUtils.closeQuitly(statement);
+                    DbUtils.closeQuietly(statement);
                 }
 
             } finally {
-                DbUtils.closeQuitly(connection);
+                DbUtils.closeQuietly(connection);
             }
 
         } catch (SQLException e) {
@@ -137,11 +137,11 @@ public class JDBCRepositoryTest {
                     return statement.executeUpdate(sql);
 
                 } finally {
-                    DbUtils.closeQuitly(statement);
+                    DbUtils.closeQuietly(statement);
                 }
 
             } finally {
-                DbUtils.closeQuitly(connection);
+                DbUtils.closeQuietly(connection);
             }
 
         } catch (SQLException e) {

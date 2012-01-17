@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class DbUtils {
 
-    public static void closeQuitly(Connection c) {
+    public static void closeQuietly(Connection c) {
         if (c != null) {
             try {
                 c.close();
@@ -17,7 +17,7 @@ public class DbUtils {
         }
     }
 
-    public static void closeQuitly(Statement s) {
+    public static void closeQuietly(Statement s) {
         if (s != null) {
             try {
                 s.close();
@@ -27,7 +27,7 @@ public class DbUtils {
         }
     }
 
-    public static void closeQuitly(ResultSet rs) {
+    public static void closeQuietly(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();
