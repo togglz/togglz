@@ -1,9 +1,11 @@
 package de.chkal.togglz.core.repository.jdbc;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
@@ -16,9 +18,13 @@ import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.util.DbUtils;
 
 /**
- *  CREATE TABLE TOGGLZ (FEATURE CHAR(100), ENABLED INTEGER, USERS CHAR(2000))
+ * CREATE TABLE TOGGLZ (FEATURE CHAR(100), ENABLED INTEGER, USERS CHAR(2000))
  */
 public class JDBCFeatureStateRepository implements FeatureStateRepository {
+
+    private static final String TABLE_DDL = "CREATE TABLE TOGGLZ (FEATURE CHAR(100), ENABLED INTEGER, USERS CHAR(2000))";
+
+    private static final String TABLE_NAME = "TOGGLZ";
 
     private static final String GET_STATE_QUERY = "SELECT ENABLED FROM TOGGLZ WHERE FEATURE = ?";
     private static final String SET_STATE_UPDATE = "UPDATE TOGGLZ SET ENABLED = ? WHERE FEATURE = ?";
@@ -30,6 +36,53 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
 
     public JDBCFeatureStateRepository(DataSource dataSource) {
         this.dataSource = dataSource;
+        init();
+    }
+
+    private void init() {
+
+        try {
+
+            Connection connection = dataSource.getConnection();
+            try {
+
+                boolean togglzTableExists = true;
+
+                DatabaseMetaData metaData = connection.getMetaData();
+                String catalog = connection.getCatalog();
+
+                ResultSet resultSet = metaData.getTables(catalog, null, TABLE_NAME, new String[] { "TABLE" });
+                try {
+                    togglzTableExists = resultSet.next();
+                } finally {
+                    DbUtils.closeQuietly(resultSet);
+                }
+
+                if (!togglzTableExists) {
+
+                    Statement statement = connection.createStatement();
+                    try {
+
+                        statement.executeUpdate(TABLE_DDL);
+
+                        log.info("Database table {} has been created successfully", TABLE_NAME);
+
+                    } finally {
+                        DbUtils.closeQuietly(statement);
+                    }
+
+                } else {
+                    log.debug("Found existing table {} in database.", TABLE_NAME);
+                }
+
+            } finally {
+                DbUtils.closeQuietly(connection);
+            }
+
+        } catch (SQLException e) {
+            log.error("Failed", e);
+        }
+
     }
 
     @Override
@@ -83,7 +136,7 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                 int updatedRows = 0;
 
                 /*
-                 * First try to update an existing row 
+                 * First try to update an existing row
                  */
                 PreparedStatement updateStatement = connection.prepareStatement(SET_STATE_UPDATE);
                 try {
@@ -95,7 +148,6 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
                 } finally {
                     DbUtils.closeQuietly(updateStatement);
                 }
-
 
                 /*
                  * If our update didn't modify any data we have to insert a new row
@@ -123,6 +175,6 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
             log.error("Failed", e);
         }
 
-     }
+    }
 
 }

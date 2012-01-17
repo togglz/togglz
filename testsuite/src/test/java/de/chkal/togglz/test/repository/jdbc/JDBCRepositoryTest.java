@@ -18,7 +18,6 @@ import javax.sql.DataSource;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,15 +41,6 @@ public class JDBCRepositoryTest {
 
     @Resource(mappedName = "jboss/datasources/ExampleDS")
     private DataSource dataSource;
-
-    @Before
-    public void before() {
-        try {
-            executeUpdate("CREATE TABLE TOGGLZ (FEATURE CHAR(100), ENABLED INTEGER, USERS CHAR(2000))");
-        } catch (Exception e) {
-            // ignore
-        }
-    }
 
     @Test
     public void testGetFeatureStateFromJDBCRepository() throws IOException {
