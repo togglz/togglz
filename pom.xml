@@ -62,6 +62,7 @@
         <module>spring</module>
         <module>jsf</module>
         <module>seam-security</module>
+        <module>spring-security</module>
       </modules>
     </profile>
 
@@ -74,6 +75,7 @@
         <module>spring</module>
         <module>jsf</module>
         <module>seam-security</module>
+        <module>spring-security</module>
         <module>testsuite</module>
       </modules>
     </profile>
