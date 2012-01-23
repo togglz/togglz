@@ -12,6 +12,7 @@ import de.chkal.togglz.core.util.ClassUtils;
 public class ServletContextBeanFinder implements BeanFinder {
 
     @Override
+    @SuppressWarnings("unchecked")
     public <E> Collection<E> find(Class<E> clazz, Object context) {
 
         if (context instanceof ServletContext) {
@@ -27,7 +28,7 @@ public class ServletContextBeanFinder implements BeanFinder {
             }
 
         }
-        
+
         return Collections.emptyList();
 
     }

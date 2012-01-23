@@ -23,6 +23,7 @@ public class CDIBeanFinder implements BeanFinder {
     public final static String SERVLET_CONTEXT_ATTR_WELD_1_1 = "org.jboss.weld.environment.servlet.javax.enterprise.inject.spi.BeanManager";
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Collection<T> find(Class<T> clazz, Object context) {
 
         List<T> result = new ArrayList<T>();

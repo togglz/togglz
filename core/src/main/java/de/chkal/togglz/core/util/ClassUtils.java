@@ -2,6 +2,7 @@ package de.chkal.togglz.core.util;
 
 public class ClassUtils {
 
+    @SuppressWarnings("unchecked")
     public static <T> T createInstance(String classname, Class<T> interfaceClazz) {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -12,7 +13,7 @@ public class ClassUtils {
 
         try {
 
-            Class<?> clazz = Class.forName(classname, true, classLoader);
+            Class<T> clazz = ((Class<T>) Class.forName(classname, true, classLoader).newInstance());
             return (T) clazz.newInstance();
 
         } catch (ClassNotFoundException e) {
