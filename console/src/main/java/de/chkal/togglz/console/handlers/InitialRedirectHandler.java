@@ -11,7 +11,7 @@ public class InitialRedirectHandler implements RequestHandler {
 
     @Override
     public boolean handles(String path) {
-        return path.endsWith("/");
+        return path.equals("") || path.equals("/");
     }
 
     @Override

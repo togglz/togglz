@@ -18,7 +18,7 @@ public class IndexPageHandler extends RequestHandlerBase {
 
     @Override
     public boolean handles(String path) {
-        return path.endsWith("/index");
+        return path.equals("/index");
     }
 
     @Override

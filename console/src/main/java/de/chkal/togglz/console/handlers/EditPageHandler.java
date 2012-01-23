@@ -20,8 +20,8 @@ import de.chkal.togglz.core.util.Strings;
 public class EditPageHandler extends RequestHandlerBase {
 
     @Override
-    public boolean handles(String uri) {
-        return uri.endsWith("/edit");
+    public boolean handles(String path) {
+        return path.equals("/edit");
     }
 
     @Override

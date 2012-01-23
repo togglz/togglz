@@ -32,11 +32,13 @@ public class TogglzConsoleServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String uri = request.getRequestURI();
+        //  ====>    /contxtPath/togglz/index   ->    /index
+        String prefix = request.getContextPath() + request.getServletPath();
+        String path = request.getRequestURI().substring(prefix.length());
 
         for (RequestHandler page : handlers) {
 
-            if (page.handles(uri)) {
+            if (page.handles(path)) {
                 page.process(request, response);
                 return;
             }
