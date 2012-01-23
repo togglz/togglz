@@ -1,4 +1,4 @@
-package de.chkal.togglz.servlet.ui.handlers;
+package de.chkal.togglz.console.handlers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,19 +9,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.chkal.togglz.console.RequestHandlerBase;
 import de.chkal.togglz.core.Feature;
 import de.chkal.togglz.core.FeatureMetaData;
 import de.chkal.togglz.core.context.FeatureContext;
 import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.core.util.Strings;
-import de.chkal.togglz.servlet.ui.RequestHandlerBase;
 
 public class EditPageHandler extends RequestHandlerBase {
 
     @Override
-    public boolean handles(String path) {
-        return "/edit".equals(path);
+    public boolean handles(String uri) {
+        return uri.endsWith("/edit");
     }
 
     @Override

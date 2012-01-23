@@ -58,6 +58,7 @@
       <modules>
         <module>core</module>
         <module>servlet</module>
+        <module>console</module>
         <module>cdi</module>
         <module>spring</module>
         <module>jsf</module>
@@ -71,6 +72,7 @@
       <modules>
         <module>core</module>
         <module>servlet</module>
+        <module>console</module>
         <module>cdi</module>
         <module>spring</module>
         <module>jsf</module>

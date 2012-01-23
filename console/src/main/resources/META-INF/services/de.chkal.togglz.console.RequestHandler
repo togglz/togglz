@@ -1,0 +1,4 @@
+de.chkal.togglz.console.handlers.EditPageHandler
+de.chkal.togglz.console.handlers.IndexPageHandler
+de.chkal.togglz.console.handlers.InitialRedirectHandler
+de.chkal.togglz.console.handlers.ResourceHandler

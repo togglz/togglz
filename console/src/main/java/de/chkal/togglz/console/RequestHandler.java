@@ -1,10 +1,9 @@
-package de.chkal.togglz.servlet.ui;
+package de.chkal.togglz.console;
 
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 public interface RequestHandler {
 

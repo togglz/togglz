@@ -1,4 +1,4 @@
-package de.chkal.togglz.servlet.ui.handlers;
+package de.chkal.togglz.console.handlers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.chkal.togglz.servlet.ui.RequestHandlerBase;
+import de.chkal.togglz.console.RequestHandlerBase;
 
 public class ResourceHandler extends RequestHandlerBase {
 
