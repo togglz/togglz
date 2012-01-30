@@ -11,13 +11,7 @@ import de.chkal.togglz.servlet.util.HttpServletRequestHolder;
 
 public class ServletFeatureUserProvider implements FeatureUserProvider {
 
-    public final static String DEFAULT_FEATURE_ADMIN_ROLE = "togglz";
-
     private final String featureAdminRole;
-
-    public ServletFeatureUserProvider() {
-        this(DEFAULT_FEATURE_ADMIN_ROLE);
-    }
 
     public ServletFeatureUserProvider(String featureAdminRole) {
         this.featureAdminRole = featureAdminRole;
