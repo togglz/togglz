@@ -7,6 +7,12 @@ import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.user.FeatureUser;
 import de.chkal.togglz.core.user.FeatureUserProvider;
 
+/**
+ * Default implementation of {@link FeatureManager}
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class DefaultFeatureManager implements FeatureManager {
 
     private final FeatureStateRepository featureStore;
@@ -26,8 +32,8 @@ public class DefaultFeatureManager implements FeatureManager {
     public boolean isActive(Feature feature) {
 
         FeatureState state = featureStore.getFeatureState(feature);
-        
-        if(state == null) {
+
+        if (state == null) {
             FeatureMetaData metaData = new FeatureMetaData(feature);
             return metaData.isEnabledByDefault();
         }
@@ -41,7 +47,7 @@ public class DefaultFeatureManager implements FeatureManager {
         if (state.getUsers().isEmpty()) {
             return true;
         }
-        
+
         // check if user is in user list
         FeatureUser user = featureUserProvider.getCurrentUser();
         if (user != null && user.getName() != null) {
