@@ -12,12 +12,40 @@ import de.chkal.togglz.core.manager.FeatureState;
 import de.chkal.togglz.core.repository.FeatureStateRepository;
 import de.chkal.togglz.core.repository.file.FeaturePropertiesFile.Editor;
 
+/**
+ * 
+ * <p>
+ * This implementation of {@link FeatureStateRepository} stores the state of feature using a standard Java properties file.
+ * </p>
+ * <p>
+ * The file has the following format:
+ * </p>
+ * 
+ * <pre>
+ * FEATURE_ONE = true
+ * FEATURE_ONE.users = admin, chkal
+ * FEATURE_TWO = false
+ * </pre>
+ * 
+ * <p>
+ * Please note that this class is able to detect changes made to the properties file and will automatically reload it in this
+ * case.
+ * </p>
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class FileBasedRepository implements FeatureStateRepository {
 
     private final Logger log = LoggerFactory.getLogger(FileBasedRepository.class);
 
     private FeaturePropertiesFile fileContent;
 
+    /**
+     * Constructor for {@link FileBasedRepository}.
+     * 
+     * @param file A {@link File} representing the Java properties file to use.
+     */
     public FileBasedRepository(File file) {
         this.fileContent = new FeaturePropertiesFile(file);
         log.debug(this.getClass().getSimpleName() + " initialized with: " + file.getAbsolutePath());
@@ -30,11 +58,11 @@ public class FileBasedRepository implements FeatureStateRepository {
 
         // feature enabled?
         String enabledAsStr = fileContent.getValue(getEnabledPropertyName(feature), null);
-        if(enabledAsStr != null) {
+        if (enabledAsStr != null) {
             List<String> users = toList(fileContent.getValue(getUsersPropertyName(feature), null));
             return new FeatureState(feature, isTrue(enabledAsStr), users);
         }
-        
+
         return null;
 
     }
@@ -43,23 +71,23 @@ public class FileBasedRepository implements FeatureStateRepository {
 
         // update file if changed
         fileContent.reloadIfUpdated();
-        
+
         Editor editor = fileContent.getEditor();
-        
+
         // enabled
         String enabledKey = getEnabledPropertyName(featureState.getFeature());
-        String enabledValue = featureState.isEnabled() ? "true" : "false"; 
+        String enabledValue = featureState.isEnabled() ? "true" : "false";
         editor.setValue(enabledKey, enabledValue);
-        
+
         // users
         String usersKey = getUsersPropertyName(featureState.getFeature());
         String usersValue = join(featureState.getUsers());
-        if(usersValue.length() > 0) {
+        if (usersValue.length() > 0) {
             editor.setValue(usersKey, usersValue);
         } else {
             editor.removeValue(usersKey);
         }
-        
+
         // write
         editor.commit();
 
@@ -90,11 +118,11 @@ public class FileBasedRepository implements FeatureStateRepository {
         }
         return result;
     }
-    
+
     private static String join(List<String> list) {
         StringBuilder result = new StringBuilder();
-        for(String s : list) {
-            if(result.length() > 0) {
+        for (String s : list) {
+            if (result.length() > 0) {
                 result.append(',');
             }
             result.append(s);
