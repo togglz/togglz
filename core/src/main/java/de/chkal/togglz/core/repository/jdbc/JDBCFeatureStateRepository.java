@@ -21,11 +21,34 @@ import de.chkal.togglz.core.util.DbUtils;
 import de.chkal.togglz.core.util.Strings;
 
 /**
- * CREATE TABLE TOGGLZ (FEATURE CHAR(100), ENABLED INTEGER, USERS CHAR(2000))
+ * <p>
+ * This repository implementation can be used to store the feature state in SQL database using the standard JDBC API.
+ * </p>
+ * 
+ * <p>
+ * {@link JDBCFeatureStateRepository} stores the feature state in a single database table. You can choose the name of this table
+ * using an constructor argument. If the repository doesn't find the required table in the database, it will automatically
+ * create it.
+ * </p>
+ * 
+ * <p>
+ * The database table has the following format:
+ * </p>
+ * 
+ * <pre>
+ * CREATE TABLE &lt;table&gt; (
+ *   FEATURE_NAME CHAR(100) PRIMARY KEY, 
+ *   FEATURE_ENABLED INTEGER, 
+ *   FEATURE_USERS CHAR(2000)
+ * )
+ * </pre>
+ * 
+ * @author Christian Kaltepoth
+ * 
  */
 public class JDBCFeatureStateRepository implements FeatureStateRepository {
 
-    private static final String TABLE_DDL = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100), FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
+    private static final String TABLE_DDL = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
 
     private static final String GET_STATE_QUERY = "SELECT FEATURE_ENABLED, FEATURE_USERS FROM %TABLE% WHERE FEATURE_NAME = ?";
     private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
@@ -37,10 +60,23 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
 
     private final String tableName;
 
+    /**
+     * Constructor of {@link JDBCFeatureStateRepository}. Using this constructor will automatically set the database table name
+     * to <code>TOGGLZ</CODE>.
+     * 
+     * @param dataSource The JDBC {@link DataSource} to obtain connections from
+     * @see #JDBCFeatureStateRepository(DataSource, String)
+     */
     public JDBCFeatureStateRepository(DataSource dataSource) {
         this(dataSource, "TOGGLZ");
     }
 
+    /**
+     * Constructor of {@link JDBCFeatureStateRepository}.
+     * 
+     * @param dataSource The JDBC {@link DataSource} to obtain connections from
+     * @param tableName The name of the database table to use
+     */
     public JDBCFeatureStateRepository(DataSource dataSource, String tableName) {
         this.dataSource = dataSource;
         this.tableName = tableName;
