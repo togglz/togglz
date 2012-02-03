@@ -13,7 +13,7 @@ public class ClassUtils {
 
         try {
 
-            Class<T> clazz = ((Class<T>) Class.forName(classname, true, classLoader).newInstance());
+            Class<T> clazz = (Class<T>) Class.forName(classname, true, classLoader);
             return (T) clazz.newInstance();
 
         } catch (ClassNotFoundException e) {
