@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.chkal.togglz.core.context.FeatureContext;
+import de.chkal.togglz.core.user.FeatureUser;
+
 public class TogglzConsoleServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +34,13 @@ public class TogglzConsoleServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        // first check the permission
+        FeatureUser user = FeatureContext.getFeatureManager().getCurrentFeatureUser();
+        if (user == null || !user.isFeatureAdmin()) {
+            response.sendError(403, "You are not allowed to access the Togglz Console");
+            return;
+        }
 
         //  ====>    /contxtPath/togglz/index   ->    /index
         String prefix = request.getContextPath() + request.getServletPath();
