@@ -2,6 +2,7 @@ package de.chkal.togglz.test.basic.spring;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import de.chkal.togglz.core.manager.FeatureManager;
 import de.chkal.togglz.test.basic.BasicFeatures;
 
 @Component
+@Lazy  // Fixes the early feature usage problem
 @Scope("singleton")
 public class SpringEarlyFeatureUsageService {
 
