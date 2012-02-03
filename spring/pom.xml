@@ -4,7 +4,7 @@
   <parent>
     <artifactId>togglz</artifactId>
     <groupId>de.chkal.togglz</groupId>
-    <version>1.0.0.Alpha2</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-spring</artifactId>
