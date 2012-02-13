@@ -4,8 +4,8 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
   <context-param>
-    <param-name>de.chkal.togglz.core.config.FeatureManagerConfiguration</param-name>
-    <param-value>de.chkal.togglz.test.basic.servlet.ServletFeatureConfiguration</param-value>
+    <param-name>org.togglz.core.config.FeatureManagerConfiguration</param-name>
+    <param-value>org.togglz.test.basic.servlet.ServletFeatureConfiguration</param-value>
   </context-param>
 
 </web-app>

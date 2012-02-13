@@ -6,7 +6,7 @@
 
   <managed-bean>
     <managed-bean-name>features</managed-bean-name>
-    <managed-bean-class>de.chkal.togglz.jsf.ActiveFeatureMap</managed-bean-class>
+    <managed-bean-class>org.togglz.jsf.ActiveFeatureMap</managed-bean-class>
     <managed-bean-scope>application</managed-bean-scope>
   </managed-bean>
 

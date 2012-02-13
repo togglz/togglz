@@ -5,7 +5,7 @@
 
   <servlet>
     <servlet-name>TogglzConsoleServlet</servlet-name>
-    <servlet-class>de.chkal.togglz.console.TogglzConsoleServlet</servlet-class>
+    <servlet-class>org.togglz.console.TogglzConsoleServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>TogglzConsoleServlet</servlet-name>

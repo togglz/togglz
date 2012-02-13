@@ -8,6 +8,6 @@
 
    <context:annotation-config />
 
-   <context:component-scan base-package="de.chkal" />
+   <context:component-scan base-package="org.togglz" />
 
 </beans>
