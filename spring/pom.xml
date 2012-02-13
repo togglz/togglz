@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>togglz</artifactId>
-    <groupId>de.chkal.togglz</groupId>
+    <groupId>org.togglz</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
@@ -17,7 +17,7 @@
   <dependencies>
 
     <dependency>
-      <groupId>de.chkal.togglz</groupId>
+      <groupId>org.togglz</groupId>
       <artifactId>togglz-core</artifactId>
     </dependency>
 
