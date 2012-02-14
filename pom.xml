@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>org.togglz</groupId>
-  <artifactId>togglz</artifactId>
+  <artifactId>togglz-project</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
+  <name>Togglz</name>
+  <description>Implementation of the feature toggles pattern for Java</description>
+  <url>http://www.togglz.org/</url>
+
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
 
   <scm>
     <connection>scm:git:git@github.com:chkal/togglz.git</connection>
     <url>https://github.com/chkal/togglz</url>
   </scm>
+
+  <issueManagement>
+    <system>github</system>
+    <url>http://github.com/chkal/togglz/issues</url>
+  </issueManagement>
 
   <distributionManagement>
     <repository>
