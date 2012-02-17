@@ -75,7 +75,7 @@
   <profiles>
 
     <profile>
-      <id>togglz-default</id>
+      <id>default</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
@@ -88,11 +88,12 @@
         <module>jsf</module>
         <module>seam-security</module>
         <module>spring-security</module>
+        <module>testsuite</module>
       </modules>
     </profile>
 
     <profile>
-      <id>togglz-full</id>
+      <id>deploy</id>
       <modules>
         <module>core</module>
         <module>servlet</module>
@@ -102,7 +103,6 @@
         <module>jsf</module>
         <module>seam-security</module>
         <module>spring-security</module>
-        <module>testsuite</module>
       </modules>
     </profile>
 
