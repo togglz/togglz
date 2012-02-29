@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import org.togglz.core.Feature;
-import org.togglz.core.config.FeatureManagerConfiguration;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.manager.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.repository.mem.InMemoryRepository;
@@ -14,7 +14,7 @@ import org.togglz.seam.security.SeamSecurityFeatureUserProvider;
 import org.togglz.test.user.UserDependentFeature;
 
 
-public class SeamSecurityUsersConfiguration implements FeatureManagerConfiguration {
+public class SeamSecurityUsersConfiguration implements TogglzConfig {
 
     @Inject
     private SeamSecurityFeatureUserProvider featureUserProvider;

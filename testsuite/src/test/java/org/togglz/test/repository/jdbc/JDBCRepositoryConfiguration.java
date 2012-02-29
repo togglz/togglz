@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.sql.DataSource;
 
 import org.togglz.core.Feature;
-import org.togglz.core.config.FeatureManagerConfiguration;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.repository.jdbc.JDBCFeatureStateRepository;
 import org.togglz.core.user.FeatureUserProvider;
@@ -13,7 +13,7 @@ import org.togglz.core.user.NoOpFeatureUserProvider;
 
 
 @ApplicationScoped
-public class JDBCRepositoryConfiguration implements FeatureManagerConfiguration {
+public class JDBCRepositoryConfiguration implements TogglzConfig {
 
     @Resource(mappedName = "jboss/datasources/ExampleDS")
     private DataSource dataSource;

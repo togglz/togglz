@@ -13,7 +13,7 @@ import org.togglz.core.user.NoOpFeatureUserProvider;
  * @author Christian Kaltepoth
  * 
  */
-public interface FeatureManagerConfiguration {
+public interface TogglzConfig {
 
     /**
      * Used to tell Togglz about the feature enum that you want to use. Please note that your feature enum has to implement the

@@ -2,7 +2,7 @@ package org.togglz.core.manager;
 
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
-import org.togglz.core.config.FeatureManagerConfiguration;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.FeatureUserProvider;
@@ -19,7 +19,7 @@ public class DefaultFeatureManager implements FeatureManager {
     private final Feature[] features;
     private final FeatureUserProvider featureUserProvider;
 
-    public DefaultFeatureManager(FeatureManagerConfiguration config) {
+    public DefaultFeatureManager(TogglzConfig config) {
         this.features = config.getFeatureClass().getEnumConstants();
         this.featureStore = config.getFeatureStateRepository();
         this.featureUserProvider = config.getFeatureUserProvider();

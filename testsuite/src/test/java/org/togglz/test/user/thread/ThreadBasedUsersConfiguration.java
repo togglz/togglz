@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.togglz.core.Feature;
-import org.togglz.core.config.FeatureManagerConfiguration;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.manager.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.repository.mem.InMemoryRepository;
@@ -15,7 +15,7 @@ import org.togglz.test.user.UserDependentFeature;
 
 
 @ApplicationScoped
-public class ThreadBasedUsersConfiguration implements FeatureManagerConfiguration {
+public class ThreadBasedUsersConfiguration implements TogglzConfig {
 
     @Override
     public Class<? extends Feature> getFeatureClass() {

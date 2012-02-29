@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
-import org.togglz.core.config.FeatureManagerConfiguration;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.manager.DefaultFeatureManager;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureState;
@@ -87,7 +87,7 @@ public class DefaultFeatureManagerTest {
     /**
      * Configuration for the {@link FeatureManager}
      */
-    private final class MyConfiguration implements FeatureManagerConfiguration {
+    private final class MyConfiguration implements TogglzConfig {
 
         private final FeatureUserProvider featureUserProvider;
 

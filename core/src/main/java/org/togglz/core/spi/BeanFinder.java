@@ -2,13 +2,13 @@ package org.togglz.core.spi;
 
 import java.util.Collection;
 
-import org.togglz.core.config.FeatureManagerConfiguration;
+import org.togglz.core.config.TogglzConfig;
 
 
 /**
  * 
  * This SPI is used by Tooglz to lookup beans that are managed by bean containers like CDI or Spring. Currently Togglz uses this
- * feature only for finding the {@link FeatureManagerConfiguration} implementation.
+ * feature only for finding the {@link TogglzConfig} implementation.
  * 
  * @author Christian Kaltepoth
  * 
