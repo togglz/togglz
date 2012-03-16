@@ -4,6 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.SimpleFeatureUser;
 
 /**
  * 
@@ -33,12 +34,11 @@ public class ShiroFeatureUserProvider implements FeatureUserProvider {
 
         // only allow authenticated user
         if (subject.isAuthenticated()) {
-            return new ShiroFeatureUser(subject, featureAdminRole);
+            return new SimpleFeatureUser(subject.getPrincipal().toString(), subject.hasRole(featureAdminRole));
         }
 
         // user is not authenticated
         return null;
 
     }
-
 }
