@@ -30,6 +30,15 @@ public class Deployments {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
+    public static WebArchive getShiroArchive() {
+        return getCDIArchive()
+                .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
+                        .artifact("org.apache.shiro:shiro-web:1.2.0")
+                        .artifact("commons-logging:commons-logging:1.1.1")
+                        .resolveAs(JavaArchive.class))
+                .addAsLibraries(getTogglzShiroArchive());
+    }
+
     public static WebArchive getSeamSecurityArchive() {
         return getCDIArchive()
                 .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
@@ -91,6 +100,12 @@ public class Deployments {
     private static JavaArchive getTogglzSeamSecurityArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-seam-security.jar")
                 .importDirectory("../seam-security/target/classes")
+                .as(JavaArchive.class);
+    }
+
+    private static JavaArchive getTogglzShiroArchive() {
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-shiro.jar")
+                .importDirectory("../shiro/target/classes")
                 .as(JavaArchive.class);
     }
 
