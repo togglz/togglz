@@ -1,57 +1,103 @@
 package org.togglz.core.context;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.WeakHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.manager.FeatureManager;
-
+import org.togglz.core.spi.FeatureManagerProvider;
+import org.togglz.core.util.Weighted;
 
 /**
  * 
- * The {@link FeatureContext} stores one {@link FeatureManager} for each context classloader. This class is typically used to
- * obtai the {@link FeatureManager} from application code.
+ * This class is typically used to obtain the {@link FeatureManager} from application code. It uses the
+ * {@link FeatureManagerProvider} to find the correct FeatureManager and caches it for each context class loader.
  * 
  * @author Christian Kaltepoth
  * 
  */
 public class FeatureContext {
 
-    private static final ConcurrentHashMap<ClassLoader, FeatureManager> managerMap = new ConcurrentHashMap<ClassLoader, FeatureManager>();
+    private static final Logger log = LoggerFactory.getLogger(FeatureContext.class);
 
     /**
-     * Binds the {@link FeatureManager} to the current context classloader.
+     * Cache for the {@link FeatureManager} instances looked up using the SPI
+     */
+    private static final WeakHashMap<ClassLoader, FeatureManager> cache = new WeakHashMap<ClassLoader, FeatureManager>();
+
+    /**
      * 
-     * @param featureManager The manager to store
-     */
-    public static void bindFeatureManager(FeatureManager featureManager) {
-        Object old = managerMap.putIfAbsent(getContextClassLoader(), featureManager);
-        if (old != null) {
-            throw new IllegalStateException(
-                    "There is already a FeatureManager associated with the context ClassLoader of the current thread!");
-        }
-    }
-
-    /**
-     * Removes the {@link FeatureManager} associated with the current context classloader from the internal datastructure.
-     */
-    public static void unbindFeatureManager() {
-        managerMap.remove(getContextClassLoader());
-    }
-
-    /**
-     * Returns the {@link FeatureManager} associated with the current context classloader. The method will throw a runtime
-     * exception if not {@link FeatureManager} manager has been bound to the context classloader before using
-     * {@link #bindFeatureManager(FeatureManager)}.
+     * Returns the {@link FeatureManager} for the current application (context class loader). The method uses the
+     * {@link FeatureManagerProvider} SPI to find the correct {@link FeatureManager} instance. It will throw a runtime exception
+     * if no {@link FeatureManager} can be found.
      * 
-     * @return The manager associalted with the current context classloader, never <code>null</code>
+     * @return The {@link FeatureManager} for the application, never <code>null</code>
      */
-    public static FeatureManager getFeatureManager() {
-        FeatureManager featureManager = managerMap.get(getContextClassLoader());
-        if (featureManager == null) {
-            throw new IllegalStateException("FeatureManager is not bound to the context ClassLoader of the current thread!");
+    public static synchronized FeatureManager getFeatureManager() {
+
+        // the classloader used for cache lookups
+        ClassLoader classLoader = getContextClassLoader();
+
+        // first try to lookup from the cache
+        FeatureManager featureManager = cache.get(classLoader);
+        if (featureManager != null) {
+            return featureManager;
         }
-        return featureManager;
+
+        if (log.isDebugEnabled()) {
+            log.debug("No cached FeatureManager for class loader: {}", classLoader);
+        }
+
+        // build a sorted list of all SPI implementations
+        Iterator<FeatureManagerProvider> providerIterator = ServiceLoader.load(FeatureManagerProvider.class).iterator();
+        List<FeatureManagerProvider> providerList = new ArrayList<FeatureManagerProvider>();
+        while (providerIterator.hasNext()) {
+            providerList.add(providerIterator.next());
+        }
+        Collections.sort(providerList, new Weighted.WeightedComparator());
+
+        if (log.isDebugEnabled()) {
+            log.debug("Found {} FeatureManagerProvider implementations...", providerList.size());
+        }
+
+        // try providers one by one to find a FeatureManager
+        for (FeatureManagerProvider provider : providerList) {
+
+            // call the SPI
+            featureManager = provider.getFeatureManager();
+
+            if (log.isDebugEnabled()) {
+                if (featureManager != null) {
+                    log.debug("Provider {} returned a FeatureManager", provider.getClass().getName());
+                } else {
+                    log.debug("No FeatureManager provided by {}", provider.getClass().getName());
+                }
+            }
+
+            // accept the first FeatureManager found
+            if (featureManager != null) {
+                break;
+            }
+
+        }
+
+        // cache the result for later lookups
+        if (featureManager != null) {
+            cache.put(classLoader, featureManager);
+            return featureManager;
+        }
+
+        throw new IllegalStateException("No FeatureManagerProvider returned a FeatureManager");
     }
 
+    /**
+     * Returns the context classloader of the current thread. Throws a runtime exception if no context classloader is available.
+     */
     private static ClassLoader getContextClassLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {

@@ -13,11 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerFactory;
+import org.togglz.servlet.spi.WebAppFeatureManagerProvider;
 import org.togglz.servlet.util.HttpServletRequestHolder;
-
 
 public class TogglzFilter implements Filter {
 
@@ -29,7 +28,7 @@ public class TogglzFilter implements Filter {
 
         // create FeatureManager
         FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
-        FeatureContext.bindFeatureManager(featureManager);
+        WebAppFeatureManagerProvider.bindFeatureManager(featureManager);
 
         log.info("FeatureFilter started!");
 
@@ -56,7 +55,7 @@ public class TogglzFilter implements Filter {
     }
 
     public void destroy() {
-        FeatureContext.unbindFeatureManager();
+        WebAppFeatureManagerProvider.unbindFeatureManager();
     }
 
 }
