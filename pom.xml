@@ -91,6 +91,7 @@
         <module>spring-security</module>
         <module>shiro</module>
         <module>testsuite</module>
+        <module>distribution</module>
       </modules>
     </profile>
 
