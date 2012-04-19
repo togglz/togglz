@@ -30,12 +30,12 @@ public class ThreadBasedUsersFilter implements Filter {
             throw new IllegalArgumentException("Query parameter 'user' must be set!");
         }
 
-        ThreadLocalFeatureUserProvider.setFeatureUser(new SimpleFeatureUser(username, "ck".equals(username)));
+        ThreadLocalFeatureUserProvider.bind(new SimpleFeatureUser(username, "ck".equals(username)));
 
         try {
             chain.doFilter(request, response);
         } finally {
-            ThreadLocalFeatureUserProvider.setFeatureUser(null);
+            ThreadLocalFeatureUserProvider.bind(null);
         }
 
     }

@@ -17,7 +17,7 @@ public class HttpServletRequestHolder {
     /**
      * Associate the request with the current thread.
      */
-    public static void set(HttpServletRequest request) {
+    public static void bind(HttpServletRequest request) {
         if (request != null && threadLocal.get() != null) {
             throw new IllegalStateException("HttpServletRequestHolder.set() called for a "
                     + "thread that already has a request associated with it. It's likely that the request "

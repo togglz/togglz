@@ -12,7 +12,7 @@ import org.togglz.core.user.FeatureUserProvider;
  * <pre>
  * FeatureUser user = ....
  * 
- * ThreadLocalFeatureUserProvider.setFeatureUser(user);
+ * ThreadLocalFeatureUserProvider.bind(user);
  * try {
  *     chain.doFilter(request, response);
  * } finally {
@@ -36,7 +36,7 @@ public class ThreadLocalFeatureUserProvider implements FeatureUserProvider {
      * 
      * @param featureUser The feature user to store
      */
-    public static void setFeatureUser(FeatureUser featureUser) {
+    public static void bind(FeatureUser featureUser) {
         if (featureUser != null && threadLocal.get() != null) {
             throw new IllegalStateException("setFeatureUser() called for a "
                     + "thread that already has one associated with it. It's likely that the FeatureUser "

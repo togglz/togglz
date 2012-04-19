@@ -50,7 +50,7 @@ public class TogglzFilter implements Filter {
         try {
 
             // store the request in a thread local
-            HttpServletRequestHolder.set(request);
+            HttpServletRequestHolder.bind(request);
 
             // continue processing the chain
             chain.doFilter(req, resp);
