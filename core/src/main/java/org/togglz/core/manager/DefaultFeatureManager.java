@@ -23,7 +23,7 @@ public class DefaultFeatureManager implements FeatureManager {
     public DefaultFeatureManager(TogglzConfig config) {
         this.features = config.getFeatureClass().getEnumConstants();
         this.featureStore = config.getStateRepository();
-        this.featureUserProvider = config.getFeatureUserProvider();
+        this.featureUserProvider = config.getUserProvider();
     }
 
     public Feature[] getFeatures() {

@@ -105,7 +105,7 @@ public class DefaultFeatureManagerTest {
         }
 
         @Override
-        public UserProvider getFeatureUserProvider() {
+        public UserProvider getUserProvider() {
             return featureUserProvider;
         }
 

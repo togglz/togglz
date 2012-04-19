@@ -34,7 +34,7 @@ public class SeamSecurityUsersConfiguration implements TogglzConfig {
     }
 
     @Override
-    public UserProvider getFeatureUserProvider() {
+    public UserProvider getUserProvider() {
         return featureUserProvider;
     }
 

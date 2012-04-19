@@ -52,6 +52,6 @@ public interface TogglzConfig {
      * 
      * @return The feature user provider, never <code>null</code>
      */
-    UserProvider getFeatureUserProvider();
+    UserProvider getUserProvider();
 
 }

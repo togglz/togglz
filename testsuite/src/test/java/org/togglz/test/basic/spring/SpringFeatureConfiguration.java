@@ -24,7 +24,7 @@ public class SpringFeatureConfiguration implements TogglzConfig {
     }
 
     @Override
-    public UserProvider getFeatureUserProvider() {
+    public UserProvider getUserProvider() {
         return new NoOpUserProvider();
     }
 

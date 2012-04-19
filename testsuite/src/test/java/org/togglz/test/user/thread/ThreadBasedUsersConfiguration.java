@@ -32,7 +32,7 @@ public class ThreadBasedUsersConfiguration implements TogglzConfig {
     }
 
     @Override
-    public UserProvider getFeatureUserProvider() {
+    public UserProvider getUserProvider() {
         return new ThreadLocalUserProvider();
     }
 
