@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.util.DbUtils;
 import org.togglz.core.util.Strings;

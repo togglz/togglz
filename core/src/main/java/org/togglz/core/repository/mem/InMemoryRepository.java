@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.togglz.core.Feature;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 
 

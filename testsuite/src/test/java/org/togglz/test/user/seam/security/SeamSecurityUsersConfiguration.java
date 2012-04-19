@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.repository.mem.InMemoryRepository;
 import org.togglz.core.user.FeatureUserProvider;

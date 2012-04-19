@@ -1,7 +1,6 @@
 package org.togglz.core.repository;
 
 import org.togglz.core.Feature;
-import org.togglz.core.manager.FeatureState;
 
 /**
  * 

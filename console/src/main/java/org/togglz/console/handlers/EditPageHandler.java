@@ -14,7 +14,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
 

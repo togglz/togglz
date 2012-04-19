@@ -15,7 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.file.FileBasedRepository;
 
 

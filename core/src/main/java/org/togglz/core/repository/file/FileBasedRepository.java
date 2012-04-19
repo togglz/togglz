@@ -7,7 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.repository.file.FeaturePropertiesFile.Editor;
 

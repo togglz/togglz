@@ -20,7 +20,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.FeatureState;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.DbUtils;
 import org.togglz.test.Deployments;
 

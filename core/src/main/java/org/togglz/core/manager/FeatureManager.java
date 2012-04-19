@@ -2,6 +2,7 @@ package org.togglz.core.manager;
 
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.FeatureUserProvider;

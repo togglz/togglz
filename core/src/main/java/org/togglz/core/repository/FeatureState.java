@@ -1,11 +1,10 @@
-package org.togglz.core.manager;
+package org.togglz.core.repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureStateRepository;
 
 
 /**
