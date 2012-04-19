@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.FeatureStateRepository;
-import org.togglz.core.repository.file.FeaturePropertiesFile.Editor;
+import org.togglz.core.repository.file.ReloadablePropertiesFile.Editor;
 
 
 /**
@@ -39,7 +39,7 @@ public class FileBasedRepository implements FeatureStateRepository {
 
     private final Logger log = LoggerFactory.getLogger(FileBasedRepository.class);
 
-    private FeaturePropertiesFile fileContent;
+    private ReloadablePropertiesFile fileContent;
 
     /**
      * Constructor for {@link FileBasedRepository}.
@@ -47,7 +47,7 @@ public class FileBasedRepository implements FeatureStateRepository {
      * @param file A {@link File} representing the Java properties file to use.
      */
     public FileBasedRepository(File file) {
-        this.fileContent = new FeaturePropertiesFile(file);
+        this.fileContent = new ReloadablePropertiesFile(file);
         log.debug(this.getClass().getSimpleName() + " initialized with: " + file.getAbsolutePath());
     }
 

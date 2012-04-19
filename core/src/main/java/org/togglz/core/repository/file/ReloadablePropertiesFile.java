@@ -11,10 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.util.IOUtils;
 
+class ReloadablePropertiesFile {
 
-class FeaturePropertiesFile {
-
-    private final Logger log = LoggerFactory.getLogger(FeaturePropertiesFile.class);
+    private final Logger log = LoggerFactory.getLogger(ReloadablePropertiesFile.class);
 
     private final File file;
 
@@ -22,7 +21,7 @@ class FeaturePropertiesFile {
 
     private long lastRead = 0;
 
-    public FeaturePropertiesFile(File file) {
+    public ReloadablePropertiesFile(File file) {
         this.file = file;
     }
 
