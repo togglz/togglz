@@ -8,7 +8,7 @@ import org.togglz.core.Feature;
 
 
 /**
- * This class represents the state of a feature that is persisted by the {@link FeatureStateRepository} implementations.
+ * This class represents the state of a feature that is persisted by the {@link StateRepository} implementations.
  * 
  * @author Christian Kaltepoth
  * 

@@ -8,14 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.FeatureStateRepository;
+import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.file.ReloadablePropertiesFile.Editor;
 
 
 /**
  * 
  * <p>
- * This implementation of {@link FeatureStateRepository} stores the state of feature using a standard Java properties file.
+ * This implementation of {@link StateRepository} stores the state of feature using a standard Java properties file.
  * </p>
  * <p>
  * The file has the following format:
@@ -35,18 +35,18 @@ import org.togglz.core.repository.file.ReloadablePropertiesFile.Editor;
  * @author Christian Kaltepoth
  * 
  */
-public class FileBasedRepository implements FeatureStateRepository {
+public class FileBasedStateRepository implements StateRepository {
 
-    private final Logger log = LoggerFactory.getLogger(FileBasedRepository.class);
+    private final Logger log = LoggerFactory.getLogger(FileBasedStateRepository.class);
 
     private ReloadablePropertiesFile fileContent;
 
     /**
-     * Constructor for {@link FileBasedRepository}.
+     * Constructor for {@link FileBasedStateRepository}.
      * 
      * @param file A {@link File} representing the Java properties file to use.
      */
-    public FileBasedRepository(File file) {
+    public FileBasedStateRepository(File file) {
         this.fileContent = new ReloadablePropertiesFile(file);
         log.debug(this.getClass().getSimpleName() + " initialized with: " + file.getAbsolutePath());
     }

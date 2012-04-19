@@ -3,7 +3,7 @@ package org.togglz.core.manager;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.FeatureStateRepository;
+import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.FeatureUserProvider;
 
@@ -44,7 +44,7 @@ public interface FeatureManager {
 
     /**
      * Returns the {@link FeatureState} for the specified feature. This state represents the current configuration of the
-     * feature and is typically persisted by a {@link FeatureStateRepository} across JVM restarts. The state includes whether
+     * feature and is typically persisted by a {@link StateRepository} across JVM restarts. The state includes whether
      * the feature is enabled or disabled and the use list.
      * 
      * @param feature The feature to get the state for

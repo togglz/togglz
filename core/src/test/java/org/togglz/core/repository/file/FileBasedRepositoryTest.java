@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.file.FileBasedRepository;
+import org.togglz.core.repository.file.FileBasedStateRepository;
 
 
 public class FileBasedRepositoryTest {
@@ -47,7 +47,7 @@ public class FileBasedRepositoryTest {
     @Test
     public void testGetFeatureState() {
 
-        FileBasedRepository repo = new FileBasedRepository(file);
+        FileBasedStateRepository repo = new FileBasedStateRepository(file);
 
         FeatureState state1 = repo.getFeatureState(MyFeature.FEATURE1);
         assertEquals(true, state1.isEnabled());
@@ -70,7 +70,7 @@ public class FileBasedRepositoryTest {
     public void testSetFeatureState() throws IOException {
 
         // modify FEATURE1 and FEATURE2, don't touch FEATURE3
-        FileBasedRepository repo = new FileBasedRepository(file);
+        FileBasedStateRepository repo = new FileBasedStateRepository(file);
         repo.setFeatureState(new FeatureState(MyFeature.FEATURE1, false));
         repo.setFeatureState(new FeatureState(MyFeature.FEATURE2, true, Arrays.asList("a", "b", "c")));
 

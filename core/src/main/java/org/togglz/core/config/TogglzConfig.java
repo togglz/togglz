@@ -1,7 +1,7 @@
 package org.togglz.core.config;
 
 import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureStateRepository;
+import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.FeatureUserProvider;
 import org.togglz.core.user.NoOpFeatureUserProvider;
 
@@ -25,7 +25,7 @@ public interface TogglzConfig {
 
     /**
      * <p>
-     * The {@link FeatureStateRepository} Togglz should use to store feature state. Please refer to the Togglz documentation of
+     * The {@link StateRepository} Togglz should use to store feature state. Please refer to the Togglz documentation of
      * a list of default implementations that ship with Togglz.
      * </p>
      * 
@@ -36,7 +36,7 @@ public interface TogglzConfig {
      * 
      * @return The repository, never <code>null</code>
      */
-    FeatureStateRepository getFeatureStateRepository();
+    StateRepository getStateRepository();
 
     /**
      * <p>

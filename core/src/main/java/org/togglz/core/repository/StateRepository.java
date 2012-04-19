@@ -10,7 +10,7 @@ import org.togglz.core.Feature;
  * @author Christian Kaltepoth
  * 
  */
-public interface FeatureStateRepository {
+public interface StateRepository {
 
     /**
      * Get the persisted state of a feature from the repository. If the repository doesn't contain any information regarding

@@ -14,8 +14,8 @@ import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.DefaultFeatureManager;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.FeatureStateRepository;
-import org.togglz.core.repository.mem.InMemoryRepository;
+import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.FeatureUserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
@@ -23,14 +23,14 @@ import org.togglz.core.user.SimpleFeatureUser;
 
 public class DefaultFeatureManagerTest {
 
-    private FeatureStateRepository repository;
+    private StateRepository repository;
     private FeatureManager manager;
     private TestFeatureUserProvider featureUserProvider;
 
     @Before
     public void before() {
 
-        repository = new InMemoryRepository();
+        repository = new InMemoryStateRepository();
         repository.setFeatureState(new FeatureState(MyFeatures.DELETE_USERS, true, Arrays.asList("admin")));
         repository.setFeatureState(new FeatureState(MyFeatures.EXPERIMENTAL, false));
 
@@ -100,7 +100,7 @@ public class DefaultFeatureManagerTest {
             return MyFeatures.class;
         }
 
-        public FeatureStateRepository getFeatureStateRepository() {
+        public StateRepository getStateRepository() {
             return repository;
         }
 

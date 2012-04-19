@@ -7,8 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.FeatureStateRepository;
-import org.togglz.core.repository.mem.InMemoryRepository;
+import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.FeatureUserProvider;
 import org.togglz.core.user.thread.ThreadLocalFeatureUserProvider;
 import org.togglz.test.user.UserDependentFeature;
@@ -23,8 +23,8 @@ public class ThreadBasedUsersConfiguration implements TogglzConfig {
     }
 
     @Override
-    public FeatureStateRepository getFeatureStateRepository() {
-        InMemoryRepository repository = new InMemoryRepository();
+    public StateRepository getStateRepository() {
+        InMemoryStateRepository repository = new InMemoryStateRepository();
         repository.setFeatureState(new FeatureState(UserDependentFeature.DISABLED, false));
         repository.setFeatureState(new FeatureState(UserDependentFeature.ENABLED_FOR_ALL, true));
         repository.setFeatureState(new FeatureState(UserDependentFeature.ENABLED_FOR_CK, true, Arrays.asList("ck")));

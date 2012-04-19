@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.FeatureStateRepository;
+import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.DbUtils;
 import org.togglz.core.util.Strings;
 
@@ -26,7 +26,7 @@ import org.togglz.core.util.Strings;
  * </p>
  * 
  * <p>
- * {@link JDBCFeatureStateRepository} stores the feature state in a single database table. You can choose the name of this table
+ * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table
  * using an constructor argument. If the repository doesn't find the required table in the database, it will automatically
  * create it.
  * </p>
@@ -46,7 +46,7 @@ import org.togglz.core.util.Strings;
  * @author Christian Kaltepoth
  * 
  */
-public class JDBCFeatureStateRepository implements FeatureStateRepository {
+public class JDBCStateRepository implements StateRepository {
 
     private static final String TABLE_DDL = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
 
@@ -54,30 +54,30 @@ public class JDBCFeatureStateRepository implements FeatureStateRepository {
     private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
     private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
 
-    private final Logger log = LoggerFactory.getLogger(JDBCFeatureStateRepository.class);
+    private final Logger log = LoggerFactory.getLogger(JDBCStateRepository.class);
 
     private final DataSource dataSource;
 
     private final String tableName;
 
     /**
-     * Constructor of {@link JDBCFeatureStateRepository}. Using this constructor will automatically set the database table name
+     * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name
      * to <code>TOGGLZ</CODE>.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @see #JDBCFeatureStateRepository(DataSource, String)
      */
-    public JDBCFeatureStateRepository(DataSource dataSource) {
+    public JDBCStateRepository(DataSource dataSource) {
         this(dataSource, "TOGGLZ");
     }
 
     /**
-     * Constructor of {@link JDBCFeatureStateRepository}.
+     * Constructor of {@link JDBCStateRepository}.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @param tableName The name of the database table to use
      */
-    public JDBCFeatureStateRepository(DataSource dataSource, String tableName) {
+    public JDBCStateRepository(DataSource dataSource, String tableName) {
         this.dataSource = dataSource;
         this.tableName = tableName;
         init();

@@ -5,18 +5,18 @@ import java.util.Map;
 
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.FeatureStateRepository;
+import org.togglz.core.repository.StateRepository;
 
 
 /**
  * 
- * A very simply implementation of {@link FeatureStateRepository} entirely on memory. This class is typically only used for
+ * A very simply implementation of {@link StateRepository} entirely on memory. This class is typically only used for
  * integration tests or at development time.
  * 
  * @author Christian Kaltepoth
  * 
  */
-public class InMemoryRepository implements FeatureStateRepository {
+public class InMemoryStateRepository implements StateRepository {
 
     private final Map<Feature, FeatureState> states = new HashMap<Feature, FeatureState>();
 

@@ -6,8 +6,8 @@ import javax.sql.DataSource;
 
 import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
-import org.togglz.core.repository.FeatureStateRepository;
-import org.togglz.core.repository.jdbc.JDBCFeatureStateRepository;
+import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.jdbc.JDBCStateRepository;
 import org.togglz.core.user.FeatureUserProvider;
 import org.togglz.core.user.NoOpFeatureUserProvider;
 
@@ -24,13 +24,13 @@ public class JDBCRepositoryConfiguration implements TogglzConfig {
     }
 
     @Override
-    public FeatureStateRepository getFeatureStateRepository() {
+    public StateRepository getStateRepository() {
 
         if (dataSource == null) {
             throw new IllegalStateException("No datasource found");
         }
 
-        return new JDBCFeatureStateRepository(dataSource, "MYTABLE");
+        return new JDBCStateRepository(dataSource, "MYTABLE");
 
     }
 
