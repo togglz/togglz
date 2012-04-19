@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
+import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureState;
 import org.togglz.core.repository.file.FileBasedRepository;
 
@@ -88,6 +89,11 @@ public class FileBasedRepositoryTest {
     private static enum MyFeature implements Feature {
 
         FEATURE1, FEATURE2, FEATURE3, FEATURE4;
+
+        @Override
+        public boolean isActive() {
+            return FeatureContext.getFeatureManager().isActive(this);
+        }
 
     }
 

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.DefaultFeatureManager;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureState;
@@ -137,6 +138,11 @@ public class DefaultFeatureManagerTest {
         DELETE_USERS,
 
         EXPERIMENTAL;
+
+        @Override
+        public boolean isActive() {
+            return FeatureContext.getFeatureManager().isActive(this);
+        }
 
     }
 

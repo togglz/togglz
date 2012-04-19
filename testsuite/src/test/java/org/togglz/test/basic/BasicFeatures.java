@@ -11,6 +11,7 @@ public enum BasicFeatures implements Feature {
     @EnabledByDefault
     FEATURE2;
 
+    @Override
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }
