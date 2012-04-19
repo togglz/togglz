@@ -3,17 +3,17 @@ package org.togglz.shiro;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 
 /**
  * 
- * A {@link FeatureUserProvider} implementation for Apache Shiro.
+ * A {@link UserProvider} implementation for Apache Shiro.
  * 
  * @author Christian Kaltepoth
  * 
  */
-public class ShiroFeatureUserProvider implements FeatureUserProvider {
+public class ShiroUserProvider implements UserProvider {
 
     private String featureAdminRole;
 
@@ -22,7 +22,7 @@ public class ShiroFeatureUserProvider implements FeatureUserProvider {
      * 
      * @param featureAdminRole The role identifier to check whether the users are feature admins.
      */
-    public ShiroFeatureUserProvider(String featureAdminRole) {
+    public ShiroUserProvider(String featureAdminRole) {
         this.featureAdminRole = featureAdminRole;
     }
 

@@ -17,7 +17,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 
 
@@ -90,9 +90,9 @@ public class DefaultFeatureManagerTest {
      */
     private final class MyConfiguration implements TogglzConfig {
 
-        private final FeatureUserProvider featureUserProvider;
+        private final UserProvider featureUserProvider;
 
-        public MyConfiguration(FeatureUserProvider featureUserProvider) {
+        public MyConfiguration(UserProvider featureUserProvider) {
             this.featureUserProvider = featureUserProvider;
         }
 
@@ -105,16 +105,16 @@ public class DefaultFeatureManagerTest {
         }
 
         @Override
-        public FeatureUserProvider getFeatureUserProvider() {
+        public UserProvider getFeatureUserProvider() {
             return featureUserProvider;
         }
 
     }
 
     /**
-     * {@link FeatureUserProvider} that allows to set the user directly
+     * {@link UserProvider} that allows to set the user directly
      */
-    private final class TestFeatureUserProvider implements FeatureUserProvider {
+    private final class TestFeatureUserProvider implements UserProvider {
 
         private FeatureUser featureUser;
 

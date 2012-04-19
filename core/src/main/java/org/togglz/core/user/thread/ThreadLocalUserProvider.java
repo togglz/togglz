@@ -1,11 +1,11 @@
 package org.togglz.core.user.thread;
 
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 
 /**
  * 
- * This implementation of {@link FeatureUserProvider} is very useful if authentication has been implemented using a servlet
+ * This implementation of {@link UserProvider} is very useful if authentication has been implemented using a servlet
  * filter. It allows to store the current user in a {@link ThreadLocal} for the active thread. See the following code for an
  * example for how to user this class.
  * 
@@ -25,7 +25,7 @@ import org.togglz.core.user.FeatureUserProvider;
  * @author Christian Kaltepoth
  * 
  */
-public class ThreadLocalFeatureUserProvider implements FeatureUserProvider {
+public class ThreadLocalUserProvider implements UserProvider {
 
     private static ThreadLocal<FeatureUser> threadLocal = new ThreadLocal<FeatureUser>();
 

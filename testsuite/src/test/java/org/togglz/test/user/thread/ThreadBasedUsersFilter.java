@@ -11,7 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
 import org.togglz.core.user.SimpleFeatureUser;
-import org.togglz.core.user.thread.ThreadLocalFeatureUserProvider;
+import org.togglz.core.user.thread.ThreadLocalUserProvider;
 
 
 @WebFilter(urlPatterns = "/*")
@@ -30,12 +30,12 @@ public class ThreadBasedUsersFilter implements Filter {
             throw new IllegalArgumentException("Query parameter 'user' must be set!");
         }
 
-        ThreadLocalFeatureUserProvider.bind(new SimpleFeatureUser(username, "ck".equals(username)));
+        ThreadLocalUserProvider.bind(new SimpleFeatureUser(username, "ck".equals(username)));
 
         try {
             chain.doFilter(request, response);
         } finally {
-            ThreadLocalFeatureUserProvider.bind(null);
+            ThreadLocalUserProvider.bind(null);
         }
 
     }

@@ -8,8 +8,8 @@ import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.jdbc.JDBCStateRepository;
-import org.togglz.core.user.FeatureUserProvider;
-import org.togglz.core.user.NoOpFeatureUserProvider;
+import org.togglz.core.user.UserProvider;
+import org.togglz.core.user.NoOpUserProvider;
 
 
 @ApplicationScoped
@@ -35,8 +35,8 @@ public class JDBCRepositoryConfiguration implements TogglzConfig {
     }
 
     @Override
-    public FeatureUserProvider getFeatureUserProvider() {
-        return new NoOpFeatureUserProvider();
+    public UserProvider getFeatureUserProvider() {
+        return new NoOpUserProvider();
     }
 
 }

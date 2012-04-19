@@ -2,8 +2,8 @@ package org.togglz.core.config;
 
 import org.togglz.core.Feature;
 import org.togglz.core.repository.StateRepository;
-import org.togglz.core.user.FeatureUserProvider;
-import org.togglz.core.user.NoOpFeatureUserProvider;
+import org.togglz.core.user.UserProvider;
+import org.togglz.core.user.NoOpUserProvider;
 
 /**
  * 
@@ -40,9 +40,9 @@ public interface TogglzConfig {
 
     /**
      * <p>
-     * The {@link FeatureUserProvider} Togglz should use to obtain the current user. Please refer to the Togglz documentation of
+     * The {@link UserProvider} Togglz should use to obtain the current user. Please refer to the Togglz documentation of
      * a list of default implementations that ship with Togglz. If you don't want to be able to toggle feature on a per user
-     * basis and are not planning to use the Togglz Console, you can return {@link NoOpFeatureUserProvider} here.
+     * basis and are not planning to use the Togglz Console, you can return {@link NoOpUserProvider} here.
      * </p>
      * 
      * <p>
@@ -52,6 +52,6 @@ public interface TogglzConfig {
      * 
      * @return The feature user provider, never <code>null</code>
      */
-    FeatureUserProvider getFeatureUserProvider();
+    UserProvider getFeatureUserProvider();
 
 }

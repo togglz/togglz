@@ -6,7 +6,7 @@ import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 
 /**
  * Default implementation of {@link FeatureManager}
@@ -18,7 +18,7 @@ public class DefaultFeatureManager implements FeatureManager {
 
     private final StateRepository featureStore;
     private final Feature[] features;
-    private final FeatureUserProvider featureUserProvider;
+    private final UserProvider featureUserProvider;
 
     public DefaultFeatureManager(TogglzConfig config) {
         this.features = config.getFeatureClass().getEnumConstants();

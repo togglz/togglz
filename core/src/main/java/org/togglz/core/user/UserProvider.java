@@ -7,7 +7,7 @@ package org.togglz.core.user;
  * @author Christian Kaltepoth
  * 
  */
-public interface FeatureUserProvider {
+public interface UserProvider {
 
     /**
      * Return a {@link FeatureUser} instance representing the current user. This method should return <code>null</code> if the

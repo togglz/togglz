@@ -6,15 +6,15 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 
 
-public class SpringSecurityFeatureUserProvider implements FeatureUserProvider {
+public class SpringSecurityUserProvider implements UserProvider {
 
     private final String featureAdminAuthority;
 
-    public SpringSecurityFeatureUserProvider(String featureAdminAuthority) {
+    public SpringSecurityUserProvider(String featureAdminAuthority) {
         this.featureAdminAuthority = featureAdminAuthority;
     }
 

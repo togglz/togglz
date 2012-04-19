@@ -8,7 +8,7 @@ import java.util.Iterator;
 import javax.security.auth.Subject;
 
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 
 /**
@@ -19,7 +19,7 @@ import org.togglz.core.user.SimpleFeatureUser;
  * @author Christian Kaltepoth
  * 
  */
-public class JAASUserProvider implements FeatureUserProvider {
+public class JAASUserProvider implements UserProvider {
 
     @Override
     public FeatureUser getCurrentUser() {

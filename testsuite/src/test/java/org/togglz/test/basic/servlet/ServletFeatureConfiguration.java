@@ -4,8 +4,8 @@ import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
-import org.togglz.core.user.FeatureUserProvider;
-import org.togglz.core.user.NoOpFeatureUserProvider;
+import org.togglz.core.user.UserProvider;
+import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.test.basic.BasicFeatures;
 
 
@@ -22,8 +22,8 @@ public class ServletFeatureConfiguration implements TogglzConfig {
     }
     
     @Override
-    public FeatureUserProvider getFeatureUserProvider() {
-        return new NoOpFeatureUserProvider();
+    public UserProvider getFeatureUserProvider() {
+        return new NoOpUserProvider();
     }
 
 }

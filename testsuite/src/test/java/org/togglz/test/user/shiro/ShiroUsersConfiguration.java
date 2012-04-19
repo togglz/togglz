@@ -9,8 +9,8 @@ import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
-import org.togglz.core.user.FeatureUserProvider;
-import org.togglz.shiro.ShiroFeatureUserProvider;
+import org.togglz.core.user.UserProvider;
+import org.togglz.shiro.ShiroUserProvider;
 import org.togglz.test.user.UserDependentFeature;
 
 @ApplicationScoped
@@ -31,8 +31,8 @@ public class ShiroUsersConfiguration implements TogglzConfig {
     }
 
     @Override
-    public FeatureUserProvider getFeatureUserProvider() {
-        return new ShiroFeatureUserProvider("togglz");
+    public UserProvider getFeatureUserProvider() {
+        return new ShiroUserProvider("togglz");
     }
 
 }

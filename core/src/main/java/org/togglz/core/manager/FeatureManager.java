@@ -5,7 +5,7 @@ import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 
 /**
  * 
@@ -26,7 +26,7 @@ public interface FeatureManager {
 
     /**
      * Checks whether the supplied feature is active or not. Please note that this method will internally use the
-     * {@link FeatureUserProvider} to obtain the currently acting user as it may be relevant if the feature is enabled only for
+     * {@link UserProvider} to obtain the currently acting user as it may be relevant if the feature is enabled only for
      * specific set of users.
      * 
      * @param feature The feature to check
@@ -35,10 +35,10 @@ public interface FeatureManager {
     boolean isActive(Feature feature);
 
     /**
-     * Get the current feature user. This method will internally use the configured {@link FeatureUserProvider} to obtain the
+     * Get the current feature user. This method will internally use the configured {@link UserProvider} to obtain the
      * user.
      * 
-     * @return The current {@link FeatureUser} or null if the {@link FeatureUserProvider} didn't return any result.
+     * @return The current {@link FeatureUser} or null if the {@link UserProvider} didn't return any result.
      */
     FeatureUser getCurrentFeatureUser();
 

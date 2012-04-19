@@ -5,18 +5,18 @@ import java.security.Principal;
 import javax.servlet.http.HttpServletRequest;
 
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.FeatureUserProvider;
+import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 /**
  * 
- * Implementation of {@link FeatureUserProvider} that uses {@link HttpServletRequest#getUserPrincipal()} to obtain the user.
+ * Implementation of {@link UserProvider} that uses {@link HttpServletRequest#getUserPrincipal()} to obtain the user.
  * 
  * @author Christian Kaltepoth
  * 
  */
-public class ServletFeatureUserProvider implements FeatureUserProvider {
+public class ServletUserProvider implements UserProvider {
 
     private final String featureAdminRole;
 
@@ -25,7 +25,7 @@ public class ServletFeatureUserProvider implements FeatureUserProvider {
      * 
      * @param featureAdminRole the feature admin role name
      */
-    public ServletFeatureUserProvider(String featureAdminRole) {
+    public ServletUserProvider(String featureAdminRole) {
         this.featureAdminRole = featureAdminRole;
     }
 

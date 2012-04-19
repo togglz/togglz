@@ -9,15 +9,15 @@ import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
-import org.togglz.core.user.FeatureUserProvider;
-import org.togglz.seam.security.SeamSecurityFeatureUserProvider;
+import org.togglz.core.user.UserProvider;
+import org.togglz.seam.security.SeamSecurityUserProvider;
 import org.togglz.test.user.UserDependentFeature;
 
 
 public class SeamSecurityUsersConfiguration implements TogglzConfig {
 
     @Inject
-    private SeamSecurityFeatureUserProvider featureUserProvider;
+    private SeamSecurityUserProvider featureUserProvider;
 
     @Override
     public Class<? extends Feature> getFeatureClass() {
@@ -34,7 +34,7 @@ public class SeamSecurityUsersConfiguration implements TogglzConfig {
     }
 
     @Override
-    public FeatureUserProvider getFeatureUserProvider() {
+    public UserProvider getFeatureUserProvider() {
         return featureUserProvider;
     }
 
