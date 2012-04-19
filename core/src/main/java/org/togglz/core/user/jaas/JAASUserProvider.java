@@ -11,7 +11,14 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.FeatureUserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 
-
+/**
+ * 
+ * This implementation supports looking up the current user the JAAS AccessControlContext. The class currently doesn't support
+ * determining whether a user is a feature admin.
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class JAASUserProvider implements FeatureUserProvider {
 
     @Override
