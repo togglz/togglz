@@ -2,10 +2,21 @@ package org.togglz.servlet.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 
+ * This class can be used to bind the {@link HttpServletRequest} to a thread local. Please take special care to ALWAYS remove
+ * the request from the thread local by calling {@link #release()}.
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class HttpServletRequestHolder {
 
     private static ThreadLocal<HttpServletRequest> threadLocal = new ThreadLocal<HttpServletRequest>();
 
+    /**
+     * Associate the request with the current thread.
+     */
     public static void set(HttpServletRequest request) {
         if (request != null && threadLocal.get() != null) {
             throw new IllegalStateException("HttpServletRequestHolder.set() called for a "
@@ -13,6 +24,13 @@ public class HttpServletRequestHolder {
                     + "was not correctly removed from the thread before it is put back into the thread pool.");
         }
         threadLocal.set(request);
+    }
+
+    /**
+     * Remove the request that is currently associated with the current thread.
+     */
+    public static void release() {
+        threadLocal.set(null);
     }
 
     public static HttpServletRequest get() {

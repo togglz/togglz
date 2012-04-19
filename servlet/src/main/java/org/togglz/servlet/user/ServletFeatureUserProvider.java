@@ -9,11 +9,22 @@ import org.togglz.core.user.FeatureUserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-
+/**
+ * 
+ * Implementation of {@link FeatureUserProvider} that uses {@link HttpServletRequest#getUserPrincipal()} to obtain the user.
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class ServletFeatureUserProvider implements FeatureUserProvider {
 
     private final String featureAdminRole;
 
+    /**
+     * This constructor requires you to supply the name of the role that identifies users to be feature admins.
+     * 
+     * @param featureAdminRole the feature admin role name
+     */
     public ServletFeatureUserProvider(String featureAdminRole) {
         this.featureAdminRole = featureAdminRole;
     }

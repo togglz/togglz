@@ -18,6 +18,14 @@ import org.togglz.core.manager.FeatureManagerFactory;
 import org.togglz.servlet.spi.WebAppFeatureManagerProvider;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
+/**
+ * 
+ * This filter is the central component of the Togglz Servlet integration module. It is responsible to bootstrap the
+ * {@link FeatureManager} and register it with {@link WebAppFeatureManagerProvider}.
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class TogglzFilter implements Filter {
 
     private final Logger log = LoggerFactory.getLogger(TogglzFilter.class);
@@ -49,7 +57,7 @@ public class TogglzFilter implements Filter {
 
         } finally {
             // remove the request from the thread local
-            HttpServletRequestHolder.set(null);
+            HttpServletRequestHolder.release();
         }
 
     }

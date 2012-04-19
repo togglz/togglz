@@ -4,10 +4,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
+import org.togglz.servlet.TogglzFilter;
 
 /**
  * 
- * This implementation of {@link FeatureManagerProvider} stores one {@link FeatureManager} for each context classloader.
+ * This implementation of {@link FeatureManagerProvider} stores one {@link FeatureManager} for each context classloader. It is
+ * used by {@link TogglzFilter} which binds the configuration in {@link TogglzFilter#init(javax.servlet.FilterConfig)} and
+ * unbinds it in {@link TogglzFilter#destroy()}
  * 
  * @author Christian Kaltepoth
  * 
