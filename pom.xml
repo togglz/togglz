@@ -82,7 +82,7 @@
       </activation>
       <modules>
         <module>core</module>
-        <module>testsuite</module>
+        <module>test-harness</module>
         <module>servlet</module>
         <module>console</module>
         <module>cdi</module>
@@ -100,7 +100,7 @@
       <id>deploy</id>
       <modules>
         <module>core</module>
-        <module>testsuite</module>
+        <module>test-harness</module>
         <module>servlet</module>
         <module>console</module>
         <module>cdi</module>
@@ -141,7 +141,7 @@
 
       <dependency>
         <groupId>org.togglz</groupId>
-        <artifactId>togglz-testsuite</artifactId>
+        <artifactId>togglz-test-harness</artifactId>
         <version>${project.version}</version>
         <scope>test</scope>
       </dependency>

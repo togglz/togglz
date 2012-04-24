@@ -9,9 +9,9 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>togglz-testsuite</artifactId>
-  <name>Togglz - Integration tests</name>
-  <description>Togglz - Integration tests</description>
+  <artifactId>togglz-test-harness</artifactId>
+  <name>Togglz - Test Harness</name>
+  <description>Togglz - Test Harness</description>
 
   <dependencies>
 

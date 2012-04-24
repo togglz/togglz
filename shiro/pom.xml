@@ -29,7 +29,7 @@
 
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-testsuite</artifactId>
+      <artifactId>togglz-test-harness</artifactId>
       <scope>test</scope>
     </dependency>
 
