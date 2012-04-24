@@ -1,4 +1,4 @@
-package org.togglz.test.basic.cdi;
+package org.togglz.cdi;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,11 +12,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.test.Deployments;
-import org.togglz.test.basic.BasicFeatures;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
-
 
 @RunWith(Arquillian.class)
 public class CDIBasicOperationTest {

@@ -1,4 +1,4 @@
-package org.togglz.test.basic.cdi;
+package org.togglz.cdi;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -6,10 +6,8 @@ import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.NoOpUserProvider;
-import org.togglz.test.basic.BasicFeatures;
-
+import org.togglz.core.user.UserProvider;
 
 @ApplicationScoped
 public class CDIFeatureConfiguration implements TogglzConfig {

@@ -1,4 +1,4 @@
-package org.togglz.test.basic.cdi;
+package org.togglz.cdi;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,8 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.test.Deployments;
-import org.togglz.test.basic.BasicFeatures;
-
 
 @RunWith(Arquillian.class)
 public class BeanManagerProducerTest {
