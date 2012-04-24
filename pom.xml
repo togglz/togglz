@@ -82,13 +82,13 @@
       </activation>
       <modules>
         <module>core</module>
+        <module>testsuite</module>
         <module>servlet</module>
         <module>console</module>
         <module>cdi</module>
         <module>spring</module>
         <module>spring-security</module>
         <module>deltaspike</module>
-        <module>testsuite</module>
         <module>shiro</module>
         <module>jsf</module>
         <module>seam-security</module>
@@ -100,15 +100,16 @@
       <id>deploy</id>
       <modules>
         <module>core</module>
+        <module>testsuite</module>
         <module>servlet</module>
         <module>console</module>
         <module>cdi</module>
         <module>spring</module>
+        <module>spring-security</module>
+        <module>deltaspike</module>
+        <module>shiro</module>
         <module>jsf</module>
         <module>seam-security</module>
-        <module>spring-security</module>
-        <module>shiro</module>
-        <module>deltaspike</module>
       </modules>
     </profile>
 

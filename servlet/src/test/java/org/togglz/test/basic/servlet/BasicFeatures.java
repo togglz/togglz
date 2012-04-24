@@ -1,4 +1,4 @@
-package org.togglz.test.basic;
+package org.togglz.test.basic.servlet;
 
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;

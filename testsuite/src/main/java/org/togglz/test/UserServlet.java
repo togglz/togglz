@@ -12,7 +12,6 @@ import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.user.FeatureUser;
 
-
 @WebServlet(urlPatterns = "/user")
 public class UserServlet extends HttpServlet {
 

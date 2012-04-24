@@ -12,8 +12,6 @@ import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 
-
-
 @WebServlet(urlPatterns = "/features")
 public class FeatureServlet extends HttpServlet {
 
@@ -23,7 +21,7 @@ public class FeatureServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         FeatureManager featureManager = FeatureContext.getFeatureManager();
-        
+
         StringBuilder builder = new StringBuilder();
 
         for (Feature f : featureManager.getFeatures()) {

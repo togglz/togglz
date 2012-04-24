@@ -1,4 +1,4 @@
-package org.togglz.test.user;
+package org.togglz.test.user.thread;
 
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;

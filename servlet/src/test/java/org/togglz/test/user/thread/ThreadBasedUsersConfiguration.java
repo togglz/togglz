@@ -11,7 +11,6 @@ import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.thread.ThreadLocalUserProvider;
-import org.togglz.test.user.UserDependentFeature;
 
 
 @ApplicationScoped

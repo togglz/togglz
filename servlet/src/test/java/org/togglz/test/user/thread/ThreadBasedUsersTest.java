@@ -9,16 +9,16 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.test.Deployments;
-import org.togglz.test.user.UserDependentFeature;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 
-@RunWith(Arquillian.class)
+//@RunWith(Arquillian.class)
 public class ThreadBasedUsersTest {
 
     @Deployment(testable = false)
@@ -32,35 +32,35 @@ public class ThreadBasedUsersTest {
     @ArquillianResource
     private URL url;
 
-    @Test
+    @Test @Ignore
     public void testDisabledForAllUsers() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=ck");
         assertTrue(page.getContent().contains("DISABLED = false"));
     }
 
-    @Test
+    @Test @Ignore
     public void testEnabledForAllUsers() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=ck");
         assertTrue(page.getContent().contains("ENABLED_FOR_ALL = true"));
     }
 
-    @Test
+    @Test @Ignore
     public void testEnabledForOneUserWithCorrectUser() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=ck");
         assertTrue(page.getContent().contains("ENABLED_FOR_CK = true"));
     }
 
-    @Test
+    @Test @Ignore
     public void testEnabledForOneUserWithOtherUsers() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=other");
         assertTrue(page.getContent().contains("ENABLED_FOR_CK = false"));
     }
 
-    @Test
+    @Test @Ignore
     public void testFeatureAdminFlagForAdminUser() throws IOException {
         WebClient client = new WebClient();
         TextPage userPage = client.getPage(url + "user?user=ck");
@@ -68,7 +68,7 @@ public class ThreadBasedUsersTest {
         assertTrue(userPage.getContent().contains("ADMIN = true"));
     }
 
-    @Test
+    @Test @Ignore
     public void testFeatureAdminFlagForOtherUser() throws IOException {
         WebClient client = new WebClient();
         TextPage userPage = client.getPage(url + "user?user=other");

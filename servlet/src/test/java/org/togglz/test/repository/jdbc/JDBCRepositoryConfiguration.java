@@ -8,9 +8,8 @@ import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.jdbc.JDBCStateRepository;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.NoOpUserProvider;
-
+import org.togglz.core.user.UserProvider;
 
 @ApplicationScoped
 public class JDBCRepositoryConfiguration implements TogglzConfig {
