@@ -87,11 +87,11 @@
         <module>cdi</module>
         <module>spring</module>
         <module>jsf</module>
-        <module>seam-security</module>
         <module>spring-security</module>
         <module>deltaspike</module>
         <module>shiro</module>
         <module>testsuite</module>
+        <module>seam-security</module>
         <module>distribution</module>
       </modules>
     </profile>
@@ -136,6 +136,13 @@
         <groupId>org.togglz</groupId>
         <artifactId>togglz-servlet</artifactId>
         <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-testsuite</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>

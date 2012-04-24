@@ -1,4 +1,4 @@
-package org.togglz.test.user.seam.security;
+package org.togglz.seam.security;
 
 import java.io.IOException;
 

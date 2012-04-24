@@ -20,17 +20,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-seam-security</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.seam.security</groupId>
-      <artifactId>seam-security</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-web</artifactId>
       <version>1.2.0</version>
@@ -52,7 +41,6 @@
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-container</artifactId>
       <version>1.0.0.CR7</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.as</groupId>
@@ -74,7 +62,6 @@
       <groupId>net.sourceforge.htmlunit</groupId>
       <artifactId>htmlunit</artifactId>
       <version>2.9</version>
-      <scope>test</scope>
     </dependency>
 
     <!-- Dependency on this is required because otherwise transitive dependencies are excluded. It also excludes the API 
@@ -83,7 +70,6 @@
       <groupId>org.jboss.shrinkwrap.resolver</groupId>
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
       <version>1.0.0-beta-5</version>
-      <scope>test</scope>
       <exclusions>
         <exclusion>
           <artifactId>shrinkwrap-api</artifactId>

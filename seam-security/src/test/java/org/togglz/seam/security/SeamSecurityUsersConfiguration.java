@@ -1,4 +1,4 @@
-package org.togglz.test.user.seam.security;
+package org.togglz.seam.security;
 
 import java.util.Arrays;
 
@@ -10,9 +10,6 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.UserProvider;
-import org.togglz.seam.security.SeamSecurityUserProvider;
-import org.togglz.test.user.UserDependentFeature;
-
 
 public class SeamSecurityUsersConfiguration implements TogglzConfig {
 
@@ -21,15 +18,15 @@ public class SeamSecurityUsersConfiguration implements TogglzConfig {
 
     @Override
     public Class<? extends Feature> getFeatureClass() {
-        return UserDependentFeature.class;
+        return TestFeature.class;
     }
 
     @Override
     public StateRepository getStateRepository() {
         InMemoryStateRepository repository = new InMemoryStateRepository();
-        repository.setFeatureState(new FeatureState(UserDependentFeature.DISABLED, false));
-        repository.setFeatureState(new FeatureState(UserDependentFeature.ENABLED_FOR_ALL, true));
-        repository.setFeatureState(new FeatureState(UserDependentFeature.ENABLED_FOR_CK, true, Arrays.asList("ck")));
+        repository.setFeatureState(new FeatureState(TestFeature.DISABLED, false));
+        repository.setFeatureState(new FeatureState(TestFeature.ENABLED_FOR_ALL, true));
+        repository.setFeatureState(new FeatureState(TestFeature.ENABLED_FOR_CK, true, Arrays.asList("ck")));
         return repository;
     }
 

@@ -1,9 +1,8 @@
-package org.togglz.test.user.seam.security;
+package org.togglz.seam.security;
 
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.annotations.Secures;
 import org.togglz.seam.security.FeatureAdmin;
-
 
 public class SeamSecurityAuthorizer {
 

@@ -1,4 +1,4 @@
-package org.togglz.test.user.seam.security;
+package org.togglz.seam.security;
 
 import java.io.IOException;
 
@@ -13,7 +13,6 @@ import org.jboss.seam.security.Credentials;
 import org.jboss.seam.security.Identity;
 import org.picketlink.idm.impl.api.PasswordCredential;
 import org.togglz.core.util.Strings;
-
 
 @WebServlet(urlPatterns = "/login")
 public class SeamSecurityLoginServlet extends HttpServlet {

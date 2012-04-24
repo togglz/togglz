@@ -1,4 +1,4 @@
-package org.togglz.test.user.seam.security;
+package org.togglz.seam.security;
 
 import static org.junit.Assert.assertTrue;
 
@@ -11,11 +11,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.test.Deployments;
-import org.togglz.test.user.UserDependentFeature;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
-
 
 @RunWith(Arquillian.class)
 public class SeamSecurityUsersTest {
@@ -32,7 +30,7 @@ public class SeamSecurityUsersTest {
 
                 // Togglz
                 .addClass(SeamSecurityUsersConfiguration.class)
-                .addClass(UserDependentFeature.class);
+                .addClass(TestFeature.class);
 
     }
 
