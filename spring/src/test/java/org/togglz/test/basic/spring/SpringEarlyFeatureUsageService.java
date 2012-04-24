@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.test.basic.BasicFeatures;
-
 
 @Component
 @Lazy  // Fixes the early feature usage problem

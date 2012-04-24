@@ -12,8 +12,6 @@ import org.junit.runner.RunWith;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.togglz.test.Deployments;
-import org.togglz.test.basic.BasicFeatures;
-
 
 @RunWith(Arquillian.class)
 public class SpringEarlyFeatureUsageTest {
