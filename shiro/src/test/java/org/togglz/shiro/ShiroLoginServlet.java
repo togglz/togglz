@@ -1,4 +1,4 @@
-package org.togglz.test.user.shiro;
+package org.togglz.shiro;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package org.togglz.test.user.shiro;
+package org.togglz.shiro;
 
 import static org.junit.Assert.assertTrue;
 
@@ -11,7 +11,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.test.Deployments;
-import org.togglz.test.user.UserDependentFeature;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -25,7 +24,7 @@ public class ShiroUsersTest {
                 .addClass(ShiroUsersConfiguration.class)
                 .addClass(ShiroLoginServlet.class)
                 .addClass(ShiroLogoutServlet.class)
-                .addClass(UserDependentFeature.class)
+                .addClass(TestFeature.class)
                 .addClass(ShiroTestRealm.class)
                 .setWebXML("shiro/shiro-web.xml")
                 .addAsWebInfResource("shiro/shiro.ini", "shiro.ini");

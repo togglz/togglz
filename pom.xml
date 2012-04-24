@@ -88,8 +88,8 @@
         <module>spring</module>
         <module>spring-security</module>
         <module>deltaspike</module>
-        <module>shiro</module>
         <module>testsuite</module>
+        <module>shiro</module>
         <module>jsf</module>
         <module>seam-security</module>
         <module>distribution</module>
