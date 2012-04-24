@@ -86,11 +86,11 @@
         <module>console</module>
         <module>cdi</module>
         <module>spring</module>
-        <module>jsf</module>
         <module>spring-security</module>
         <module>deltaspike</module>
         <module>shiro</module>
         <module>testsuite</module>
+        <module>jsf</module>
         <module>seam-security</module>
         <module>distribution</module>
       </modules>

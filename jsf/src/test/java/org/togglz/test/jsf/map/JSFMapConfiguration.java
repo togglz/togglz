@@ -6,10 +6,9 @@ import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.NoOpUserProvider;
+import org.togglz.core.user.UserProvider;
 import org.togglz.test.jsf.JSFFeatures;
-
 
 @ApplicationScoped
 public class JSFMapConfiguration implements TogglzConfig {
