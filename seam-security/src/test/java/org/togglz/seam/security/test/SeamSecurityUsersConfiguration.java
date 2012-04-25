@@ -1,4 +1,4 @@
-package org.togglz.seam.security;
+package org.togglz.seam.security.test;
 
 import java.util.Arrays;
 
@@ -10,6 +10,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.UserProvider;
+import org.togglz.seam.security.SeamSecurityUserProvider;
 
 public class SeamSecurityUsersConfiguration implements TogglzConfig {
 

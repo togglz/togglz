@@ -1,4 +1,4 @@
-package org.togglz.seam.security;
+package org.togglz.seam.security.test;
 
 import javax.inject.Inject;
 

@@ -39,15 +39,6 @@ public class Deployments {
                 .addAsLibraries(getTogglzShiroArchive());
     }
 
-    public static WebArchive getSeamSecurityArchive() {
-        return getCDIArchive()
-                .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                        .artifact("org.jboss.seam.security:seam-security:3.1.0.Final")
-                        .artifact("joda-time:joda-time:1.6.2")
-                        .resolveAs(JavaArchive.class))
-                .addAsLibraries(getTogglzSeamSecurityArchive());
-    }
-
     public static JavaArchive getTogglzSerlvetArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-servlet.jar")
                 .importDirectory("../servlet/target/classes")

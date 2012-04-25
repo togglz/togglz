@@ -1,4 +1,4 @@
-package org.togglz.seam.security;
+package org.togglz.seam.security.test;
 
 import org.jboss.seam.security.Identity;
 import org.jboss.seam.security.annotations.Secures;
