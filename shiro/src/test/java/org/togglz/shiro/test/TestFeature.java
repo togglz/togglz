@@ -1,4 +1,4 @@
-package org.togglz.shiro;
+package org.togglz.shiro.test;
 
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;

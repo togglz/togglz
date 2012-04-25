@@ -1,4 +1,4 @@
-package org.togglz.shiro;
+package org.togglz.shiro.test;
 
 import java.util.Arrays;
 

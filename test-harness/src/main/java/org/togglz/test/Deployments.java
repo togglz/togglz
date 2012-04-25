@@ -1,7 +1,6 @@
 package org.togglz.test;
 
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -22,21 +21,6 @@ public class Deployments {
                                 .resolveAs(JavaArchive.class))
                 .addClass(FeatureServlet.class)
                 .addClass(UserServlet.class);
-    }
-
-    private static WebArchive getCDIArchive() {
-        return getServletArchive()
-                .addAsLibrary(getTogglzCDIArchive())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
-
-    public static WebArchive getShiroArchive() {
-        return getCDIArchive()
-                .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                        .artifact("org.apache.shiro:shiro-web:1.2.0")
-                        .artifact("commons-logging:commons-logging:1.1.1")
-                        .resolveAs(JavaArchive.class))
-                .addAsLibraries(getTogglzShiroArchive());
     }
 
     public static JavaArchive getTogglzSerlvetArchive() {

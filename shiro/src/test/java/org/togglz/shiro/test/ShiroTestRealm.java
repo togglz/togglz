@@ -1,4 +1,4 @@
-package org.togglz.shiro;
+package org.togglz.shiro.test;
 
 import org.apache.shiro.authc.SimpleAccount;
 import org.apache.shiro.realm.SimpleAccountRealm;

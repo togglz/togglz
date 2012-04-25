@@ -1,15 +1,24 @@
-package org.togglz.shiro;
+package org.togglz.shiro.test;
 
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 
+import org.apache.shiro.web.env.EnvironmentLoaderListener;
+import org.apache.shiro.web.servlet.ShiroFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
+import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.test.Deployments;
 
 import com.gargoylesoftware.htmlunit.TextPage;
@@ -20,14 +29,24 @@ public class ShiroUsersTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getShiroArchive()
+        return Deployments.getServletArchive()
+                .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
+                        .artifact("org.apache.shiro:shiro-web:1.2.0")
+                        .artifact("commons-logging:commons-logging:1.1.1")
+                        .resolveAs(JavaArchive.class))
+                .addAsLibraries(Deployments.getTogglzShiroArchive())
                 .addClass(ShiroUsersConfiguration.class)
                 .addClass(ShiroLoginServlet.class)
                 .addClass(ShiroLogoutServlet.class)
                 .addClass(TestFeature.class)
                 .addClass(ShiroTestRealm.class)
-                .setWebXML("shiro/shiro-web.xml")
-                .addAsWebInfResource("shiro/shiro.ini", "shiro.ini");
+                .addAsWebInfResource("shiro.ini")
+                .setWebXML(new StringAsset(
+                        Descriptors.create(WebAppDescriptor.class)
+                                .contextParam(TogglzConfig.class.getName(), ShiroUsersConfiguration.class.getName())
+                                .listener(EnvironmentLoaderListener.class)
+                                .filter(ShiroFilter.class, "/*")
+                                .exportAsString()));
     }
 
     @ArquillianResource
