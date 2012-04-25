@@ -11,39 +11,44 @@ import java.sql.Statement;
 import java.util.Arrays;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Ignore;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.DbUtils;
 import org.togglz.test.Deployments;
 
-//@RunWith(Arquillian.class)
+@RunWith(Arquillian.class)
 public class JDBCRepositoryTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return Deployments.getCDIArchive()
+        return Deployments.getServletArchive()
                 .addClass(JDBCRepositoryConfiguration.class)
-                .addClass(JDBCFeatures.class);
+                .addClass(JDBCFeatures.class)
+                .setWebXML(new StringAsset(
+                        Descriptors.create(WebAppDescriptor.class)
+                                .contextParam(TogglzConfig.class.getName(), JDBCRepositoryConfiguration.class.getName())
+                                .exportAsString()));
     }
-
-    @Inject
-    private FeatureManager featureManager;
 
     @Resource(mappedName = "jboss/datasources/ExampleDS")
     private DataSource dataSource;
 
     @Test
-    @Ignore
     public void testGetFeatureStateFromJDBCRepository() throws IOException {
+
+        FeatureManager featureManager = FeatureContext.getFeatureManager();
 
         assertNotNull(featureManager);
         assertNotNull(dataSource);
@@ -71,8 +76,10 @@ public class JDBCRepositoryTest {
 
     }
 
-    @Test @Ignore
+    @Test
     public void testSetFeatureStateFromJDBCRepository() throws IOException {
+
+        FeatureManager featureManager = FeatureContext.getFeatureManager();
 
         assertNotNull(featureManager);
         assertNotNull(dataSource);

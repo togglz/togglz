@@ -2,8 +2,6 @@ package org.togglz.test.user.thread;
 
 import java.util.Arrays;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.togglz.core.Feature;
 import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
@@ -12,8 +10,6 @@ import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.thread.ThreadLocalUserProvider;
 
-
-@ApplicationScoped
 public class ThreadBasedUsersConfiguration implements TogglzConfig {
 
     @Override

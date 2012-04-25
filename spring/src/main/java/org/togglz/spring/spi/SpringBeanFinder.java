@@ -10,7 +10,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.togglz.core.spi.BeanFinder;
 
-
 public class SpringBeanFinder implements BeanFinder {
 
     @Override

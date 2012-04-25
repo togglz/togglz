@@ -13,7 +13,6 @@ import javax.servlet.annotation.WebFilter;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.thread.ThreadLocalUserProvider;
 
-
 @WebFilter(urlPatterns = "/*")
 public class ThreadBasedUsersFilter implements Filter {
 

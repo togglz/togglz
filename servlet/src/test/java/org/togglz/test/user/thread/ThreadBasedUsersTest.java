@@ -8,59 +8,65 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Ignore;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.test.Deployments;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 
-
-//@RunWith(Arquillian.class)
+@RunWith(Arquillian.class)
 public class ThreadBasedUsersTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getCDIArchive()
+        return Deployments.getServletArchive()
                 .addClass(ThreadBasedUsersConfiguration.class)
                 .addClass(ThreadBasedUsersFilter.class)
-                .addClass(UserDependentFeature.class);
+                .addClass(UserDependentFeature.class)
+                .setWebXML(new StringAsset(
+                        Descriptors.create(WebAppDescriptor.class)
+                                .contextParam(TogglzConfig.class.getName(), ThreadBasedUsersConfiguration.class.getName())
+                                .exportAsString()));
     }
 
     @ArquillianResource
     private URL url;
 
-    @Test @Ignore
+    @Test
     public void testDisabledForAllUsers() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=ck");
         assertTrue(page.getContent().contains("DISABLED = false"));
     }
 
-    @Test @Ignore
+    @Test
     public void testEnabledForAllUsers() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=ck");
         assertTrue(page.getContent().contains("ENABLED_FOR_ALL = true"));
     }
 
-    @Test @Ignore
+    @Test
     public void testEnabledForOneUserWithCorrectUser() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=ck");
         assertTrue(page.getContent().contains("ENABLED_FOR_CK = true"));
     }
 
-    @Test @Ignore
+    @Test
     public void testEnabledForOneUserWithOtherUsers() throws IOException {
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features?user=other");
         assertTrue(page.getContent().contains("ENABLED_FOR_CK = false"));
     }
 
-    @Test @Ignore
+    @Test
     public void testFeatureAdminFlagForAdminUser() throws IOException {
         WebClient client = new WebClient();
         TextPage userPage = client.getPage(url + "user?user=ck");
@@ -68,7 +74,7 @@ public class ThreadBasedUsersTest {
         assertTrue(userPage.getContent().contains("ADMIN = true"));
     }
 
-    @Test @Ignore
+    @Test
     public void testFeatureAdminFlagForOtherUser() throws IOException {
         WebClient client = new WebClient();
         TextPage userPage = client.getPage(url + "user?user=other");

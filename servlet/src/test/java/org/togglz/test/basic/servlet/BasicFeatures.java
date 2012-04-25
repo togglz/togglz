@@ -7,7 +7,7 @@ import org.togglz.core.context.FeatureContext;
 public enum BasicFeatures implements Feature {
 
     FEATURE1,
-    
+
     @EnabledByDefault
     FEATURE2;
 

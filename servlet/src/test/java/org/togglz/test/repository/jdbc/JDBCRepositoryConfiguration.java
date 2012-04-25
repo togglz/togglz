@@ -1,7 +1,7 @@
 package org.togglz.test.repository.jdbc;
 
-import javax.annotation.Resource;
-import javax.enterprise.context.ApplicationScoped;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.togglz.core.Feature;
@@ -11,11 +11,7 @@ import org.togglz.core.repository.jdbc.JDBCStateRepository;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
 
-@ApplicationScoped
 public class JDBCRepositoryConfiguration implements TogglzConfig {
-
-    @Resource(mappedName = "jboss/datasources/ExampleDS")
-    private DataSource dataSource;
 
     @Override
     public Class<? extends Feature> getFeatureClass() {
@@ -25,11 +21,15 @@ public class JDBCRepositoryConfiguration implements TogglzConfig {
     @Override
     public StateRepository getStateRepository() {
 
-        if (dataSource == null) {
-            throw new IllegalStateException("No datasource found");
-        }
+        try {
 
-        return new JDBCStateRepository(dataSource, "MYTABLE");
+            InitialContext context = new InitialContext();
+            DataSource dataSource = (DataSource) context.lookup("jboss/datasources/ExampleDS");
+            return new JDBCStateRepository(dataSource, "MYTABLE");
+
+        } catch (NamingException e) {
+            throw new IllegalArgumentException("Could not find datasource");
+        }
 
     }
 

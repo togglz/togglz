@@ -8,9 +8,13 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.descriptor.api.Descriptors;
+import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.core.config.TogglzConfig;
 import org.togglz.test.Deployments;
 
 import com.gargoylesoftware.htmlunit.TextPage;
@@ -24,9 +28,12 @@ public class ServletBasicOperationTest {
         return Deployments.getServletArchive()
                 .addClass(ServletFeatureConfiguration.class)
                 .addClass(BasicFeatures.class)
-                .setWebXML("basic/basic-web.xml");
+                .setWebXML(new StringAsset(
+                        Descriptors.create(WebAppDescriptor.class)
+                                .contextParam(TogglzConfig.class.getName(), ServletFeatureConfiguration.class.getName())
+                                .exportAsString()));
     }
-    
+
     @ArquillianResource
     private URL url;
 
