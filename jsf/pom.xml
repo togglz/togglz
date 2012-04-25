@@ -21,6 +21,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.jboss.spec.javax.servlet</groupId>
+      <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.myfaces.core</groupId>
       <artifactId>myfaces-api</artifactId>
       <version>1.2.11</version>
@@ -31,14 +37,6 @@
       <groupId>org.togglz</groupId>
       <artifactId>togglz-test-harness</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.spec</groupId>
-      <artifactId>jboss-javaee-6.0</artifactId>
-      <version>1.0.0.Final</version>
-      <type>pom</type>
-      <scope>provided</scope>
     </dependency>
 
   </dependencies>

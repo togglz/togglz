@@ -24,7 +24,7 @@ public class Deployments {
                 .addClass(UserServlet.class);
     }
 
-    public static WebArchive getCDIArchive() {
+    private static WebArchive getCDIArchive() {
         return getServletArchive()
                 .addAsLibrary(getTogglzCDIArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
@@ -48,62 +48,43 @@ public class Deployments {
                 .addAsLibraries(getTogglzSeamSecurityArchive());
     }
 
-    public static WebArchive getJSFArchive() {
-        return getCDIArchive()
-                .addAsLibrary(getTogglzJSFArchive())
-                .addAsWebInfResource("jsf/jsf-web.xml", "web.xml")
-                .addAsWebInfResource("jsf/faces-config.xml", "faces-config.xml");
-    }
-
-    public static WebArchive getSpringArchive() {
-        return getServletArchive()
-                .addAsLibrary(getTogglzSpringArchive())
-                .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class)
-                                .artifact("org.springframework:spring-web:3.0.7.RELEASE")
-                                .resolveAs(JavaArchive.class))
-                .addClass(FeatureServlet.class)
-                .addAsWebInfResource("common/spring/applicationContext.xml")
-                .setWebXML("common/spring/spring-web.xml");
-    }
-
-    private static JavaArchive getTogglzSerlvetArchive() {
+    public static JavaArchive getTogglzSerlvetArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-servlet.jar")
                 .importDirectory("../servlet/target/classes")
                 .as(JavaArchive.class);
     }
 
-    private static JavaArchive getTogglzCoreArchive() {
+    public static JavaArchive getTogglzCoreArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-core.jar")
                 .importDirectory("../core/target/classes")
                 .as(JavaArchive.class);
     }
 
-    private static JavaArchive getTogglzSpringArchive() {
+    public static JavaArchive getTogglzSpringArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-spring.jar")
                 .importDirectory("../spring/target/classes")
                 .as(JavaArchive.class);
     }
 
-    private static JavaArchive getTogglzCDIArchive() {
+    public static JavaArchive getTogglzCDIArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-cdi.jar")
                 .importDirectory("../cdi/target/classes")
                 .as(JavaArchive.class);
     }
 
-    private static JavaArchive getTogglzJSFArchive() {
+    public static JavaArchive getTogglzJSFArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsf.jar")
                 .importDirectory("../jsf/target/classes")
                 .as(JavaArchive.class);
     }
 
-    private static JavaArchive getTogglzSeamSecurityArchive() {
+    public static JavaArchive getTogglzSeamSecurityArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-seam-security.jar")
                 .importDirectory("../seam-security/target/classes")
                 .as(JavaArchive.class);
     }
 
-    private static JavaArchive getTogglzShiroArchive() {
+    public static JavaArchive getTogglzShiroArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-shiro.jar")
                 .importDirectory("../shiro/target/classes")
                 .as(JavaArchive.class);
