@@ -29,7 +29,7 @@ public class ShiroUsersTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
                         .artifact("org.apache.shiro:shiro-web:1.2.0")
                         .artifact("commons-logging:commons-logging:1.1.1")

@@ -9,7 +9,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
 public class Deployments {
 
-    public static WebArchive getServletArchive() {
+    public static WebArchive getBasicWebArchive() {
         return ShrinkWrap
                 .create(WebArchive.class, "test.war")
                 .addAsLibraries(

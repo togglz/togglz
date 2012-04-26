@@ -21,7 +21,7 @@ public class BeanManagerProducerTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addAsLibrary(Deployments.getTogglzCDIArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClass(CDIFeatureConfiguration.class)

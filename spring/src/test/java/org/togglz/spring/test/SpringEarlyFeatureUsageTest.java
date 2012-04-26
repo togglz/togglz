@@ -21,7 +21,7 @@ public class SpringEarlyFeatureUsageTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addAsLibrary(Deployments.getTogglzSpringArchive())
                 .addAsLibraries(
                         DependencyResolvers.use(MavenDependencyResolver.class)

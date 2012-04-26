@@ -25,7 +25,7 @@ public class ThreadBasedUsersTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addClass(ThreadBasedUsersConfiguration.class)
                 .addClass(ThreadBasedUsersFilter.class)
                 .addClass(UserDependentFeature.class)

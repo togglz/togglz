@@ -25,7 +25,7 @@ public class ServletBasicOperationTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addClass(ServletFeatureConfiguration.class)
                 .addClass(BasicFeatures.class)
                 .setWebXML(new StringAsset(

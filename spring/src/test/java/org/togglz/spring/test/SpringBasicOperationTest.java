@@ -24,7 +24,7 @@ public class SpringBasicOperationTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addAsLibrary(Deployments.getTogglzSpringArchive())
                 .addAsLibraries(
                         DependencyResolvers.use(MavenDependencyResolver.class)

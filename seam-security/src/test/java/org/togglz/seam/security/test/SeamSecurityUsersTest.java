@@ -24,7 +24,7 @@ public class SeamSecurityUsersTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
 
                 // add all required libraries
                 .addAsLibraries(Deployments.getTogglzSeamSecurityArchive())

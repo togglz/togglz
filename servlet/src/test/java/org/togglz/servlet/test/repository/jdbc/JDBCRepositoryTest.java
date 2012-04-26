@@ -33,7 +33,7 @@ public class JDBCRepositoryTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addClass(JDBCRepositoryConfiguration.class)
                 .addClass(JDBCFeatures.class)
                 .setWebXML(new StringAsset(

@@ -31,7 +31,7 @@ public class JSFMapTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
-        return Deployments.getServletArchive()
+        return Deployments.getBasicWebArchive()
                 .addAsLibrary(Deployments.getTogglzJSFArchive())
                 .addAsWebInfResource("faces-config.xml", "faces-config.xml")
                 .addClass(JSFMapConfiguration.class)
