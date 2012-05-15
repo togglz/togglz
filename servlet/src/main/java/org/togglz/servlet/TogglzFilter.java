@@ -34,11 +34,13 @@ public class TogglzFilter implements Filter {
 
         ServletContext servletContext = filterConfig.getServletContext();
 
-        // create FeatureManager
-        FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
-        WebAppFeatureManagerProvider.bindFeatureManager(featureManager);
+        // create FeatureManager if required
+        if (isCreateLocalFeatureManager(servletContext)) {
+            FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
+            WebAppFeatureManagerProvider.bindFeatureManager(featureManager);
+        }
 
-        log.info("FeatureFilter started!");
+        log.info("TogglzFilter started!");
 
     }
 
@@ -64,6 +66,22 @@ public class TogglzFilter implements Filter {
 
     public void destroy() {
         WebAppFeatureManagerProvider.unbindFeatureManager();
+    }
+
+    /**
+     * Returns <code>true</code> if the filter should create a local {@link FeatureManager} for the application.
+     */
+    private static boolean isCreateLocalFeatureManager(ServletContext servletContext) {
+
+        String value = servletContext.getInitParameter("org.togglz.LOCAL_FEATURE_MANAGER");
+
+        // "false" only if explicitly configured this way
+        if (value != null && "false".equalsIgnoreCase(value.trim())) {
+            return false;
+        }
+
+        // the default case
+        return true;
     }
 
 }
