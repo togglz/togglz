@@ -11,6 +11,9 @@ import java.util.Comparator;
  */
 public interface Weighted {
 
+    /**
+     * Low priorities are processed first.
+     */
     int priority();
 
     public static class WeightedComparator implements Comparator<Weighted> {
