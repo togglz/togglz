@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.WeakHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ocpsoft.logging.Logger;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 import org.togglz.core.util.Weighted;
@@ -23,7 +22,7 @@ import org.togglz.core.util.Weighted;
  */
 public class FeatureContext {
 
-    private static final Logger log = LoggerFactory.getLogger(FeatureContext.class);
+    private static final Logger log = Logger.getLogger(FeatureContext.class);
 
     /**
      * Cache for the {@link FeatureManager} instances looked up using the SPI

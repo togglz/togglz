@@ -142,16 +142,16 @@
       </dependency>
 
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.6.1</version>
-      </dependency>
-
-      <dependency>
         <groupId>org.jboss.spec.javax.servlet</groupId>
         <artifactId>jboss-servlet-api_3.0_spec</artifactId>
         <version>1.0.1.Final</version>
         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.ocpsoft.logging</groupId>
+        <artifactId>logging-api</artifactId>
+        <version>1.0.1.Final</version>
       </dependency>
 
       <dependency>

@@ -16,8 +16,8 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
+      <groupId>org.ocpsoft.logging</groupId>
+      <artifactId>logging-api</artifactId>
     </dependency>
 
     <dependency>

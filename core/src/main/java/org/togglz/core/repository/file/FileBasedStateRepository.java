@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ocpsoft.logging.Logger;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -37,7 +36,7 @@ import org.togglz.core.repository.file.ReloadablePropertiesFile.Editor;
  */
 public class FileBasedStateRepository implements StateRepository {
 
-    private final Logger log = LoggerFactory.getLogger(FileBasedStateRepository.class);
+    private final Logger log = Logger.getLogger(FileBasedStateRepository.class);
 
     private ReloadablePropertiesFile fileContent;
 

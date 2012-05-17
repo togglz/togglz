@@ -11,8 +11,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ocpsoft.logging.Logger;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -54,7 +53,7 @@ public class JDBCStateRepository implements StateRepository {
     private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
     private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
 
-    private final Logger log = LoggerFactory.getLogger(JDBCStateRepository.class);
+    private final Logger log = Logger.getLogger(JDBCStateRepository.class);
 
     private final DataSource dataSource;
 
