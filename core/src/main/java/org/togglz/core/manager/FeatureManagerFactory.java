@@ -49,7 +49,7 @@ public class FeatureManagerFactory {
         }
 
         if (configurations.size() != 1) {
-            throw new IllegalStateException("Unable to find exactly on TogglzConfig but got "
+            throw new IllegalStateException("Unable to find exactly one TogglzConfig but got "
                     + configurations.size());
         }
 
