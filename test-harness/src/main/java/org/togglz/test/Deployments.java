@@ -17,7 +17,7 @@ public class Deployments {
                         getTogglzSerlvetArchive())
                 .addAsLibraries(
                         DependencyResolvers.use(MavenDependencyResolver.class)
-                                .artifact("org.slf4j:slf4j-jdk14:1.6.4")
+                                .artifact("org.ocpsoft.logging:logging-api:1.0.1.Final")
                                 .resolveAs(JavaArchive.class))
                 .addClass(FeatureServlet.class)
                 .addClass(UserServlet.class);
