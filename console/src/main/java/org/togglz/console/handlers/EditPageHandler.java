@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
@@ -16,7 +17,6 @@ import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
-
 
 public class EditPageHandler extends RequestHandlerBase {
 
@@ -26,9 +26,11 @@ public class EditPageHandler extends RequestHandlerBase {
     }
 
     @Override
-    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void process(RequestEvent event) throws IOException {
 
         FeatureManager featureManager = FeatureContext.getFeatureManager();
+        HttpServletRequest request = event.getRequest();
+        HttpServletResponse response = event.getResponse();
 
         // identify the feature
         Feature feature = null;
@@ -59,7 +61,7 @@ public class EditPageHandler extends RequestHandlerBase {
             model.put("%CHECKED%", state.isEnabled() ? "checked=\"checked\"" : "");
             model.put("%USERS%", Strings.join(state.getUsers(), "\n"));
 
-            writeResponse(response, evaluateTemplate(template, model));
+            writeResponse(event, evaluateTemplate(template, model));
 
         }
 

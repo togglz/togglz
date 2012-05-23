@@ -17,7 +17,9 @@ public abstract class RequestHandlerBase implements RequestHandler {
 
     private final Charset UTF8 = Charset.forName("UTF8");
 
-    protected void writeResponse(HttpServletResponse response, String body) throws IOException {
+    protected void writeResponse(RequestEvent event, String body) throws IOException {
+
+        HttpServletResponse response = event.getResponse();
 
         // load the template
         InputStream templateStream = loadResource("template.html");
@@ -30,8 +32,22 @@ public abstract class RequestHandlerBase implements RequestHandler {
         // write the template to the output stream
         String templateLine = null;
         while ((templateLine = templateReader.readLine()) != null) {
-            String outputLine = templateLine.replace("%CONTENT%", body);
+
+            // the <display-name> is optional
+            String displayName = "";
+            if (event.getContext().getServletContextName() != null) {
+                displayName = "<h2>" + event.getContext().getServletContextName() + "</h2>";
+            }
+
+            // replace templates values
+            String outputLine = templateLine
+                    .replace("%CONTENT%", body)
+                    .replace("%SERVER_INFO%", event.getContext().getServerInfo())
+                    .replace("%DISPLAY_NAME%", displayName);
+
+            // write the data out to the client
             outputStream.write(outputLine.getBytes(UTF8));
+
         }
 
         // finished

@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-
 
 public class IndexPageHandler extends RequestHandlerBase {
 
@@ -23,7 +20,7 @@ public class IndexPageHandler extends RequestHandlerBase {
     }
 
     @Override
-    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void process(RequestEvent event) throws IOException {
 
         StringBuilder body = new StringBuilder();
 
@@ -58,14 +55,14 @@ public class IndexPageHandler extends RequestHandlerBase {
         body.append("</table>");
         body.append("</html>");
 
-        writeResponse(response, body.toString());
+        writeResponse(event, body.toString());
 
     }
 
     private String buildUserList(FeatureState state) {
         StringBuilder users = new StringBuilder();
-        for(String user : state.getUsers()) {
-            if(users.length() > 0) {
+        for (String user : state.getUsers()) {
+            if (users.length() > 0) {
                 users.append(", ");
             }
             users.append(user);

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.user.FeatureUser;
 
-
 public class TogglzConsoleServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
     private final List<RequestHandler> handlers = new ArrayList<RequestHandler>();
 
+    private ServletContext servletContext;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
+
+        servletContext = config.getServletContext();
 
         // build list of request handlers
         Iterator<RequestHandler> handlerIterator = ServiceLoader.load(RequestHandler.class).iterator();
@@ -43,14 +47,13 @@ public class TogglzConsoleServlet extends HttpServlet {
             return;
         }
 
-        //  ====>    /contxtPath/togglz/index   ->    /index
-        String prefix = request.getContextPath() + request.getServletPath();
-        String path = request.getRequestURI().substring(prefix.length());
+        RequestEvent consoleRequest = new RequestEvent(servletContext, request, response);
+        String path = consoleRequest.getPath();
 
         for (RequestHandler page : handlers) {
 
             if (page.handles(path)) {
-                page.process(request, response);
+                page.process(consoleRequest);
                 return;
             }
 

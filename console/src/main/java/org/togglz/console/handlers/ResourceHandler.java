@@ -5,11 +5,10 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
-
 
 public class ResourceHandler extends RequestHandlerBase {
 
@@ -21,9 +20,11 @@ public class ResourceHandler extends RequestHandlerBase {
     }
 
     @Override
-    public void process(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void process(RequestEvent event) throws IOException {
 
-        Matcher matcher = PATTERN.matcher(request.getRequestURI());
+        HttpServletResponse response = event.getResponse();
+        
+        Matcher matcher = PATTERN.matcher(event.getRequest().getRequestURI());
         if (matcher.matches()) {
 
             String basename = matcher.group(1);
