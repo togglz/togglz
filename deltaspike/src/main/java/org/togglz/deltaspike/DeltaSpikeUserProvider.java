@@ -34,8 +34,8 @@ public class DeltaSpikeUserProvider implements UserProvider {
     }
 
     /**
-     * Checks if the supplied user is a feature admin. The default implementation always returns <code>null</code>. Users can
-     * overwrite this method to implement other behavior.
+     * Checks if the supplied user is a feature admin. The default implementation always returns <code>false</code>. Users can
+     * overwrite this method to implement a different behavior.
      * 
      * @param user The name of the user
      * @return <code>true</code> for feature admins, <code>false</code> otherwise
