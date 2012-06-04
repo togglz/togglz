@@ -31,8 +31,8 @@ public class JAASUserProvider implements UserProvider {
             if (subject != null) {
                 Iterator<Principal> iter = subject.getPrincipals().iterator();
                 if (iter.hasNext()) {
-                    String name = iter.next().getName();
-                    return new SimpleFeatureUser(name, isFeatureAdmin(name));
+                    Principal principal = iter.next();
+                    return new SimpleFeatureUser(principal.getName(), isFeatureAdmin(principal));
                 }
             }
         }
@@ -44,10 +44,10 @@ public class JAASUserProvider implements UserProvider {
      * Checks if the supplied user is a feature admin. The default implementation always returns <code>false</code>. Users can
      * overwrite this method to implement a different behavior.
      * 
-     * @param user The name of the user
+     * @param principal The principal
      * @return <code>true</code> for feature admins, <code>false</code> otherwise
      */
-    protected boolean isFeatureAdmin(String user) {
+    protected boolean isFeatureAdmin(Principal principal) {
         return false;
     }
 
