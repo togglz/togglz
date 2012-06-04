@@ -9,7 +9,8 @@ import org.togglz.core.user.UserProvider;
 /**
  * 
  * Initial integration for Apache DeltaSpike. Please not that this implementation currently doesn't support the feature admin
- * flag and therefore always sets it to <code>false</code>.
+ * flag and therefore always sets it to <code>false</code>. Overriding {@link #isFeatureAdmin(String)} allows to change the
+ * default behaviour.
  * 
  * @author Christian Kaltepoth
  * 
