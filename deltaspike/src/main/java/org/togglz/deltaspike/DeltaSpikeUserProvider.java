@@ -26,10 +26,21 @@ public class DeltaSpikeUserProvider implements UserProvider {
 
         if (identity.isLoggedIn()) {
             String name = identity.getUser().getId();
-            return new SimpleFeatureUser(name, false);
+            return new SimpleFeatureUser(name, isFeatureAdmin(name));
         }
 
         return null;
+    }
+
+    /**
+     * Checks if the supplied user is a feature admin. The default implementation always returns <code>null</code>. Users can
+     * overwrite this method to implement other behavior.
+     * 
+     * @param user The name of the user
+     * @return <code>true</code> for feature admins, <code>false</code> otherwise
+     */
+    protected boolean isFeatureAdmin(String user) {
+        return false;
     }
 
 }
