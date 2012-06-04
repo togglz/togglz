@@ -8,13 +8,14 @@ import java.util.Iterator;
 import javax.security.auth.Subject;
 
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
+import org.togglz.core.user.UserProvider;
 
 /**
  * 
  * This implementation supports looking up the current user the JAAS AccessControlContext. The class currently doesn't support
- * determining whether a user is a feature admin.
+ * determining whether a user is a feature admin and therefore always sets it to false. Overriding
+ * {@link #isFeatureAdmin(String)} allows to change the default behavior.
  * 
  * @author Christian Kaltepoth
  * 
@@ -30,12 +31,24 @@ public class JAASUserProvider implements UserProvider {
             if (subject != null) {
                 Iterator<Principal> iter = subject.getPrincipals().iterator();
                 if (iter.hasNext()) {
-                    return new SimpleFeatureUser(iter.next().getName(), false);
+                    String name = iter.next().getName();
+                    return new SimpleFeatureUser(name, isFeatureAdmin(name));
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Checks if the supplied user is a feature admin. The default implementation always returns <code>false</code>. Users can
+     * overwrite this method to implement a different behavior.
+     * 
+     * @param user The name of the user
+     * @return <code>true</code> for feature admins, <code>false</code> otherwise
+     */
+    protected boolean isFeatureAdmin(String user) {
+        return false;
     }
 
 }
