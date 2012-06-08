@@ -34,7 +34,7 @@ public class WebAppFeatureManagerProvider implements FeatureManagerProvider {
      * 
      * @param featureManager The manager to store
      */
-    public static void bindFeatureManager(FeatureManager featureManager) {
+    public static void bind(FeatureManager featureManager) {
         Object old = managerMap.putIfAbsent(getContextClassLoader(), featureManager);
         if (old != null) {
             throw new IllegalStateException(
@@ -45,7 +45,7 @@ public class WebAppFeatureManagerProvider implements FeatureManagerProvider {
     /**
      * Removes the {@link FeatureManager} associated with the current context classloader from the internal datastructure.
      */
-    public static void unbindFeatureManager() {
+    public static void release() {
         managerMap.remove(getContextClassLoader());
     }
 

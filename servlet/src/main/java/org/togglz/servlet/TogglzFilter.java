@@ -36,7 +36,7 @@ public class TogglzFilter implements Filter {
         // create FeatureManager if required
         if (isCreateLocalFeatureManager(servletContext)) {
             FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
-            WebAppFeatureManagerProvider.bindFeatureManager(featureManager);
+            WebAppFeatureManagerProvider.bind(featureManager);
         }
 
         log.info("TogglzFilter started!");
@@ -64,7 +64,7 @@ public class TogglzFilter implements Filter {
     }
 
     public void destroy() {
-        WebAppFeatureManagerProvider.unbindFeatureManager();
+        WebAppFeatureManagerProvider.release();
     }
 
     /**
