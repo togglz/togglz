@@ -1,1 +1,2 @@
+org.togglz.core.context.ThreadLocalFeatureManagerProvider
 org.togglz.core.jndi.JNDIFeatureManagerProvider
