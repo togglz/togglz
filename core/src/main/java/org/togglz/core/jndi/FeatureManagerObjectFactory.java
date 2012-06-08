@@ -10,8 +10,8 @@ import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 import org.togglz.core.config.TogglzConfig;
-import org.togglz.core.manager.DefaultFeatureManager;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.manager.FeatureManagerBuilder;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class FeatureManagerObjectFactory implements ObjectFactory {
             throw new IllegalArgumentException("Unable to find TogglzConfig implementation..");
         }
 
-        return new DefaultFeatureManager(config);
+        return new FeatureManagerBuilder().togglzConfig(config).build();
 
     }
 

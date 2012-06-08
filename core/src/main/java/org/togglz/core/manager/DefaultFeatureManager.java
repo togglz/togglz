@@ -2,7 +2,6 @@ package org.togglz.core.manager;
 
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
-import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.FeatureUser;
@@ -16,23 +15,24 @@ import org.togglz.core.user.UserProvider;
  */
 public class DefaultFeatureManager implements FeatureManager {
 
-    private final StateRepository featureStore;
-    private final Feature[] features;
-    private final UserProvider featureUserProvider;
+    private final StateRepository stateRepository;
+    private final Class<? extends Feature> featureClazz;
+    private final UserProvider userProvider;
 
-    public DefaultFeatureManager(TogglzConfig config) {
-        this.features = config.getFeatureClass().getEnumConstants();
-        this.featureStore = config.getStateRepository();
-        this.featureUserProvider = config.getUserProvider();
+    DefaultFeatureManager(Class<? extends Feature> featureClazz, StateRepository stateRepository,
+            UserProvider userProvider) {
+        this.featureClazz = featureClazz;
+        this.stateRepository = stateRepository;
+        this.userProvider = userProvider;
     }
 
     public Feature[] getFeatures() {
-        return features;
+        return featureClazz.getEnumConstants();
     }
 
     public boolean isActive(Feature feature) {
 
-        FeatureState state = featureStore.getFeatureState(feature);
+        FeatureState state = stateRepository.getFeatureState(feature);
 
         if (state == null) {
             FeatureMetaData metaData = new FeatureMetaData(feature);
@@ -50,7 +50,7 @@ public class DefaultFeatureManager implements FeatureManager {
         }
 
         // check if user is in user list
-        FeatureUser user = featureUserProvider.getCurrentUser();
+        FeatureUser user = userProvider.getCurrentUser();
         if (user != null && user.getName() != null) {
             for (String username : state.getUsers()) {
                 if (username.equals(user.getName())) {
@@ -63,7 +63,7 @@ public class DefaultFeatureManager implements FeatureManager {
     }
 
     public FeatureState getFeatureState(Feature feature) {
-        FeatureState state = featureStore.getFeatureState(feature);
+        FeatureState state = stateRepository.getFeatureState(feature);
         if (state == null) {
             FeatureMetaData metaData = new FeatureMetaData(feature);
             state = new FeatureState(feature, metaData.isEnabledByDefault());
@@ -72,12 +72,12 @@ public class DefaultFeatureManager implements FeatureManager {
     }
 
     public void setFeatureState(FeatureState state) {
-        featureStore.setFeatureState(state);
+        stateRepository.setFeatureState(state);
     }
 
     @Override
     public FeatureUser getCurrentFeatureUser() {
-        return featureUserProvider.getCurrentUser();
+        return userProvider.getCurrentUser();
     }
 
 }

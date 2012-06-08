@@ -9,17 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
-import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.manager.DefaultFeatureManager;
-import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
-
+import org.togglz.core.user.UserProvider;
 
 public class DefaultFeatureManagerTest {
 
@@ -36,7 +32,11 @@ public class DefaultFeatureManagerTest {
 
         featureUserProvider = new TestFeatureUserProvider();
 
-        manager = new DefaultFeatureManager(new MyConfiguration(featureUserProvider));
+        manager = new FeatureManagerBuilder()
+                .featureClass(MyFeatures.class)
+                .stateRepository(repository)
+                .userProvider(featureUserProvider)
+                .build();
 
     }
 
@@ -82,32 +82,6 @@ public class DefaultFeatureManagerTest {
         assertEquals(MyFeatures.DELETE_USERS, state.getFeature());
         assertEquals(true, state.isEnabled());
         assertEquals(Arrays.asList("admin"), state.getUsers());
-
-    }
-
-    /**
-     * Configuration for the {@link FeatureManager}
-     */
-    private final class MyConfiguration implements TogglzConfig {
-
-        private final UserProvider featureUserProvider;
-
-        public MyConfiguration(UserProvider featureUserProvider) {
-            this.featureUserProvider = featureUserProvider;
-        }
-
-        public Class<? extends Feature> getFeatureClass() {
-            return MyFeatures.class;
-        }
-
-        public StateRepository getStateRepository() {
-            return repository;
-        }
-
-        @Override
-        public UserProvider getUserProvider() {
-            return featureUserProvider;
-        }
 
     }
 

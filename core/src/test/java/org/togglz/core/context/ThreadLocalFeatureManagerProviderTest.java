@@ -6,13 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.config.TogglzConfig;
-import org.togglz.core.manager.DefaultFeatureManager;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.repository.StateRepository;
+import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.NoOpUserProvider;
-import org.togglz.core.user.UserProvider;
 
 public class ThreadLocalFeatureManagerProviderTest {
 
@@ -21,7 +18,11 @@ public class ThreadLocalFeatureManagerProviderTest {
      */
     @Before
     public void before() {
-        FeatureManager featureManager = new DefaultFeatureManager(new DummyConfig());
+        FeatureManager featureManager = new FeatureManagerBuilder()
+                .featureClass(Feature.class)
+                .stateRepository(new InMemoryStateRepository())
+                .userProvider(new NoOpUserProvider())
+                .build();
         ThreadLocalFeatureManagerProvider.bind(featureManager);
     }
 
@@ -49,25 +50,6 @@ public class ThreadLocalFeatureManagerProviderTest {
     public void secondTest() {
         FeatureManager featureManager = FeatureContext.getFeatureManager();
         assertNotNull(featureManager);
-    }
-
-    private static class DummyConfig implements TogglzConfig {
-
-        @Override
-        public Class<? extends Feature> getFeatureClass() {
-            return Feature.class;
-        }
-
-        @Override
-        public StateRepository getStateRepository() {
-            return new InMemoryStateRepository();
-        }
-
-        @Override
-        public UserProvider getUserProvider() {
-            return new NoOpUserProvider();
-        }
-
     }
 
 }

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ocpsoft.logging.Logger;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.FeatureManagerFactory;
+import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.servlet.spi.WebAppFeatureManagerProvider;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
@@ -35,7 +35,7 @@ public class TogglzFilter implements Filter {
 
         // create FeatureManager if required
         if (isCreateLocalFeatureManager(servletContext)) {
-            FeatureManager featureManager = new FeatureManagerFactory().build(servletContext);
+            FeatureManager featureManager = new FeatureManagerBuilder().autoDiscovery(servletContext).build();
             WebAppFeatureManagerProvider.bind(featureManager);
         }
 
