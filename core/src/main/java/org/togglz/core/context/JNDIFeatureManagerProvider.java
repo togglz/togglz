@@ -1,4 +1,4 @@
-package org.togglz.core.jndi;
+package org.togglz.core.context;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
