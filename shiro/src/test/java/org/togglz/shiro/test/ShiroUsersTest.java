@@ -18,7 +18,7 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.manager.TogglzConfig;
 import org.togglz.test.Deployments;
 
 import com.gargoylesoftware.htmlunit.TextPage;

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import org.togglz.core.Feature;
-import org.togglz.core.config.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.spi.BeanFinder;

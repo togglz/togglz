@@ -2,7 +2,7 @@ package org.togglz.core.spi;
 
 import java.util.Collection;
 
-import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.manager.TogglzConfig;
 
 
 /**

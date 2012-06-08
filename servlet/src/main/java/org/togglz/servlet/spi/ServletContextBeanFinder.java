@@ -6,7 +6,7 @@ import java.util.Collections;
 
 import javax.servlet.ServletContext;
 
-import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.spi.BeanFinder;
 import org.togglz.core.util.ClassUtils;
 

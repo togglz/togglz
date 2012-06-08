@@ -5,7 +5,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.togglz.core.Feature;
-import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.jdbc.JDBCStateRepository;
 import org.togglz.core.user.NoOpUserProvider;

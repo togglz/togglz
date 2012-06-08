@@ -1,7 +1,7 @@
 package org.togglz.jsf.test.map;
 
 import org.togglz.core.Feature;
-import org.togglz.core.config.TogglzConfig;
+import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.NoOpUserProvider;

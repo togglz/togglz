@@ -1,4 +1,4 @@
-package org.togglz.core.config;
+package org.togglz.core.manager;
 
 import org.togglz.core.Feature;
 import org.togglz.core.repository.StateRepository;
