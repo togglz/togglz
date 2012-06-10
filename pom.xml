@@ -6,7 +6,7 @@
 
   <groupId>org.togglz</groupId>
   <artifactId>togglz-project</artifactId>
-  <version>1.0.0.Alpha6</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Togglz</name>
@@ -24,7 +24,7 @@
     <connection>scm:git:git@github.com:chkal/togglz.git</connection>
     <developerConnection>scm:git:git@github.com:chkal/togglz.git</developerConnection>
     <url>https://github.com/chkal/togglz</url>
-    <tag>1.0.0.Alpha6</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
