@@ -20,6 +20,7 @@
 
     <dependencySet>
       <outputDirectory>/</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>org.togglz:togglz-core:jar:*</include>
         <include>org.togglz:togglz-servlet:jar:*</include>
@@ -29,6 +30,7 @@
 
     <dependencySet>
       <outputDirectory>/integration</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>org.togglz:togglz-cdi:jar:*</include>
         <include>org.togglz:togglz-seam-security:jar:*</include>
