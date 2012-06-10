@@ -42,16 +42,6 @@
   <build>
     <plugins>
 
-      <!-- Java6 -->
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-
       <!-- Release -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -88,49 +78,46 @@
       </plugin>
 
     </plugins>
+
+    <pluginManagement>
+      <plugins>
+
+        <!-- Java 1.6 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>2.5.1</version>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.7</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
   </build>
 
-  <profiles>
-
-    <profile>
-      <id>default</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <modules>
-        <module>core</module>
-        <module>test-harness</module>
-        <module>servlet</module>
-        <module>console</module>
-        <module>cdi</module>
-        <module>spring</module>
-        <module>spring-security</module>
-        <module>deltaspike</module>
-        <module>shiro</module>
-        <module>jsf</module>
-        <module>seam-security</module>
-        <module>distribution</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>deploy</id>
-      <modules>
-        <module>core</module>
-        <module>test-harness</module>
-        <module>servlet</module>
-        <module>console</module>
-        <module>cdi</module>
-        <module>spring</module>
-        <module>spring-security</module>
-        <module>deltaspike</module>
-        <module>shiro</module>
-        <module>jsf</module>
-        <module>seam-security</module>
-      </modules>
-    </profile>
-
-  </profiles>
+  <modules>
+    <module>core</module>
+    <module>test-harness</module>
+    <module>servlet</module>
+    <module>console</module>
+    <module>cdi</module>
+    <module>spring</module>
+    <module>spring-security</module>
+    <module>deltaspike</module>
+    <module>shiro</module>
+    <module>jsf</module>
+    <module>seam-security</module>
+    <module>distribution</module>
+  </modules>
 
   <developers>
     <developer>
