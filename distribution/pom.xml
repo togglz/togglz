@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -14,15 +15,23 @@
   <description>Togglz - Distribution</description>
 
   <build>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>2.3</version>
         <configuration>
+          <finalName>togglz-${project.version}</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
-            <descriptor>src/assembly/binary.xml</descriptor>
+            <descriptor>src/assembly/bin.xml</descriptor>
           </descriptors>
+          <archiverConfig>
+            <fileMode>420</fileMode> <!-- 420(dec) = 644(oct) -->
+            <directoryMode>493</directoryMode> <!-- 493(dec) = 755(oct) -->
+            <defaultDirectoryMode>493</defaultDirectoryMode>
+          </archiverConfig>
         </configuration>
         <executions>
           <execution>
@@ -42,12 +51,10 @@
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-core</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-servlet</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
