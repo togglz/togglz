@@ -27,16 +27,11 @@
       <scope>compile</scope>
     </dependency>
 
-    <!-- Arquillian for JBossAS7 -->
+    <!-- Arquillian -->
     <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-container</artifactId>
       <version>1.0.1.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.as</groupId>
-      <artifactId>jboss-as-arquillian-container-managed</artifactId>
-      <version>7.1.1.Final</version>
     </dependency>
 
     <!-- JEE APIs -->
