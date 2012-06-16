@@ -14,7 +14,6 @@ import javax.servlet.ServletContext;
 
 import org.togglz.core.spi.BeanFinder;
 
-
 public class CDIBeanFinder implements BeanFinder {
 
     public final static String BEAN_MANAGER_JNDI = "java:comp/BeanManager";

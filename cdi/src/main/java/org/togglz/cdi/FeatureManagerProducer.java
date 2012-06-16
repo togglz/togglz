@@ -6,7 +6,6 @@ import javax.enterprise.inject.Produces;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 
-
 public class FeatureManagerProducer {
 
     @Produces

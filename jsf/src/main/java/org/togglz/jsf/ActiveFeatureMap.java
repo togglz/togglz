@@ -8,7 +8,6 @@ import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 
-
 public class ActiveFeatureMap implements Map<String, Boolean> {
 
     @Override
