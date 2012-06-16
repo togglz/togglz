@@ -37,13 +37,6 @@
     <url>http://github.com/chkal/togglz/issues</url>
   </issueManagement>
 
-  <distributionManagement>
-    <repository>
-      <id>gh-pages</id>
-      <url>file:///${env.REPOSITORY}/</url>
-    </repository>
-  </distributionManagement>
-
   <properties>
     <version.jbossas>7.1.1.Final</version.jbossas>
   </properties>
