@@ -30,7 +30,7 @@ public class SeamSecurityUsersTest {
                 .addAsLibraries(Deployments.getTogglzSeamSecurityArchive())
                 .addAsLibrary(Deployments.getTogglzCDIArchive())
                 .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                        .loadMetadataFromPom("pom.xml")
+                        .loadMetadataFromPom("src/test/resources/repository-pom.xml")
                         .artifact("org.jboss.seam.security:seam-security:3.1.0.Final")
                         .artifact("joda-time:joda-time:1.6.2")
                         .resolveAs(JavaArchive.class))
