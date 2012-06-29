@@ -43,6 +43,13 @@ public class FeatureState {
     }
 
     /**
+     * Creates a copy of this object
+     */
+    public FeatureState copy() {
+        return new FeatureState(feature, enabled, new ArrayList<String>(users));
+    }
+
+    /**
      * Returns the feature represented by this feature state.
      * 
      * @return The feature, never <code>null</code>
