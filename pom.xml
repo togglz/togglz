@@ -123,6 +123,7 @@
     <module>shiro</module>
     <module>jsf</module>
     <module>seam-security</module>
+    <module>junit</module>
     <module>distribution</module>
   </modules>
 

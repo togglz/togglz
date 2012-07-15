@@ -104,5 +104,9 @@ public class FeatureContext {
         }
         return classLoader;
     }
+    
+    public static void clearCache() {
+        cache.clear();
+    }
 
 }
