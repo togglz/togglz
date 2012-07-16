@@ -1,4 +1,4 @@
-package org.togglz.junit;
+package org.togglz.testing;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,9 +16,6 @@ public class TestFeatureManager implements FeatureManager {
 
     public TestFeatureManager(Class<? extends Feature> featureClass) {
         this.featureClass = featureClass;
-        for (Feature f : getFeatures()) {
-            activeFeatures.add(f);
-        }
     }
 
     @Override
@@ -56,6 +53,16 @@ public class TestFeatureManager implements FeatureManager {
 
     public void disable(Feature feature) {
         activeFeatures.remove(feature);
+    }
+
+    public void enableAll() {
+        for (Feature feature : featureClass.getEnumConstants()) {
+            enable(feature);
+        }
+    }
+
+    public void disableAll() {
+        activeFeatures.clear();
     }
 
 }

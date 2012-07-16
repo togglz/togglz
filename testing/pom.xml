@@ -9,16 +9,15 @@
     <version>1.1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>togglz-junit</artifactId>
-  <name>Togglz - JUnit integration</name>
-  <description>Togglz - JUnit integration</description>
+  <artifactId>togglz-testing</artifactId>
+  <name>Togglz - Testing Support</name>
+  <description>Togglz - Testing Support</description>
 
   <dependencies>
 
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-testing</artifactId>
-      <version>${project.version}</version>
+      <artifactId>togglz-core</artifactId>
     </dependency>
 
     <dependency>

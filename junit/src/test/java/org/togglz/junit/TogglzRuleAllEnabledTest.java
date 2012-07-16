@@ -5,13 +5,11 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 
-public class TogglzRuleTest {
+public class TogglzRuleAllEnabledTest {
 
     @Rule
-    public TogglzRule togglzRule = new TogglzRule(MyFeatures.class);
+    public TogglzRule togglzRule = TogglzRule.allEnabled(MyFeatures.class);
 
     @Test
     public void testActiveByDefault() {
@@ -37,17 +35,6 @@ public class TogglzRuleTest {
         // enable and check result
         togglzRule.enable(MyFeatures.FEATURE_ONE);
         assertTrue(MyFeatures.FEATURE_ONE.isActive());
-
-    }
-
-    private static enum MyFeatures implements Feature {
-
-        FEATURE_ONE;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
 
     }
 

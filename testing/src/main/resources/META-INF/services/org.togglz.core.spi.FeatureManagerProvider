@@ -1,0 +1,2 @@
+org.togglz.testing.TestFeatureManagerProvider
+org.togglz.testing.fallback.FallbackTestFeatureManagerProvider

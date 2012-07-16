@@ -1,4 +1,5 @@
-package org.togglz.junit;
+package org.togglz.testing;
+
 
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
