@@ -32,7 +32,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     }
 
     /**
-     * Vary this feature in the varion set.
+     * Vary this feature in the variation set.
      */
     public VariationSetBuilder<F> vary(F f)
     {
@@ -43,7 +43,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     }
 
     /**
-     * Enable this feature for the variation set.
+     * Enable this feature in the variation set.
      */
     public VariationSetBuilder<F> enable(F f)
     {
@@ -54,7 +54,18 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     }
 
     /**
-     * Disable this feature for the variation set.
+     * Disable this feature in the variation set.
+     */
+    public VariationSetBuilder<F> disable(F f)
+    {
+        featuresToVary.remove(f);
+        featuresToEnable.remove(f);
+        featuresToDisable.add(f);
+        return this;
+    }
+
+    /**
+     * Enable all features in the variation set.
      */
     public VariationSetBuilder<F> enableAll() {
         for (F f : featureClass.getEnumConstants()) {
@@ -64,23 +75,12 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     }
 
     /**
-     * Enable all features for the variation set.
+     * Disable all features in the variation set.
      */
     public VariationSetBuilder<F> disableAll() {
         for (F f : featureClass.getEnumConstants()) {
             disable(f);
         }
-        return this;
-    }
-
-    /**
-     * Disable all features for the variation set.
-     */
-    public VariationSetBuilder<F> disable(F f)
-    {
-        featuresToVary.remove(f);
-        featuresToEnable.remove(f);
-        featuresToDisable.add(f);
         return this;
     }
 
