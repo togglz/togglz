@@ -50,7 +50,7 @@ public class CacheRepositoryTest {
         }
         long duration = System.currentTimeMillis() - start;
 
-        assertTrue(duration < 2000); // without cache: 500ms * 10 = 5000ms
+        assertTrue(duration < 4000); // without cache: 500ms * 10 = 5000ms
 
     }
 }
