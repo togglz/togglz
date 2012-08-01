@@ -4,36 +4,16 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.util.UntypedFeature;
+import org.togglz.core.util.Validate;
 
 public class ActiveFeatureMap implements Map<String, Boolean> {
 
     @Override
     public Boolean get(Object key) {
-
-        FeatureManager featureManager = FeatureContext.getFeatureManager();
-
-        // the name of the feature
-        String name = (key != null) ? key.toString() : "null";
-
-        // get the correct feature
-        Feature feature = null;
-        for (Feature f : featureManager.getFeatures()) {
-            if (f.name().equals(name)) {
-                feature = f;
-                break;
-            }
-        }
-
-        // we need a matching feature
-        if (feature == null) {
-            throw new IllegalArgumentException("Unknown feature: " + name);
-        }
-
-        return featureManager.isActive(feature);
-
+        Validate.notNull(key, "The feature must not be null");
+        return new UntypedFeature(key.toString()).isActive();
     }
 
     @Override
