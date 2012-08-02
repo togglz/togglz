@@ -8,6 +8,38 @@ import org.togglz.core.context.FeatureContext;
 import org.togglz.testing.TestFeatureManager;
 import org.togglz.testing.TestFeatureManagerProvider;
 
+/**
+ * <p>
+ * JUnit rule that simplifies the process of controlling features in unit tests.
+ * </p>
+ * 
+ * <p>
+ * Example usage:
+ * </p>
+ * 
+ * <pre>
+ * public class TogglzRuleAllEnabledTest {
+ * 
+ *   &#064;Rule
+ *   public TogglzRule togglzRule = TogglzRule.allEnabled(MyFeatures.class);
+ * 
+ *   &#064;Test
+ *   public void testToggleFeature() {
+ * 
+ *     assertTrue(MyFeatures.FEATURE_ONE.isActive());
+ * 
+ *     togglzRule.disable(MyFeatures.FEATURE_ONE);
+ *      
+ *     assertFalse(MyFeatures.FEATURE_ONE.isActive());
+ *     
+ *   }
+ * 
+ * }
+ * </pre>
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class TogglzRule implements TestRule {
 
     private final Class<? extends Feature> featureClass;
@@ -45,7 +77,7 @@ public class TogglzRule implements TestRule {
 
                     // create blank instance and set initial state
                     featureManager = new TestFeatureManager(featureClass);
-                    for(Feature feature : initiallyActive) {
+                    for (Feature feature : initiallyActive) {
                         featureManager.enable(feature);
                     }
 
