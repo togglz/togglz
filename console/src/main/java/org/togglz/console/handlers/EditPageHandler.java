@@ -18,6 +18,8 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
+import com.floreysoft.jmte.Engine;
+
 public class EditPageHandler extends RequestHandlerBase {
 
     @Override
@@ -53,15 +55,15 @@ public class EditPageHandler extends RequestHandlerBase {
 
             FeatureState state = featureManager.getFeatureState(feature);
 
+            Map<String, Object> model = new HashMap<String, Object>();
+            model.put("label", metaData.getLabel());
+            model.put("name", feature.name());
+            model.put("enabled", state.isEnabled());
+            model.put("users", Strings.join(state.getUsers(), "\n"));
+
             String template = getResourceAsString("edit.html");
-
-            Map<String, String> model = new HashMap<String, String>();
-            model.put("%LABEL%", metaData.getLabel());
-            model.put("%NAME%", feature.name());
-            model.put("%CHECKED%", state.isEnabled() ? "checked=\"checked\"" : "");
-            model.put("%USERS%", Strings.join(state.getUsers(), "\n"));
-
-            writeResponse(event, evaluateTemplate(template, model));
+            String content = new Engine().transform(template, model);
+            writeResponse(event, content);
 
         }
 

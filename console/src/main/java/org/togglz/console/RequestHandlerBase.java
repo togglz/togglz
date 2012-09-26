@@ -1,17 +1,17 @@
 package org.togglz.console;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import com.floreysoft.jmte.Engine;
 
 public abstract class RequestHandlerBase implements RequestHandler {
 
@@ -21,46 +21,21 @@ public abstract class RequestHandlerBase implements RequestHandler {
 
         HttpServletResponse response = event.getResponse();
 
-        // load the template
-        InputStream templateStream = loadResource("template.html");
-        BufferedReader templateReader = new BufferedReader(new InputStreamReader(templateStream));
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("content", body);
+        model.put("serverInfo", event.getContext().getServerInfo());
+        if (event.getContext().getServletContextName() != null) {
+            model.put("displayName", event.getContext().getServletContextName());
+        }
 
-        // prepare the response
+        String template = getResourceAsString("template.html");
+        String result = new Engine().transform(template, model);
+
         response.setContentType("text/html");
         ServletOutputStream outputStream = response.getOutputStream();
-
-        // write the template to the output stream
-        String templateLine = null;
-        while ((templateLine = templateReader.readLine()) != null) {
-
-            // the <display-name> is optional
-            String displayName = "";
-            if (event.getContext().getServletContextName() != null) {
-                displayName = "<h2>" + event.getContext().getServletContextName() + "</h2>";
-            }
-
-            // replace templates values
-            String outputLine = templateLine
-                    .replace("%CONTENT%", body)
-                    .replace("%SERVER_INFO%", event.getContext().getServerInfo())
-                    .replace("%DISPLAY_NAME%", displayName);
-
-            // write the data out to the client
-            outputStream.write(outputLine.getBytes(UTF8));
-
-        }
-
-        // finished
+        outputStream.write(result.getBytes(UTF8));
         response.flushBuffer();
 
-    }
-
-    protected String evaluateTemplate(String template, Map<String, String> model) {
-        String result = template;
-        for (Entry<String, String> e : model.entrySet()) {
-            result = result.replace(e.getKey(), e.getValue());
-        }
-        return result;
     }
 
     protected String getResourceAsString(String name) throws IOException {

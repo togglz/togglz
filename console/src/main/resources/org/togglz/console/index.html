@@ -1,0 +1,31 @@
+<table class="zebra-striped feature-overview">
+  <thead>
+    <tr>
+      <th class="feature-label">Feature</th>
+      <th class="feature-status">Status</th>
+      <th class="feature-users">User</th>
+      <th class="feature-actions">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${foreach features feature}
+    <tr>
+      <td class="feature-label">
+        <span title="${feature.name}">${feature.label}</span>
+      </td>
+      <td class="feature-status">
+        <img src="${if feature.enabled}ledgreen.png${else}ledred.png${end}" alt="toggle" 
+            title="The current state of ${feature.label}" />
+      </td>
+      <td class="feature-users">
+        ${feature.users}
+      </td>
+      <td class="feature-actions">
+        <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
+          <img src="edit.png" alt="edit" />
+        </a>
+      </td>
+    </tr>
+    ${end}
+  </tbody>
+</table>
