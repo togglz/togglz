@@ -35,7 +35,7 @@ public class DefaultFeatureManager implements FeatureManager {
         FeatureState state = stateRepository.getFeatureState(feature);
 
         if (state == null) {
-            FeatureMetaData metaData = new FeatureMetaData(feature);
+            FeatureMetaData metaData = FeatureMetaData.build(feature);
             return metaData.isEnabledByDefault();
         }
 
@@ -65,7 +65,7 @@ public class DefaultFeatureManager implements FeatureManager {
     public FeatureState getFeatureState(Feature feature) {
         FeatureState state = stateRepository.getFeatureState(feature);
         if (state == null) {
-            FeatureMetaData metaData = new FeatureMetaData(feature);
+            FeatureMetaData metaData = FeatureMetaData.build(feature);
             state = new FeatureState(feature, metaData.isEnabledByDefault());
         }
         return state;

@@ -48,7 +48,7 @@ public class EditPageHandler extends RequestHandlerBase {
         }
 
         // we may need the meta data for this feature
-        FeatureMetaData metaData = new FeatureMetaData(feature);
+        FeatureMetaData metaData = FeatureMetaData.build(feature);
 
         // GET requests for this feature
         if ("GET".equals(request.getMethod())) {

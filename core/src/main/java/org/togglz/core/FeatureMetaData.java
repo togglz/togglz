@@ -16,9 +16,13 @@ public class FeatureMetaData {
     private final String label;
     private final boolean enabledByDefault;
 
-    public FeatureMetaData(Feature feature) {
+    private FeatureMetaData(Feature feature) {
         this.label = FeatureAnnotations.getLabel(feature);
         this.enabledByDefault = FeatureAnnotations.isEnabledByDefault(feature);
+    }
+
+    public static FeatureMetaData build(Feature feature) {
+        return new FeatureMetaData(feature);
     }
 
     public String getLabel() {

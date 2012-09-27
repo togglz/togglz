@@ -56,7 +56,7 @@ public class IndexPageHandler extends RequestHandlerBase {
 
         public IndexPageRow(FeatureState state) {
             this.name = state.getFeature().name();
-            this.label = new FeatureMetaData(state.getFeature()).getLabel();
+            this.label = FeatureMetaData.build(state.getFeature()).getLabel();
             this.enabled = state.isEnabled();
             this.users = Strings.join(state.getUsers(), ", ");
         }
