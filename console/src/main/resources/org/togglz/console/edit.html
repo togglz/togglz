@@ -1,38 +1,34 @@
-<form action="edit" method="POST">
+<form action="edit" method="POST" class="form-horizontal">
+
+  <legend>${label}</legend>
 
   <input type="hidden" name="f" value="${name}" />
 
-  <fieldset>
-
-    <legend>${label}</legend>
-
-    <div class="clearfix">
-      <label for="enabled">Enablexd</label>
-      <div class="input">
-        <ul class="inputs-list">
-          <li>
-            <label>
-              <input id="enabled" type="checkbox" name="enabled" value="enabled"
-                  ${if enabled} checked="checked"${end}>
-            </label>
-          </li>
-        </ul>
-      </div>
+  <div class="control-group">
+    <label class="control-label" for="enabled">
+      Enabled
+    </label>
+    <div class="controls">
+      <label>
+        <input id="enabled" type="checkbox" name="enabled" value="enabled"
+            ${if enabled} checked="checked"${end}>
+      </label>
     </div>
+  </div>
 
-    <div class="clearfix">
-      <label for="users">Feature Users</label>
-      <div class="input">
-        <textarea class="xxlarge" id="users" name="users" style="height: 200px;">${users}</textarea>
-        <span class="help-block">A list of users for which the feature should be active.</span>
-      </div>
+  <div class="control-group">
+    <label class="control-label" for="users">
+      Feature Users
+    </label>
+    <div class="controls">
+      <textarea class="input-xxlarge" id="users" name="users" rows="6">${users}</textarea>
+      <span class="help-block">A list of users for which the feature is active.</span>
     </div>
+  </div>
 
-    <div class="actions">
-      <input type="submit" class="btn primary" value="Save">&nbsp; <a href="index" class="btn">Cancel</a>
-    </div>
-
-  </fieldset>
-
+  <div class="form-actions">
+    <input type="submit" class="btn btn-primary" value="Save">
+    <a href="index" class="btn">Cancel</a>
+  </div>
 
 </form>

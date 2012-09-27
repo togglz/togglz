@@ -1,9 +1,10 @@
-.page-header h2 {
-  margin-bottom: 6px;
+.page-header {
+  margin-top: 30px;
+  text-align: center;
 }
 
-table.feature-overview {
-	width: 100%;
+.page-header h2 {
+  margin-bottom: 6px;
 }
 
 table.feature-overview td.feature-label, table.feature-overview th.feature-label {
