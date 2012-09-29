@@ -13,12 +13,15 @@ table.feature-overview td.feature-label, table.feature-overview th.feature-label
 
 table.feature-overview td.feature-status, table.feature-overview th.feature-status {
 	text-align: center;
+  width: 15%;
 }
 
 table.feature-overview td.feature-users, table.feature-overview th.feature-users {
 	text-align: left;
+  width: 20%;
 }
 
 table.feature-overview td.feature-actions, table.feature-overview th.feature-actions {
 	text-align: center;
+	width: 20%;
 }
