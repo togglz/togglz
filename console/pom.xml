@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -11,6 +12,46 @@
   <artifactId>togglz-console</artifactId>
   <name>Togglz - Admin Console</name>
   <description>Togglz - Admin Console</description>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>com.floreysoft:jmte</include>
+                  <include>asm:asm</include>
+                </includes>
+              </artifactSet>
+              <!-- <filters> <filter> <artifact>*:*</artifact> <includes> <include>org/ocpsoft/rewrite/**</include> <include>com/yahoo/**</include> 
+                <include>jargs/**</include> <include>org/mozilla/**</include> </includes> </filter> </filters> -->
+              <relocations>
+                <relocation>
+                  <pattern>com.floreysoft.jmte</pattern>
+                  <shadedPattern>org.togglz.console.shade.jmte</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.objectweb.asm</pattern>
+                  <shadedPattern>org.togglz.console.shade.asm</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 
   <dependencies>
 
@@ -24,12 +65,12 @@
       <artifactId>jboss-servlet-api_3.0_spec</artifactId>
       <scope>provided</scope>
     </dependency>
-  
+
     <dependency>
       <groupId>com.floreysoft</groupId>
       <artifactId>jmte</artifactId>
       <version>3.0</version>
     </dependency>
-  
+
   </dependencies>
 </project>
