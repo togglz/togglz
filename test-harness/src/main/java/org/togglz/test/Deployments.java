@@ -4,8 +4,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
 public class Deployments {
 
@@ -15,10 +13,6 @@ public class Deployments {
                 .addAsLibraries(
                         getTogglzCoreArchive(),
                         getTogglzSerlvetArchive())
-                .addAsLibraries(
-                        DependencyResolvers.use(MavenDependencyResolver.class)
-                                .artifact("org.ocpsoft.logging:logging-api:1.0.1.Final")
-                                .resolveAs(JavaArchive.class))
                 .addClass(FeatureServlet.class)
                 .addClass(UserServlet.class);
     }
