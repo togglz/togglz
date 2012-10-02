@@ -11,7 +11,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.ocpsoft.logging.Logger;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.servlet.spi.WebAppFeatureManagerProvider;
@@ -27,7 +28,7 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
  */
 public class TogglzFilter implements Filter {
 
-    private final Logger log = Logger.getLogger(TogglzFilter.class);
+    private final Log log = LogFactory.getLog(TogglzFilter.class);
 
     public void init(FilterConfig filterConfig) throws ServletException {
 

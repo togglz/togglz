@@ -11,8 +11,9 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.ocpsoft.logging.Logger;
 import org.togglz.core.Feature;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.DbUtils;
@@ -53,7 +54,7 @@ public class JDBCStateRepository implements StateRepository {
     private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
     private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
 
-    private final Logger log = Logger.getLogger(JDBCStateRepository.class);
+    private final Log log = LogFactory.getLog(JDBCStateRepository.class);
 
     private final DataSource dataSource;
 
@@ -108,14 +109,14 @@ public class JDBCStateRepository implements StateRepository {
 
                         statement.executeUpdate(insertTableName(TABLE_DDL));
 
-                        log.info("Database table {} has been created successfully", tableName);
+                        log.info("Database table " + tableName + " has been created successfully");
 
                     } finally {
                         DbUtils.closeQuietly(statement);
                     }
 
                 } else {
-                    log.debug("Found existing table {} in database.", tableName);
+                    log.debug("Found existing table " + tableName + " in database.");
                 }
 
             } finally {

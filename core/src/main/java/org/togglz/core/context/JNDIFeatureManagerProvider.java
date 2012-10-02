@@ -3,7 +3,8 @@ package org.togglz.core.context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.ocpsoft.logging.Logger;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 
@@ -19,7 +20,7 @@ public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
 
     public final static String JNDI_NAME = "java:/comp/env/FeatureManager";
 
-    private final Logger log = Logger.getLogger(JNDIFeatureManagerProvider.class);
+    private final Log log = LogFactory.getLog(JNDIFeatureManagerProvider.class);
 
     @Override
     public int priority() {
@@ -36,7 +37,7 @@ public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
             return (FeatureManager) initialContext.lookup(JNDI_NAME);
 
         } catch (NamingException e) {
-            log.debug("FeatureMananger not found: ", e.getMessage());
+            log.debug("FeatureMananger not found: " + e.getMessage());
         }
 
         return null;

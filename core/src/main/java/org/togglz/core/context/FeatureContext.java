@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.WeakHashMap;
 
-import org.ocpsoft.logging.Logger;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 import org.togglz.core.util.Weighted;
@@ -22,7 +23,7 @@ import org.togglz.core.util.Weighted;
  */
 public class FeatureContext {
 
-    private static final Logger log = Logger.getLogger(FeatureContext.class);
+    private static final Log log = LogFactory.getLog(FeatureContext.class);
 
     /**
      * Cache for the {@link FeatureManager} instances looked up using the SPI
@@ -49,7 +50,7 @@ public class FeatureContext {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("No cached FeatureManager for class loader: {}", classLoader);
+            log.debug("No cached FeatureManager for class loader: " + classLoader);
         }
 
         // build a sorted list of all SPI implementations
@@ -61,7 +62,7 @@ public class FeatureContext {
         Collections.sort(providerList, new Weighted.WeightedComparator());
 
         if (log.isDebugEnabled()) {
-            log.debug("Found {} FeatureManagerProvider implementations...", providerList.size());
+            log.debug("Found " + providerList.size() + " FeatureManagerProvider implementations...");
         }
 
         // try providers one by one to find a FeatureManager
@@ -72,9 +73,9 @@ public class FeatureContext {
 
             if (log.isDebugEnabled()) {
                 if (featureManager != null) {
-                    log.debug("Provider {} returned a FeatureManager", provider.getClass().getName());
+                    log.debug("Provider " + provider.getClass().getName() + " returned a FeatureManager");
                 } else {
-                    log.debug("No FeatureManager provided by {}", provider.getClass().getName());
+                    log.debug("No FeatureManager provided by " + provider.getClass().getName());
                 }
             }
 

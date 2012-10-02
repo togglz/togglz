@@ -7,12 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.ocpsoft.logging.Logger;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.IOUtils;
 
 class ReloadablePropertiesFile {
 
-    private final Logger log = Logger.getLogger(ReloadablePropertiesFile.class);
+    private final Log log = LogFactory.getLog(ReloadablePropertiesFile.class);
 
     private final File file;
 

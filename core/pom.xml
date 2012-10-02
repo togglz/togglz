@@ -16,11 +16,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>org.ocpsoft.logging</groupId>
-      <artifactId>logging-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
