@@ -42,6 +42,15 @@
       </includes>
     </dependencySet>
 
+    <dependencySet>
+      <outputDirectory>/testing</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.togglz:togglz-testing:jar:*</include>
+        <include>org.togglz:togglz-junit:jar:*</include>
+      </includes>
+    </dependencySet>
+
   </dependencySets>
 
 </assembly>
