@@ -7,7 +7,7 @@ public class FallbackTestFeatureManagerProvider implements FeatureManagerProvide
 
     @Override
     public int priority() {
-        return 10;
+        return 20;
     }
 
     @Override

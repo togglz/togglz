@@ -11,7 +11,7 @@ public class TestFeatureManagerProvider implements FeatureManagerProvider {
     @Override
     public int priority() {
         // very high priority
-        return 1;
+        return 10;
     }
 
     @Override
