@@ -47,22 +47,26 @@ public class TestFeatureManager implements FeatureManager {
         }
     }
 
-    public void enable(Feature feature) {
+    public TestFeatureManager enable(Feature feature) {
         activeFeatures.add(feature);
+        return this;
     }
 
-    public void disable(Feature feature) {
+    public TestFeatureManager disable(Feature feature) {
         activeFeatures.remove(feature);
+        return this;
     }
 
-    public void enableAll() {
+    public TestFeatureManager enableAll() {
         for (Feature feature : featureClass.getEnumConstants()) {
             enable(feature);
         }
+        return this;
     }
 
-    public void disableAll() {
+    public TestFeatureManager disableAll() {
         activeFeatures.clear();
+        return this;
     }
 
 }
