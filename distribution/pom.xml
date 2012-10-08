@@ -124,6 +124,13 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!-- Logging support -->
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-slf4j</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
   </dependencies>
 
 </project>

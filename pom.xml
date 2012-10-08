@@ -114,6 +114,7 @@
   <modules>
     <module>core</module>
     <module>test-harness</module>
+    <module>slf4j</module>
     <module>servlet</module>
     <module>console</module>
     <module>cdi</module>

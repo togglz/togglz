@@ -51,6 +51,14 @@
       </includes>
     </dependencySet>
 
+    <dependencySet>
+      <outputDirectory>/logging</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <includes>
+        <include>org.togglz:togglz-slf4j:jar:*</include>
+      </includes>
+    </dependencySet>
+
   </dependencySets>
 
 </assembly>
