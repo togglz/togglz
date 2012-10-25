@@ -85,6 +85,11 @@ public class TogglzRule implements TestRule {
                     TestFeatureManagerProvider.setFeatureManager(featureManager);
                     FeatureContext.clearCache();
 
+                    WithFeature withFeature = description.getAnnotation(WithFeature.class);                    
+                    if ( withFeature != null) {
+                        enableFeature(withFeature);
+                    }
+                    
                     // run the test
                     base.evaluate();
 
@@ -95,6 +100,18 @@ public class TogglzRule implements TestRule {
                     TestFeatureManagerProvider.setFeatureManager(null);
                 }
 
+            }
+            
+            void enableFeature(WithFeature withFeature)
+            {
+                Feature[] features = withFeature.type().getEnumConstants();
+                if (features != null) {
+                    for (Feature feature : features) {
+                        if ( feature.name().equals(withFeature.value()) ) {
+                            enable(feature);
+                        }
+                    }
+                }
             }
         };
 
