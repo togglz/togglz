@@ -6,6 +6,8 @@ import org.togglz.core.user.FeatureUser;
 
 public class UsernameActivationStrategy implements ActivationStrategy {
 
+    public static final String PARAM_USERS = "users";
+
     @Override
     public boolean isActive(FeatureState state, FeatureUser user) {
 

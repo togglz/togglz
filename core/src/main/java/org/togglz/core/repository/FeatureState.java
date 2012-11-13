@@ -1,15 +1,19 @@
 package org.togglz.core.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.activation.UsernameActivationStrategy;
+import org.togglz.core.util.Strings;
 
 /**
  * This class represents the state of a feature that is persisted by the {@link StateRepository} implementations.
@@ -21,9 +25,6 @@ public class FeatureState {
 
     private final Feature feature;
     private boolean enabled;
-
-    private final List<String> users;
-
     private String strategyId;
     private final Map<String, String> parameters = new HashMap<String, String>();
 
@@ -53,10 +54,11 @@ public class FeatureState {
      * @param enabled Flag indicating whether this feature is enabled or not.
      * @param users A list of users
      */
+    @Deprecated
     public FeatureState(Feature feature, boolean enabled, List<String> users) {
         this.feature = feature;
         this.enabled = enabled;
-        this.users = users;
+        this.addUsers(users);
     }
 
     /**
@@ -65,7 +67,6 @@ public class FeatureState {
     public FeatureState copy() {
         FeatureState copy = new FeatureState(feature);
         copy.setEnabled(this.enabled);
-        copy.addUsers(this.users);
         copy.setStrategyId(this.strategyId);
         for (Entry<String, String> entry : this.parameters.entrySet()) {
             copy.setParameter(entry.getKey(), entry.getValue());
@@ -117,22 +118,31 @@ public class FeatureState {
      * @return The user list, never <code>null</code>
      */
     public List<String> getUsers() {
-        return Collections.unmodifiableList(users);
+        String value = getParameter(UsernameActivationStrategy.PARAM_USERS);
+        if (Strings.isNotBlank(value)) {
+            return Strings.splitAndTrim(value, ",");
+        }
+        return Collections.emptyList();
     }
 
     /**
      * Adds a single user to the list of users
      */
+    @Deprecated
     public FeatureState addUser(String user) {
-        this.users.add(user);
-        return this;
+        return this.addUsers(Arrays.asList(user));
     }
 
     /**
      * Adds a single user to the list of users
      */
+    @Deprecated
     public FeatureState addUsers(Collection<String> users) {
-        this.users.addAll(users);
+        Set<String> set = new LinkedHashSet<String>();
+        set.addAll(this.getUsers());
+        set.addAll(users);
+        String setAsString = Strings.trimToNull(Strings.join(set, ","));
+        setParameter(UsernameActivationStrategy.PARAM_USERS, setAsString);
         return this;
     }
 
@@ -161,7 +171,12 @@ public class FeatureState {
      * Sets a new value for the given parameter.
      */
     public FeatureState setParameter(String name, String value) {
-        this.parameters.put(name, value);
+        if (value != null) {
+            this.parameters.put(name, value);
+        }
+        else {
+            this.parameters.remove(name);
+        }
         return this;
     }
 
