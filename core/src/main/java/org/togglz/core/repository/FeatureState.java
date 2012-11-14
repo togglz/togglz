@@ -117,6 +117,7 @@ public class FeatureState {
      * 
      * @return The user list, never <code>null</code>
      */
+    @Deprecated
     public List<String> getUsers() {
         String value = getParameter(UsernameActivationStrategy.PARAM_USERS);
         if (Strings.isNotBlank(value)) {
@@ -156,8 +157,9 @@ public class FeatureState {
     /**
      * Sets the selected activation strategy ID
      */
-    public void setStrategyId(String strategyId) {
+    public FeatureState setStrategyId(String strategyId) {
         this.strategyId = strategyId;
+        return this;
     }
 
     /**
