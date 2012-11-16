@@ -1,8 +1,11 @@
 package org.togglz.core.activation;
 
+import java.util.List;
+
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
+import org.togglz.core.util.Strings;
 
 public class UsernameActivationStrategy implements ActivationStrategy {
 
@@ -13,21 +16,30 @@ public class UsernameActivationStrategy implements ActivationStrategy {
     @Override
     public boolean isActive(FeatureState state, FeatureUser user) {
 
-        // no user restriction? active!
-        if (state.getUsers().isEmpty()) {
-            return true;
-        }
+        String usersAsString = state.getParameter(PARAM_USERS);
 
-        // check if user is in user list
-        if (user != null && user.getName() != null) {
-            for (String username : state.getUsers()) {
-                if (username.equals(user.getName())) {
-                    return true;
+        if (Strings.isNotBlank(usersAsString)) {
+
+            List<String> users = Strings.splitAndTrim(usersAsString, ",");
+
+            if (user != null && Strings.isNotBlank(user.getName())) {
+                for (String username : users) {
+                    if (username.equals(user.getName())) {
+                        return true;
+                    }
                 }
             }
+
         }
         return false;
 
+    }
+
+    @Override
+    public Parameter[] getParameters() {
+        return new Parameter[] {
+                ParameterBuilder.create(PARAM_USERS).named("Users")
+        };
     }
 
     @Override
