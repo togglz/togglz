@@ -1,6 +1,5 @@
 package org.togglz.core.manager;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -13,7 +12,6 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.util.Lists;
 import org.togglz.core.util.Validate;
-import org.togglz.core.util.Weighted.WeightedComparator;
 
 /**
  * Default implementation of {@link FeatureManager}
@@ -34,7 +32,6 @@ public class DefaultFeatureManager implements FeatureManager {
         this.userProvider = userProvider;
         this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
         Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
-        Collections.sort(strategies, new WeightedComparator());
     }
 
     public Feature[] getFeatures() {
@@ -50,19 +47,24 @@ public class DefaultFeatureManager implements FeatureManager {
             return metaData.isEnabledByDefault();
         }
 
-        // disabled features are never active
-        if (!state.isEnabled()) {
-            return false;
+        String strategyId = state.getStrategyId();
+
+        // if no strategy is selected, the decision is simple
+        if (strategyId == null) {
+            return state.isEnabled();
         }
 
         FeatureUser user = userProvider.getCurrentUser();
 
+        // check the selected strategy
         for (ActivationStrategy strategy : strategies) {
-            if (!strategy.isActive(state, user)) {
-                return false;
+            if (strategy.getId().equalsIgnoreCase(strategyId)) {
+                return strategy.isActive(state, user);
             }
         }
-        return true;
+
+        // if the strategy was not found, the feature should be off
+        return false;
 
     }
 

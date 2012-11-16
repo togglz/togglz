@@ -3,9 +3,10 @@ package org.togglz.core.spi;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.util.Weighted;
 
-public interface ActivationStrategy extends Weighted {
+public interface ActivationStrategy {
+
+    String getId();
 
     boolean isActive(FeatureState featureState, FeatureUser user);
 

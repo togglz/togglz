@@ -14,6 +14,11 @@ public class UsernameActivationStrategy implements ActivationStrategy {
     public static final String PARAM_USERS = "users";
 
     @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
     public boolean isActive(FeatureState state, FeatureUser user) {
 
         String usersAsString = state.getParameter(PARAM_USERS);
@@ -40,11 +45,6 @@ public class UsernameActivationStrategy implements ActivationStrategy {
         return new Parameter[] {
                 ParameterBuilder.create(PARAM_USERS).named("Users")
         };
-    }
-
-    @Override
-    public int priority() {
-        return 100;
     }
 
 }
