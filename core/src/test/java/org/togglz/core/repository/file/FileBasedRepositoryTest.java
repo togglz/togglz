@@ -1,94 +1,333 @@
 package org.togglz.core.repository.file;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.file.FileBasedStateRepository;
-
 
 public class FileBasedRepositoryTest {
 
-    private File file;
+    @Test
+    public void updateMultipleStates() throws IOException {
 
-    @Before
-    public void before() throws IOException {
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+        initialProps.setProperty("FEATURE1.strategy", UsernameActivationStrategy.ID);
+        initialProps.setProperty("FEATURE1.param.users", "chkal,tester");
+        initialProps.setProperty("FEATURE2", "false");
+        initialProps.setProperty("FEATURE3", "true");
 
-        Properties p = new Properties();
-        p.setProperty("FEATURE1", "true");
-        p.setProperty("FEATURE1.users", "chkal,tester");
-        p.setProperty("FEATURE2", "false");
-        p.setProperty("FEATURE3", "true");
+        File file = createPropertiesFile(initialProps);
 
-        file = File.createTempFile("test-file-repository", null);
-        FileOutputStream fos = new FileOutputStream(file);
-        p.store(fos, null);
-        fos.close();
+        try {
 
-    }
+            // modify FEATURE1 and FEATURE2, don't touch FEATURE3
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+            repo.setFeatureState(new FeatureState(MyFeature.FEATURE1, false));
+            repo.setFeatureState(new FeatureState(MyFeature.FEATURE2, true)
+                .setStrategyId("some-strategy").setParameter("myparam", "myvalue"));
 
-    @After
-    public void after() throws IOException {
-        file.delete();
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(5));
+
+            // FEATURE1: disabled without any strategy or properties
+            assertThat(newProps.getProperty("FEATURE1"), is("false"));
+
+            // FEATURE2: enabled with a strategy and one property
+            assertThat(newProps.getProperty("FEATURE2"), is("true"));
+            assertThat(newProps.getProperty("FEATURE2.strategy"), is("some-strategy"));
+            assertThat(newProps.getProperty("FEATURE2.param.myparam"), is("myvalue"));
+
+            // FEATURE3: didn't change
+            assertThat(newProps.getProperty("FEATURE3"), is("true"));
+
+        } finally {
+            file.delete();
+        }
+
     }
 
     @Test
-    public void testGetFeatureState() {
+    public void addNewProperty() throws IOException {
 
-        FileBasedStateRepository repo = new FileBasedStateRepository(file);
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+        initialProps.setProperty("FEATURE1.strategy", "my-strategy");
+        initialProps.setProperty("FEATURE1.param.myparam", "some-value");
 
-        FeatureState state1 = repo.getFeatureState(MyFeature.FEATURE1);
-        assertEquals(true, state1.isEnabled());
-        assertEquals(Arrays.asList("chkal", "tester"), state1.getUsers());
+        File file = createPropertiesFile(initialProps);
 
-        FeatureState state2 = repo.getFeatureState(MyFeature.FEATURE2);
-        assertEquals(false, state2.isEnabled());
-        assertEquals(Collections.emptyList(), state2.getUsers());
+        try {
 
-        FeatureState state3 = repo.getFeatureState(MyFeature.FEATURE3);
-        assertEquals(true, state3.isEnabled());
-        assertEquals(Collections.emptyList(), state3.getUsers());
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
 
-        FeatureState state4 = repo.getFeatureState(MyFeature.FEATURE4);
-        assertNull(state4);
-        
+            FeatureState state = repo.getFeatureState(MyFeature.FEATURE1);
+            state.setParameter("other", "something-else");
+            repo.setFeatureState(state);
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(4));
+            assertThat(newProps.getProperty("FEATURE1"), is("true"));
+            assertThat(newProps.getProperty("FEATURE1.strategy"), is("my-strategy"));
+            assertThat(newProps.getProperty("FEATURE1.param.myparam"), is("some-value"));
+            assertThat(newProps.getProperty("FEATURE1.param.other"), is("something-else"));
+
+        } finally {
+            file.delete();
+        }
+
     }
 
     @Test
-    public void testSetFeatureState() throws IOException {
+    public void removeProperty() throws IOException {
 
-        // modify FEATURE1 and FEATURE2, don't touch FEATURE3
-        FileBasedStateRepository repo = new FileBasedStateRepository(file);
-        repo.setFeatureState(new FeatureState(MyFeature.FEATURE1, false));
-        repo.setFeatureState(new FeatureState(MyFeature.FEATURE2, true, Arrays.asList("a", "b", "c")));
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+        initialProps.setProperty("FEATURE1.strategy", "my-strategy");
+        initialProps.setProperty("FEATURE1.param.myparam", "some-value");
 
+        File file = createPropertiesFile(initialProps);
+
+        try {
+
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            FeatureState state = repo.getFeatureState(MyFeature.FEATURE1);
+            state.setParameter("myparam", null);
+            repo.setFeatureState(state);
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(2));
+            assertThat(newProps.getProperty("FEATURE1"), is("true"));
+            assertThat(newProps.getProperty("FEATURE1.strategy"), is("my-strategy"));
+
+        } finally {
+            file.delete();
+        }
+
+    }
+
+    @Test
+    public void setStrategyId() throws IOException {
+
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+
+        File file = createPropertiesFile(initialProps);
+
+        try {
+
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            FeatureState state = repo.getFeatureState(MyFeature.FEATURE1);
+            state.setStrategyId("something");
+            repo.setFeatureState(state);
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(2));
+            assertThat(newProps.getProperty("FEATURE1"), is("true"));
+            assertThat(newProps.getProperty("FEATURE1.strategy"), is("something"));
+
+        } finally {
+            file.delete();
+        }
+
+    }
+
+    @Test
+    public void removeStrategy() throws IOException {
+
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+        initialProps.setProperty("FEATURE1.strategy", "foo");
+
+        File file = createPropertiesFile(initialProps);
+
+        try {
+
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            FeatureState state = repo.getFeatureState(MyFeature.FEATURE1);
+            state.setStrategyId(null);
+            repo.setFeatureState(state);
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(1));
+            assertThat(newProps.getProperty("FEATURE1"), is("true"));
+
+        } finally {
+            file.delete();
+        }
+
+    }
+
+    @Test
+    public void enableFeature() throws IOException {
+
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "false");
+        initialProps.setProperty("FEATURE1.strategy", "something");
+        initialProps.setProperty("FEATURE1.param.foo", "bar");
+
+        File file = createPropertiesFile(initialProps);
+
+        try {
+
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            FeatureState state = repo.getFeatureState(MyFeature.FEATURE1);
+            state.enable();
+            repo.setFeatureState(state);
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(3));
+            assertThat(newProps.getProperty("FEATURE1"), is("true"));
+            assertThat(newProps.getProperty("FEATURE1.strategy"), is("something"));
+            assertThat(newProps.getProperty("FEATURE1.param.foo"), is("bar"));
+
+        } finally {
+            file.delete();
+        }
+
+    }
+
+    @Test
+    public void disableFeature() throws IOException {
+
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+        initialProps.setProperty("FEATURE1.strategy", "something");
+        initialProps.setProperty("FEATURE1.param.foo", "bar");
+
+        File file = createPropertiesFile(initialProps);
+
+        try {
+
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            FeatureState state = repo.getFeatureState(MyFeature.FEATURE1);
+            state.disable();
+            repo.setFeatureState(state);
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertThat(newProps.size(), is(3));
+            assertThat(newProps.getProperty("FEATURE1"), is("false"));
+            assertThat(newProps.getProperty("FEATURE1.strategy"), is("something"));
+            assertThat(newProps.getProperty("FEATURE1.param.foo"), is("bar"));
+
+        } finally {
+            file.delete();
+        }
+
+    }
+
+    @Test
+    public void readFeatureStateFromOldFormat() throws IOException {
+
+        Properties initialProps = new Properties();
+        initialProps.setProperty("FEATURE1", "true");
+        initialProps.setProperty("FEATURE1.users", "chkal,tester");
+        initialProps.setProperty("FEATURE2", "false");
+        initialProps.setProperty("FEATURE3", "true");
+
+        File file = createPropertiesFile(initialProps);
+
+        try {
+
+            /*
+             * Check the state of the repository
+             */
+
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            // FEATURE1: enabled, strategy set by migration code, one property containing user list
+            FeatureState state1 = repo.getFeatureState(MyFeature.FEATURE1);
+            assertEquals(true, state1.isEnabled());
+            assertEquals(UsernameActivationStrategy.ID, state1.getStrategyId());
+            assertEquals(1, state1.getParameterNames().size());
+            assertEquals("chkal,tester", state1.getParameter(UsernameActivationStrategy.PARAM_USERS));
+            assertEquals(Arrays.asList("chkal", "tester"), state1.getUsers());
+
+            // FEATURE2: disabled, no strategy, no parameters
+            FeatureState state2 = repo.getFeatureState(MyFeature.FEATURE2);
+            assertEquals(false, state2.isEnabled());
+            assertEquals(null, state2.getStrategyId());
+            assertEquals(0, state2.getParameterNames().size());
+            assertEquals(Collections.emptyList(), state2.getUsers());
+
+            // FEATURE3: enabled, no strategy, no parameters
+            FeatureState state3 = repo.getFeatureState(MyFeature.FEATURE3);
+            assertEquals(true, state3.isEnabled());
+            assertEquals(null, state2.getStrategyId());
+            assertEquals(0, state3.getParameterNames().size());
+            assertEquals(Collections.emptyList(), state3.getUsers());
+
+            FeatureState state4 = repo.getFeatureState(MyFeature.FEATURE4);
+            assertNull(state4);
+
+            /*
+             * Now change one feature and check the new format is persisted
+             */
+
+            state1.disable();
+            repo.setFeatureState(state1);
+
+            Properties newProps = readPropertiesFile(file);
+            assertThat(newProps.getProperty("FEATURE1"), is("false"));
+            assertThat(newProps.getProperty("FEATURE1.strategy"), is(UsernameActivationStrategy.ID));
+            assertThat(newProps.getProperty("FEATURE1.param.users"), is("chkal,tester"));
+            assertThat(newProps.getProperty("FEATURE1.users"), nullValue());
+
+        } finally {
+            file.delete();
+        }
+
+    }
+
+    private static Properties readPropertiesFile(File file) throws FileNotFoundException, IOException {
         FileInputStream fis = new FileInputStream(file);
         Properties p = new Properties();
         p.load(fis);
+        return p;
+    }
 
-        assertEquals(4, p.size());
-        assertEquals("false", p.getProperty("FEATURE1"));
-        assertEquals("true", p.getProperty("FEATURE2"));
-        assertEquals("a,b,c", p.getProperty("FEATURE2.users"));
-        assertEquals("true", p.getProperty("FEATURE3"));
-
+    private static File createPropertiesFile(Properties p) throws IOException {
+        File file = File.createTempFile("test-file-repository", null);
+        FileOutputStream fos = new FileOutputStream(file);
+        p.store(fos, null);
+        fos.close();
+        return file;
     }
 
     private static enum MyFeature implements Feature {
 
-        FEATURE1, FEATURE2, FEATURE3, FEATURE4;
+        FEATURE1,
+        FEATURE2,
+        FEATURE3,
+        FEATURE4;
 
         @Override
         public boolean isActive() {
