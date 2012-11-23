@@ -1,10 +1,10 @@
-package org.togglz.console.handlers;
+package org.togglz.console.handlers.edit;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
-import org.togglz.core.FeatureMetaData;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.util.Strings;
+import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.util.Lists;
 
 import com.floreysoft.jmte.Engine;
 
@@ -47,47 +47,50 @@ public class EditPageHandler extends RequestHandlerBase {
             return;
         }
 
-        // we may need the meta data for this feature
-        FeatureMetaData metaData = FeatureMetaData.build(feature);
+        List<ActivationStrategy> impls = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
+        FeatureModel featureModel = new FeatureModel(feature, impls);
 
         // GET requests for this feature
         if ("GET".equals(request.getMethod())) {
 
             FeatureState state = featureManager.getFeatureState(feature);
+            featureModel.populateFromFeatureState(state);
 
-            Map<String, Object> model = new HashMap<String, Object>();
-            model.put("label", metaData.getLabel());
-            model.put("name", feature.name());
-            model.put("enabled", state.isEnabled());
-            model.put("users", Strings.join(state.getUsers(), "\n"));
-
-            String template = getResourceAsString("edit.html");
-            String content = new Engine().transform(template, model);
-            writeResponse(event, content);
+            renderEditPage(event, featureModel);
 
         }
 
         // POST requests for this feature
         if ("POST".equals(request.getMethod())) {
 
-            String enabledParam = request.getParameter("enabled");
-            String usersParam = request.getParameter("users");
+            featureModel.restoreFromRequest(request);
 
-            boolean enabled = enabledParam != null && enabledParam.trim().length() > 0;
+            // no validation errors
+            if (featureModel.isValid()) {
 
-            List<String> users = new ArrayList<String>();
-            for (String u : usersParam.split("[,\\s]+")) {
-                if (u != null && u.trim().length() > 0) {
-                    users.add(u.trim());
-                }
+                FeatureState state = featureModel.toFeatureState();
+                featureManager.setFeatureState(state);
+                response.sendRedirect("index");
+
             }
 
-            FeatureState state = new FeatureState(feature, enabled, users);
-            featureManager.setFeatureState(state);
-
-            response.sendRedirect("index");
+            // got validation errors
+            else {
+                renderEditPage(event, featureModel);
+            }
 
         }
+
+    }
+
+    private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
+
+        Map<String, Object> model = new HashMap<String, Object>();
+        model.put("model", featureModel);
+
+        String template = getResourceAsString("edit.html");
+        String content = new Engine().transform(template, model);
+        writeResponse(event, content);
 
     }
 

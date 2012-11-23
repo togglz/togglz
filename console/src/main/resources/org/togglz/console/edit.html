@@ -1,8 +1,15 @@
 <form action="edit" method="POST" class="form-horizontal">
 
-  <legend>${label}</legend>
+  <ul>
+    ${foreach model.validationErrors error}
+      <li>${error}</li>
+    ${end}
+  </ul>
 
-  <input type="hidden" name="f" value="${name}" />
+  <legend>${model.label}</legend>
+
+  <input type="hidden" name="f" value="${model.name}" />
+  
 
   <div class="control-group">
     <label class="control-label" for="enabled">
@@ -11,11 +18,48 @@
     <div class="controls">
       <label>
         <input id="enabled" type="checkbox" name="enabled" value="enabled"
-            ${if enabled} checked="checked"${end}>
+            ${if model.enabled} checked="checked"${end}>
       </label>
     </div>
   </div>
 
+  <div class="control-group">
+    <label class="control-label" for="strategy">
+      Activation Strategy
+    </label>
+    <div class="controls">
+      <select id="strategy" name="strategy" size="1">
+        <option value="">- none -</option>
+        ${foreach model.strategies strategy}
+          <option value="${strategy.id}"
+              ${if strategy.selected}selected="selected"${end}>
+            ${strategy.label}
+          </option>  
+        ${end}
+      </select>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    jQuery('#strategy').change(function() {
+      $('.param').hide();
+      $('.strategy'+this.selectedIndex).show();
+    });
+  </script>
+  
+  ${foreach model.parameters param}
+    <div class="control-group param strategy${param.strategyIndex}"
+        ${if !param.visible} style="display: none;" ${end}>
+      <label class="control-label" for="${param.inputId}">
+        ${param.label}
+      </label>
+      <div class="controls">
+        <input id="${param.inputId}" name="${param.inputId}" type="text" class="input-xxlarge" value="${param.value}"/>
+      </div>
+    </div>
+  ${end}
+  
+<!-- 
   <div class="control-group">
     <label class="control-label" for="users">
       Feature Users
@@ -25,6 +69,7 @@
       <span class="help-block">A list of users for which the feature is active.</span>
     </div>
   </div>
+ -->
 
   <div class="form-actions">
     <input type="submit" class="btn btn-primary" value="Save">

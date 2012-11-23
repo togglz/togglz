@@ -27,4 +27,10 @@ public class Validate {
         }
     }
 
+    public static void isTrue(boolean b, String msg) {
+        if (!b) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
 }
