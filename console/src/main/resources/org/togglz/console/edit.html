@@ -1,10 +1,13 @@
 <form action="edit" method="POST" class="form-horizontal">
 
-  <ul>
-    ${foreach model.validationErrors error}
-      <li>${error}</li>
-    ${end}
-  </ul>
+  ${if !model.valid}
+    <div class="alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      ${foreach model.validationErrors error}
+        <div>${error}</div>
+      ${end}
+    </div>
+  ${end}
 
   <legend>${model.label}</legend>
 
