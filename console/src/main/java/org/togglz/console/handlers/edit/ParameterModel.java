@@ -57,9 +57,21 @@ public class ParameterModel {
     public int getStrategyIndex() {
         return strategy.getStrategyIndex();
     }
-    
+
     public boolean isVisible() {
         return strategy.isSelected();
+    }
+
+    public String getDescription() {
+        return parameter.getDescription();
+    }
+
+    public boolean isHasDescription() {
+        return Strings.isNotBlank(getDescription());
+    }
+
+    public boolean isLargeText() {
+        return parameter.isLargeText();
     }
 
 }

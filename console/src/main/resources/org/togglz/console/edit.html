@@ -57,23 +57,19 @@
         ${param.label}
       </label>
       <div class="controls">
-        <input id="${param.inputId}" name="${param.inputId}" type="text" class="input-xxlarge" value="${param.value}"/>
+        ${if param.largeText}
+          <textarea id="${param.inputId}" name="${param.inputId}" class="input-xxlarge" rows="8">${param.value}</textarea>
+        ${else}
+          <input id="${param.inputId}" name="${param.inputId}" type="text" class="input-xxlarge" value="${param.value}"/>
+        ${end}
+        ${if param.hasDescription}
+          <span class="help-block">${param.description}</span>
+        ${end}
+
       </div>
     </div>
   ${end}
   
-<!-- 
-  <div class="control-group">
-    <label class="control-label" for="users">
-      Feature Users
-    </label>
-    <div class="controls">
-      <textarea class="input-xxlarge" id="users" name="users" rows="6">${users}</textarea>
-      <span class="help-block">A list of users for which the feature is active.</span>
-    </div>
-  </div>
- -->
-
   <div class="form-actions">
     <input type="submit" class="btn btn-primary" value="Save">
     <a href="index" class="btn">Cancel</a>
