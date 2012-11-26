@@ -84,7 +84,7 @@ public class UsernameActivationStrategyTest {
         Parameter userParam = parameters[0];
 
         assertThat(userParam, notNullValue());
-        assertThat(userParam.getId(), is(UsernameActivationStrategy.PARAM_USERS));
+        assertThat(userParam.getName(), is(UsernameActivationStrategy.PARAM_USERS));
 
     }
 

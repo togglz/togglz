@@ -23,7 +23,7 @@ public class ParameterModel {
     }
 
     public void readValueFrom(FeatureState featureState) {
-        this.value = featureState.getParameter(parameter.getId());
+        this.value = featureState.getParameter(parameter.getName());
     }
 
     public void readValueFrom(HttpServletRequest request) {
@@ -35,7 +35,7 @@ public class ParameterModel {
     }
 
     public String getLabel() {
-        return parameter.getName();
+        return parameter.getLabel();
     }
 
     public String getInputId() {
@@ -43,7 +43,7 @@ public class ParameterModel {
     }
 
     public String getId() {
-        return parameter.getId();
+        return parameter.getName();
     }
 
     public String getValue() {
