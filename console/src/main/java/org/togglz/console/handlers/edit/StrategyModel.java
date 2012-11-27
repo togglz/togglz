@@ -23,7 +23,7 @@ public class StrategyModel {
     }
 
     public String getLabel() {
-        return strategy.getClass().getSimpleName();
+        return strategy.getName();
     }
 
     public String getId() {

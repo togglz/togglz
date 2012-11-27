@@ -7,6 +7,8 @@ import org.togglz.core.user.FeatureUser;
 public interface ActivationStrategy {
 
     String getId();
+    
+    String getName();
 
     boolean isActive(FeatureState featureState, FeatureUser user);
 

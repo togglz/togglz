@@ -19,6 +19,11 @@ public class UsernameActivationStrategy implements ActivationStrategy {
     }
 
     @Override
+    public String getName() {
+        return "Username";
+    }
+
+    @Override
     public boolean isActive(FeatureState state, FeatureUser user) {
 
         String usersAsString = state.getParameter(PARAM_USERS);
@@ -43,8 +48,9 @@ public class UsernameActivationStrategy implements ActivationStrategy {
     @Override
     public Parameter[] getParameters() {
         return new Parameter[] {
-                ParameterBuilder.create(PARAM_USERS).label("Users").largeText()
+                ParameterBuilder.create(PARAM_USERS).label("Usernames").largeText()
                     .description("A list of users for which the feature is active.")
         };
     }
+
 }
