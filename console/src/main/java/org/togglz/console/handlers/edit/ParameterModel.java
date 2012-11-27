@@ -30,8 +30,18 @@ public class ParameterModel {
         this.value = request.getParameter(getInputId());
     }
 
+    public String getValidationError() {
+        if (Strings.isBlank(value) && !parameter.isOptional()) {
+            return "Please enter a value for parameter: " + getLabel();
+        }
+        if (Strings.isNotBlank(value) && !parameter.isValid(value.trim())) {
+            return "Please enter a valid value for: " + getLabel();
+        }
+        return null;
+    }
+
     public boolean isValid() {
-        return Strings.isNotBlank(value) && parameter.isValid(value);
+        return Strings.isBlank(getValidationError());
     }
 
     public String getLabel() {

@@ -80,10 +80,14 @@ public class FeatureModel {
             }
         }
 
+        // validate parameters of the strategy
         if (strategy != null) {
             for (ParameterModel param : strategy.getParameters()) {
                 if (!param.isValid()) {
-                    errors.add("Please enter a valid value for: " + param.getLabel());
+                    String msg = param.getValidationError();
+                    if (msg != null) {
+                        errors.add(msg);
+                    }
                 }
             }
         }
