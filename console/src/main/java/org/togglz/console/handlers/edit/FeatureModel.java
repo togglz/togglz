@@ -2,6 +2,7 @@ package org.togglz.console.handlers.edit;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,17 @@ public class FeatureModel {
         this.feature = feature;
         this.metaData = FeatureMetaData.build(feature);
 
+        List<ActivationStrategy> sortedImpls = new ArrayList<ActivationStrategy>(impls);
+        Collections.sort(sortedImpls, new Comparator<ActivationStrategy>() {
+            @Override
+            public int compare(ActivationStrategy o1, ActivationStrategy o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+
         int paramIndex = 1;
         int strategyIndex = 1;
-        for (ActivationStrategy impl : impls) {
+        for (ActivationStrategy impl : sortedImpls) {
 
             StrategyModel strategy = new StrategyModel(strategyIndex++, impl, this);
 
@@ -42,8 +51,6 @@ public class FeatureModel {
             }
 
         }
-
-        Collections.sort(this.strategies);
 
     }
 
