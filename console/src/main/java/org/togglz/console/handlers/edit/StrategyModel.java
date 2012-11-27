@@ -6,7 +6,7 @@ import java.util.List;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Strings;
 
-public class StrategyModel {
+public class StrategyModel implements Comparable<StrategyModel> {
 
     private final int index;
 
@@ -52,6 +52,11 @@ public class StrategyModel {
 
     public int getStrategyIndex() {
         return index;
+    }
+
+    @Override
+    public int compareTo(StrategyModel o) {
+        return getLabel().compareTo(o.getLabel());
     }
 
 }

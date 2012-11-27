@@ -1,6 +1,7 @@
 package org.togglz.console.handlers.edit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +42,8 @@ public class FeatureModel {
             }
 
         }
+
+        Collections.sort(this.strategies);
 
     }
 
