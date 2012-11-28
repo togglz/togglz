@@ -23,7 +23,8 @@ public class FeatureModel {
     private final List<StrategyModel> strategies = new ArrayList<StrategyModel>();
 
     private boolean enabled;
-    private String strategyId = null;
+
+    private StrategyModel strategy;
 
     public FeatureModel(Feature feature, List<ActivationStrategy> impls) {
 
@@ -56,7 +57,9 @@ public class FeatureModel {
 
     public void populateFromFeatureState(FeatureState featureState) {
 
-        this.strategyId = Strings.trimToNull(featureState.getStrategyId());
+        String strategyId = Strings.trimToNull(featureState.getStrategyId());
+        this.strategy = getStrategyById(strategyId);
+
         this.enabled = featureState.isEnabled();
 
         for (ParameterModel param : getParameters()) {
@@ -69,7 +72,9 @@ public class FeatureModel {
 
         String enabledParam = request.getParameter("enabled");
         this.enabled = enabledParam != null && enabledParam.trim().length() > 0;
-        this.strategyId = request.getParameter("strategy");
+
+        String strategyId = request.getParameter("strategy");
+        this.strategy = getStrategyById(strategyId);
 
         for (ParameterModel param : getParameters()) {
             param.readValueFrom(request);
@@ -80,15 +85,6 @@ public class FeatureModel {
     public List<String> getValidationErrors() {
 
         List<String> errors = new ArrayList<String>();
-
-        // check if the strategy ID is valid
-        StrategyModel strategy = null;
-        if (Strings.isNotBlank(strategyId)) {
-            strategy = getStrategyById(strategyId);
-            if (strategy == null) {
-                errors.add("Invalid strategy selected: " + strategyId);
-            }
-        }
 
         // validate parameters of the strategy
         if (strategy != null) {
@@ -134,10 +130,7 @@ public class FeatureModel {
 
         FeatureState state = new FeatureState(feature, enabled);
 
-        if (Strings.isNotBlank(strategyId)) {
-
-            StrategyModel strategy = getStrategyById(strategyId);
-            Validate.notNull(strategy, "Strategy cannot be found: " + strategyId);
+        if (strategy != null) {
 
             state.setStrategyId(strategy.getId());
 
@@ -166,18 +159,8 @@ public class FeatureModel {
         return enabled;
     }
 
-    public String getStrategyId() {
-        return strategyId;
-    }
-
-    public String getLabelOfSelectedStrategy() {
-        if(Strings.isNotBlank(strategyId)) {
-            StrategyModel strategy = getStrategyById(strategyId);
-            if(strategy != null) {
-                return strategy.getLabel();
-            }
-        }
-        return null;
+    public StrategyModel getStrategy() {
+        return strategy;
     }
 
 }

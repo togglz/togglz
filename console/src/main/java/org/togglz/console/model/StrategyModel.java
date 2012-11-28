@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.togglz.core.spi.ActivationStrategy;
-import org.togglz.core.util.Strings;
 
 public class StrategyModel {
 
@@ -34,12 +33,9 @@ public class StrategyModel {
         return strategy;
     }
 
-    public boolean hasId(String id) {
-        return Strings.isNotBlank(id) && getId().equals(id);
-    }
-
     public boolean isSelected() {
-        return hasId(featureModel.getStrategyId());
+        return featureModel.getStrategy() != null &&
+            featureModel.getStrategy().getId().equals(getId());
     }
 
     public void add(ParameterModel param) {
