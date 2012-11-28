@@ -16,7 +16,7 @@ table.feature-overview td.feature-status, table.feature-overview th.feature-stat
   width: 15%;
 }
 
-table.feature-overview td.feature-users, table.feature-overview th.feature-users {
+table.feature-overview td.feature-strategy, table.feature-overview th.feature-strategy {
 	text-align: left;
   width: 20%;
 }

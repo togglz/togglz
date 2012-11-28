@@ -170,4 +170,14 @@ public class FeatureModel {
         return strategyId;
     }
 
+    public String getLabelOfSelectedStrategy() {
+        if(Strings.isNotBlank(strategyId)) {
+            StrategyModel strategy = getStrategyById(strategyId);
+            if(strategy != null) {
+                return strategy.getLabel();
+            }
+        }
+        return null;
+    }
+
 }

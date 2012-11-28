@@ -3,10 +3,12 @@ package org.togglz.console.handlers.index;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.togglz.console.handlers.edit.FeatureModel;
+
 public class IndexPageTab implements Comparable<IndexPageTab> {
 
     private final int index;
-    private final List<IndexPageRow> rows = new ArrayList<IndexPageRow>();
+    private final List<FeatureModel> rows = new ArrayList<FeatureModel>();
     private final String label;
 
     private IndexPageTab(int index, String label) {
@@ -27,11 +29,11 @@ public class IndexPageTab implements Comparable<IndexPageTab> {
         return (label != null ? label : "").compareTo(o.label != null ? o.label : "");
     }
 
-    public void add(IndexPageRow row) {
+    public void add(FeatureModel row) {
         rows.add(row);
     }
 
-    public List<IndexPageRow> getRows() {
+    public List<FeatureModel> getRows() {
         return rows;
     }
 

@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.togglz.console.handlers.edit.FeatureModel;
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
 import org.togglz.core.group.FeatureGroup;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.spi.ActivationStrategy;
 
 public class IndexPageTabView {
+
+    private final List<ActivationStrategy> strategies;
 
     private final IndexPageTab allTab;
 
@@ -21,7 +25,8 @@ public class IndexPageTabView {
 
     private int nextIndex = 0;
 
-    public IndexPageTabView() {
+    public IndexPageTabView(List<ActivationStrategy> strategies) {
+        this.strategies = strategies;
         allTab = IndexPageTab.allTab(nextIndex++);
         tabs.add(allTab);
     }
@@ -29,7 +34,8 @@ public class IndexPageTabView {
     public void add(Feature feature, FeatureState featureState) {
 
         // all features are shown in the ALL tab
-        IndexPageRow row = new IndexPageRow(featureState);
+        FeatureModel row = new FeatureModel(feature, strategies);
+        row.populateFromFeatureState(featureState);
         allTab.add(row);
 
         FeatureMetaData metaData = FeatureMetaData.build(feature);

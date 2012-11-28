@@ -21,7 +21,7 @@
           <tr>
             <th class="feature-label">Feature</th>
             <th class="feature-status">Status</th>
-            <th class="feature-users">User</th>
+            <th class="feature-users">Strategy</th>
             <th class="feature-actions">Actions</th>
           </tr>
         </thead>
@@ -36,8 +36,8 @@
                 <img src="${if feature.enabled}ledgreen.png${else}ledred.png${end}" alt="toggle" 
                     title="The current state of ${feature.label}" />
               </td>
-              <td class="feature-users">
-                ${feature.users}
+              <td class="feature-strategy">
+                ${feature.labelOfSelectedStrategy}
               </td>
               <td class="feature-actions">
                 <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
