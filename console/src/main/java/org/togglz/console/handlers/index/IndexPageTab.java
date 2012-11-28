@@ -3,7 +3,7 @@ package org.togglz.console.handlers.index;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.togglz.console.handlers.edit.FeatureModel;
+import org.togglz.console.model.FeatureModel;
 
 public class IndexPageTab implements Comparable<IndexPageTab> {
 

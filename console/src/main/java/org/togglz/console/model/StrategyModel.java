@@ -1,4 +1,4 @@
-package org.togglz.console.handlers.edit;
+package org.togglz.console.model;
 
 import java.util.ArrayList;
 import java.util.List;

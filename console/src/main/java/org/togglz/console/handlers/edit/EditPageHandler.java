@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
+import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;

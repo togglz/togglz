@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.togglz.console.handlers.edit.FeatureModel;
+import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
 import org.togglz.core.group.FeatureGroup;
