@@ -50,4 +50,13 @@ public class StrategyModel {
         return index;
     }
 
+    public boolean isHasParametersWithValues() {
+        for (ParameterModel param : parameters) {
+            if (param.isHasValue()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

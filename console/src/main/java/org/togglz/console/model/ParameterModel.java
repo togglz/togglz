@@ -84,4 +84,8 @@ public class ParameterModel {
         return parameter.isLargeText();
     }
 
+    public boolean isHasValue() {
+        return Strings.isNotBlank(value);
+    }
+
 }

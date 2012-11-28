@@ -38,6 +38,15 @@
               </td>
               <td class="feature-strategy">
                 ${feature.strategy.label}
+                ${if feature.strategy.hasParametersWithValues}
+                  <ul class="params">
+                  ${foreach feature.strategy.parameters param}
+                    ${if param.hasValue}
+                      <li>${param.label}: ${param.value}</li>
+                    ${end}
+                  ${end}
+                  </ul>
+                ${end}
               </td>
               <td class="feature-actions">
                 <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
