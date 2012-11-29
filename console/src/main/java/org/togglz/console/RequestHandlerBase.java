@@ -4,12 +4,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import org.togglz.core.util.Strings;
 
 import com.floreysoft.jmte.Engine;
 
@@ -24,6 +28,7 @@ public abstract class RequestHandlerBase implements RequestHandler {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("content", body);
         model.put("serverInfo", event.getContext().getServerInfo());
+        model.put("togglzVersion", getTogglzVersion());
         if (event.getContext().getServletContextName() != null) {
             model.put("displayName", event.getContext().getServletContextName());
         }
@@ -57,6 +62,43 @@ public abstract class RequestHandlerBase implements RequestHandler {
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
         }
+    }
+
+    protected String getTogglzVersion() {
+
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = this.getClass().getClassLoader();
+        }
+
+        URL url = classLoader.getResource("META-INF/maven/org.togglz/togglz-core/pom.properties");
+        if (url != null) {
+
+            InputStream stream = null;
+            try {
+
+                stream = url.openStream();
+
+                Properties props = new Properties();
+                props.load(stream);
+
+                return Strings.trimToNull(props.getProperty("version"));
+
+            } catch (IOException e) {
+                // ignore
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            }
+
+        }
+        return null;
+
     }
 
 }
