@@ -1,11 +1,9 @@
 package org.togglz.core.repository.jdbc;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,16 +17,14 @@ import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.DbUtils;
 import org.togglz.core.util.Strings;
 
-
 /**
  * <p>
  * This repository implementation can be used to store the feature state in SQL database using the standard JDBC API.
  * </p>
  * 
  * <p>
- * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table
- * using an constructor argument. If the repository doesn't find the required table in the database, it will automatically
- * create it.
+ * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table using
+ * an constructor argument. If the repository doesn't find the required table in the database, it will automatically create it.
  * </p>
  * 
  * <p>
@@ -48,8 +44,6 @@ import org.togglz.core.util.Strings;
  */
 public class JDBCStateRepository implements StateRepository {
 
-    private static final String TABLE_DDL = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
-
     private static final String GET_STATE_QUERY = "SELECT FEATURE_ENABLED, FEATURE_USERS FROM %TABLE% WHERE FEATURE_NAME = ?";
     private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
     private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
@@ -61,8 +55,8 @@ public class JDBCStateRepository implements StateRepository {
     private final String tableName;
 
     /**
-     * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name
-     * to <code>TOGGLZ</CODE>.
+     * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name to
+     * <code>TOGGLZ</CODE>.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @see #JDBCFeatureStateRepository(DataSource, String)
@@ -90,33 +84,9 @@ public class JDBCStateRepository implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                boolean togglzTableExists = true;
-
-                DatabaseMetaData metaData = connection.getMetaData();
-                String catalog = connection.getCatalog();
-
-                ResultSet resultSet = metaData.getTables(catalog, null, tableName, new String[] { "TABLE" });
-                try {
-                    togglzTableExists = resultSet.next();
-                } finally {
-                    DbUtils.closeQuietly(resultSet);
-                }
-
-                if (!togglzTableExists) {
-
-                    Statement statement = connection.createStatement();
-                    try {
-
-                        statement.executeUpdate(insertTableName(TABLE_DDL));
-
-                        log.info("Database table " + tableName + " has been created successfully");
-
-                    } finally {
-                        DbUtils.closeQuietly(statement);
-                    }
-
-                } else {
-                    log.debug("Found existing table " + tableName + " in database.");
+                SchemaUpdater updater = new SchemaUpdater(connection, tableName);
+                if (!updater.doesTableExist()) {
+                    updater.migrateToVersion1();
                 }
 
             } finally {
