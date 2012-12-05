@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.DbUtils;
@@ -21,6 +22,11 @@ import org.togglz.core.util.Strings;
 class SchemaUpdater {
 
     private static final String V1_CREATE_TABLE = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
+
+    private static final String COLUMN_FEATURE_NAME = "FEATURE_NAME";
+    private static final String COLUMN_FEATURE_USERS = "FEATURE_USERS";
+    private static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
+    private static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
 
     private final Log log = LogFactory.getLog(SchemaUpdater.class);
 
@@ -90,18 +96,72 @@ class SchemaUpdater {
         }
 
         // version 1 check
-        return columns.contains("FEATURE_NAME") && !columns.contains("STRATEGY_ID");
+        return columns.contains(COLUMN_FEATURE_NAME) && !columns.contains(COLUMN_STRATEGY_ID);
 
     }
 
     protected void migrateToVersion2() throws SQLException {
-        Statement statement = connection.createStatement();
+
+        // add the new columns
+        Statement addColumnsStmt = connection.createStatement();
         try {
-            statement.executeUpdate(insertTableName(
+            addColumnsStmt.executeUpdate(insertTableName(
                 "ALTER TABLE %TABLE% ADD COLUMN ( STRATEGY_ID CHAR(200), STRATEGY_PARAMS CHAR(2000) )"));
         } finally {
-            DbUtils.closeQuietly(statement);
+            DbUtils.closeQuietly(addColumnsStmt);
         }
+
+        // migrate the existing data
+        Statement updateDataStmt = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
+        try {
+
+            ResultSet resultSet = null;
+            try {
+
+                resultSet = updateDataStmt.executeQuery(insertTableName(
+                    "SELECT FEATURE_NAME, FEATURE_USERS, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE%"));
+
+                while (resultSet.next()) {
+
+                    // migration is only required if there is data in the users column
+                    String users = resultSet.getString(COLUMN_FEATURE_USERS);
+                    if (Strings.isNotBlank(users)) {
+
+                        // TODO: nicer way to fix this?
+                        resultSet.updateString(COLUMN_STRATEGY_PARAMS,
+                            UsernameActivationStrategy.PARAM_USERS + "=" + users);
+
+                        // only overwrite strategy ID if it is not set yet
+                        String strategyId = resultSet.getString(COLUMN_STRATEGY_ID);
+                        if (Strings.isBlank(strategyId)) {
+                            resultSet.updateString(COLUMN_STRATEGY_ID, UsernameActivationStrategy.ID);
+                        }
+
+                        // perform the update
+                        resultSet.updateRow();
+
+                    }
+
+                }
+
+            } finally {
+                DbUtils.closeQuietly(resultSet);
+            }
+        } finally {
+            DbUtils.closeQuietly(updateDataStmt);
+        }
+
+        /*
+         * remove the deprecated column
+         */
+        Statement removeUsersColumnStmt = connection.createStatement();
+        try {
+            removeUsersColumnStmt.executeUpdate(insertTableName(
+                "ALTER TABLE %TABLE% DROP COLUMN FEATURE_USERS"));
+        } finally {
+            DbUtils.closeQuietly(removeUsersColumnStmt);
+        }
+
     }
 
 }
