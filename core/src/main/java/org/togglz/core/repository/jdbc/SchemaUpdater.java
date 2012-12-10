@@ -5,13 +5,16 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.DbUtils;
+import org.togglz.core.util.MapConverter;
 import org.togglz.core.util.Strings;
 
 /**
@@ -34,9 +37,12 @@ class SchemaUpdater {
 
     private final String tableName;
 
-    protected SchemaUpdater(Connection connection, String tableName) {
+    private final MapConverter mapConverter;
+
+    protected SchemaUpdater(Connection connection, String tableName, MapConverter mapConverter) {
         this.connection = connection;
         this.tableName = tableName;
+        this.mapConverter = mapConverter;
     }
 
     protected void migrate() throws SQLException {
@@ -127,9 +133,11 @@ class SchemaUpdater {
                     String users = resultSet.getString(COLUMN_FEATURE_USERS);
                     if (Strings.isNotBlank(users)) {
 
-                        // TODO: nicer way to fix this?
-                        resultSet.updateString(COLUMN_STRATEGY_PARAMS,
-                            UsernameActivationStrategy.PARAM_USERS + "=" + users);
+                        // convert the user list to the new parameters format
+                        Map<String,String> params = new HashMap<String, String>();
+                        params.put(UsernameActivationStrategy.PARAM_USERS, users);
+                        String paramsAsString = mapConverter.convertToString(params);
+                        resultSet.updateString(COLUMN_STRATEGY_PARAMS, paramsAsString);
 
                         // only overwrite strategy ID if it is not set yet
                         String strategyId = resultSet.getString(COLUMN_STRATEGY_ID);
