@@ -15,6 +15,7 @@ import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.DbUtils;
+import org.togglz.core.util.MapConverter;
 import org.togglz.core.util.Strings;
 
 /**
@@ -54,6 +55,8 @@ public class JDBCStateRepository implements StateRepository {
 
     private final String tableName;
 
+    private final MapConverter mapConverter;
+
     /**
      * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name to
      * <code>TOGGLZ</CODE>.
@@ -72,19 +75,34 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
+        this(dataSource, tableName, MapConverter.create().withNewLines());
+    }
+
+    /**
+     * Constructor of {@link JDBCStateRepository}.
+     * 
+     * @param dataSource The JDBC {@link DataSource} to obtain connections from
+     * @param tableName The name of the database table to use
+     * @param mapConverter The {@link MapConverter} instance to use
+     */
+    public JDBCStateRepository(DataSource dataSource, String tableName, MapConverter mapConverter) {
         this.dataSource = dataSource;
         this.tableName = tableName;
+        this.mapConverter = mapConverter;
         init();
     }
 
-    private void init() {
+    /**
+     * Method for creating/migrating the database schema
+     */
+    protected void init() {
 
         try {
 
             Connection connection = dataSource.getConnection();
             try {
 
-                SchemaUpdater updater = new SchemaUpdater(connection, tableName);
+                SchemaUpdater updater = new SchemaUpdater(connection, tableName, mapConverter);
                 if (!updater.doesTableExist()) {
                     updater.migrateToVersion1();
                 }
