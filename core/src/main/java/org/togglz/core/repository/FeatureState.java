@@ -189,4 +189,11 @@ public class FeatureState {
         return this.parameters.keySet();
     }
 
+    /**
+     * Returns an unmodifiable map of parameters
+     */
+    public Map<String, String> getParameterMap() {
+        return Collections.unmodifiableMap(this.parameters);
+    }
+
 }

@@ -4,8 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
@@ -36,7 +36,8 @@ import org.togglz.core.util.Strings;
  * CREATE TABLE &lt;table&gt; (
  *   FEATURE_NAME CHAR(100) PRIMARY KEY, 
  *   FEATURE_ENABLED INTEGER, 
- *   FEATURE_USERS CHAR(2000)
+ *   STRATEGY_ID CHAR(200), 
+ *   STRATEGY_PARAMS CHAR(2000)
  * )
  * </pre>
  * 
@@ -45,9 +46,9 @@ import org.togglz.core.util.Strings;
  */
 public class JDBCStateRepository implements StateRepository {
 
-    private static final String GET_STATE_QUERY = "SELECT FEATURE_ENABLED, FEATURE_USERS FROM %TABLE% WHERE FEATURE_NAME = ?";
-    private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
-    private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
+    protected static final String COLUMN_FEATURE_ENABLED = "FEATURE_ENABLED";
+    protected static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
+    protected static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
 
     private final Log log = LogFactory.getLog(JDBCStateRepository.class);
 
@@ -125,7 +126,8 @@ public class JDBCStateRepository implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                PreparedStatement statement = connection.prepareStatement(insertTableName(GET_STATE_QUERY));
+                String sql = "SELECT FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = ?";
+                PreparedStatement statement = connection.prepareStatement(insertTableName(sql));
                 try {
 
                     statement.setString(1, feature.name());
@@ -135,10 +137,22 @@ public class JDBCStateRepository implements StateRepository {
 
                         if (resultSet.next()) {
 
-                            boolean enabled = resultSet.getInt(1) > 0;
-                            List<String> users = parseUserList(resultSet.getString(2));
+                            boolean enabled = resultSet.getInt(COLUMN_FEATURE_ENABLED) > 0;
+                            FeatureState state = new FeatureState(feature, enabled);
 
-                            return new FeatureState(feature, enabled, users);
+                            String strategyId = resultSet.getString(COLUMN_STRATEGY_ID);
+                            if (Strings.isNotBlank(strategyId)) {
+                                state.setStrategyId(strategyId.trim());
+                            }
+
+                            String paramsAsString = resultSet.getString(COLUMN_STRATEGY_PARAMS);
+                            if (Strings.isNotBlank(paramsAsString)) {
+                                Map<String, String> params = mapConverter.convertFromString(paramsAsString);
+                                for (Entry<String, String> param : params.entrySet()) {
+                                    state.setParameter(param.getKey(), param.getValue());
+                                }
+                            }
+
                         }
 
                     } finally {
@@ -173,12 +187,15 @@ public class JDBCStateRepository implements StateRepository {
                 /*
                  * First try to update an existing row
                  */
-                PreparedStatement updateStatement = connection.prepareStatement(insertTableName(SET_STATE_UPDATE));
+                String updateSql = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, STRATEGY_ID = ?, STRATEGY_PARAMS = ? WHERE FEATURE_NAME = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(insertTableName(updateSql));
                 try {
 
                     updateStatement.setInt(1, featureState.isEnabled() ? 1 : 0);
-                    updateStatement.setString(2, createUserList(featureState.getUsers()));
-                    updateStatement.setString(3, featureState.getFeature().name());
+                    updateStatement.setString(2, Strings.trimToNull(featureState.getStrategyId()));
+                    String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+                    updateStatement.setString(3, Strings.trimToNull(paramsAsString));
+
                     updatedRows = updateStatement.executeUpdate();
 
                 } finally {
@@ -190,12 +207,16 @@ public class JDBCStateRepository implements StateRepository {
                  */
                 if (updatedRows == 0) {
 
-                    PreparedStatement insertStatement = connection.prepareStatement(insertTableName(SET_STATE_INSERT));
+                    String insertSql = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS) VALUES (?,?,?,?)";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertTableName(insertSql));
                     try {
 
                         insertStatement.setString(1, featureState.getFeature().name());
                         insertStatement.setInt(2, featureState.isEnabled() ? 1 : 0);
-                        insertStatement.setString(3, createUserList(featureState.getUsers()));
+                        updateStatement.setString(3, Strings.trimToNull(featureState.getStrategyId()));
+                        String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+                        updateStatement.setString(4, Strings.trimToNull(paramsAsString));
+
                         insertStatement.executeUpdate();
 
                     } finally {
@@ -216,25 +237,6 @@ public class JDBCStateRepository implements StateRepository {
 
     private String insertTableName(String s) {
         return s.replace("%TABLE%", tableName);
-    }
-
-    private String createUserList(List<String> users) {
-        if (users != null && users.size() > 0) {
-            return Strings.join(users, ", ");
-        }
-        return null;
-    }
-
-    private List<String> parseUserList(String str) {
-        List<String> result = new ArrayList<String>();
-        if (Strings.isNotBlank(str)) {
-            for (String u : str.split("[,\\s]+")) {
-                if (u != null && u.trim().length() > 0) {
-                    result.add(u.trim());
-                }
-            }
-        }
-        return result;
     }
 
 }
