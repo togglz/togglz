@@ -112,7 +112,9 @@ class SchemaUpdater {
         Statement addColumnsStmt = connection.createStatement();
         try {
             addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD COLUMN ( STRATEGY_ID CHAR(200), STRATEGY_PARAMS CHAR(2000) )"));
+                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_ID CHAR(200)"));
+            addColumnsStmt.executeUpdate(insertTableName(
+                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_PARAMS CHAR(2000)"));
         } finally {
             DbUtils.closeQuietly(addColumnsStmt);
         }
