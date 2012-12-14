@@ -24,8 +24,6 @@ import org.togglz.core.util.Strings;
  */
 class SchemaUpdater {
 
-    private static final String V1_CREATE_TABLE = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
-
     private static final String COLUMN_FEATURE_NAME = "FEATURE_NAME";
     private static final String COLUMN_FEATURE_USERS = "FEATURE_USERS";
     private static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
@@ -72,7 +70,9 @@ class SchemaUpdater {
     protected void migrateToVersion1() throws SQLException {
         Statement statement = connection.createStatement();
         try {
-            statement.executeUpdate(insertTableName(V1_CREATE_TABLE));
+            statement
+                .executeUpdate(insertTableName(
+                "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))"));
         } finally {
             DbUtils.closeQuietly(statement);
         }
@@ -108,18 +108,22 @@ class SchemaUpdater {
 
     protected void migrateToVersion2() throws SQLException {
 
-        // add the new columns
+        /*
+         * step 1: add new columns
+         */
         Statement addColumnsStmt = connection.createStatement();
         try {
             addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_ID CHAR(200)"));
+                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_ID VARCHAR(200)"));
             addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_PARAMS CHAR(2000)"));
+                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_PARAMS VARCHAR(2000)"));
         } finally {
             DbUtils.closeQuietly(addColumnsStmt);
         }
 
-        // migrate the existing data
+        /*
+         * step 2: migrate the existing data
+         */
         Statement updateDataStmt = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
         try {
 
@@ -136,7 +140,7 @@ class SchemaUpdater {
                     if (Strings.isNotBlank(users)) {
 
                         // convert the user list to the new parameters format
-                        Map<String,String> params = new HashMap<String, String>();
+                        Map<String, String> params = new HashMap<String, String>();
                         params.put(UsernameActivationStrategy.PARAM_USERS, users);
                         String paramsAsString = mapConverter.convertToString(params);
                         resultSet.updateString(COLUMN_STRATEGY_PARAMS, paramsAsString);
@@ -162,7 +166,7 @@ class SchemaUpdater {
         }
 
         /*
-         * remove the deprecated column
+         * step 3: remove the deprecated column
          */
         Statement removeUsersColumnStmt = connection.createStatement();
         try {

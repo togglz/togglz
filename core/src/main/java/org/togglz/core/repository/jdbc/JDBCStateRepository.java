@@ -36,8 +36,8 @@ import org.togglz.core.util.Strings;
  * CREATE TABLE &lt;table&gt; (
  *   FEATURE_NAME CHAR(100) PRIMARY KEY, 
  *   FEATURE_ENABLED INTEGER, 
- *   STRATEGY_ID CHAR(200), 
- *   STRATEGY_PARAMS CHAR(2000)
+ *   STRATEGY_ID VARCHAR(200), 
+ *   STRATEGY_PARAMS VARCHAR(2000)
  * )
  * </pre>
  * 
@@ -46,9 +46,9 @@ import org.togglz.core.util.Strings;
  */
 public class JDBCStateRepository implements StateRepository {
 
-    protected static final String COLUMN_FEATURE_ENABLED = "FEATURE_ENABLED";
-    protected static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
-    protected static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
+    private static final String COLUMN_FEATURE_ENABLED = "FEATURE_ENABLED";
+    private static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
+    private static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
 
     private final Log log = LogFactory.getLog(JDBCStateRepository.class);
 
@@ -196,9 +196,10 @@ public class JDBCStateRepository implements StateRepository {
                 PreparedStatement updateStatement = connection.prepareStatement(insertTableName(updateSql));
                 try {
 
+                    String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+
                     updateStatement.setInt(1, featureState.isEnabled() ? 1 : 0);
                     updateStatement.setString(2, Strings.trimToNull(featureState.getStrategyId()));
-                    String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
                     updateStatement.setString(3, Strings.trimToNull(paramsAsString));
                     updateStatement.setString(4, featureState.getFeature().name());
 
@@ -217,10 +218,11 @@ public class JDBCStateRepository implements StateRepository {
                     PreparedStatement insertStatement = connection.prepareStatement(insertTableName(insertSql));
                     try {
 
+                        String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+
                         insertStatement.setString(1, featureState.getFeature().name());
                         insertStatement.setInt(2, featureState.isEnabled() ? 1 : 0);
                         insertStatement.setString(3, Strings.trimToNull(featureState.getStrategyId()));
-                        String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
                         insertStatement.setString(4, Strings.trimToNull(paramsAsString));
 
                         insertStatement.executeUpdate();
