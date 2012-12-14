@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -34,12 +33,12 @@ public class JDBCRepositoryTest {
     @Deployment
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
-                .addClass(JDBCRepositoryConfiguration.class)
-                .addClass(JDBCFeatures.class)
-                .setWebXML(new StringAsset(
-                        Descriptors.create(WebAppDescriptor.class)
-                                .contextParam(TogglzConfig.class.getName(), JDBCRepositoryConfiguration.class.getName())
-                                .exportAsString()));
+            .addClass(JDBCRepositoryConfiguration.class)
+            .addClass(JDBCFeatures.class)
+            .setWebXML(new StringAsset(
+                Descriptors.create(WebAppDescriptor.class)
+                    .contextParam(TogglzConfig.class.getName(), JDBCRepositoryConfiguration.class.getName())
+                    .exportAsString()));
     }
 
     @Resource(mappedName = "jboss/datasources/ExampleDS")
@@ -55,24 +54,28 @@ public class JDBCRepositoryTest {
 
         FeatureState stateNoEntry = featureManager.getFeatureState(JDBCFeatures.F1);
         assertEquals(false, stateNoEntry.isEnabled());
-        assertEquals(0, stateNoEntry.getUsers().size());
+        assertEquals(null, stateNoEntry.getStrategyId());
+        assertEquals(0, stateNoEntry.getParameterNames().size());
 
-        executeUpdate("INSERT INTO MYTABLE (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES ('F1', 1, 'A,B')");
+        int inserted = executeUpdate("INSERT INTO MYTABLE " +
+            "(FEATURE_NAME, FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS) " +
+            "VALUES ('F1', 1, 'SomeStrategy', 'param=foobar')");
+        assertEquals(1, inserted);
 
         FeatureState stateEnabled = featureManager.getFeatureState(JDBCFeatures.F1);
         assertEquals(true, stateEnabled.isEnabled());
-        assertEquals(2, stateEnabled.getUsers().size());
-        assertEquals("A", stateEnabled.getUsers().get(0));
-        assertEquals("B", stateEnabled.getUsers().get(1));
+        assertEquals("SomeStrategy", stateEnabled.getStrategyId());
+        assertEquals(1, stateEnabled.getParameterNames().size());
+        assertEquals("foobar", stateEnabled.getParameter("param"));
 
-        executeUpdate("UPDATE MYTABLE SET FEATURE_ENABLED = 0, FEATURE_USERS = 'A, X, Y'  WHERE FEATURE_NAME = 'F1'");
+        executeUpdate("UPDATE MYTABLE " +
+            "SET FEATURE_ENABLED = 0, STRATEGY_ID = NULL, STRATEGY_PARAMS = NULL " +
+            "WHERE FEATURE_NAME = 'F1'");
 
         FeatureState stateDisabled = featureManager.getFeatureState(JDBCFeatures.F1);
         assertEquals(false, stateDisabled.isEnabled());
-        assertEquals(3, stateDisabled.getUsers().size());
-        assertEquals("A", stateDisabled.getUsers().get(0));
-        assertEquals("X", stateDisabled.getUsers().get(1));
-        assertEquals("Y", stateDisabled.getUsers().get(2));
+        assertEquals(null, stateDisabled.getStrategyId());
+        assertEquals(0, stateDisabled.getParameterNames().size());
 
     }
 
@@ -86,15 +89,22 @@ public class JDBCRepositoryTest {
 
         assertEquals(0l, executeQuery("SELECT COUNT(*) FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
-        featureManager.setFeatureState(new FeatureState(JDBCFeatures.F2, true, Arrays.asList("A", "B")));
+        FeatureState firstState = new FeatureState(JDBCFeatures.F2, true);
+        firstState.setStrategyId("someId");
+        firstState.setParameter("param", "foo");
+        featureManager.setFeatureState(firstState);
 
         assertEquals(1, executeQuery("SELECT FEATURE_ENABLED FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
-        assertEquals("A, B", executeQuery("SELECT FEATURE_USERS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals("someId", executeQuery("SELECT STRATEGY_ID FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals("param=foo", executeQuery("SELECT STRATEGY_PARAMS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
-        featureManager.setFeatureState(new FeatureState(JDBCFeatures.F2, false, Arrays.asList("X")));
+        FeatureState secondState = new FeatureState(JDBCFeatures.F2, false);
+        secondState.setStrategyId(null);
+        featureManager.setFeatureState(secondState);
 
         assertEquals(0, executeQuery("SELECT FEATURE_ENABLED FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
-        assertEquals("X", executeQuery("SELECT FEATURE_USERS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals(null, executeQuery("SELECT STRATEGY_ID FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals(null, executeQuery("SELECT STRATEGY_PARAMS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
     }
 

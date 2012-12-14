@@ -107,6 +107,9 @@ public class JDBCStateRepository implements StateRepository {
                 if (!updater.doesTableExist()) {
                     updater.migrateToVersion1();
                 }
+                if (updater.isSchemaVersion1()) {
+                    updater.migrateToVersion2();
+                }
 
             } finally {
                 DbUtils.closeQuietly(connection);
@@ -153,6 +156,8 @@ public class JDBCStateRepository implements StateRepository {
                                 }
                             }
 
+                            return state;
+
                         }
 
                     } finally {
@@ -195,6 +200,7 @@ public class JDBCStateRepository implements StateRepository {
                     updateStatement.setString(2, Strings.trimToNull(featureState.getStrategyId()));
                     String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
                     updateStatement.setString(3, Strings.trimToNull(paramsAsString));
+                    updateStatement.setString(4, featureState.getFeature().name());
 
                     updatedRows = updateStatement.executeUpdate();
 
@@ -213,9 +219,9 @@ public class JDBCStateRepository implements StateRepository {
 
                         insertStatement.setString(1, featureState.getFeature().name());
                         insertStatement.setInt(2, featureState.isEnabled() ? 1 : 0);
-                        updateStatement.setString(3, Strings.trimToNull(featureState.getStrategyId()));
+                        insertStatement.setString(3, Strings.trimToNull(featureState.getStrategyId()));
                         String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
-                        updateStatement.setString(4, Strings.trimToNull(paramsAsString));
+                        insertStatement.setString(4, Strings.trimToNull(paramsAsString));
 
                         insertStatement.executeUpdate();
 
