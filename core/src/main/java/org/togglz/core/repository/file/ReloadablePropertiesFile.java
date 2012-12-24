@@ -5,7 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
@@ -59,7 +64,23 @@ class ReloadablePropertiesFile {
     public String getValue(String key, String defaultValue) {
         return values.getProperty(key, defaultValue);
     }
-    
+
+    public Set<String> getKeysStartingWith(String prefix) {
+
+        Set<String> result = new HashSet<String>();
+
+        Enumeration<?> keys = values.propertyNames();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement().toString();
+            if (key.startsWith(prefix)) {
+                result.add(key);
+            }
+        }
+
+        return result;
+
+    }
+
     public Editor getEditor() {
         return new Editor(values);
     }
@@ -90,13 +111,24 @@ class ReloadablePropertiesFile {
         }
 
         public void setValue(String key, String value) {
-            newValues.setProperty(key, value);
+            if (value != null) {
+                newValues.setProperty(key, value);
+            }
+            else {
+                newValues.remove(key);
+            }
         }
 
-        public void removeValue(String usersKey) {
-            newValues.remove(usersKey);
+        public void removeKeysStartingWith(String prefix) {
+            Iterator<Entry<Object, Object>> iterator = newValues.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Entry<Object, Object> entry = iterator.next();
+                if (entry.getKey().toString().startsWith(prefix)) {
+                    iterator.remove();
+                }
+            }
         }
-        
+
         public void commit() {
             write(newValues);
         }

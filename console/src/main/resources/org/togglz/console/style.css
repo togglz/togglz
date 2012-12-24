@@ -16,7 +16,7 @@ table.feature-overview td.feature-status, table.feature-overview th.feature-stat
   width: 15%;
 }
 
-table.feature-overview td.feature-users, table.feature-overview th.feature-users {
+table.feature-overview td.feature-strategy, table.feature-overview th.feature-strategy {
 	text-align: left;
   width: 20%;
 }
@@ -24,4 +24,11 @@ table.feature-overview td.feature-users, table.feature-overview th.feature-users
 table.feature-overview td.feature-actions, table.feature-overview th.feature-actions {
 	text-align: center;
 	width: 20%;
+}
+
+table.feature-overview td.feature-strategy ul.params {
+  list-style: none;
+  margin: 0 0 0 15px;
+  font-size: 9pt;
+  color: gray;
 }

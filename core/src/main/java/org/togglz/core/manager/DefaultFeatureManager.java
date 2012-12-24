@@ -1,11 +1,17 @@
 package org.togglz.core.manager;
 
+import java.util.List;
+import java.util.ServiceLoader;
+
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
+import org.togglz.core.util.Lists;
+import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link FeatureManager}
@@ -18,12 +24,14 @@ public class DefaultFeatureManager implements FeatureManager {
     private final StateRepository stateRepository;
     private final Class<? extends Feature> featureClazz;
     private final UserProvider userProvider;
+    private final List<ActivationStrategy> strategies;
 
-    DefaultFeatureManager(Class<? extends Feature> featureClazz, StateRepository stateRepository,
-            UserProvider userProvider) {
+    DefaultFeatureManager(Class<? extends Feature> featureClazz, StateRepository stateRepository, UserProvider userProvider) {
         this.featureClazz = featureClazz;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
+        this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
+        Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
     }
 
     public Feature[] getFeatures() {
@@ -39,25 +47,23 @@ public class DefaultFeatureManager implements FeatureManager {
             return metaData.isEnabledByDefault();
         }
 
-        // disabled features are never active
-        if (!state.isEnabled()) {
-            return false;
+        String strategyId = state.getStrategyId();
+
+        // if no strategy is selected, the decision is simple
+        if (strategyId == null) {
+            return state.isEnabled();
         }
 
-        // no user restriction? active!
-        if (state.getUsers().isEmpty()) {
-            return true;
-        }
-
-        // check if user is in user list
         FeatureUser user = userProvider.getCurrentUser();
-        if (user != null && user.getName() != null) {
-            for (String username : state.getUsers()) {
-                if (username.equals(user.getName())) {
-                    return true;
-                }
+
+        // check the selected strategy
+        for (ActivationStrategy strategy : strategies) {
+            if (strategy.getId().equalsIgnoreCase(strategyId)) {
+                return strategy.isActive(state, user);
             }
         }
+
+        // if the strategy was not found, the feature should be off
         return false;
 
     }

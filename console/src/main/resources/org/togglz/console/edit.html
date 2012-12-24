@@ -1,8 +1,18 @@
 <form action="edit" method="POST" class="form-horizontal">
 
-  <legend>${label}</legend>
+  ${if !model.valid}
+    <div class="alert alert-error">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      ${foreach model.validationErrors error}
+        <div>${error}</div>
+      ${end}
+    </div>
+  ${end}
 
-  <input type="hidden" name="f" value="${name}" />
+  <legend>${model.label}</legend>
+
+  <input type="hidden" name="f" value="${model.name}" />
+  
 
   <div class="control-group">
     <label class="control-label" for="enabled">
@@ -11,21 +21,55 @@
     <div class="controls">
       <label>
         <input id="enabled" type="checkbox" name="enabled" value="enabled"
-            ${if enabled} checked="checked"${end}>
+            ${if model.enabled} checked="checked"${end}>
       </label>
     </div>
   </div>
 
   <div class="control-group">
-    <label class="control-label" for="users">
-      Feature Users
+    <label class="control-label" for="strategy">
+      Activation Strategy
     </label>
     <div class="controls">
-      <textarea class="input-xxlarge" id="users" name="users" rows="6">${users}</textarea>
-      <span class="help-block">A list of users for which the feature is active.</span>
+      <select id="strategy" name="strategy" size="1">
+        <option value="">- none -</option>
+        ${foreach model.strategies strategy}
+          <option value="${strategy.id}"
+              ${if strategy.selected}selected="selected"${end}>
+            ${strategy.label}
+          </option>  
+        ${end}
+      </select>
     </div>
   </div>
+  
+  <script type="text/javascript">
+    jQuery('#strategy').change(function() {
+      $('.param').hide('slow');
+      $('.strategy'+this.selectedIndex).show('slow');
+    });
+  </script>
+  
+  ${foreach model.parameters param}
+    <div class="control-group param strategy${param.strategyIndex}"
+        ${if !param.visible} style="display: none;" ${end}>
+      <label class="control-label" for="${param.inputId}">
+        ${param.label}
+      </label>
+      <div class="controls">
+        ${if param.largeText}
+          <textarea id="${param.inputId}" name="${param.inputId}" class="input-xxlarge" rows="8">${param.value}</textarea>
+        ${else}
+          <input id="${param.inputId}" name="${param.inputId}" type="text" class="input-xxlarge" value="${param.value}"/>
+        ${end}
+        ${if param.hasDescription}
+          <span class="help-block">${param.description}</span>
+        ${end}
 
+      </div>
+    </div>
+  ${end}
+  
   <div class="form-actions">
     <input type="submit" class="btn btn-primary" value="Save">
     <a href="index" class="btn">Cancel</a>

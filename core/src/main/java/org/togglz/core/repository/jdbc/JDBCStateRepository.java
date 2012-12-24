@@ -1,13 +1,11 @@
 package org.togglz.core.repository.jdbc;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
@@ -17,8 +15,8 @@ import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.DbUtils;
+import org.togglz.core.util.MapConverter;
 import org.togglz.core.util.Strings;
-
 
 /**
  * <p>
@@ -26,9 +24,8 @@ import org.togglz.core.util.Strings;
  * </p>
  * 
  * <p>
- * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table
- * using an constructor argument. If the repository doesn't find the required table in the database, it will automatically
- * create it.
+ * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table using
+ * an constructor argument. If the repository doesn't find the required table in the database, it will automatically create it.
  * </p>
  * 
  * <p>
@@ -39,7 +36,8 @@ import org.togglz.core.util.Strings;
  * CREATE TABLE &lt;table&gt; (
  *   FEATURE_NAME CHAR(100) PRIMARY KEY, 
  *   FEATURE_ENABLED INTEGER, 
- *   FEATURE_USERS CHAR(2000)
+ *   STRATEGY_ID VARCHAR(200), 
+ *   STRATEGY_PARAMS VARCHAR(2000)
  * )
  * </pre>
  * 
@@ -48,11 +46,9 @@ import org.togglz.core.util.Strings;
  */
 public class JDBCStateRepository implements StateRepository {
 
-    private static final String TABLE_DDL = "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))";
-
-    private static final String GET_STATE_QUERY = "SELECT FEATURE_ENABLED, FEATURE_USERS FROM %TABLE% WHERE FEATURE_NAME = ?";
-    private static final String SET_STATE_UPDATE = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, FEATURE_USERS = ? WHERE FEATURE_NAME = ?";
-    private static final String SET_STATE_INSERT = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, FEATURE_USERS) VALUES (?,?,?)";
+    private static final String COLUMN_FEATURE_ENABLED = "FEATURE_ENABLED";
+    private static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
+    private static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
 
     private final Log log = LogFactory.getLog(JDBCStateRepository.class);
 
@@ -60,9 +56,11 @@ public class JDBCStateRepository implements StateRepository {
 
     private final String tableName;
 
+    private final MapConverter mapConverter;
+
     /**
-     * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name
-     * to <code>TOGGLZ</CODE>.
+     * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name to
+     * <code>TOGGLZ</CODE>.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @see #JDBCFeatureStateRepository(DataSource, String)
@@ -78,45 +76,39 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
+        this(dataSource, tableName, MapConverter.create().withNewLines());
+    }
+
+    /**
+     * Constructor of {@link JDBCStateRepository}.
+     * 
+     * @param dataSource The JDBC {@link DataSource} to obtain connections from
+     * @param tableName The name of the database table to use
+     * @param mapConverter The {@link MapConverter} instance to use
+     */
+    public JDBCStateRepository(DataSource dataSource, String tableName, MapConverter mapConverter) {
         this.dataSource = dataSource;
         this.tableName = tableName;
+        this.mapConverter = mapConverter;
         init();
     }
 
-    private void init() {
+    /**
+     * Method for creating/migrating the database schema
+     */
+    protected void init() {
 
         try {
 
             Connection connection = dataSource.getConnection();
             try {
 
-                boolean togglzTableExists = true;
-
-                DatabaseMetaData metaData = connection.getMetaData();
-                String catalog = connection.getCatalog();
-
-                ResultSet resultSet = metaData.getTables(catalog, null, tableName, new String[] { "TABLE" });
-                try {
-                    togglzTableExists = resultSet.next();
-                } finally {
-                    DbUtils.closeQuietly(resultSet);
+                SchemaUpdater updater = new SchemaUpdater(connection, tableName, mapConverter);
+                if (!updater.doesTableExist()) {
+                    updater.migrateToVersion1();
                 }
-
-                if (!togglzTableExists) {
-
-                    Statement statement = connection.createStatement();
-                    try {
-
-                        statement.executeUpdate(insertTableName(TABLE_DDL));
-
-                        log.info("Database table " + tableName + " has been created successfully");
-
-                    } finally {
-                        DbUtils.closeQuietly(statement);
-                    }
-
-                } else {
-                    log.debug("Found existing table " + tableName + " in database.");
+                if (updater.isSchemaVersion1()) {
+                    updater.migrateToVersion2();
                 }
 
             } finally {
@@ -137,7 +129,8 @@ public class JDBCStateRepository implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                PreparedStatement statement = connection.prepareStatement(insertTableName(GET_STATE_QUERY));
+                String sql = "SELECT FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = ?";
+                PreparedStatement statement = connection.prepareStatement(insertTableName(sql));
                 try {
 
                     statement.setString(1, feature.name());
@@ -147,10 +140,24 @@ public class JDBCStateRepository implements StateRepository {
 
                         if (resultSet.next()) {
 
-                            boolean enabled = resultSet.getInt(1) > 0;
-                            List<String> users = parseUserList(resultSet.getString(2));
+                            boolean enabled = resultSet.getInt(COLUMN_FEATURE_ENABLED) > 0;
+                            FeatureState state = new FeatureState(feature, enabled);
 
-                            return new FeatureState(feature, enabled, users);
+                            String strategyId = resultSet.getString(COLUMN_STRATEGY_ID);
+                            if (Strings.isNotBlank(strategyId)) {
+                                state.setStrategyId(strategyId.trim());
+                            }
+
+                            String paramsAsString = resultSet.getString(COLUMN_STRATEGY_PARAMS);
+                            if (Strings.isNotBlank(paramsAsString)) {
+                                Map<String, String> params = mapConverter.convertFromString(paramsAsString);
+                                for (Entry<String, String> param : params.entrySet()) {
+                                    state.setParameter(param.getKey(), param.getValue());
+                                }
+                            }
+
+                            return state;
+
                         }
 
                     } finally {
@@ -185,12 +192,17 @@ public class JDBCStateRepository implements StateRepository {
                 /*
                  * First try to update an existing row
                  */
-                PreparedStatement updateStatement = connection.prepareStatement(insertTableName(SET_STATE_UPDATE));
+                String updateSql = "UPDATE %TABLE% SET FEATURE_ENABLED = ?, STRATEGY_ID = ?, STRATEGY_PARAMS = ? WHERE FEATURE_NAME = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(insertTableName(updateSql));
                 try {
 
+                    String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+
                     updateStatement.setInt(1, featureState.isEnabled() ? 1 : 0);
-                    updateStatement.setString(2, createUserList(featureState.getUsers()));
-                    updateStatement.setString(3, featureState.getFeature().name());
+                    updateStatement.setString(2, Strings.trimToNull(featureState.getStrategyId()));
+                    updateStatement.setString(3, Strings.trimToNull(paramsAsString));
+                    updateStatement.setString(4, featureState.getFeature().name());
+
                     updatedRows = updateStatement.executeUpdate();
 
                 } finally {
@@ -202,12 +214,17 @@ public class JDBCStateRepository implements StateRepository {
                  */
                 if (updatedRows == 0) {
 
-                    PreparedStatement insertStatement = connection.prepareStatement(insertTableName(SET_STATE_INSERT));
+                    String insertSql = "INSERT INTO %TABLE% (FEATURE_NAME, FEATURE_ENABLED, STRATEGY_ID, STRATEGY_PARAMS) VALUES (?,?,?,?)";
+                    PreparedStatement insertStatement = connection.prepareStatement(insertTableName(insertSql));
                     try {
+
+                        String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
 
                         insertStatement.setString(1, featureState.getFeature().name());
                         insertStatement.setInt(2, featureState.isEnabled() ? 1 : 0);
-                        insertStatement.setString(3, createUserList(featureState.getUsers()));
+                        insertStatement.setString(3, Strings.trimToNull(featureState.getStrategyId()));
+                        insertStatement.setString(4, Strings.trimToNull(paramsAsString));
+
                         insertStatement.executeUpdate();
 
                     } finally {
@@ -228,25 +245,6 @@ public class JDBCStateRepository implements StateRepository {
 
     private String insertTableName(String s) {
         return s.replace("%TABLE%", tableName);
-    }
-
-    private String createUserList(List<String> users) {
-        if (users != null && users.size() > 0) {
-            return Strings.join(users, ", ");
-        }
-        return null;
-    }
-
-    private List<String> parseUserList(String str) {
-        List<String> result = new ArrayList<String>();
-        if (Strings.isNotBlank(str)) {
-            for (String u : str.split("[,\\s]+")) {
-                if (u != null && u.trim().length() > 0) {
-                    result.add(u.trim());
-                }
-            }
-        }
-        return result;
     }
 
 }
