@@ -1,6 +1,6 @@
 package org.togglz.core.repository;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,12 +16,13 @@ import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.util.Strings;
 
 /**
- * This class represents the state of a feature that is persisted by the {@link StateRepository} implementations.
+ * This class represents the state of a feature that is persisted by {@link StateRepository} implementations.
  * 
  * @author Christian Kaltepoth
- * 
  */
-public class FeatureState {
+public class FeatureState implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final Feature feature;
     private boolean enabled;
@@ -29,40 +30,47 @@ public class FeatureState {
     private final Map<String, String> parameters = new HashMap<String, String>();
 
     /**
-     * This constructor creates a new feature state with an empty user list.
+     * This constructor creates a new feature state for the given feature. The feature is initially disabled if this constructor
+     * is used.
      * 
-     * @param feature The feature that is represented by this object.
+     * @param feature The feature that is represented by this state.
      */
     public FeatureState(Feature feature) {
         this(feature, false);
     }
 
     /**
-     * This constructor creates a new feature state with an empty user list.
+     * This constructor creates a new feature state for the given feature.
      * 
-     * @param feature The feature that is represented by this object.
-     * @param enabled Flag indicating whether this feature is enabled or not.
+     * @param feature The feature that is represented by this state.
+     * @param enabled boolean indicating whether this feature should be enabled or not.
      */
     public FeatureState(Feature feature, boolean enabled) {
-        this(feature, enabled, new ArrayList<String>());
+        this.feature = feature;
+        this.enabled = enabled;
     }
 
     /**
-     * Creates a new {@link FeatureState} instance.
+     * This constructor creates a new feature state for the given feature. Please not that using this constructor will
+     * automatically set strategyId to match the {@link UsernameActivationStrategy}.
      * 
-     * @param feature The feature that is represented by this object.
-     * @param enabled Flag indicating whether this feature is enabled or not.
+     * @param feature The feature that is represented by this state.
+     * @param enabled boolean indicating whether this feature should be enabled or not.
      * @param users A list of users
+     * 
+     * @deprecated This constructor will be removed soon. You should use {@link #FeatureState(Feature, boolean)} and
+     *             {@link #setParameter(String, String)} instead.
      */
     @Deprecated
     public FeatureState(Feature feature, boolean enabled, List<String> users) {
         this.feature = feature;
         this.enabled = enabled;
+        this.strategyId = UsernameActivationStrategy.ID;
         this.addUsers(users);
     }
 
     /**
-     * Creates a copy of this object
+     * Creates a copy of this state object
      */
     public FeatureState copy() {
         FeatureState copy = new FeatureState(feature);
@@ -106,7 +114,7 @@ public class FeatureState {
     }
 
     /**
-     * Enable the feature
+     * Disable the feature
      */
     public FeatureState disable() {
         return setEnabled(false);
@@ -116,6 +124,9 @@ public class FeatureState {
      * The list of users associated with the feature state.
      * 
      * @return The user list, never <code>null</code>
+     * 
+     * @deprecated This method will be removed soon. Use {@link #getParameter(String)} instead to read the corresponding
+     *             strategy parameter.
      */
     @Deprecated
     public List<String> getUsers() {
@@ -128,6 +139,9 @@ public class FeatureState {
 
     /**
      * Adds a single user to the list of users
+     * 
+     * @deprecated This method will be removed soon. Use {@link #setParameter(String, String)} instead to modify the
+     *             corresponding strategy parameter.
      */
     @Deprecated
     public FeatureState addUser(String user) {
@@ -136,6 +150,9 @@ public class FeatureState {
 
     /**
      * Adds a single user to the list of users
+     * 
+     * @deprecated This method will be removed soon. Use {@link #setParameter(String, String)} instead to modify the
+     *             corresponding strategy parameter.
      */
     @Deprecated
     public FeatureState addUsers(Collection<String> users) {
