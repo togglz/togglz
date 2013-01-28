@@ -23,4 +23,12 @@ public interface FeatureUser {
      */
     boolean isFeatureAdmin();
 
+    /**
+     * This method allows to retrieve attributes associated with a user.
+     * 
+     * @param name The name of the attribute
+     * @return the value of the attribute or <code>null</code> if there is no such attribute.
+     */
+    Object getAttribute(String name);
+
 }

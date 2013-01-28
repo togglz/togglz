@@ -1,5 +1,8 @@
 package org.togglz.core.user;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.togglz.core.manager.DefaultFeatureManager;
 
 /**
@@ -13,6 +16,7 @@ public class SimpleFeatureUser implements FeatureUser {
 
     private final String name;
     private final boolean featureAdmin;
+    private final Map<String, Object> attributes = new HashMap<String, Object>();
 
     /**
      * Constructor of {@link DefaultFeatureManager}.
@@ -31,6 +35,27 @@ public class SimpleFeatureUser implements FeatureUser {
 
     public boolean isFeatureAdmin() {
         return featureAdmin;
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    /**
+     * This method can be used to set attributes of the user.
+     * 
+     * @param name The name of the attribute
+     * @param value The value of the attribute
+     * @return <code>this</code> for fluent object creation
+     */
+    public SimpleFeatureUser setAttribute(String name, Object value) {
+        if (value != null) {
+            attributes.put(name, value);
+        } else {
+            attributes.remove(name);
+        }
+        return this;
     }
 
 }
