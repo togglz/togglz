@@ -2,6 +2,8 @@ package org.togglz.core.activation;
 
 import java.util.Locale;
 
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -17,6 +19,8 @@ import org.togglz.core.util.Validate;
  */
 public class GradualActivationStrategy implements ActivationStrategy {
 
+    private final Log log = LogFactory.getLog(GradualActivationStrategy.class);
+    
     public static final String PARAM_PERCENTAGE = "percentage";
 
     @Override
@@ -32,18 +36,29 @@ public class GradualActivationStrategy implements ActivationStrategy {
     @Override
     public boolean isActive(FeatureState state, FeatureUser user) {
 
-        // the regular expression ensures that the parameter is a valid integer
-        int percentage = Integer.valueOf(state.getParameter(PARAM_PERCENTAGE));
+        if (user != null && Strings.isNotBlank(user.getName())) {
 
-        if (percentage > 0 && user != null && Strings.isNotBlank(user.getName())) {
-            int hashCode = calculateHashCode(user);
-            return (hashCode % 100) <= percentage;
+            String percentageAsString = state.getParameter(PARAM_PERCENTAGE);
+            try {
+
+                int percentage = Integer.valueOf(percentageAsString);
+
+                if (percentage > 0) {
+                    int hashCode = calculateHashCode(user);
+                    return (hashCode % 100) < percentage;
+                }
+
+            } catch (NumberFormatException e) {
+                log.error("Invalid gradual rollout percentage for feature " + state.getFeature().name() + ": "
+                    + percentageAsString);
+            }
+
         }
 
         return false;
 
     }
-
+    
     protected int calculateHashCode(FeatureUser user) {
         Validate.notNull(user, "user is required");
         return user.getName().toLowerCase(Locale.ENGLISH).trim().hashCode();
