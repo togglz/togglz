@@ -44,7 +44,7 @@ public class GradualActivationStrategy implements ActivationStrategy {
                 int percentage = Integer.valueOf(percentageAsString);
 
                 if (percentage > 0) {
-                    int hashCode = calculateHashCode(user);
+                    int hashCode = Math.abs(calculateHashCode(user));
                     return (hashCode % 100) < percentage;
                 }
 
