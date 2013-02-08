@@ -7,6 +7,11 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 
+/**
+ * Activation strategy that allows to activate features only for certain users.
+ * 
+ * @author Christian Kaltepoth
+ */
 public class UsernameActivationStrategy implements ActivationStrategy {
 
     public static final String ID = "username";
