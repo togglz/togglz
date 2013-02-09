@@ -2,13 +2,11 @@ package org.togglz.core.manager;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -27,7 +25,9 @@ public class DefaultFeatureManagerTest {
     public void before() {
 
         repository = new InMemoryStateRepository();
-        repository.setFeatureState(new FeatureState(MyFeatures.DELETE_USERS, true, Arrays.asList("admin")));
+        repository.setFeatureState(new FeatureState(MyFeatures.DELETE_USERS, true)
+            .setStrategyId(UsernameActivationStrategy.ID)
+            .setParameter(UsernameActivationStrategy.PARAM_USERS, "admin"));
         repository.setFeatureState(new FeatureState(MyFeatures.EXPERIMENTAL, false));
 
         featureUserProvider = new TestFeatureUserProvider();
@@ -81,7 +81,7 @@ public class DefaultFeatureManagerTest {
         FeatureState state = manager.getFeatureState(MyFeatures.DELETE_USERS);
         assertEquals(MyFeatures.DELETE_USERS, state.getFeature());
         assertEquals(true, state.isEnabled());
-        assertEquals(Arrays.asList("admin"), state.getUsers());
+        assertEquals("admin", state.getParameter(UsernameActivationStrategy.PARAM_USERS));
 
     }
 
@@ -108,9 +108,7 @@ public class DefaultFeatureManagerTest {
      */
     private static enum MyFeatures implements Feature {
 
-        @EnabledByDefault
         DELETE_USERS,
-
         EXPERIMENTAL;
 
         @Override

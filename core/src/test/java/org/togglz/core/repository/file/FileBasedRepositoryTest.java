@@ -269,21 +269,18 @@ public class FileBasedRepositoryTest {
             assertEquals(UsernameActivationStrategy.ID, state1.getStrategyId());
             assertEquals(1, state1.getParameterNames().size());
             assertEquals("chkal,tester", state1.getParameter(UsernameActivationStrategy.PARAM_USERS));
-            assertEquals(Arrays.asList("chkal", "tester"), state1.getUsers());
 
             // FEATURE2: disabled, no strategy, no parameters
             FeatureState state2 = repo.getFeatureState(MyFeature.FEATURE2);
             assertEquals(false, state2.isEnabled());
             assertEquals(null, state2.getStrategyId());
             assertEquals(0, state2.getParameterNames().size());
-            assertEquals(Collections.emptyList(), state2.getUsers());
 
             // FEATURE3: enabled, no strategy, no parameters
             FeatureState state3 = repo.getFeatureState(MyFeature.FEATURE3);
             assertEquals(true, state3.isEnabled());
             assertEquals(null, state2.getStrategyId());
             assertEquals(0, state3.getParameterNames().size());
-            assertEquals(Collections.emptyList(), state3.getUsers());
 
             FeatureState state4 = repo.getFeatureState(MyFeature.FEATURE4);
             assertNull(state4);

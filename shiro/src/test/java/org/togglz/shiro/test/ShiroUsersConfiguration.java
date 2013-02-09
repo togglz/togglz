@@ -1,8 +1,7 @@
 package org.togglz.shiro.test;
 
-import java.util.Arrays;
-
 import org.togglz.core.Feature;
+import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -22,7 +21,9 @@ public class ShiroUsersConfiguration implements TogglzConfig {
         InMemoryStateRepository repository = new InMemoryStateRepository();
         repository.setFeatureState(new FeatureState(TestFeature.DISABLED, false));
         repository.setFeatureState(new FeatureState(TestFeature.ENABLED_FOR_ALL, true));
-        repository.setFeatureState(new FeatureState(TestFeature.ENABLED_FOR_CK, true, Arrays.asList("ck")));
+        repository.setFeatureState(new FeatureState(TestFeature.ENABLED_FOR_CK, true)
+            .setStrategyId(UsernameActivationStrategy.ID)
+            .setParameter(UsernameActivationStrategy.PARAM_USERS, "ck"));
         return repository;
     }
 
