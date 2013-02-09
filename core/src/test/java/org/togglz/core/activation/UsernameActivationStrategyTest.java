@@ -14,6 +14,8 @@ import org.togglz.core.user.SimpleFeatureUser;
 
 public class UsernameActivationStrategyTest {
 
+    private final UsernameActivationStrategy strategy = new UsernameActivationStrategy();
+
     @Test
     public void shouldReturnFalseForEmptyUserlist() {
 
@@ -22,7 +24,7 @@ public class UsernameActivationStrategyTest {
             .enable()
             .setStrategyId(UsernameActivationStrategy.ID);
 
-        boolean active = new UsernameActivationStrategy().isActive(state, user);
+        boolean active = strategy.isActive(state, user);
 
         assertEquals(false, active);
 
@@ -37,7 +39,7 @@ public class UsernameActivationStrategyTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "person1,ck,person2");
 
-        boolean active = new UsernameActivationStrategy().isActive(state, user);
+        boolean active = strategy.isActive(state, user);
 
         assertEquals(false, active);
 
@@ -52,7 +54,7 @@ public class UsernameActivationStrategyTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "person1,ck,person2");
 
-        boolean active = new UsernameActivationStrategy().isActive(state, user);
+        boolean active = strategy.isActive(state, user);
 
         assertEquals(false, active);
 
@@ -67,7 +69,7 @@ public class UsernameActivationStrategyTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "person1,ck,person2");
 
-        boolean active = new UsernameActivationStrategy().isActive(state, user);
+        boolean active = strategy.isActive(state, user);
 
         assertEquals(true, active);
 
@@ -76,7 +78,7 @@ public class UsernameActivationStrategyTest {
     @Test
     public void shouldReturnCorrectParameterList() {
 
-        Parameter[] parameters = new UsernameActivationStrategy().getParameters();
+        Parameter[] parameters = strategy.getParameters();
 
         assertThat(parameters, notNullValue());
         assertThat(parameters.length, is(1));
