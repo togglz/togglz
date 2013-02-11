@@ -19,6 +19,15 @@ public class SimpleFeatureUser implements FeatureUser {
     private final Map<String, Object> attributes = new HashMap<String, Object>();
 
     /**
+     * Constructor of {@link DefaultFeatureManager}. The <code>featureAdmin</code> flag will be set to <code>false</code>.
+     * 
+     * @param name The name of the user
+     */
+    public SimpleFeatureUser(String name) {
+        this(name, false);
+    }
+
+    /**
      * Constructor of {@link DefaultFeatureManager}.
      * 
      * @param name The name of the user
