@@ -29,10 +29,12 @@ public class SimpleFeatureUser implements FeatureUser {
         this.featureAdmin = featureAdmin;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public boolean isFeatureAdmin() {
         return featureAdmin;
     }
