@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.activation.UsernameActivationStrategy;
+import org.togglz.core.repository.util.MapSerializer;
 import org.togglz.core.util.DbUtils;
-import org.togglz.core.util.MapConverter;
 import org.togglz.core.util.Strings;
 
 /**
@@ -26,12 +26,12 @@ class SchemaUpdater {
 
     private final String tableName;
 
-    private final MapConverter mapConverter;
+    private final MapSerializer serializer;
 
-    protected SchemaUpdater(Connection connection, String tableName, MapConverter mapConverter) {
+    protected SchemaUpdater(Connection connection, String tableName, MapSerializer serializer) {
         this.connection = connection;
         this.tableName = tableName;
-        this.mapConverter = mapConverter;
+        this.serializer = serializer;
     }
 
     protected boolean doesTableExist() throws SQLException {
@@ -119,8 +119,8 @@ class SchemaUpdater {
                         // convert the user list to the new parameters format
                         Map<String, String> params = new HashMap<String, String>();
                         params.put(UsernameActivationStrategy.PARAM_USERS, users);
-                        String paramsAsString = mapConverter.convertToString(params);
-                        resultSet.updateString(Columns.STRATEGY_PARAMS, paramsAsString);
+                        String paramData = serializer.serialize(params);
+                        resultSet.updateString(Columns.STRATEGY_PARAMS, paramData);
 
                         // only overwrite strategy ID if it is not set yet
                         String strategyId = resultSet.getString(Columns.STRATEGY_ID);

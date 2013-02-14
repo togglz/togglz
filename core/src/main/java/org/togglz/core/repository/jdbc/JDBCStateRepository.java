@@ -14,8 +14,9 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.util.DefaultMapSerializer;
+import org.togglz.core.repository.util.MapSerializer;
 import org.togglz.core.util.DbUtils;
-import org.togglz.core.util.MapConverter;
 import org.togglz.core.util.Strings;
 
 /**
@@ -57,7 +58,7 @@ public class JDBCStateRepository implements StateRepository {
 
     private final String tableName;
 
-    private final MapConverter mapConverter;
+    private final MapSerializer serializer;
 
     /**
      * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name to
@@ -77,7 +78,7 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
-        this(dataSource, tableName, MapConverter.create().withNewLines());
+        this(dataSource, tableName, DefaultMapSerializer.create().withNewLines());
     }
 
     /**
@@ -85,12 +86,12 @@ public class JDBCStateRepository implements StateRepository {
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @param tableName The name of the database table to use
-     * @param mapConverter The {@link MapConverter} instance to use
+     * @param serializer The {@link MapSerializer} for storing parameters
      */
-    public JDBCStateRepository(DataSource dataSource, String tableName, MapConverter mapConverter) {
+    public JDBCStateRepository(DataSource dataSource, String tableName, MapSerializer serializer) {
         this.dataSource = dataSource;
         this.tableName = tableName;
-        this.mapConverter = mapConverter;
+        this.serializer = serializer;
         init();
     }
 
@@ -104,7 +105,7 @@ public class JDBCStateRepository implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                SchemaUpdater updater = new SchemaUpdater(connection, tableName, mapConverter);
+                SchemaUpdater updater = new SchemaUpdater(connection, tableName, serializer);
                 if (!updater.doesTableExist()) {
                     updater.migrateToVersion1();
                 }
@@ -149,9 +150,9 @@ public class JDBCStateRepository implements StateRepository {
                                 state.setStrategyId(strategyId.trim());
                             }
 
-                            String paramsAsString = resultSet.getString(Columns.STRATEGY_PARAMS);
-                            if (Strings.isNotBlank(paramsAsString)) {
-                                Map<String, String> params = mapConverter.convertFromString(paramsAsString);
+                            String paramData = resultSet.getString(Columns.STRATEGY_PARAMS);
+                            if (Strings.isNotBlank(paramData)) {
+                                Map<String, String> params = serializer.deserialize(paramData);
                                 for (Entry<String, String> param : params.entrySet()) {
                                     state.setParameter(param.getKey(), param.getValue());
                                 }
@@ -197,11 +198,11 @@ public class JDBCStateRepository implements StateRepository {
                 PreparedStatement updateStatement = connection.prepareStatement(insertTableName(updateSql));
                 try {
 
-                    String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+                    String paramData = serializer.serialize(featureState.getParameterMap());
 
                     updateStatement.setInt(1, featureState.isEnabled() ? 1 : 0);
                     updateStatement.setString(2, Strings.trimToNull(featureState.getStrategyId()));
-                    updateStatement.setString(3, Strings.trimToNull(paramsAsString));
+                    updateStatement.setString(3, Strings.trimToNull(paramData));
                     updateStatement.setString(4, featureState.getFeature().name());
 
                     updatedRows = updateStatement.executeUpdate();
@@ -219,7 +220,7 @@ public class JDBCStateRepository implements StateRepository {
                     PreparedStatement insertStatement = connection.prepareStatement(insertTableName(insertSql));
                     try {
 
-                        String paramsAsString = mapConverter.convertToString(featureState.getParameterMap());
+                        String paramsAsString = serializer.serialize(featureState.getParameterMap());
 
                         insertStatement.setString(1, featureState.getFeature().name());
                         insertStatement.setInt(2, featureState.isEnabled() ? 1 : 0);

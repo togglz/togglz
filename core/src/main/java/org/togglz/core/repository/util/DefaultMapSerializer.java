@@ -1,4 +1,4 @@
-package org.togglz.core.util;
+package org.togglz.core.repository.util;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -17,27 +17,27 @@ import java.util.Properties;
  * 
  * @author Christian Kaltepoth
  */
-public class MapConverter {
+public class DefaultMapSerializer implements MapSerializer {
 
     private boolean newLines = true;
 
     /**
      * Use {@link #create()}
      */
-    private MapConverter() {
+    private DefaultMapSerializer() {
     }
 
     /**
-     * Creates a new instance of the {@link MapConverter}.
+     * Creates a new instance of the {@link DefaultMapSerializer}.
      */
-    public static MapConverter create() {
-        return new MapConverter();
+    public static DefaultMapSerializer create() {
+        return new DefaultMapSerializer();
     }
 
     /**
      * Don't use new line characters in the string representation.
      */
-    public MapConverter withoutNewLines() {
+    public DefaultMapSerializer withoutNewLines() {
         this.newLines = false;
         return this;
     }
@@ -45,16 +45,16 @@ public class MapConverter {
     /**
      * Allow new lines in the string representation
      */
-    public MapConverter withNewLines() {
+    public DefaultMapSerializer withNewLines() {
         this.newLines = true;
         return this;
     }
 
-    /**
-     * Converts the given map to a string representation that can be used to restore the map using
-     * {@link #convertFromString(String)}.
+    /* (non-Javadoc)
+     * @see org.togglz.core.util.MapSerializer#convertToString(java.util.Map)
      */
-    public String convertToString(Map<String, String> map) {
+    @Override
+    public String serialize(Map<String, String> map) {
 
         try {
 
@@ -100,10 +100,11 @@ public class MapConverter {
 
     }
 
-    /**
-     * Restores a map that has been converted into a string using {@link #convertToString(Map)}
+    /* (non-Javadoc)
+     * @see org.togglz.core.util.MapSerializer#convertFromString(java.lang.String)
      */
-    public Map<String, String> convertFromString(String s) {
+    @Override
+    public Map<String, String> deserialize(String s) {
 
         try {
 

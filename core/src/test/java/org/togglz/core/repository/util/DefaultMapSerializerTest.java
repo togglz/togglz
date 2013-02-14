@@ -1,4 +1,4 @@
-package org.togglz.core.util;
+package org.togglz.core.repository.util;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
@@ -8,13 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.togglz.core.repository.util.DefaultMapSerializer;
 
-public class MapConverterTest {
+public class DefaultMapSerializerTest {
 
     @Test
     public void testWithNewLines() {
 
-        MapConverter persister = MapConverter.create().withNewLines();
+        DefaultMapSerializer persister = DefaultMapSerializer.create().withNewLines();
 
         Map<String, String> input = new HashMap<String, String>();
         input.put("param1", "a&b c");
@@ -23,10 +24,10 @@ public class MapConverterTest {
         /*
          * & is not escaped, \r and \n are escaped, parameters are divided by \r\n
          */
-        String str = persister.convertToString(input);
+        String str = persister.serialize(input);
         assertThat(str, is("param1=a&b c\r\nparam2=a\\r\\nb\r\n"));
 
-        Map<String, String> output = persister.convertFromString(str);
+        Map<String, String> output = persister.deserialize(str);
         assertEquals(input, output);
 
     }
@@ -34,7 +35,7 @@ public class MapConverterTest {
     @Test
     public void testWithoutNewLines() {
 
-        MapConverter persister = MapConverter.create().withoutNewLines();
+        DefaultMapSerializer persister = DefaultMapSerializer.create().withoutNewLines();
 
         Map<String, String> input = new HashMap<String, String>();
         input.put("param1", "a&b c");
@@ -43,10 +44,10 @@ public class MapConverterTest {
         /*
          * & is escaped, \r and \n are escaped, parameters are divided by &
          */
-        String str = persister.convertToString(input);
+        String str = persister.serialize(input);
         assertThat(str, is("param1=a\\u0026b c&param2=a\\r\\nb"));
 
-        Map<String, String> output = persister.convertFromString(str);
+        Map<String, String> output = persister.deserialize(str);
         assertEquals(input, output);
     }
 

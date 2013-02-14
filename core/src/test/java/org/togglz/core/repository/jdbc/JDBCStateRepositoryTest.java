@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.DbUtils;
-import org.togglz.core.util.MapConverter;
 
 public class JDBCStateRepositoryTest {
 
@@ -28,7 +28,7 @@ public class JDBCStateRepositoryTest {
     public void before() throws SQLException {
         dataSource = createDataSource();
         repository = new JDBCStateRepository(dataSource, "TOGGLZ",
-            MapConverter.create().withoutNewLines());
+            DefaultMapSerializer.create().withoutNewLines());
     }
 
     @Test

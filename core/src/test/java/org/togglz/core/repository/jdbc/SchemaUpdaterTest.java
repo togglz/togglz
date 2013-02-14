@@ -14,8 +14,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.togglz.core.activation.UsernameActivationStrategy;
+import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.DbUtils;
-import org.togglz.core.util.MapConverter;
 
 public class SchemaUpdaterTest {
 
@@ -25,7 +25,7 @@ public class SchemaUpdaterTest {
         Connection connection = createConnection();
         try {
 
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", MapConverter.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
             assertFalse(updater.doesTableExist());
 
         } finally {
@@ -40,7 +40,7 @@ public class SchemaUpdaterTest {
         Connection connection = createConnection();
         try {
 
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", MapConverter.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
             assertFalse(updater.doesTableExist());
 
             updater.migrateToVersion1();
@@ -60,7 +60,7 @@ public class SchemaUpdaterTest {
         Connection connection = createConnection();
         try {
 
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", MapConverter.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
             assertFalse(updater.doesTableExist());
 
             assertFalse(updater.isSchemaVersion1());
@@ -82,7 +82,7 @@ public class SchemaUpdaterTest {
         try {
 
             // create schema version 1
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", MapConverter.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
             assertFalse(updater.doesTableExist());
             updater.migrateToVersion1();
             assertTrue(updater.isSchemaVersion1());
