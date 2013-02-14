@@ -18,12 +18,14 @@ import org.togglz.core.util.Strings;
  * This implementation of {@link StateRepository} stores the state of feature using a standard Java properties file.
  * </p>
  * <p>
- * The file has the following format:
+ * The file format has changed since version 1.2.0 because of the new extendable activation strategy support. Old file formats
+ * will be automatically migrated. The new format looks like this:
  * </p>
  * 
  * <pre>
  * FEATURE_ONE = true
- * FEATURE_ONE.users = admin, chkal
+ * FEATURE_ONE.strategy = gradual
+ * FEATURE_ONE.param.percentage = 25
  * FEATURE_TWO = false
  * </pre>
  * 
@@ -65,7 +67,7 @@ public class FileBasedStateRepository implements StateRepository {
             FeatureState state = new FeatureState(feature);
             state.setEnabled(isTrue(enabledAsStr));
 
-            // active strategy
+            // active strategy (may be null)
             String strategy = fileContent.getValue(getStrategyPropertyName(feature), null);
             state.setStrategyId(strategy);
 
@@ -78,7 +80,7 @@ public class FileBasedStateRepository implements StateRepository {
             }
 
             /*
-             * Backwards compatibility: if there are users in the old format, add them to the corresponding property
+             * Backwards compatibility: if there are users stored in the old format, add them to the corresponding property
              */
             List<String> additionalUsers = toList(fileContent.getValue(getUsersPropertyName(feature), null));
             if (!additionalUsers.isEmpty()) {

@@ -11,8 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Properties;
 
 import org.junit.Test;
@@ -21,7 +19,7 @@ import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 
-public class FileBasedRepositoryTest {
+public class FileBasedStateRepositoryTest {
 
     @Test
     public void updateMultipleStates() throws IOException {
