@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.activation.UsernameActivationStrategy;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.DbUtils;
 import org.togglz.core.util.MapConverter;
 import org.togglz.core.util.Strings;
@@ -24,8 +22,6 @@ import org.togglz.core.util.Strings;
  */
 class SchemaUpdater {
 
-    private final Log log = LogFactory.getLog(SchemaUpdater.class);
-
     private final Connection connection;
 
     private final String tableName;
@@ -36,16 +32,6 @@ class SchemaUpdater {
         this.connection = connection;
         this.tableName = tableName;
         this.mapConverter = mapConverter;
-    }
-
-    protected void migrate() throws SQLException {
-
-        // schema version 1
-        if (!doesTableExist()) {
-            log.info("Creating initial version of Togglz database table...");
-            migrateToVersion1();
-        }
-
     }
 
     protected boolean doesTableExist() throws SQLException {
@@ -73,16 +59,12 @@ class SchemaUpdater {
         }
     }
 
-    private String insertTableName(String s) {
-        return s.replace("%TABLE%", tableName);
-    }
-
-    public boolean isSchemaVersion1() throws SQLException {
+    protected boolean isSchemaVersion1() throws SQLException {
 
         DatabaseMetaData metaData = connection.getMetaData();
         String catalog = connection.getCatalog();
 
-        // we build a set of columns of the togglz table
+        // build a set of columns of the table
         Set<String> columns = new HashSet<String>();
         ResultSet resultSet = metaData.getColumns(catalog, null, tableName, null);
         try {
@@ -171,6 +153,10 @@ class SchemaUpdater {
             DbUtils.closeQuietly(removeUsersColumnStmt);
         }
 
+    }
+
+    private String insertTableName(String s) {
+        return s.replace("%TABLE%", tableName);
     }
 
 }
