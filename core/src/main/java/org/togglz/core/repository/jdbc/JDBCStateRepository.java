@@ -25,7 +25,7 @@ import org.togglz.core.util.Strings;
  * 
  * <p>
  * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table using
- * an constructor argument. If the repository doesn't find the required table in the database, it will automatically create it.
+ * a constructor argument. If the repository doesn't find the required table in the database, it will automatically create it.
  * </p>
  * 
  * <p>
@@ -41,14 +41,15 @@ import org.togglz.core.util.Strings;
  * )
  * </pre>
  * 
+ * <p>
+ * Please note that the structure of the database table changed with version 1.2.0 because of the new extensible activation
+ * strategy mechanism. The table structure will be automatically migrated to the new format.
+ * </p>
+ * 
  * @author Christian Kaltepoth
  * 
  */
 public class JDBCStateRepository implements StateRepository {
-
-    private static final String COLUMN_FEATURE_ENABLED = "FEATURE_ENABLED";
-    private static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
-    private static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
 
     private final Log log = LogFactory.getLog(JDBCStateRepository.class);
 
@@ -140,15 +141,15 @@ public class JDBCStateRepository implements StateRepository {
 
                         if (resultSet.next()) {
 
-                            boolean enabled = resultSet.getInt(COLUMN_FEATURE_ENABLED) > 0;
+                            boolean enabled = resultSet.getInt(Columns.FEATURE_ENABLED) > 0;
                             FeatureState state = new FeatureState(feature, enabled);
 
-                            String strategyId = resultSet.getString(COLUMN_STRATEGY_ID);
+                            String strategyId = resultSet.getString(Columns.STRATEGY_ID);
                             if (Strings.isNotBlank(strategyId)) {
                                 state.setStrategyId(strategyId.trim());
                             }
 
-                            String paramsAsString = resultSet.getString(COLUMN_STRATEGY_PARAMS);
+                            String paramsAsString = resultSet.getString(Columns.STRATEGY_PARAMS);
                             if (Strings.isNotBlank(paramsAsString)) {
                                 Map<String, String> params = mapConverter.convertFromString(paramsAsString);
                                 for (Entry<String, String> param : params.entrySet()) {

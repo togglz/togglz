@@ -24,11 +24,6 @@ import org.togglz.core.util.Strings;
  */
 class SchemaUpdater {
 
-    private static final String COLUMN_FEATURE_NAME = "FEATURE_NAME";
-    private static final String COLUMN_FEATURE_USERS = "FEATURE_USERS";
-    private static final String COLUMN_STRATEGY_ID = "STRATEGY_ID";
-    private static final String COLUMN_STRATEGY_PARAMS = "STRATEGY_PARAMS";
-
     private final Log log = LogFactory.getLog(SchemaUpdater.class);
 
     private final Connection connection;
@@ -102,7 +97,7 @@ class SchemaUpdater {
         }
 
         // version 1 check
-        return columns.contains(COLUMN_FEATURE_NAME) && !columns.contains(COLUMN_STRATEGY_ID);
+        return columns.contains(Columns.FEATURE_NAME) && !columns.contains(Columns.STRATEGY_ID);
 
     }
 
@@ -136,19 +131,19 @@ class SchemaUpdater {
                 while (resultSet.next()) {
 
                     // migration is only required if there is data in the users column
-                    String users = resultSet.getString(COLUMN_FEATURE_USERS);
+                    String users = resultSet.getString(Columns.FEATURE_USERS);
                     if (Strings.isNotBlank(users)) {
 
                         // convert the user list to the new parameters format
                         Map<String, String> params = new HashMap<String, String>();
                         params.put(UsernameActivationStrategy.PARAM_USERS, users);
                         String paramsAsString = mapConverter.convertToString(params);
-                        resultSet.updateString(COLUMN_STRATEGY_PARAMS, paramsAsString);
+                        resultSet.updateString(Columns.STRATEGY_PARAMS, paramsAsString);
 
                         // only overwrite strategy ID if it is not set yet
-                        String strategyId = resultSet.getString(COLUMN_STRATEGY_ID);
+                        String strategyId = resultSet.getString(Columns.STRATEGY_ID);
                         if (Strings.isBlank(strategyId)) {
-                            resultSet.updateString(COLUMN_STRATEGY_ID, UsernameActivationStrategy.ID);
+                            resultSet.updateString(Columns.STRATEGY_ID, UsernameActivationStrategy.ID);
                         }
 
                         // perform the update
