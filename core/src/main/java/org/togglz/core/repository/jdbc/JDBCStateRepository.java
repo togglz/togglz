@@ -78,7 +78,7 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
-        this(dataSource, tableName, DefaultMapSerializer.create().withNewLines());
+        this(dataSource, tableName, DefaultMapSerializer.multiline());
     }
 
     /**

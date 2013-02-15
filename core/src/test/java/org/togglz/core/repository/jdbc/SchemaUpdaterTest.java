@@ -25,7 +25,7 @@ public class SchemaUpdaterTest {
         Connection connection = createConnection();
         try {
 
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.multiline());
             assertFalse(updater.doesTableExist());
 
         } finally {
@@ -40,7 +40,7 @@ public class SchemaUpdaterTest {
         Connection connection = createConnection();
         try {
 
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.multiline());
             assertFalse(updater.doesTableExist());
 
             updater.migrateToVersion1();
@@ -60,7 +60,7 @@ public class SchemaUpdaterTest {
         Connection connection = createConnection();
         try {
 
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.multiline());
             assertFalse(updater.doesTableExist());
 
             assertFalse(updater.isSchemaVersion1());
@@ -82,7 +82,7 @@ public class SchemaUpdaterTest {
         try {
 
             // create schema version 1
-            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.create().withNewLines());
+            SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.multiline());
             assertFalse(updater.doesTableExist());
             updater.migrateToVersion1();
             assertTrue(updater.isSchemaVersion1());

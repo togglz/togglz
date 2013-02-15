@@ -1,54 +1,155 @@
 package org.togglz.core.repository.util;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fest.assertions.data.MapEntry;
 import org.junit.Test;
-import org.togglz.core.repository.util.DefaultMapSerializer;
 
 public class DefaultMapSerializerTest {
 
     @Test
-    public void testWithNewLines() {
+    public void shouldConvertInMultilineMode() {
 
-        DefaultMapSerializer persister = DefaultMapSerializer.create().withNewLines();
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline("\n");
 
         Map<String, String> input = new HashMap<String, String>();
-        input.put("param1", "a&b c");
-        input.put("param2", "a\r\nb");
+        input.put("param1", "value1");
+        input.put("param2", "value2");
 
-        /*
-         * & is not escaped, \r and \n are escaped, parameters are divided by \r\n
-         */
-        String str = persister.serialize(input);
-        assertThat(str, is("param1=a&b c\r\nparam2=a\\r\\nb\r\n"));
+        String data = serializer.serialize(input);
 
-        Map<String, String> output = persister.deserialize(str);
-        assertEquals(input, output);
+        assertThat(data)
+            .isEqualTo("param1=value1\nparam2=value2");
+
+        Map<String, String> result = serializer.deserialize(data);
+
+        assertThat(result)
+            .hasSize(2)
+            .contains(MapEntry.entry("param1", "value1"))
+            .contains(MapEntry.entry("param2", "value2"));
 
     }
 
     @Test
-    public void testWithoutNewLines() {
+    public void shouldConvertInSinglelineMode() {
 
-        DefaultMapSerializer persister = DefaultMapSerializer.create().withoutNewLines();
+        DefaultMapSerializer serializer = DefaultMapSerializer.singleline();
 
         Map<String, String> input = new HashMap<String, String>();
-        input.put("param1", "a&b c");
-        input.put("param2", "a\r\nb");
+        input.put("param1", "value1");
+        input.put("param2", "value2");
 
-        /*
-         * & is escaped, \r and \n are escaped, parameters are divided by &
-         */
-        String str = persister.serialize(input);
-        assertThat(str, is("param1=a\\u0026b c&param2=a\\r\\nb"));
+        String data = serializer.serialize(input);
 
-        Map<String, String> output = persister.deserialize(str);
-        assertEquals(input, output);
+        assertThat(data)
+            .isEqualTo("param1=value1&param2=value2");
+
+        Map<String, String> result = serializer.deserialize(data);
+
+        assertThat(result)
+            .hasSize(2)
+            .contains(MapEntry.entry("param1", "value1"))
+            .contains(MapEntry.entry("param2", "value2"));
+
+    }
+
+    @Test
+    public void escapesAmpersandInSinglelineMode() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.singleline();
+
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("param1", "foo&bar");
+
+        String data = serializer.serialize(input);
+
+        assertThat(data)
+            .isEqualTo("param1=foo\\u0026bar");
+
+        Map<String, String> result = serializer.deserialize(data);
+
+        assertThat(result)
+            .hasSize(1)
+            .contains(MapEntry.entry("param1", "foo&bar"));
+
+    }
+
+    @Test
+    public void escapesNewLineInSinglelineMode() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.singleline();
+
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("param1", "foo\r\nbar");
+
+        String data = serializer.serialize(input);
+
+        assertThat(data)
+            .isEqualTo("param1=foo\\r\\nbar");
+
+        Map<String, String> result = serializer.deserialize(data);
+
+        assertThat(result)
+            .hasSize(1)
+            .contains(MapEntry.entry("param1", "foo\r\nbar"));
+
+    }
+
+    @Test
+    public void escapesNewLineInMultilineMode() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline("\n");
+
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("param1", "foo\r\nbar");
+
+        String data = serializer.serialize(input);
+
+        assertThat(data)
+            .isEqualTo("param1=foo\\r\\nbar");
+
+        Map<String, String> result = serializer.deserialize(data);
+
+        assertThat(result)
+            .hasSize(1)
+            .contains(MapEntry.entry("param1", "foo\r\nbar"));
+
+    }
+
+    @Test
+    public void lineSeparatorShouldDefaultSimpleNewLine() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline();
+
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("param1", "value1");
+        input.put("param2", "value2");
+
+        String data = serializer.serialize(input);
+
+        assertThat(data)
+            .isEqualTo("param1=value1\nparam2=value2");
+
+    }
+
+
+    @Test
+    public void shouldUseCustomLineSeparator() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline("%");
+
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("param1", "value1");
+        input.put("param2", "value2");
+
+        String data = serializer.serialize(input);
+
+        assertThat(data)
+            .isEqualTo("param1=value1%param2=value2");
+
     }
 
 }

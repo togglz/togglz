@@ -19,38 +19,49 @@ import java.util.Properties;
  */
 public class DefaultMapSerializer implements MapSerializer {
 
-    private boolean newLines = true;
+    private final boolean multiline;
+
+    private final String lineSeparator;
 
     /**
      * Use {@link #create()}
      */
-    private DefaultMapSerializer() {
+    private DefaultMapSerializer(boolean multiline) {
+        this(multiline, "\n");
+    }
+
+    /**
+     * Use {@link #create()}
+     */
+    private DefaultMapSerializer(boolean multiline, String lineSeparator) {
+        this.multiline = multiline;
+        this.lineSeparator = lineSeparator;
     }
 
     /**
      * Creates a new instance of the {@link DefaultMapSerializer}.
      */
-    public static DefaultMapSerializer create() {
-        return new DefaultMapSerializer();
+    public static DefaultMapSerializer singleline() {
+        return new DefaultMapSerializer(false);
     }
 
     /**
-     * Don't use new line characters in the string representation.
+     * Creates a new instance of the {@link DefaultMapSerializer}.
      */
-    public DefaultMapSerializer withoutNewLines() {
-        this.newLines = false;
-        return this;
+    public static DefaultMapSerializer multiline() {
+        return new DefaultMapSerializer(true);
     }
 
     /**
-     * Allow new lines in the string representation
+     * Creates a new instance of the {@link DefaultMapSerializer}.
      */
-    public DefaultMapSerializer withNewLines() {
-        this.newLines = true;
-        return this;
+    public static DefaultMapSerializer multiline(String lineSeparator) {
+        return new DefaultMapSerializer(true, lineSeparator);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.togglz.core.util.MapSerializer#convertToString(java.util.Map)
      */
     @Override
@@ -80,9 +91,11 @@ public class DefaultMapSerializer implements MapSerializer {
             StringBuilder builder = new StringBuilder();
             for (String line : lines) {
 
-                if (newLines) {
+                if (multiline) {
+                    if (builder.length() > 0) {
+                        builder.append(lineSeparator);
+                    }
                     builder.append(line);
-                    builder.append("\r\n");
                 }
                 else {
                     if (builder.length() > 0) {
@@ -100,7 +113,9 @@ public class DefaultMapSerializer implements MapSerializer {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.togglz.core.util.MapSerializer#convertFromString(java.lang.String)
      */
     @Override
@@ -108,7 +123,7 @@ public class DefaultMapSerializer implements MapSerializer {
 
         try {
 
-            String input = newLines ? s : s.replace('&', '\n');
+            String input = multiline ? s : s.replace('&', '\n');
 
             Properties props = new Properties();
             if (s != null) {

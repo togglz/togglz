@@ -28,7 +28,7 @@ public class JDBCStateRepositoryTest {
     public void before() throws SQLException {
         dataSource = createDataSource();
         repository = new JDBCStateRepository(dataSource, "TOGGLZ",
-            DefaultMapSerializer.create().withoutNewLines());
+            DefaultMapSerializer.multiline());
     }
 
     @Test
