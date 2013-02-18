@@ -71,9 +71,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
     @Override
     public Parameter[] getParameters() {
         return new Parameter[] {
-                ParameterBuilder.create(PARAM_LANG).label("Language")
-                    .description("The script language to use. Your system seems to support the following languages: " +
-                        Strings.join(getSupportedLanguages(), ", ")),
+                new ScriptLanguageParameter(engineManager),
                 ParameterBuilder.create(PARAM_SCRIPT).label("Script").largeText()
                     .description("The script to check if the feature is active. " +
                         "The script context provides access to some default objects. " +
@@ -82,12 +80,47 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
         };
     }
 
-    private List<String> getSupportedLanguages() {
-        List<String> languages = new ArrayList<String>();
-        for (ScriptEngineFactory factory : engineManager.getEngineFactories()) {
-            languages.add(factory.getLanguageName());
+    private static class ScriptLanguageParameter implements Parameter {
+
+        private List<String> languages = new ArrayList<String>();
+
+        public ScriptLanguageParameter(ScriptEngineManager engineManager) {
+            for (ScriptEngineFactory factory : engineManager.getEngineFactories()) {
+                languages.add(factory.getLanguageName());
+            }
         }
-        return languages;
+
+        @Override
+        public String getName() {
+            return PARAM_LANG;
+        }
+
+        @Override
+        public String getLabel() {
+            return "Language";
+        }
+
+        @Override
+        public String getDescription() {
+            return "The script language to use. Your system seems to support the following languages: " +
+                Strings.join(languages, ", ");
+        }
+
+        @Override
+        public boolean isOptional() {
+            return false;
+        }
+
+        @Override
+        public boolean isLargeText() {
+            return false;
+        }
+
+        @Override
+        public boolean isValid(String value) {
+            return Strings.isNotBlank(value) && languages.contains(value);
+        }
+
     }
 
 }
