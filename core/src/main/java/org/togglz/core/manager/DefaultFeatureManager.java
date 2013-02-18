@@ -47,19 +47,21 @@ public class DefaultFeatureManager implements FeatureManager {
             return metaData.isEnabledByDefault();
         }
 
-        String strategyId = state.getStrategyId();
+        if (state.isEnabled()) {
 
-        // if no strategy is selected, the decision is simple
-        if (strategyId == null) {
-            return state.isEnabled();
-        }
+            // if no strategy is selected, the decision is simple
+            String strategyId = state.getStrategyId();
+            if (strategyId == null) {
+                return true;
+            }
 
-        FeatureUser user = userProvider.getCurrentUser();
+            FeatureUser user = userProvider.getCurrentUser();
 
-        // check the selected strategy
-        for (ActivationStrategy strategy : strategies) {
-            if (strategy.getId().equalsIgnoreCase(strategyId)) {
-                return strategy.isActive(state, user);
+            // check the selected strategy
+            for (ActivationStrategy strategy : strategies) {
+                if (strategy.getId().equalsIgnoreCase(strategyId)) {
+                    return strategy.isActive(state, user);
+                }
             }
         }
 

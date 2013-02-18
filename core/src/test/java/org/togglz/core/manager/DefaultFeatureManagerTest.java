@@ -76,6 +76,23 @@ public class DefaultFeatureManagerTest {
     }
 
     @Test
+    public void testShouldHandleEnabledFlagCorrectlyWithCustomStrategy() {
+
+        // enabled for admin
+        featureUserProvider.setFeatureUser(new SimpleFeatureUser("admin", false));
+        assertEquals(true, manager.isActive(MyFeatures.DELETE_USERS));
+
+        // disable feature, but keep configuration
+        FeatureState state = repository.getFeatureState(MyFeatures.DELETE_USERS);
+        state.setEnabled(false);
+        repository.setFeatureState(state);
+
+        // enabled for admin
+        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS));
+
+    }
+
+    @Test
     public void testGetFeatureState() {
 
         FeatureState state = manager.getFeatureState(MyFeatures.DELETE_USERS);
