@@ -1,2 +1,3 @@
 org.togglz.core.activation.UsernameActivationStrategy
 org.togglz.core.activation.GradualActivationStrategy
+org.togglz.core.activation.ScriptEngineActivationStrategy
