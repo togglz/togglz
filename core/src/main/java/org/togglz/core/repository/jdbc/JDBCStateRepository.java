@@ -43,7 +43,7 @@ import org.togglz.core.util.Strings;
  * </pre>
  * 
  * <p>
- * Please note that the structure of the database table changed with version 1.2.0 because of the new extensible activation
+ * Please note that the structure of the database table changed with version 2.0.0 because of the new extensible activation
  * strategy mechanism. The table structure will be automatically migrated to the new format.
  * </p>
  * 

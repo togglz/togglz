@@ -18,7 +18,7 @@ import org.togglz.core.util.Strings;
  * This implementation of {@link StateRepository} stores the state of feature using a standard Java properties file.
  * </p>
  * <p>
- * The file format has changed since version 1.2.0 because of the new extendable activation strategy support. Old file formats
+ * The file format has changed since version 2.0.0 because of the new extendable activation strategy support. Old file formats
  * will be automatically migrated. The new format looks like this:
  * </p>
  * 
