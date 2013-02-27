@@ -61,8 +61,8 @@ public class JDBCStateRepository implements StateRepository {
     private final MapSerializer serializer;
 
     /**
-     * Constructor of {@link JDBCStateRepository}. Using this constructor will automatically set the database table name to
-     * <code>TOGGLZ</CODE>.
+     * Constructor of {@link JDBCStateRepository}. A database table called <code>TOGGLZ</code> will be created automatically for
+     * you.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @see #JDBCFeatureStateRepository(DataSource, String)
@@ -72,13 +72,13 @@ public class JDBCStateRepository implements StateRepository {
     }
 
     /**
-     * Constructor of {@link JDBCStateRepository}.
+     * Constructor of {@link JDBCStateRepository}. The database table will be created automatically for you.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @param tableName The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
-        this(dataSource, tableName, DefaultMapSerializer.multiline());
+        this(dataSource, tableName, true);
     }
 
     /**
@@ -86,19 +86,33 @@ public class JDBCStateRepository implements StateRepository {
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @param tableName The name of the database table to use
+     * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
+     */
+    public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable) {
+        this(dataSource, tableName, createTable, DefaultMapSerializer.multiline());
+    }
+
+    /**
+     * Constructor of {@link JDBCStateRepository}.
+     * 
+     * @param dataSource The JDBC {@link DataSource} to obtain connections from
+     * @param tableName The name of the database table to use
+     * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
      * @param serializer The {@link MapSerializer} for storing parameters
      */
-    public JDBCStateRepository(DataSource dataSource, String tableName, MapSerializer serializer) {
+    public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer) {
         this.dataSource = dataSource;
         this.tableName = tableName;
         this.serializer = serializer;
-        init();
+        if (createTable) {
+            migrateSchema();
+        }
     }
 
     /**
      * Method for creating/migrating the database schema
      */
-    protected void init() {
+    protected void migrateSchema() {
 
         try {
 
