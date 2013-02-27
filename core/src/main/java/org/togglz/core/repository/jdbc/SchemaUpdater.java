@@ -53,7 +53,7 @@ class SchemaUpdater {
         try {
             statement
                 .executeUpdate(insertTableName(
-                "CREATE TABLE %TABLE% (FEATURE_NAME CHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS CHAR(2000))"));
+                "CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED SMALLINT, FEATURE_USERS VARCHAR(2000))"));
         } finally {
             DbUtils.closeQuietly(statement);
         }
@@ -91,9 +91,9 @@ class SchemaUpdater {
         Statement addColumnsStmt = connection.createStatement();
         try {
             addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_ID VARCHAR(200)"));
+                "ALTER TABLE %TABLE% ADD STRATEGY_ID VARCHAR(200)"));
             addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD COLUMN STRATEGY_PARAMS VARCHAR(2000)"));
+                "ALTER TABLE %TABLE% ADD STRATEGY_PARAMS VARCHAR(2000)"));
         } finally {
             DbUtils.closeQuietly(addColumnsStmt);
         }
@@ -148,7 +148,7 @@ class SchemaUpdater {
         Statement removeUsersColumnStmt = connection.createStatement();
         try {
             removeUsersColumnStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% DROP COLUMN FEATURE_USERS"));
+                "ALTER TABLE %TABLE% DROP FEATURE_USERS"));
         } finally {
             DbUtils.closeQuietly(removeUsersColumnStmt);
         }
