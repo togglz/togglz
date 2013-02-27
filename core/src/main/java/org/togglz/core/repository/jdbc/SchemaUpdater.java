@@ -53,7 +53,7 @@ class SchemaUpdater {
         try {
             statement
                 .executeUpdate(insertTableName(
-                "CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED SMALLINT, FEATURE_USERS VARCHAR(2000))"));
+                "CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS VARCHAR(2000))"));
         } finally {
             DbUtils.closeQuietly(statement);
         }
