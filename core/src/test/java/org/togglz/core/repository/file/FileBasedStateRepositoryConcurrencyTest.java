@@ -4,11 +4,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.fest.assertions.data.MapEntry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +40,7 @@ public class FileBasedStateRepositoryConcurrencyTest {
             // build up a feature state containing some data
             String name = "FEATURE" + i;
             Feature feature = new TestFeature(name);
-            final FeatureState state = new FeatureState(feature)
-                .setStrategyId("strategy-for-" + name)
-                .setParameter("param-of-" + name, "some-value-of-" + name);
+            final FeatureState state = new FeatureState(feature, false, Arrays.asList("admin"));
 
             // queue a thread writing that state
             executor.submit(new Runnable() {
@@ -68,10 +66,7 @@ public class FileBasedStateRepositoryConcurrencyTest {
 
             // verify that the state is as expected
             assertThat(state).isNotNull();
-            assertThat(state.getStrategyId()).isEqualTo("strategy-for-" + name);
-            assertThat(state.getParameterMap())
-                .hasSize(1)
-                .contains(MapEntry.entry("param-of-" + name, "some-value-of-" + name));
+            assertThat(state.getUsers()).contains("admin");
 
         }
 
