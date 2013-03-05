@@ -16,6 +16,9 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.IOUtils;
 
+/**
+ * Please note that this class is NOT thread-safe.
+ */
 class ReloadablePropertiesFile {
 
     private final Log log = LogFactory.getLog(ReloadablePropertiesFile.class);
