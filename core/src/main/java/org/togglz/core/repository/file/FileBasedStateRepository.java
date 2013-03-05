@@ -51,7 +51,7 @@ public class FileBasedStateRepository implements StateRepository {
         log.debug(this.getClass().getSimpleName() + " initialized with: " + file.getAbsolutePath());
     }
 
-    public FeatureState getFeatureState(Feature feature) {
+    public synchronized FeatureState getFeatureState(Feature feature) {
 
         // update file if changed
         fileContent.reloadIfUpdated();
@@ -67,7 +67,7 @@ public class FileBasedStateRepository implements StateRepository {
 
     }
 
-    public void setFeatureState(FeatureState featureState) {
+    public synchronized void setFeatureState(FeatureState featureState) {
 
         // update file if changed
         fileContent.reloadIfUpdated();
