@@ -1,6 +1,6 @@
 package org.togglz.core.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,33 +12,80 @@ import org.togglz.core.util.Weighted.WeightedComparator;
 public class WeightedTest {
 
     @Test
-    public void testWeightedComparator() {
+    public void shouldSortCorrectlySimpleIntValues() {
+
+        Weighted prio10 = new Weighted() {
+            @Override
+            public int priority() {
+                return 10;
+            }
+        };
+
+        Weighted prio20 = new Weighted() {
+            @Override
+            public int priority() {
+                return 20;
+            }
+        };
 
         List<Weighted> list = new ArrayList<Weighted>();
-        list.add(new Second());
-        list.add(new First());
+        list.add(prio20);
+        list.add(prio10);
         Collections.sort(list, new WeightedComparator());
 
-        assertEquals(First.class, list.get(0).getClass());
-        assertEquals(Second.class, list.get(1).getClass());
+        assertThat(list).containsExactly(prio10, prio20);
 
     }
 
-    private final static class First implements Weighted {
+    @Test
+    public void shouldSupportMinimumIntValue() {
 
-        @Override
-        public int priority() {
-            return 10;
-        }
+        Weighted prioMinInt = new Weighted() {
+            @Override
+            public int priority() {
+                return Integer.MIN_VALUE;
+            }
+        };
+
+        Weighted prio50 = new Weighted() {
+            @Override
+            public int priority() {
+                return 50;
+            }
+        };
+
+        List<Weighted> list = new ArrayList<Weighted>();
+        list.add(prio50);
+        list.add(prioMinInt);
+        Collections.sort(list, new WeightedComparator());
+
+        assertThat(list).containsExactly(prioMinInt, prio50);
 
     }
 
-    private final static class Second implements Weighted {
+    @Test
+    public void shouldSupportMaximumIntValue() {
 
-        @Override
-        public int priority() {
-            return 20;
-        }
+        Weighted prioMaxInt = new Weighted() {
+            @Override
+            public int priority() {
+                return Integer.MAX_VALUE;
+            }
+        };
+
+        Weighted prio50 = new Weighted() {
+            @Override
+            public int priority() {
+                return 50;
+            }
+        };
+
+        List<Weighted> list = new ArrayList<Weighted>();
+        list.add(prioMaxInt);
+        list.add(prio50);
+        Collections.sort(list, new WeightedComparator());
+
+        assertThat(list).containsExactly(prio50, prioMaxInt);
 
     }
 

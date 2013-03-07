@@ -20,7 +20,7 @@ public interface Weighted {
 
         @Override
         public int compare(Weighted left, Weighted right) {
-            return left.priority() - right.priority();
+            return Integer.valueOf(left.priority()).compareTo(Integer.valueOf(right.priority()));
         }
 
     }
