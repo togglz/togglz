@@ -25,15 +25,15 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:git@github.com:chkal/togglz.git</connection>
-    <developerConnection>scm:git:git@github.com:chkal/togglz.git</developerConnection>
-    <url>https://github.com/chkal/togglz</url>
-    <tag>1.1.0.Final</tag>
+    <connection>scm:git:git@github.com:togglz/togglz.git</connection>
+    <developerConnection>scm:git:git@github.com:togglz/togglz.git</developerConnection>
+    <url>https://github.com/togglz/togglz</url>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
     <system>github</system>
-    <url>http://github.com/chkal/togglz/issues</url>
+    <url>http://github.com/togglz/togglz/issues</url>
   </issueManagement>
 
   <properties>
