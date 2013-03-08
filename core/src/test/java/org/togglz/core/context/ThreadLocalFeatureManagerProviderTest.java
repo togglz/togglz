@@ -19,7 +19,7 @@ public class ThreadLocalFeatureManagerProviderTest {
     @Before
     public void before() {
         FeatureManager featureManager = new FeatureManagerBuilder()
-                .featureClass(Feature.class)
+                .features(new Feature[0])
                 .stateRepository(new InMemoryStateRepository())
                 .userProvider(new NoOpUserProvider())
                 .build();

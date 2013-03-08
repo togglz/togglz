@@ -22,7 +22,7 @@ import org.togglz.core.user.UserProvider;
  */
 public class FeatureManagerBuilder {
 
-    private Class<? extends Feature> featureClass;
+    private Feature[] features;
     private StateRepository stateRepository = new InMemoryStateRepository();
     private UserProvider userProvider = new NoOpUserProvider();
 
@@ -35,10 +35,18 @@ public class FeatureManagerBuilder {
     }
 
     /**
-     * Use the supplied feature class for the feature manager.
+     * Use the supplied feature enum class for the feature manager.
      */
     public FeatureManagerBuilder featureClass(Class<? extends Feature> featureClass) {
-        this.featureClass = featureClass;
+        this.features = featureClass.getEnumConstants();
+        return this;
+    }
+
+    /**
+     * Set the features that the feature manager should be used with.
+     */
+    public FeatureManagerBuilder features(Feature[] features) {
+        this.features = features;
         return this;
     }
 
@@ -99,10 +107,10 @@ public class FeatureManagerBuilder {
      * Create the {@link FeatureManager} using the current configuration of the builder
      */
     public FeatureManager build() {
-        checkNotNull(featureClass, "No feature class specified");
+        checkNotNull(features, "No features specified");
         checkNotNull(stateRepository, "No state repository specified");
         checkNotNull(userProvider, "No user provider specified");
-        return new DefaultFeatureManager(featureClass, stateRepository, userProvider);
+        return new DefaultFeatureManager(features, stateRepository, userProvider);
     }
 
     private static void checkNotNull(Object o, String message) {

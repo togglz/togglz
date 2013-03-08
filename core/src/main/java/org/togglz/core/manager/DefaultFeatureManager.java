@@ -22,12 +22,12 @@ import org.togglz.core.util.Validate;
 public class DefaultFeatureManager implements FeatureManager {
 
     private final StateRepository stateRepository;
-    private final Class<? extends Feature> featureClazz;
     private final UserProvider userProvider;
     private final List<ActivationStrategy> strategies;
+    private final Feature[] features;
 
-    DefaultFeatureManager(Class<? extends Feature> featureClazz, StateRepository stateRepository, UserProvider userProvider) {
-        this.featureClazz = featureClazz;
+    DefaultFeatureManager(Feature[] features, StateRepository stateRepository, UserProvider userProvider) {
+        this.features = features;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
         this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
@@ -35,7 +35,7 @@ public class DefaultFeatureManager implements FeatureManager {
     }
 
     public Feature[] getFeatures() {
-        return featureClazz.getEnumConstants();
+        return features;
     }
 
     public boolean isActive(Feature feature) {
