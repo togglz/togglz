@@ -1,5 +1,6 @@
 package org.togglz.testing;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +20,8 @@ public class TestFeatureManager implements FeatureManager {
     }
 
     @Override
-    public Feature[] getFeatures() {
-        return featureClass.getEnumConstants();
+    public Set<Feature> getFeatures() {
+        return new HashSet<Feature>(Arrays.asList(featureClass.getEnumConstants()));
     }
 
     @Override

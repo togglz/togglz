@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -13,6 +15,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.test.Deployments;
 
@@ -35,9 +38,10 @@ public class BeanManagerProducerTest {
     public void testFeatureManagerInjection() throws IOException {
 
         assertNotNull(featureManager);
-        assertEquals(2, featureManager.getFeatures().length);
-        assertEquals(BasicFeatures.FEATURE1, featureManager.getFeatures()[0]);
-        assertEquals(BasicFeatures.FEATURE2, featureManager.getFeatures()[1]);
+        List<Feature> features = new ArrayList<Feature>(featureManager.getFeatures());
+        assertEquals(2, features.size());
+        assertEquals(BasicFeatures.FEATURE1, features.get(0));
+        assertEquals(BasicFeatures.FEATURE2, features.get(1));
 
     }
 

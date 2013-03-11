@@ -1,5 +1,6 @@
 package org.togglz.core.manager;
 
+import static org.fest.assertions.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
@@ -49,9 +50,9 @@ public class DefaultFeatureManagerTest {
 
     @Test
     public void testGetFeatures() {
-        assertEquals(2, manager.getFeatures().length);
-        assertEquals(MyFeatures.DELETE_USERS, manager.getFeatures()[0]);
-        assertEquals(MyFeatures.EXPERIMENTAL, manager.getFeatures()[1]);
+        assertThat(manager.getFeatures())
+            .hasSize(2)
+            .containsExactly(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL);
     }
 
     @Test

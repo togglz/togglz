@@ -1,5 +1,7 @@
 package org.togglz.core.manager;
 
+import java.util.Set;
+
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
@@ -18,11 +20,11 @@ import org.togglz.core.user.UserProvider;
 public interface FeatureManager {
 
     /**
-     * Provides a list of all features the manager is responsible for.
+     * Provides access to all features the manager is responsible for.
      * 
-     * @return Array of features, never <code>null</code>
+     * @return Set of features, never <code>null</code>
      */
-    Feature[] getFeatures();
+    Set<Feature> getFeatures();
 
     /**
      * Checks whether the supplied feature is active or not. Please note that this method will internally use the

@@ -1,7 +1,10 @@
 package org.togglz.core.manager;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.togglz.core.Feature;
 import org.togglz.core.FeatureMetaData;
@@ -34,8 +37,8 @@ public class DefaultFeatureManager implements FeatureManager {
         Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
     }
 
-    public Feature[] getFeatures() {
-        return features;
+    public Set<Feature> getFeatures() {
+        return new LinkedHashSet<Feature>(Arrays.asList(features));
     }
 
     public boolean isActive(Feature feature) {
