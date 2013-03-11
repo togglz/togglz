@@ -35,11 +35,23 @@ public class FeatureManagerBuilder {
     }
 
     /**
-     * Use the supplied feature enum class for the feature manager.
+     * Use {@link #featureEnum(Class)} instead.
      */
+    @Deprecated
     public FeatureManagerBuilder featureClass(Class<? extends Feature> featureClass) {
         this.features = featureClass.getEnumConstants();
         return this;
+    }
+
+    /**
+     * Use the supplied feature enum class for the feature manager.
+     */
+    public FeatureManagerBuilder featureEnum(Class<? extends Feature> featureClass) {
+        if (featureClass != null && featureClass.isEnum()) {
+            this.features = featureClass.getEnumConstants();
+            return this;
+        }
+        throw new IllegalStateException("The featureClass argument must be an enum");
     }
 
     /**
@@ -98,7 +110,7 @@ public class FeatureManagerBuilder {
      */
     public FeatureManagerBuilder togglzConfig(TogglzConfig config) {
         stateRepository(config.getStateRepository());
-        featureClass(config.getFeatureClass());
+        featureEnum(config.getFeatureClass());
         userProvider(config.getUserProvider());
         return this;
     }

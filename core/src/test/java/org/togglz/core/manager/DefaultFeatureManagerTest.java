@@ -33,7 +33,7 @@ public class DefaultFeatureManagerTest {
         featureUserProvider = new TestFeatureUserProvider();
 
         manager = new FeatureManagerBuilder()
-                .featureClass(MyFeatures.class)
+                .featureEnum(MyFeatures.class)
                 .stateRepository(repository)
                 .userProvider(featureUserProvider)
                 .build();
