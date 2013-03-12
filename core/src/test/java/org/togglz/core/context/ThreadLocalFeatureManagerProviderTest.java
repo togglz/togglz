@@ -19,7 +19,7 @@ public class ThreadLocalFeatureManagerProviderTest {
     @Before
     public void before() {
         FeatureManager featureManager = new FeatureManagerBuilder()
-                .features(new Feature[0])
+                .featureEnum(MyFeature.class)
                 .stateRepository(new InMemoryStateRepository())
                 .userProvider(new NoOpUserProvider())
                 .build();
@@ -50,6 +50,18 @@ public class ThreadLocalFeatureManagerProviderTest {
     public void secondTest() {
         FeatureManager featureManager = FeatureContext.getFeatureManager();
         assertNotNull(featureManager);
+    }
+
+    private static enum MyFeature implements Feature {
+
+        FEATURE1,
+        FEATURE2;
+
+        @Override
+        public boolean isActive() {
+            return FeatureContext.getFeatureManager().isActive(this);
+        }
+
     }
 
 }

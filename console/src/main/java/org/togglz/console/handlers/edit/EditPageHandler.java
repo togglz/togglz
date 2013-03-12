@@ -15,6 +15,7 @@ import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Lists;
@@ -48,8 +49,9 @@ public class EditPageHandler extends RequestHandlerBase {
             return;
         }
 
+        FeatureMetaData metadata = featureManager.getMetaData(feature);
         List<ActivationStrategy> impls = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
-        FeatureModel featureModel = new FeatureModel(feature, impls);
+        FeatureModel featureModel = new FeatureModel(feature, metadata, impls);
 
         // GET requests for this feature
         if ("GET".equals(request.getMethod())) {

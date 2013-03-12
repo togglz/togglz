@@ -1,5 +1,7 @@
 package org.togglz.core.util;
 
+import java.util.Set;
+
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
@@ -34,7 +36,7 @@ public class UntypedFeature implements Feature {
 
     private Feature getTypedFeature() {
         if (_feature == null) {
-            Feature[] features = FeatureContext.getFeatureManager().getFeatures();
+            Set<Feature> features = FeatureContext.getFeatureManager().getFeatures();
             for (Feature f : features) {
                 if (f.name().equals(name)) {
                     _feature = f;

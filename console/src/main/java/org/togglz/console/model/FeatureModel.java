@@ -8,8 +8,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.togglz.core.Feature;
-import org.togglz.core.FeatureMetaData;
 import org.togglz.core.activation.Parameter;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Strings;
@@ -18,7 +18,7 @@ import org.togglz.core.util.Validate;
 public class FeatureModel {
 
     private final Feature feature;
-    private final FeatureMetaData metaData;
+    private final FeatureMetaData metadata;
 
     private final List<StrategyModel> strategies = new ArrayList<StrategyModel>();
 
@@ -26,10 +26,10 @@ public class FeatureModel {
 
     private StrategyModel strategy;
 
-    public FeatureModel(Feature feature, List<ActivationStrategy> impls) {
+    public FeatureModel(Feature feature, FeatureMetaData metadata, List<ActivationStrategy> impls) {
 
         this.feature = feature;
-        this.metaData = FeatureMetaData.build(feature);
+        this.metadata = metadata;
 
         List<ActivationStrategy> sortedImpls = new ArrayList<ActivationStrategy>(impls);
         Collections.sort(sortedImpls, new Comparator<ActivationStrategy>() {
@@ -148,7 +148,7 @@ public class FeatureModel {
     }
 
     public String getLabel() {
-        return metaData.getLabel();
+        return metadata.getLabel();
     }
 
     public String getName() {

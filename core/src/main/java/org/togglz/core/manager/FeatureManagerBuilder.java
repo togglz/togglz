@@ -10,6 +10,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.spi.BeanFinder;
+import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
 
@@ -22,7 +23,7 @@ import org.togglz.core.user.UserProvider;
  */
 public class FeatureManagerBuilder {
 
-    private Feature[] features;
+    private FeatureProvider featureProvider = null;
     private StateRepository stateRepository = new InMemoryStateRepository();
     private UserProvider userProvider = new NoOpUserProvider();
 
@@ -35,18 +36,27 @@ public class FeatureManagerBuilder {
     }
 
     /**
-     * Use the supplied feature enum class for the feature manager.
+     * Use {@link #featureEnum(Class)} instead.
      */
+    @Deprecated
     public FeatureManagerBuilder featureClass(Class<? extends Feature> featureClass) {
-        this.features = featureClass.getEnumConstants();
+        return this.featureEnum(featureClass);
+    }
+
+    /**
+     * Use the supplied feature enum class for the feature manager. Same as calling {@link #featureProvider(FeatureProvider)}
+     * with {@link EnumBasedFeatureProvider}.
+     */
+    public FeatureManagerBuilder featureEnum(Class<? extends Feature> featureEnum) {
+        this.featureProvider = new EnumBasedFeatureProvider(featureEnum);
         return this;
     }
 
     /**
-     * Set the features that the feature manager should be used with.
+     * Sets a {@link FeatureProvider} for the feature manager. Only useful if you don't use enums to declare your features.
      */
-    public FeatureManagerBuilder features(Feature[] features) {
-        this.features = features;
+    public FeatureManagerBuilder featureProvider(FeatureProvider featureProvider) {
+        this.featureProvider = featureProvider;
         return this;
     }
 
@@ -86,7 +96,7 @@ public class FeatureManagerBuilder {
 
         if (configurations.size() != 1) {
             throw new IllegalStateException("Unable to find exactly one TogglzConfig but got "
-                    + configurations.size());
+                + configurations.size());
         }
 
         return togglzConfig(configurations.iterator().next());
@@ -98,7 +108,7 @@ public class FeatureManagerBuilder {
      */
     public FeatureManagerBuilder togglzConfig(TogglzConfig config) {
         stateRepository(config.getStateRepository());
-        featureClass(config.getFeatureClass());
+        featureEnum(config.getFeatureClass());
         userProvider(config.getUserProvider());
         return this;
     }
@@ -107,10 +117,10 @@ public class FeatureManagerBuilder {
      * Create the {@link FeatureManager} using the current configuration of the builder
      */
     public FeatureManager build() {
-        checkNotNull(features, "No features specified");
+        checkNotNull(featureProvider, "No feature provider specified");
         checkNotNull(stateRepository, "No state repository specified");
         checkNotNull(userProvider, "No user provider specified");
-        return new DefaultFeatureManager(features, stateRepository, userProvider);
+        return new DefaultFeatureManager(featureProvider, stateRepository, userProvider);
     }
 
     private static void checkNotNull(Object o, String message) {

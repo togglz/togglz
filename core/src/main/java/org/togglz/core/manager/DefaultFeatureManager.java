@@ -1,13 +1,17 @@
 package org.togglz.core.manager;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.FeatureMetaData;
+import org.togglz.core.metadata.EmptyFeatureMetaData;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.util.Lists;
@@ -24,18 +28,27 @@ public class DefaultFeatureManager implements FeatureManager {
     private final StateRepository stateRepository;
     private final UserProvider userProvider;
     private final List<ActivationStrategy> strategies;
-    private final Feature[] features;
+    private final FeatureProvider featureProvider;
 
-    DefaultFeatureManager(Feature[] features, StateRepository stateRepository, UserProvider userProvider) {
-        this.features = features;
+    DefaultFeatureManager(FeatureProvider featureProvider, StateRepository stateRepository, UserProvider userProvider) {
+        this.featureProvider = featureProvider;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
         this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
         Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
     }
 
-    public Feature[] getFeatures() {
-        return features;
+    public Set<Feature> getFeatures() {
+        return Collections.unmodifiableSet(featureProvider.getFeatures());
+    }
+
+    @Override
+    public FeatureMetaData getMetaData(Feature feature) {
+        FeatureMetaData metadata = featureProvider.getMetaData(feature);
+        if (metadata != null) {
+            return metadata;
+        }
+        return new EmptyFeatureMetaData(feature);
     }
 
     public boolean isActive(Feature feature) {
@@ -43,8 +56,7 @@ public class DefaultFeatureManager implements FeatureManager {
         FeatureState state = stateRepository.getFeatureState(feature);
 
         if (state == null) {
-            FeatureMetaData metaData = FeatureMetaData.build(feature);
-            return metaData.isEnabledByDefault();
+            return getMetaData(feature).isEnabledByDefault();
         }
 
         if (state.isEnabled()) {
@@ -73,8 +85,8 @@ public class DefaultFeatureManager implements FeatureManager {
     public FeatureState getFeatureState(Feature feature) {
         FeatureState state = stateRepository.getFeatureState(feature);
         if (state == null) {
-            FeatureMetaData metaData = FeatureMetaData.build(feature);
-            state = new FeatureState(feature, metaData.isEnabledByDefault());
+            boolean enabled = getMetaData(feature).isEnabledByDefault();
+            state = new FeatureState(feature, enabled);
         }
         return state;
     }

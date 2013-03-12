@@ -5,6 +5,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.util.Validate;
 import org.togglz.testing.TestFeatureManager;
 import org.togglz.testing.TestFeatureManagerProvider;
 
@@ -56,8 +57,10 @@ public class TogglzRule implements TestRule {
         return new TogglzRule(featureClass, new Feature[0]);
     }
 
-    private TogglzRule(Class<? extends Feature> featureClass, Feature[] initiallyActive) {
-        this.featureClass = featureClass;
+    private TogglzRule(Class<? extends Feature> featureEnum, Feature[] initiallyActive) {
+        Validate.notNull(featureEnum, "The featureEnum argument is required");
+        Validate.isTrue(featureEnum.isEnum(), "This class only works with feature enums");
+        this.featureClass = featureEnum;
         this.initiallyActive = initiallyActive;
     }
 

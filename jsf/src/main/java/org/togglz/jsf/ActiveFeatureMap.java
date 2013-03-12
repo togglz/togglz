@@ -18,7 +18,7 @@ public class ActiveFeatureMap implements Map<String, Boolean> {
 
     @Override
     public int size() {
-        return FeatureContext.getFeatureManager().getFeatures().length;
+        return FeatureContext.getFeatureManager().getFeatures().size();
     }
 
     @Override
