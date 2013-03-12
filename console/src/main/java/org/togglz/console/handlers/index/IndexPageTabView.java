@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
-import org.togglz.core.FeatureMetaData;
 import org.togglz.core.group.FeatureGroup;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 
@@ -31,15 +31,14 @@ public class IndexPageTabView {
         tabs.add(allTab);
     }
 
-    public void add(Feature feature, FeatureState featureState) {
+    public void add(Feature feature, FeatureMetaData metadata, FeatureState featureState) {
 
         // all features are shown in the ALL tab
-        FeatureModel row = new FeatureModel(feature, strategies);
+        FeatureModel row = new FeatureModel(feature, metadata, strategies);
         row.populateFromFeatureState(featureState);
         allTab.add(row);
 
-        FeatureMetaData metaData = FeatureMetaData.build(feature);
-        for (FeatureGroup group : metaData.getGroups()) {
+        for (FeatureGroup group : metadata.getGroups()) {
 
             String label = group.getLabel();
             IndexPageTab tab = tabMap.get(label);

@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.metadata.EnumFeatureMetaData;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 
 /**
@@ -26,6 +28,11 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
     @Override
     public Set<Feature> getFeatures() {
         return new LinkedHashSet<Feature>(Arrays.asList(featureEnum.getEnumConstants()));
+    }
+
+    @Override
+    public FeatureMetaData getMetaData(Feature feature) {
+        return new EnumFeatureMetaData(feature);
     }
 
 }

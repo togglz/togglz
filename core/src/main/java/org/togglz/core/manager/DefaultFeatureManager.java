@@ -6,7 +6,8 @@ import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.FeatureMetaData;
+import org.togglz.core.metadata.EmptyFeatureMetaData;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
@@ -41,13 +42,21 @@ public class DefaultFeatureManager implements FeatureManager {
         return Collections.unmodifiableSet(featureProvider.getFeatures());
     }
 
+    @Override
+    public FeatureMetaData getMetaData(Feature feature) {
+        FeatureMetaData metadata = featureProvider.getMetaData(feature);
+        if (metadata != null) {
+            return metadata;
+        }
+        return new EmptyFeatureMetaData(feature);
+    }
+
     public boolean isActive(Feature feature) {
 
         FeatureState state = stateRepository.getFeatureState(feature);
 
         if (state == null) {
-            FeatureMetaData metaData = FeatureMetaData.build(feature);
-            return metaData.isEnabledByDefault();
+            return getMetaData(feature).isEnabledByDefault();
         }
 
         if (state.isEnabled()) {
@@ -76,8 +85,8 @@ public class DefaultFeatureManager implements FeatureManager {
     public FeatureState getFeatureState(Feature feature) {
         FeatureState state = stateRepository.getFeatureState(feature);
         if (state == null) {
-            FeatureMetaData metaData = FeatureMetaData.build(feature);
-            state = new FeatureState(feature, metaData.isEnabledByDefault());
+            boolean enabled = getMetaData(feature).isEnabledByDefault();
+            state = new FeatureState(feature, enabled);
         }
         return state;
     }

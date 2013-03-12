@@ -11,6 +11,7 @@ import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Lists;
@@ -34,8 +35,9 @@ public class IndexPageHandler extends RequestHandlerBase {
         IndexPageTabView tabView = new IndexPageTabView(strategies);
 
         for (Feature feature : featureManager.getFeatures()) {
+            FeatureMetaData metadata = featureManager.getMetaData(feature);
             FeatureState featureState = featureManager.getFeatureState(feature);
-            tabView.add(feature, featureState);
+            tabView.add(feature, metadata, featureState);
         }
 
         Map<String, Object> model = new HashMap<String, Object>();

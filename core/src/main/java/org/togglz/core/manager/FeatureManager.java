@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.FeatureUser;
@@ -25,6 +26,14 @@ public interface FeatureManager {
      * @return Set of features, never <code>null</code>
      */
     Set<Feature> getFeatures();
+
+    /**
+     * Returns the {@link FeatureMetaData} describing the supplied feature.
+     * 
+     * @param feature The feature to get the metadata for
+     * @return the metadata for the feature
+     */
+    FeatureMetaData getMetaData(Feature feature);
 
     /**
      * Checks whether the supplied feature is active or not. Please note that this method will internally use the
