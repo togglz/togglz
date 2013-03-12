@@ -11,18 +11,18 @@ import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 
 /**
- * Web service implementation of endpoint {@link FeatureActivity} which
- * retrieves the {@link FeatureManager} from the {@link FeatureContext}.
+ * Web service implementation of endpoint {@link TogglzWebService} which uses
+ * the {@link FeatureManager} retrieved from the {@link FeatureContext}.
  * 
  * @author Mauro Talevi
  */
-@WebService(endpointInterface = "org.togglz.ws.server.FeatureActivity")
-public class ContextFeatureActivity implements FeatureActivity {
+@WebService(endpointInterface = "org.togglz.ws.server.TogglzWebService", serviceName = "TogglzWebService")
+public class ContextTogglzWebService implements TogglzWebService {
 
-    private final Log log = LogFactory.getLog(ContextFeatureActivity.class);
+    private final Log log = LogFactory.getLog(ContextTogglzWebService.class);
 
-    public boolean isActive(String name) {
-        FeatureManager manager = FeatureContext.getFeatureManager();        
+    public boolean isFeatureActive(String name) {
+        FeatureManager manager = FeatureContext.getFeatureManager();
         try {
             boolean active = manager.isActive(feature(manager, name));
             log.debug("Feature " + name + " is " + (!active ? "not" : "") + " active");

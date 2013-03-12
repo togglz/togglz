@@ -16,14 +16,14 @@ import org.togglz.core.user.UserProvider;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ContextFeatureActivityTest {
+public class ContextTogglzWebServiceTest {
 
     @Test
     public void canDetermineIfFeatureIsActive() {
         ThreadLocalFeatureManagerProvider.bind(new FeatureManagerBuilder().togglzConfig(new MyConfig()).build());
-        FeatureActivity activity = new ContextFeatureActivity();
-        assertTrue(activity.isActive(MyFeatures.ONE.name()));
-        assertFalse(activity.isActive(MyFeatures.TWO.name()));
+        TogglzWebService service = new ContextTogglzWebService();
+        assertTrue(service.isFeatureActive(MyFeatures.ONE.name()));
+        assertFalse(service.isFeatureActive(MyFeatures.TWO.name()));
     }
 
     class MyConfig implements TogglzConfig {

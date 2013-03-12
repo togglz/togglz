@@ -6,8 +6,8 @@
     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
     http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-  <jaxws:endpoint id="featureActivity"
-    implementor="org.togglz.ws.server.ContextFeatureActivity"
-    address="/FeatureActivity" />
+  <jaxws:endpoint id="togglzWebService"
+    implementor="org.togglz.ws.server.ContextTogglzWebService"
+    address="/TogglzWebService" />
 
 </beans>
