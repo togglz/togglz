@@ -123,6 +123,7 @@
     <module>deltaspike</module>
     <module>shiro</module>
     <module>jsf</module>
+    <module>ws</module>
     <module>seam-security</module>
     <module>testing</module>
     <module>junit</module>
