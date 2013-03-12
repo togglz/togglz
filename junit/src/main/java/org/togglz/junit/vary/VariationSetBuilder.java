@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link VariationSet} that allows to build the set dynamically.
@@ -26,9 +27,11 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     private final Set<F> featuresToEnable = new HashSet<F>();
     private final Set<F> featuresToDisable = new HashSet<F>();
 
-    private VariationSetBuilder(Class<F> featureClass)
+    private VariationSetBuilder(Class<F> featureEnum)
     {
-        this.featureClass = featureClass;
+        Validate.notNull(featureEnum, "The featureEnum argument is required");
+        Validate.isTrue(featureEnum.isEnum(), "This class only works with feature enums");
+        this.featureClass = featureEnum;
     }
 
     /**

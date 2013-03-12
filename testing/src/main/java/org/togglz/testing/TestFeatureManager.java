@@ -20,7 +20,7 @@ public class TestFeatureManager implements FeatureManager {
 
     public TestFeatureManager(Class<? extends Feature> featureEnum) {
         Validate.notNull(featureEnum, "The featureEnum argument is required");
-        Validate.isTrue(featureEnum.isEnum(), "This feature manager currently only implements enums");
+        Validate.isTrue(featureEnum.isEnum(), "This feature manager currently only works with feature enums");
         this.featureEnum = featureEnum;
     }
 
