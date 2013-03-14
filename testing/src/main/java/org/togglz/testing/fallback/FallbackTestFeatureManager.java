@@ -10,6 +10,13 @@ import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 
+/**
+ * 
+ * Simple {@link FeatureManager} for unit tests that enables all features.
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class FallbackTestFeatureManager implements FeatureManager {
 
     @Override

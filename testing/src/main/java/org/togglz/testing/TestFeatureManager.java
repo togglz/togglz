@@ -12,6 +12,13 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Validate;
 
+/**
+ * 
+ * A {@link FeatureManager} implementation that allows easy manipulation of features in testing environments.
+ * 
+ * @author Christian Kaltepoth
+ * 
+ */
 public class TestFeatureManager implements FeatureManager {
 
     private final Class<? extends Feature> featureEnum;
