@@ -15,6 +15,7 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
+import org.togglz.core.repository.url.URLStateRepository;
 import org.togglz.servlet.spi.WebAppFeatureManagerProvider;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
@@ -29,6 +30,7 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
 public class TogglzFilter implements Filter {
 
     private final Log log = LogFactory.getLog(TogglzFilter.class);
+    private static final String URL_PARAMETER = "togglz";
 
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -48,6 +50,10 @@ public class TogglzFilter implements Filter {
             ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
+        String featureString = request.getParameter(URL_PARAMETER);
+        if (featureString != null && !featureString.isEmpty()) {
+            URLStateRepository.getInstance().setFeatureState(featureString);
+        }
 
         try {
 
