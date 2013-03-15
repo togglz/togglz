@@ -11,17 +11,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
-import org.togglz.servlet.spi.WebAppFeatureManagerProvider;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 /**
  * 
  * This filter is the central component of the Togglz Servlet integration module. It is responsible to bootstrap the
- * {@link FeatureManager} and register it with {@link WebAppFeatureManagerProvider}.
+ * {@link FeatureManager} and register it with {@link ContextClassLoaderFeatureManagerProvider}.
  * 
  * @author Christian Kaltepoth
  * 
@@ -37,7 +37,7 @@ public class TogglzFilter implements Filter {
         // create FeatureManager if required
         if (isCreateLocalFeatureManager(servletContext)) {
             FeatureManager featureManager = new FeatureManagerBuilder().autoDiscovery(servletContext).build();
-            WebAppFeatureManagerProvider.bind(featureManager);
+            ContextClassLoaderFeatureManagerProvider.bind(featureManager);
         }
 
         log.info("TogglzFilter started!");
@@ -65,7 +65,7 @@ public class TogglzFilter implements Filter {
     }
 
     public void destroy() {
-        WebAppFeatureManagerProvider.release();
+        ContextClassLoaderFeatureManagerProvider.release();
     }
 
     /**
