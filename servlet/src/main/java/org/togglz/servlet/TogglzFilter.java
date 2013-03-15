@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -30,22 +29,30 @@ public class TogglzFilter implements Filter {
 
     private final Log log = LogFactory.getLog(TogglzFilter.class);
 
+    private TogglzFilterConfig config;
+
     public void init(FilterConfig filterConfig) throws ServletException {
 
-        ServletContext servletContext = filterConfig.getServletContext();
+        // build the configuration object
+        config = new TogglzFilterConfig(filterConfig.getServletContext());
 
         // create FeatureManager if required
-        if (isCreateLocalFeatureManager(servletContext)) {
-            FeatureManager featureManager = new FeatureManagerBuilder().autoDiscovery(servletContext).build();
+        if (config.isCreateLocalFeatureManager()) {
+
+            FeatureManager featureManager = new FeatureManagerBuilder()
+                .autoDiscovery(filterConfig.getServletContext())
+                .build();
+
             ContextClassLoaderFeatureManagerProvider.bind(featureManager);
+
         }
 
         log.info("TogglzFilter started!");
 
     }
 
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
-            ServletException {
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
+        throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
 
@@ -58,30 +65,21 @@ public class TogglzFilter implements Filter {
             chain.doFilter(req, resp);
 
         } finally {
+
             // remove the request from the thread local
             HttpServletRequestHolder.release();
+
         }
 
     }
 
     public void destroy() {
-        ContextClassLoaderFeatureManagerProvider.release();
-    }
 
-    /**
-     * Returns <code>true</code> if the filter should create a local {@link FeatureManager} for the application.
-     */
-    private static boolean isCreateLocalFeatureManager(ServletContext servletContext) {
-
-        String value = servletContext.getInitParameter("org.togglz.LOCAL_FEATURE_MANAGER");
-
-        // "false" only if explicitly configured this way
-        if (value != null && "false".equalsIgnoreCase(value.trim())) {
-            return false;
+        // releae only if the filter created it
+        if (config.isCreateLocalFeatureManager()) {
+            ContextClassLoaderFeatureManagerProvider.release();
         }
 
-        // the default case
-        return true;
     }
 
 }
