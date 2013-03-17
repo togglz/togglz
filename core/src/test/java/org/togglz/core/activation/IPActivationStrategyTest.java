@@ -10,10 +10,7 @@ import org.togglz.core.user.SimpleFeatureUser;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 public class IPActivationStrategyTest {
 
