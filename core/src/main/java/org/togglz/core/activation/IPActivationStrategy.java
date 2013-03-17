@@ -5,8 +5,6 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 
-import java.net.Inet4Address;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
