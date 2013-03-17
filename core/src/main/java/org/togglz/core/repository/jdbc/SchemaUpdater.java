@@ -69,7 +69,7 @@ class SchemaUpdater {
         ResultSet resultSet = metaData.getColumns(catalog, null, tableName, null);
         try {
             while (resultSet.next()) {
-                String col = resultSet.getString("COLUMN_NAME");
+                String col = resultSet.getString("COLUMN_NAME").toUpperCase();
                 if (Strings.isNotBlank(col)) {
                     columns.add(col);
                 }

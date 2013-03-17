@@ -10,6 +10,7 @@ import org.togglz.core.metadata.EmptyFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.url.URLStateRepository;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
@@ -19,12 +20,11 @@ import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link FeatureManager}
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class DefaultFeatureManager implements FeatureManager {
-
+    private final static URLStateRepository urlStateRepository = URLStateRepository.getInstance();
     private final StateRepository stateRepository;
     private final UserProvider userProvider;
     private final List<ActivationStrategy> strategies;
@@ -52,7 +52,10 @@ public class DefaultFeatureManager implements FeatureManager {
     }
 
     public boolean isActive(Feature feature) {
-
+        //first check url repository
+        if (urlStateRepository.isExists(feature)) {
+            return urlStateRepository.isActive(feature);
+        }
         FeatureState state = stateRepository.getFeatureState(feature);
 
         if (state == null) {
