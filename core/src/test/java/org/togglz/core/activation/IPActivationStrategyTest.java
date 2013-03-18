@@ -1,16 +1,16 @@
 package org.togglz.core.activation;
 
+import static org.junit.Assert.assertEquals;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import static org.junit.Assert.assertEquals;
 
 public class IPActivationStrategyTest {
 
