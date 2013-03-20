@@ -16,11 +16,11 @@ import org.togglz.core.util.Strings;
  * 
  * @author Eli Abramovitch
  */
-public class IPActivationStrategy implements ActivationStrategy {
+public class ServerIpActivationStrategy implements ActivationStrategy {
 
-    private final Log log = LogFactory.getLog(IPActivationStrategy.class);
+    private final Log log = LogFactory.getLog(ServerIpActivationStrategy.class);
 
-    public static final String ID = "ip";
+    public static final String ID = "server-ip";
 
     public static final String PARAM_IPS = "ips";
 
@@ -31,7 +31,7 @@ public class IPActivationStrategy implements ActivationStrategy {
 
     @Override
     public String getName() {
-        return "IP";
+        return "Server IP";
     }
 
     @Override
@@ -61,8 +61,8 @@ public class IPActivationStrategy implements ActivationStrategy {
     @Override
     public Parameter[] getParameters() {
         return new Parameter[] {
-                ParameterBuilder.create(PARAM_IPS).label("IPs").largeText()
-                    .description("A list of IPs for which the feature should be active.")
+                ParameterBuilder.create(PARAM_IPS).label("Server IPs")
+                    .description("A comma-separated list of server IPs for which the feature should be active.")
         };
     }
 
