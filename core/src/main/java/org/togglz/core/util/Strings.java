@@ -51,4 +51,16 @@ public class Strings {
         return null;
     }
 
+    public static String joinClassNames(Iterable<?> iterable) {
+        StringBuilder result = new StringBuilder();
+        Iterator<?> it = iterable.iterator();
+        while (it.hasNext()) {
+            result.append(it.next().getClass().getName());
+            if (it.hasNext()) {
+                result.append(", ");
+            }
+        }
+        return result.toString();
+    }
+
 }
