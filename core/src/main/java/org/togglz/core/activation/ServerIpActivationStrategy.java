@@ -1,28 +1,46 @@
 package org.togglz.core.activation;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 
 /**
- * Activation strategy that allows to activate features only for certain ip's.
+ * Activation strategy that allows to activate features only for certain server IPs.
  * 
  * @author Eli Abramovitch
+ * @author Christian Kaltepoth
  */
 public class ServerIpActivationStrategy implements ActivationStrategy {
-
-    private final Log log = LogFactory.getLog(ServerIpActivationStrategy.class);
 
     public static final String ID = "server-ip";
 
     public static final String PARAM_IPS = "ips";
+
+    private final Set<String> ipAddresses = new HashSet<String>();
+
+    public ServerIpActivationStrategy()
+    {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                Enumeration<InetAddress> interfacesAddresses = interfaces.nextElement().getInetAddresses();
+                while (interfacesAddresses.hasMoreElements()) {
+                    ipAddresses.add(interfacesAddresses.nextElement().getHostAddress());
+                }
+            }
+        } catch (SocketException e) {
+            throw new IllegalStateException("Unable to find IP addresses", e);
+        }
+    }
 
     @Override
     public String getId() {
@@ -36,26 +54,23 @@ public class ServerIpActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-        String ipsAsString = featureState.getParameter(PARAM_IPS);
 
-        if (Strings.isNotBlank(ipsAsString)) {
+        String allowedIpsParam = featureState.getParameter(PARAM_IPS);
 
-            List<String> ips = Strings.splitAndTrim(ipsAsString, ",");
-            String currentMachineIp = null;
-            try {
-                currentMachineIp = InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException e) {
-                log.info("Could not resolve current IP: " + e.getMessage());
-            }
-            if (currentMachineIp != null) {
-                for (String ip : ips) {
-                    if (currentMachineIp.equals(ip)) {
-                        return true;
-                    }
+        if (Strings.isNotBlank(allowedIpsParam)) {
+
+            List<String> allowedIps = Strings.splitAndTrim(allowedIpsParam, "[\\s,]+");
+
+            for (String allowedIp : allowedIps) {
+                if (ipAddresses.contains(allowedIp)) {
+                    return true;
                 }
             }
+
         }
+
         return false;
+
     }
 
     @Override
