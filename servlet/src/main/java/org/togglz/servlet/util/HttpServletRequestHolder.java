@@ -19,7 +19,7 @@ public class HttpServletRequestHolder {
      */
     public static void bind(HttpServletRequest request) {
         if (request != null && threadLocal.get() != null) {
-            throw new IllegalStateException("HttpServletRequestHolder.set() called for a "
+            throw new IllegalStateException("HttpServletRequestHolder.bind() called for a "
                     + "thread that already has a request associated with it. It's likely that the request "
                     + "was not correctly removed from the thread before it is put back into the thread pool.");
         }
