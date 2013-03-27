@@ -15,6 +15,8 @@ import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.spi.FeatureManagerListener;
+import org.togglz.core.util.Services;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 /**
@@ -31,6 +33,8 @@ public class TogglzFilter implements Filter {
 
     private TogglzFilterConfig config;
 
+    private FeatureManager featureManager;
+
     public void init(FilterConfig filterConfig) throws ServletException {
 
         // build the configuration object
@@ -40,7 +44,11 @@ public class TogglzFilter implements Filter {
         if (config.isCreateLocalFeatureManager()) {
 
             FeatureManagerBootstrapper boostrapper = new FeatureManagerBootstrapper();
-            FeatureManager featureManager = boostrapper.createFeatureManager(filterConfig.getServletContext());
+            featureManager = boostrapper.createFeatureManager(filterConfig.getServletContext());
+
+            for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
+                listener.start(featureManager);
+            }
 
             ContextClassLoaderFeatureManagerProvider.bind(featureManager);
 
@@ -75,8 +83,16 @@ public class TogglzFilter implements Filter {
     public void destroy() {
 
         // release only if the filter created it
-        if (config.isCreateLocalFeatureManager()) {
+        if (featureManager != null) {
+
+            // notify listeners about the shutdown
+            for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
+                listener.stop(featureManager);
+            }
+
+            // release
             ContextClassLoaderFeatureManagerProvider.release();
+
         }
 
     }
