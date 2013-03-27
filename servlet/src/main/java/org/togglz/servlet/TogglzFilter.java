@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.togglz.core.Togglz;
 import org.togglz.core.bootstrap.FeatureManagerBootstrapper;
 import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
 import org.togglz.core.logging.Log;
@@ -54,7 +55,7 @@ public class TogglzFilter implements Filter {
 
         }
 
-        log.info("TogglzFilter started!");
+        log.info(Togglz.getNameWithVersion() + " started");
 
     }
 
