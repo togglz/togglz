@@ -10,11 +10,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.togglz.core.bootstrap.FeatureManagerBootstrapper;
 import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 /**
@@ -39,9 +39,8 @@ public class TogglzFilter implements Filter {
         // create FeatureManager if required
         if (config.isCreateLocalFeatureManager()) {
 
-            FeatureManager featureManager = new FeatureManagerBuilder()
-                .autoDiscovery(filterConfig.getServletContext())
-                .build();
+            FeatureManagerBootstrapper boostrapper = new FeatureManagerBootstrapper();
+            FeatureManager featureManager = boostrapper.createFeatureManager(filterConfig.getServletContext());
 
             ContextClassLoaderFeatureManagerProvider.bind(featureManager);
 
@@ -75,7 +74,7 @@ public class TogglzFilter implements Filter {
 
     public void destroy() {
 
-        // releae only if the filter created it
+        // release only if the filter created it
         if (config.isCreateLocalFeatureManager()) {
             ContextClassLoaderFeatureManagerProvider.release();
         }
