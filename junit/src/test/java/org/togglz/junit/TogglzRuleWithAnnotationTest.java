@@ -1,7 +1,8 @@
 package org.togglz.junit;
 
-import org.junit.Assert;
-import org.junit.Before;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -10,17 +11,17 @@ public class TogglzRuleWithAnnotationTest {
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(MyFeatures.class);
 
-    @Before
-    public void setUp()
-    {
-        Assert.assertTrue(MyFeatures.FEATURE_ONE.isActive());
-    }
-    
     @Test
-    @WithFeature(type=MyFeatures.class, value="FEATURE_ONE")
-    public void test_enabledByAnnotation()
+    public void featureShouldBeInactiveByDefault()
     {
-        Assert.assertTrue(MyFeatures.FEATURE_ONE.isActive());
+        assertFalse(MyFeatures.FEATURE_ONE.isActive());
+    }
+
+    @Test
+    @WithFeature("FEATURE_ONE")
+    public void featureShouldBeActiveWithAnnotation()
+    {
+        assertTrue(MyFeatures.FEATURE_ONE.isActive());
     }
 
 }

@@ -11,10 +11,20 @@ import org.togglz.core.Feature;
 /**
  * Used together with the {@link TogglzRule} on test methods.
  */
-@Target({METHOD}) 
+@Target({ METHOD })
 @Retention(RUNTIME)
 public @interface WithFeature
 {
-    Class<? extends Feature> type();
+
+    /**
+     * @deprecated Removed without replacement
+     */
+    @Deprecated
+    Class<? extends Feature> type() default Feature.class;
+
+    /**
+     * The name of the feature to enable
+     */
     String value();
+
 }
