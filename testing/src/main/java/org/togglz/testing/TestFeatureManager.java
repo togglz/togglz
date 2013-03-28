@@ -23,7 +23,7 @@ public class TestFeatureManager implements FeatureManager {
 
     private final Class<? extends Feature> featureEnum;
 
-    private final Set<Feature> activeFeatures = new HashSet<Feature>();
+    private final Set<String> activeFeatures = new HashSet<String>();
 
     public TestFeatureManager(Class<? extends Feature> featureEnum) {
         Validate.notNull(featureEnum, "The featureEnum argument is required");
@@ -43,7 +43,7 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
-        return activeFeatures.contains(feature);
+        return activeFeatures.contains(feature.name());
     }
 
     @Override
@@ -59,19 +59,19 @@ public class TestFeatureManager implements FeatureManager {
     @Override
     public void setFeatureState(FeatureState state) {
         if (state.isEnabled()) {
-            activeFeatures.add(state.getFeature());
+            activeFeatures.add(state.getFeature().name());
         } else {
-            activeFeatures.remove(state.getFeature());
+            activeFeatures.remove(state.getFeature().name());
         }
     }
 
     public TestFeatureManager enable(Feature feature) {
-        activeFeatures.add(feature);
+        activeFeatures.add(feature.name());
         return this;
     }
 
     public TestFeatureManager disable(Feature feature) {
-        activeFeatures.remove(feature);
+        activeFeatures.remove(feature.name());
         return this;
     }
 
