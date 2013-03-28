@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.togglz.core.Togglz;
 import org.togglz.core.bootstrap.FeatureManagerBootstrapper;
@@ -18,7 +19,7 @@ import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerListener;
 import org.togglz.core.util.Services;
-import org.togglz.servlet.util.HttpServletRequestHolder;
+import org.togglz.servlet.spi.RequestListener;
 
 /**
  * 
@@ -36,10 +37,14 @@ public class TogglzFilter implements Filter {
 
     private FeatureManager featureManager;
 
+    private CompositeRequestListener requestListener;
+
     public void init(FilterConfig filterConfig) throws ServletException {
 
         // build the configuration object
         config = new TogglzFilterConfig(filterConfig.getServletContext());
+
+        requestListener = new CompositeRequestListener(Services.getSorted(RequestListener.class));
 
         // create FeatureManager if required
         if (config.isCreateLocalFeatureManager()) {
@@ -63,19 +68,20 @@ public class TogglzFilter implements Filter {
         throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
 
         try {
 
-            // store the request in a thread local
-            HttpServletRequestHolder.bind(request);
+            // notify listeners
+            requestListener.begin(request, response);
 
             // continue processing the chain
             chain.doFilter(req, resp);
 
         } finally {
 
-            // remove the request from the thread local
-            HttpServletRequestHolder.release();
+            // notify listeners
+            requestListener.end(request, response);
 
         }
 
