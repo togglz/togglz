@@ -92,7 +92,10 @@ public class FeatureContext {
             return featureManager;
         }
 
-        throw new IllegalStateException("No FeatureManagerProvider returned a FeatureManager");
+        throw new IllegalStateException("Could not find the FeatureManager. " +
+            "For web applications please verify that the TogglzFilter starts up correctly. " +
+            "In other deployment scenarios you will typically have to implement a FeatureManagerProvider " +
+            "as described in the 'Advanced Configuration' chapter of the documentation.");
     }
 
     /**
@@ -101,11 +104,11 @@ public class FeatureContext {
     private static ClassLoader getContextClassLoader() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
-            throw new IllegalStateException("Unable to get the context ClassLoader for the current thread!");
+            throw new IllegalStateException("Unable to get the context class loader for the current thread!");
         }
         return classLoader;
     }
-    
+
     public static void clearCache() {
         cache.clear();
     }
