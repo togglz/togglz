@@ -9,13 +9,17 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.togglz.core.Togglz;
+import org.togglz.core.bootstrap.FeatureManagerBootstrapper;
 import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.FeatureManagerBuilder;
-import org.togglz.servlet.util.HttpServletRequestHolder;
+import org.togglz.core.spi.FeatureManagerListener;
+import org.togglz.core.util.Services;
+import org.togglz.servlet.spi.RequestListener;
 
 /**
  * 
@@ -31,23 +35,32 @@ public class TogglzFilter implements Filter {
 
     private TogglzFilterConfig config;
 
+    private FeatureManager featureManager;
+
+    private CompositeRequestListener requestListener;
+
     public void init(FilterConfig filterConfig) throws ServletException {
 
         // build the configuration object
         config = new TogglzFilterConfig(filterConfig.getServletContext());
 
+        requestListener = new CompositeRequestListener(Services.getSorted(RequestListener.class));
+
         // create FeatureManager if required
         if (config.isCreateLocalFeatureManager()) {
 
-            FeatureManager featureManager = new FeatureManagerBuilder()
-                .autoDiscovery(filterConfig.getServletContext())
-                .build();
+            FeatureManagerBootstrapper boostrapper = new FeatureManagerBootstrapper();
+            featureManager = boostrapper.createFeatureManager(filterConfig.getServletContext());
+
+            for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
+                listener.start(featureManager);
+            }
 
             ContextClassLoaderFeatureManagerProvider.bind(featureManager);
 
         }
 
-        log.info("TogglzFilter started!");
+        log.info(Togglz.getNameWithVersion() + " started");
 
     }
 
@@ -55,19 +68,20 @@ public class TogglzFilter implements Filter {
         throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
 
         try {
 
-            // store the request in a thread local
-            HttpServletRequestHolder.bind(request);
+            // notify listeners
+            requestListener.begin(request, response);
 
             // continue processing the chain
             chain.doFilter(req, resp);
 
         } finally {
 
-            // remove the request from the thread local
-            HttpServletRequestHolder.release();
+            // notify listeners
+            requestListener.end(request, response);
 
         }
 
@@ -75,9 +89,17 @@ public class TogglzFilter implements Filter {
 
     public void destroy() {
 
-        // releae only if the filter created it
-        if (config.isCreateLocalFeatureManager()) {
+        // release only if the filter created it
+        if (featureManager != null) {
+
+            // notify listeners about the shutdown
+            for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
+                listener.stop(featureManager);
+            }
+
+            // release
             ContextClassLoaderFeatureManagerProvider.release();
+
         }
 
     }
