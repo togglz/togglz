@@ -42,7 +42,8 @@ public class FeatureManagerBootstrapper {
      * 
      * @param context An optional context object which is provided to the {@link BeanFinder} implementations. This parameter is
      *        for example used in web application to supply the ServletContext.
-     * @return A newly created {@link FeatureManager} or null
+     * @return A newly created {@link FeatureManager}
+     * @throws IllegalStateException if the bootstrapping process failed
      */
     public FeatureManager createFeatureManager(Object context) {
 
@@ -68,8 +69,10 @@ public class FeatureManagerBootstrapper {
                 .build();
         }
 
-        throw new IllegalStateException("Could not find any implementations of " + TogglzBootstrap.class.getSimpleName() +
-            " or " + TogglzConfig.class.getSimpleName());
+        // fail with a descriptive error message
+        throw new IllegalStateException("Could not find any implementation of TogglzConfig or TogglzBootstrap. " +
+            "Please make sure that you have added the required integration modules to your project " +
+            "or register the implementation in your web.xml as described in the 'Configuration' chapter of the documentation.");
 
     }
 
