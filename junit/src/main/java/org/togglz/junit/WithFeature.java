@@ -23,8 +23,8 @@ public @interface WithFeature
     Class<? extends Feature> type() default Feature.class;
 
     /**
-     * The name of the feature to enable
+     * The features to enable
      */
-    String value();
+    String[] value();
 
 }

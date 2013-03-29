@@ -91,7 +91,9 @@ public class TogglzRule implements TestRule {
 
                     WithFeature withFeature = description.getAnnotation(WithFeature.class);                    
                     if (withFeature != null) {
-                        enable(new UntypedFeature(withFeature.value()));
+                        for(String featureName : withFeature.value()) {
+                            enable(new UntypedFeature(featureName));
+                        }
                     }
                     
                     // run the test

@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.togglz.core.Feature;
+import org.togglz.core.context.FeatureContext;
 
 public class TogglzRuleWithAnnotationTest {
 
@@ -14,14 +16,36 @@ public class TogglzRuleWithAnnotationTest {
     @Test
     public void featureShouldBeInactiveByDefault()
     {
-        assertFalse(MyFeatures.FEATURE_ONE.isActive());
+        assertFalse(MyFeatures.ONE.isActive());
+        assertFalse(MyFeatures.TWO.isActive());
     }
 
     @Test
-    @WithFeature("FEATURE_ONE")
+    @WithFeature("ONE")
     public void featureShouldBeActiveWithAnnotation()
     {
-        assertTrue(MyFeatures.FEATURE_ONE.isActive());
+        assertTrue(MyFeatures.ONE.isActive());
+        assertFalse(MyFeatures.TWO.isActive());
+    }
+
+    @Test
+    @WithFeature({ "ONE", "TWO" })
+    public void shouldActivateMultipleFeatures()
+    {
+        assertTrue(MyFeatures.ONE.isActive());
+        assertTrue(MyFeatures.TWO.isActive());
+    }
+
+    private enum MyFeatures implements Feature {
+
+        ONE,
+        TWO;
+
+        @Override
+        public boolean isActive() {
+            return FeatureContext.getFeatureManager().isActive(this);
+        }
+
     }
 
 }
