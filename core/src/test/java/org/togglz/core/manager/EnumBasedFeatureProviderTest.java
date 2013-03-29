@@ -4,7 +4,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
+import org.togglz.core.annotation.Label;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 
 public class EnumBasedFeatureProviderTest {
@@ -29,6 +31,25 @@ public class EnumBasedFeatureProviderTest {
 
     }
 
+    @Test
+    public void shouldReturnMetaDataWithCorrectLabel() {
+
+        FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
+        FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
+        assertThat(metaData.getLabel()).isEqualTo("First feature");
+
+    }
+
+    @Test
+    public void shouldReturnMetaDataWhenRequestedWithOtherFeatureImplementation() {
+
+        FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
+        FeatureMetaData metaData =
+            provider.getMetaData(new OtherFeatureImpl(ValidFeatureEnum.FEATURE1.name()));
+        assertThat(metaData.getLabel()).isEqualTo("First feature");
+
+    }
+
     private static class NotAnEnum implements Feature {
 
         @Override
@@ -45,7 +66,9 @@ public class EnumBasedFeatureProviderTest {
 
     private static enum ValidFeatureEnum implements Feature {
 
+        @Label("First feature")
         FEATURE1,
+
         FEATURE2;
 
         @Override
@@ -54,4 +77,25 @@ public class EnumBasedFeatureProviderTest {
         }
 
     }
+
+    private class OtherFeatureImpl implements Feature {
+
+        private final String name;
+
+        public OtherFeatureImpl(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public boolean isActive() {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
 }

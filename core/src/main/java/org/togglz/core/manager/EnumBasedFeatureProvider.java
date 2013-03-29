@@ -32,7 +32,17 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
 
     @Override
     public FeatureMetaData getMetaData(Feature feature) {
-        return new EnumFeatureMetaData(feature);
+        // get the _real_ enum feature because the input may be a UntypedFeature
+        return new EnumFeatureMetaData(getFeatureByName(feature.name()));
+    }
+
+    private Feature getFeatureByName(String name) {
+        for (Feature f : featureEnum.getEnumConstants()) {
+            if (f.name().equals(name)) {
+                return f;
+            }
+        }
+        throw new IllegalArgumentException("Unknown feature: " + name);
     }
 
 }
