@@ -89,10 +89,14 @@ public class TogglzRule implements TestRule {
                     TestFeatureManagerProvider.setFeatureManager(featureManager);
                     FeatureContext.clearCache();
 
-                    WithFeature withFeature = description.getAnnotation(WithFeature.class);                    
+                    WithFeature withFeature = description.getAnnotation(WithFeature.class);
                     if (withFeature != null) {
-                        for(String featureName : withFeature.value()) {
-                            enable(new UntypedFeature(featureName));
+                        for (String featureName : withFeature.value()) {
+                            if (withFeature.disable()) {
+                                disable(new UntypedFeature(featureName));
+                            } else {
+                                enable(new UntypedFeature(featureName));
+                            }
                         }
                     }
                     

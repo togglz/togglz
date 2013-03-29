@@ -27,4 +27,9 @@ public @interface WithFeature
      */
     String[] value();
 
+    /**
+     * disable the features instead of enabling them
+     */
+    boolean disable() default false;
+
 }
