@@ -5,6 +5,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.util.UntypedFeature;
 import org.togglz.core.util.Validate;
 import org.togglz.testing.TestFeatureManager;
 import org.togglz.testing.TestFeatureManagerProvider;
@@ -88,9 +89,15 @@ public class TogglzRule implements TestRule {
                     TestFeatureManagerProvider.setFeatureManager(featureManager);
                     FeatureContext.clearCache();
 
-                    WithFeature withFeature = description.getAnnotation(WithFeature.class);                    
-                    if ( withFeature != null) {
-                        enableFeature(withFeature);
+                    WithFeature withFeature = description.getAnnotation(WithFeature.class);
+                    if (withFeature != null) {
+                        for (String featureName : withFeature.value()) {
+                            if (withFeature.disable()) {
+                                disable(new UntypedFeature(featureName));
+                            } else {
+                                enable(new UntypedFeature(featureName));
+                            }
+                        }
                     }
                     
                     // run the test
@@ -103,18 +110,6 @@ public class TogglzRule implements TestRule {
                     TestFeatureManagerProvider.setFeatureManager(null);
                 }
 
-            }
-            
-            void enableFeature(WithFeature withFeature)
-            {
-                Feature[] features = withFeature.type().getEnumConstants();
-                if (features != null) {
-                    for (Feature feature : features) {
-                        if ( feature.name().equals(withFeature.value()) ) {
-                            enable(feature);
-                        }
-                    }
-                }
             }
         };
 

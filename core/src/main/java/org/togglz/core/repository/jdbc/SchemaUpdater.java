@@ -69,6 +69,7 @@ class SchemaUpdater {
         ResultSet resultSet = metaData.getColumns(catalog, null, tableName, null);
         try {
             while (resultSet.next()) {
+                // Note: PostgreSQL returns lower case column names
                 String col = resultSet.getString("COLUMN_NAME").toUpperCase();
                 if (Strings.isNotBlank(col)) {
                     columns.add(col);

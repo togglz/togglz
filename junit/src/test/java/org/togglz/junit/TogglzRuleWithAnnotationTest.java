@@ -1,26 +1,51 @@
 package org.togglz.junit;
 
-import org.junit.Assert;
-import org.junit.Before;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Rule;
 import org.junit.Test;
+import org.togglz.core.Feature;
+import org.togglz.core.context.FeatureContext;
 
 public class TogglzRuleWithAnnotationTest {
 
     @Rule
     public TogglzRule togglzRule = TogglzRule.allDisabled(MyFeatures.class);
 
-    @Before
-    public void setUp()
-    {
-        Assert.assertTrue(MyFeatures.FEATURE_ONE.isActive());
-    }
-    
     @Test
-    @WithFeature(type=MyFeatures.class, value="FEATURE_ONE")
-    public void test_enabledByAnnotation()
+    public void featureShouldBeInactiveByDefault()
     {
-        Assert.assertTrue(MyFeatures.FEATURE_ONE.isActive());
+        assertFalse(MyFeatures.ONE.isActive());
+        assertFalse(MyFeatures.TWO.isActive());
+    }
+
+    @Test
+    @WithFeature("ONE")
+    public void featureShouldBeActiveWithAnnotation()
+    {
+        assertTrue(MyFeatures.ONE.isActive());
+        assertFalse(MyFeatures.TWO.isActive());
+    }
+
+    @Test
+    @WithFeature({ "ONE", "TWO" })
+    public void shouldActivateMultipleFeatures()
+    {
+        assertTrue(MyFeatures.ONE.isActive());
+        assertTrue(MyFeatures.TWO.isActive());
+    }
+
+    private enum MyFeatures implements Feature {
+
+        ONE,
+        TWO;
+
+        @Override
+        public boolean isActive() {
+            return FeatureContext.getFeatureManager().isActive(this);
+        }
+
     }
 
 }
