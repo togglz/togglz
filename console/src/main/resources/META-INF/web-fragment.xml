@@ -3,6 +3,8 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
 
+  <distributable/>
+
   <servlet>
     <servlet-name>TogglzConsoleServlet</servlet-name>
     <servlet-class>org.togglz.console.TogglzConsoleServlet</servlet-class>
