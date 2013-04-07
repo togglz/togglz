@@ -12,7 +12,10 @@ import org.togglz.core.manager.FeatureManager;
  * name of the untyped feature doesn't correspond to one of these features, a runtime exception will be thrown.
  * 
  * @author Christian Kaltepoth
+ * 
+ * @deprecated Use {@link NamedFeature} instead.
  */
+@Deprecated
 public class UntypedFeature implements Feature {
 
     private final String name;
