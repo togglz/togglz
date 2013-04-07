@@ -3,10 +3,9 @@ package org.togglz.testing;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.util.UntypedFeature;
+import org.togglz.core.util.NamedFeature;
 
 public class TestFeatureManagerTest {
 
@@ -45,33 +44,29 @@ public class TestFeatureManagerTest {
 
     }
 
-    // this should be fixed
     @Test
-    @Ignore
     public void shouldSupportTogglingUntypedFeature() {
 
         // enable
-        manager.enable(new UntypedFeature("ONE"));
+        manager.enable(new NamedFeature("ONE"));
         assertTrue(manager.isActive(MyFeatures.ONE));
 
         // disable
-        manager.disable(new UntypedFeature("ONE"));
+        manager.disable(new NamedFeature("ONE"));
         assertFalse(manager.isActive(MyFeatures.ONE));
 
     }
 
-    // this should be fixed
     @Test
-    @Ignore
-    public void shouldSupportReadingWithUntypedFeature() {
+    public void shouldSupportReadingWithNamedFeature() {
 
         // enable
         manager.enable(MyFeatures.ONE);
-        assertTrue(manager.isActive(new UntypedFeature("ONE")));
+        assertTrue(manager.isActive(new NamedFeature("ONE")));
 
         // disable
         manager.disable(MyFeatures.ONE);
-        assertFalse(manager.isActive(new UntypedFeature("ONE")));
+        assertFalse(manager.isActive(new NamedFeature("ONE")));
 
     }
 

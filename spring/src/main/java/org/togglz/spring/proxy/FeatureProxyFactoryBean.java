@@ -8,7 +8,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.togglz.core.Feature;
 import org.togglz.core.proxy.FeatureProxyInvocationHandler;
-import org.togglz.core.util.UntypedFeature;
+import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
 
 /**
@@ -55,8 +55,8 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
     public Object getObject() throws Exception {
 
         // create the invocation handler that switches between implementations
-        Feature untypedFeature = new UntypedFeature(feature);
-        FeatureProxyInvocationHandler proxy = new FeatureProxyInvocationHandler(untypedFeature, active, inactive);
+        Feature namedFeature = new NamedFeature(feature);
+        FeatureProxyInvocationHandler proxy = new FeatureProxyInvocationHandler(namedFeature, active, inactive);
 
         // obtain the interface for which to create the proxy
         Class<?> proxyType = getEffectiveProxyType();

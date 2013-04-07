@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.util.UntypedFeature;
+import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
 
 public class ActiveFeatureMap implements Map<String, Boolean> {
@@ -13,7 +13,7 @@ public class ActiveFeatureMap implements Map<String, Boolean> {
     @Override
     public Boolean get(Object key) {
         Validate.notNull(key, "The feature must not be null");
-        return new UntypedFeature(key.toString()).isActive();
+        return new NamedFeature(key.toString()).isActive();
     }
 
     @Override

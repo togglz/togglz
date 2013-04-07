@@ -5,7 +5,7 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.util.UntypedFeature;
+import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
 import org.togglz.testing.TestFeatureManager;
 import org.togglz.testing.TestFeatureManagerProvider;
@@ -93,9 +93,9 @@ public class TogglzRule implements TestRule {
                     if (withFeature != null) {
                         for (String featureName : withFeature.value()) {
                             if (withFeature.disable()) {
-                                disable(new UntypedFeature(featureName));
+                                disable(new NamedFeature(featureName));
                             } else {
-                                enable(new UntypedFeature(featureName));
+                                enable(new NamedFeature(featureName));
                             }
                         }
                     }
