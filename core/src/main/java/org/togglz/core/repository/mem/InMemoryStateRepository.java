@@ -18,14 +18,14 @@ import org.togglz.core.repository.StateRepository;
  */
 public class InMemoryStateRepository implements StateRepository {
 
-    private final Map<Feature, FeatureState> states = new ConcurrentHashMap<Feature, FeatureState>();
+    private final Map<String, FeatureState> states = new ConcurrentHashMap<String, FeatureState>();
 
     public FeatureState getFeatureState(Feature feature) {
-        return states.get(feature);
+        return states.get(feature.name());
     }
 
     public void setFeatureState(FeatureState featureState) {
-        states.put(featureState.getFeature(), featureState);
+        states.put(featureState.getFeature().name(), featureState);
     }
 
 }
