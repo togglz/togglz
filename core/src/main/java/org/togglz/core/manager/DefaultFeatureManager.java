@@ -38,12 +38,14 @@ public class DefaultFeatureManager implements FeatureManager {
         Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
     }
 
+    @Override
     public Set<Feature> getFeatures() {
         return Collections.unmodifiableSet(featureProvider.getFeatures());
     }
 
     @Override
     public FeatureMetaData getMetaData(Feature feature) {
+        Validate.notNull(feature, "feature is required");
         FeatureMetaData metadata = featureProvider.getMetaData(feature);
         if (metadata != null) {
             return metadata;
@@ -51,7 +53,10 @@ public class DefaultFeatureManager implements FeatureManager {
         return new EmptyFeatureMetaData(feature);
     }
 
+    @Override
     public boolean isActive(Feature feature) {
+
+        Validate.notNull(feature, "feature is required");
 
         FeatureState state = stateRepository.getFeatureState(feature);
 
@@ -82,7 +87,9 @@ public class DefaultFeatureManager implements FeatureManager {
 
     }
 
+    @Override
     public FeatureState getFeatureState(Feature feature) {
+        Validate.notNull(feature, "feature is required");
         FeatureState state = stateRepository.getFeatureState(feature);
         if (state == null) {
             boolean enabled = getMetaData(feature).isEnabledByDefault();
@@ -91,7 +98,9 @@ public class DefaultFeatureManager implements FeatureManager {
         return state;
     }
 
+    @Override
     public void setFeatureState(FeatureState state) {
+        Validate.notNull(state, "state is required");
         stateRepository.setFeatureState(state);
     }
 
