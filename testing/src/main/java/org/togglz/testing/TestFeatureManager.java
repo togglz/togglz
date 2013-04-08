@@ -32,6 +32,11 @@ public class TestFeatureManager implements FeatureManager {
     }
 
     @Override
+    public String getName() {
+        return this.getClass().getSimpleName() + ":" + featureEnum.getSimpleName();
+    }
+
+    @Override
     public Set<Feature> getFeatures() {
         return new HashSet<Feature>(Arrays.asList(featureEnum.getEnumConstants()));
     }

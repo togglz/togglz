@@ -1,11 +1,14 @@
 package org.togglz.core.manager;
 
+import java.util.UUID;
+
 import org.togglz.core.Feature;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
+import org.togglz.core.util.Validate;
 
 /**
  * 
@@ -16,6 +19,7 @@ import org.togglz.core.user.UserProvider;
  */
 public class FeatureManagerBuilder {
 
+    private String name = UUID.randomUUID().toString();
     private FeatureProvider featureProvider = null;
     private StateRepository stateRepository = new InMemoryStateRepository();
     private UserProvider userProvider = new NoOpUserProvider();
@@ -38,10 +42,20 @@ public class FeatureManagerBuilder {
 
     /**
      * Use the supplied feature enum class for the feature manager. Same as calling {@link #featureProvider(FeatureProvider)}
-     * with {@link EnumBasedFeatureProvider}.
+     * with {@link EnumBasedFeatureProvider}. Please note calling this method also set the name of the feature manager to the
+     * simple name of the feature enum's type.
      */
     public FeatureManagerBuilder featureEnum(Class<? extends Feature> featureEnum) {
         this.featureProvider = new EnumBasedFeatureProvider(featureEnum);
+        this.name = featureEnum.getSimpleName();
+        return this;
+    }
+
+    /**
+     * Sets the name of the feature manager. This name will then be available thought {@link FeatureManager#getName()}.
+     */
+    public FeatureManagerBuilder name(String name) {
+        this.name = name;
         return this;
     }
 
@@ -75,16 +89,11 @@ public class FeatureManagerBuilder {
      * Create the {@link FeatureManager} using the current configuration of the builder
      */
     public FeatureManager build() {
-        checkNotNull(featureProvider, "No feature provider specified");
-        checkNotNull(stateRepository, "No state repository specified");
-        checkNotNull(userProvider, "No user provider specified");
-        return new DefaultFeatureManager(featureProvider, stateRepository, userProvider);
-    }
-
-    private static void checkNotNull(Object o, String message) {
-        if (o == null) {
-            throw new IllegalStateException(message);
-        }
+        Validate.notBlank(name, "No name specified");
+        Validate.notNull(featureProvider, "No feature provider specified");
+        Validate.notNull(stateRepository, "No state repository specified");
+        Validate.notNull(userProvider, "No user provider specified");
+        return new DefaultFeatureManager(name, featureProvider, stateRepository, userProvider);
     }
 
 }

@@ -21,6 +21,11 @@ import org.togglz.core.user.UserProvider;
 public interface FeatureManager {
 
     /**
+     * A unique name for this feature manager.
+     */
+    String getName();
+
+    /**
      * Provides access to all features the manager is responsible for.
      * 
      * @return Set of features, never <code>null</code>

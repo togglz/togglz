@@ -20,6 +20,11 @@ import org.togglz.core.user.FeatureUser;
 public class FallbackTestFeatureManager implements FeatureManager {
 
     @Override
+    public String getName() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
     public Set<Feature> getFeatures() {
         return Collections.emptySet();
     }

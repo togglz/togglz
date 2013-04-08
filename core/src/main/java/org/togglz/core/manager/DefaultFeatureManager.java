@@ -25,17 +25,25 @@ import org.togglz.core.util.Validate;
  */
 public class DefaultFeatureManager implements FeatureManager {
 
+    private final String name;
     private final StateRepository stateRepository;
     private final UserProvider userProvider;
     private final List<ActivationStrategy> strategies;
     private final FeatureProvider featureProvider;
 
-    DefaultFeatureManager(FeatureProvider featureProvider, StateRepository stateRepository, UserProvider userProvider) {
+    DefaultFeatureManager(String name, FeatureProvider featureProvider, StateRepository stateRepository,
+        UserProvider userProvider) {
+        this.name = name;
         this.featureProvider = featureProvider;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
         this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
         Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -107,6 +115,11 @@ public class DefaultFeatureManager implements FeatureManager {
     @Override
     public FeatureUser getCurrentFeatureUser() {
         return userProvider.getCurrentUser();
+    }
+
+    @Override
+    public String toString() {
+        return "DefaultFeatureManager[" + getName() + "]";
     }
 
 }
