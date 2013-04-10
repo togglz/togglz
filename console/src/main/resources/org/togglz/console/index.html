@@ -20,6 +20,7 @@
         <thead>
           <tr>
             <th class="feature-label">Feature</th>
+            <th class="feature-owner">Owner</th>
             <th class="feature-status">Status</th>
             <th class="feature-users">Strategy</th>
             <th class="feature-actions">Actions</th>
@@ -30,7 +31,11 @@
           ${foreach tab.rows feature}
             <tr>
               <td class="feature-label">
+                <a class="info" href="${feature.infoLink}" target="_blank" title="Feature Information"><img class="info" src="info.png" title="Feature Information" alt="Feature Information"/></a>
                 <span title="${feature.name}">${feature.label}</span>
+              </td>
+              <td class="feature-owner">
+                <span title="${feature.owner}">${feature.owner}</span>
               </td>
               <td class="feature-status">
                 <img src="${if feature.enabled}ledgreen.png${else}ledred.png${end}" alt="toggle" 
@@ -49,7 +54,7 @@
                 ${end}
               </td>
               <td class="feature-actions">
-                <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
+                <a href="edit?f=${feature.name}"title="Edit ${feature.label} feature">
                   <img src="edit.png" alt="edit" />
                 </a>
               </td>

@@ -18,6 +18,16 @@ public interface FeatureMetaData {
     String getLabel();
 
     /**
+     * Returns a human readable owner of this feature.
+     */
+    String getOwner();
+
+    /**
+     * Returns a link for information on this feature.
+     */
+    String getInfoLink();
+
+    /**
      * If the feature should be enabled by default.
      */
     boolean isEnabledByDefault();

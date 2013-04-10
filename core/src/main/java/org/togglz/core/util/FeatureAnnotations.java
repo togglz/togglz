@@ -5,14 +5,17 @@ import java.lang.reflect.Field;
 
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.InfoLink;
 import org.togglz.core.annotation.Label;
+import org.togglz.core.annotation.Owner;
 
 /**
  * 
  * Utility class to read annotation on feature enums.
  * 
  * @author Christian Kaltepoth
- * 
+ * @author Eli Abramovitch
+ *
  */
 public class FeatureAnnotations {
 
@@ -22,6 +25,22 @@ public class FeatureAnnotations {
             return label.value();
         }
         return feature.name();
+    }
+
+    public static String getOwner(Feature feature) {
+        Owner owner = getAnnotation(feature, Owner.class);
+        if (owner != null) {
+            return owner.value();
+        }
+        return "";
+    }
+
+    public static String getInfoLink(Feature feature) {
+        InfoLink infoLink = getAnnotation(feature, InfoLink.class);
+        if (infoLink != null) {
+            return infoLink.value();
+        }
+        return "";
     }
 
     public static boolean isEnabledByDefault(Feature feature) {

@@ -151,6 +151,15 @@ public class FeatureModel {
         return metadata.getLabel();
     }
 
+    public String getOwner() {
+        return metadata.getOwner();
+    }
+
+    public String getInfoLink() {
+        return metadata.getInfoLink();
+    }
+
+
     public String getName() {
         return feature.name();
     }
