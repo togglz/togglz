@@ -59,4 +59,10 @@ public class Deployments {
                 .as(JavaArchive.class);
     }
 
+    public static JavaArchive getTogglzJSPArchive() {
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsp.jar")
+                .importDirectory("../jsp/target/classes")
+                .as(JavaArchive.class);
+    }
+
 }

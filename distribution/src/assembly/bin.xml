@@ -39,6 +39,7 @@
         <include>org.togglz:togglz-deltaspike:jar:*</include>
         <include>org.togglz:togglz-shiro:jar:*</include>
         <include>org.togglz:togglz-jsf:jar:*</include>
+        <include>org.togglz:togglz-jsp:jar:*</include>
       </includes>
     </dependencySet>
 
