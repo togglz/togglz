@@ -18,6 +18,7 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.descriptor.api.Descriptors;
 import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.core.context.FeatureContext;
@@ -44,6 +45,11 @@ public class JDBCRepositoryTest {
     @Resource(mappedName = "jboss/datasources/ExampleDS")
     private DataSource dataSource;
 
+    @Before
+    public void resetDatabase() {
+        executeUpdate("DELETE FROM MYTABLE");
+    }
+    
     @Test
     public void testGetFeatureStateFromJDBCRepository() throws IOException {
 
