@@ -1,14 +1,11 @@
 package org.togglz.core.repository.jdbc;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.util.MapSerializer;
@@ -35,53 +32,15 @@ class SchemaUpdater {
     }
 
     protected boolean doesTableExist() throws SQLException {
-
-        DatabaseMetaData metaData = connection.getMetaData();
-        String catalog = connection.getCatalog();
-
-        ResultSet resultSet = metaData.getTables(catalog, null, tableName, new String[] { "TABLE" });
-        try {
-            return resultSet.next();
-        } finally {
-            DbUtils.closeQuietly(resultSet);
-        }
-
+        return isSuccessful("SELECT * FROM %TABLE%");
     }
 
     protected void migrateToVersion1() throws SQLException {
-        Statement statement = connection.createStatement();
-        try {
-            statement
-                .executeUpdate(insertTableName(
-                "CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS VARCHAR(2000))"));
-        } finally {
-            DbUtils.closeQuietly(statement);
-        }
+        execute("CREATE TABLE %TABLE% (FEATURE_NAME VARCHAR(100) PRIMARY KEY, FEATURE_ENABLED INTEGER, FEATURE_USERS VARCHAR(2000))");
     }
 
     protected boolean isSchemaVersion1() throws SQLException {
-
-        DatabaseMetaData metaData = connection.getMetaData();
-        String catalog = connection.getCatalog();
-
-        // build a set of columns of the table
-        Set<String> columns = new HashSet<String>();
-        ResultSet resultSet = metaData.getColumns(catalog, null, tableName, null);
-        try {
-            while (resultSet.next()) {
-                // Note: PostgreSQL returns lower case column names
-                String col = resultSet.getString("COLUMN_NAME").toUpperCase();
-                if (Strings.isNotBlank(col)) {
-                    columns.add(col);
-                }
-            }
-        } finally {
-            DbUtils.closeQuietly(resultSet);
-        }
-
-        // version 1 check
-        return columns.contains(Columns.FEATURE_NAME) && !columns.contains(Columns.STRATEGY_ID);
-
+        return columnExists(Columns.FEATURE_NAME) && !columnExists(Columns.STRATEGY_ID);
     }
 
     protected void migrateToVersion2() throws SQLException {
@@ -89,15 +48,8 @@ class SchemaUpdater {
         /*
          * step 1: add new columns
          */
-        Statement addColumnsStmt = connection.createStatement();
-        try {
-            addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD STRATEGY_ID VARCHAR(200)"));
-            addColumnsStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% ADD STRATEGY_PARAMS VARCHAR(2000)"));
-        } finally {
-            DbUtils.closeQuietly(addColumnsStmt);
-        }
+        execute("ALTER TABLE %TABLE% ADD STRATEGY_ID VARCHAR(200)");
+        execute("ALTER TABLE %TABLE% ADD STRATEGY_PARAMS VARCHAR(2000)");
 
         /*
          * step 2: migrate the existing data
@@ -108,7 +60,7 @@ class SchemaUpdater {
             ResultSet resultSet = null;
             try {
 
-                resultSet = updateDataStmt.executeQuery(insertTableName(
+                resultSet = updateDataStmt.executeQuery(substitute(
                     "SELECT FEATURE_NAME, FEATURE_USERS, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE%"));
 
                 while (resultSet.next()) {
@@ -146,17 +98,50 @@ class SchemaUpdater {
         /*
          * step 3: remove the deprecated column
          */
-        Statement removeUsersColumnStmt = connection.createStatement();
-        try {
-            removeUsersColumnStmt.executeUpdate(insertTableName(
-                "ALTER TABLE %TABLE% DROP FEATURE_USERS"));
-        } finally {
-            DbUtils.closeQuietly(removeUsersColumnStmt);
-        }
+        execute("ALTER TABLE %TABLE% DROP FEATURE_USERS");
 
     }
 
-    private String insertTableName(String s) {
+    /**
+     * Returns <code>true</code> if the given column exists in the features table.
+     * 
+     * @throws SQLException
+     */
+    private boolean columnExists(String column) throws SQLException {
+        return isSuccessful("SELECT " + column + " FROM %TABLE%");
+    }
+
+    /**
+     * Returns <code>true</code> if the supplied statement returned without any error
+     */
+    private boolean isSuccessful(String sql) throws SQLException {
+        Statement statement = connection.createStatement();
+        try {
+            statement.execute(substitute(sql));
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            DbUtils.closeQuietly(statement);
+        }
+        return true;
+    }
+
+    /**
+     * Executes the given statement.
+     */
+    private void execute(String sql) throws SQLException {
+        Statement statement = connection.createStatement();
+        try {
+            statement.executeUpdate(substitute(sql));
+        } finally {
+            DbUtils.closeQuietly(statement);
+        }
+    }
+
+    /**
+     * Replaces <code>%TABLE%</code> with the table name configured.
+     */
+    private String substitute(String s) {
         return s.replace("%TABLE%", tableName);
     }
 
