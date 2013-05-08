@@ -4,14 +4,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.togglz.core.manager.FeatureManager;
+
 public class RequestEvent {
 
     private final ServletContext context;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final String path;
+    private final FeatureManager featureManager;
 
-    public RequestEvent(ServletContext context, HttpServletRequest request, HttpServletResponse response) {
+    public RequestEvent(FeatureManager featureManager, ServletContext context, HttpServletRequest request,
+        HttpServletResponse response) {
+        this.featureManager = featureManager;
         this.context = context;
         this.request = request;
         this.response = response;
@@ -21,7 +26,7 @@ public class RequestEvent {
         path = request.getRequestURI().substring(prefix.length());
 
     }
-    
+
     public ServletContext getContext() {
         return context;
     }
@@ -36,6 +41,10 @@ public class RequestEvent {
 
     public String getPath() {
         return path;
+    }
+
+    public FeatureManager getFeatureManager() {
+        return featureManager;
     }
 
 }

@@ -13,19 +13,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.togglz.core.context.FeatureContext;
+import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.manager.LazyResolvingFeatureManager;
 import org.togglz.core.user.FeatureUser;
 
 public class TogglzConsoleServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private final List<RequestHandler> handlers = new ArrayList<RequestHandler>();
+    protected final List<RequestHandler> handlers = new ArrayList<RequestHandler>();
 
-    private ServletContext servletContext;
+    protected ServletContext servletContext;
+
+    protected FeatureManager featureManager;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
+
+        featureManager = new LazyResolvingFeatureManager();
 
         servletContext = config.getServletContext();
 
@@ -41,13 +46,14 @@ public class TogglzConsoleServlet extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         // first check the permission
-        FeatureUser user = FeatureContext.getFeatureManager().getCurrentFeatureUser();
+        FeatureUser user = featureManager.getCurrentFeatureUser();
         if (user == null || !user.isFeatureAdmin()) {
             response.sendError(403, "You are not allowed to access the Togglz Console");
             return;
         }
 
-        RequestEvent consoleRequest = new RequestEvent(servletContext, request, response);
+        RequestEvent consoleRequest =
+            new RequestEvent(featureManager, servletContext, request, response);
         String path = consoleRequest.getPath();
 
         for (RequestHandler page : handlers) {

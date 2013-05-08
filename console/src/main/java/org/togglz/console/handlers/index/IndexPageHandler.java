@@ -9,7 +9,6 @@ import java.util.ServiceLoader;
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
@@ -28,7 +27,7 @@ public class IndexPageHandler extends RequestHandlerBase {
     @Override
     public void process(RequestEvent event) throws IOException {
 
-        FeatureManager featureManager = FeatureContext.getFeatureManager();
+        FeatureManager featureManager = event.getFeatureManager();
 
         List<ActivationStrategy> strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
 

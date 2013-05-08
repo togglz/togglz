@@ -13,7 +13,6 @@ import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
@@ -32,7 +31,7 @@ public class EditPageHandler extends RequestHandlerBase {
     @Override
     public void process(RequestEvent event) throws IOException {
 
-        FeatureManager featureManager = FeatureContext.getFeatureManager();
+        FeatureManager featureManager = event.getFeatureManager();
         HttpServletRequest request = event.getRequest();
         HttpServletResponse response = event.getResponse();
 
