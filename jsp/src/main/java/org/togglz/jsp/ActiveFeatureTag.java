@@ -13,9 +13,9 @@ public class ActiveFeatureTag extends TagSupport {
 
     private static final long serialVersionUID = 1L;
 
-    private FeatureManager featureManager;
+    protected FeatureManager featureManager;
 
-    private String name;
+    protected String name;
 
     public ActiveFeatureTag() {
         this.featureManager = new LazyResolvingFeatureManager();
