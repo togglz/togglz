@@ -5,7 +5,6 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.Label;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 
@@ -57,11 +56,6 @@ public class EnumBasedFeatureProviderTest {
             return "something";
         }
 
-        @Override
-        public boolean isActive() {
-            return false;
-        }
-
     }
 
     private static enum ValidFeatureEnum implements Feature {
@@ -70,11 +64,6 @@ public class EnumBasedFeatureProviderTest {
         FEATURE1,
 
         FEATURE2;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
 
     }
 
@@ -89,11 +78,6 @@ public class EnumBasedFeatureProviderTest {
         @Override
         public String name() {
             return name;
-        }
-
-        @Override
-        public boolean isActive() {
-            throw new UnsupportedOperationException();
         }
 
     }

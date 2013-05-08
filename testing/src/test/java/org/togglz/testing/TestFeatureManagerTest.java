@@ -71,14 +71,8 @@ public class TestFeatureManagerTest {
     }
 
     private enum MyFeatures implements Feature {
-
         ONE,
         TWO;
-
-        @Override
-        public boolean isActive() {
-            throw new UnsupportedOperationException();
-        }
     }
 
 }

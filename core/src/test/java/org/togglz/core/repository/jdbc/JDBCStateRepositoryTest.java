@@ -223,14 +223,7 @@ public class JDBCStateRepositoryTest {
     }
 
     private static enum TestFeature implements Feature {
-
         F1;
-
-        @Override
-        public boolean isActive() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }

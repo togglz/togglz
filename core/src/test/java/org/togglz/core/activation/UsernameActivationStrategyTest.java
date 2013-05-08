@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
@@ -91,14 +90,7 @@ public class UsernameActivationStrategyTest {
     }
 
     private enum MyFeature implements Feature {
-
         FEATURE;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
-
     }
 
 }

@@ -53,15 +53,8 @@ public class ThreadLocalFeatureManagerProviderTest {
     }
 
     private static enum MyFeature implements Feature {
-
         FEATURE1,
         FEATURE2;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
-
     }
 
 }

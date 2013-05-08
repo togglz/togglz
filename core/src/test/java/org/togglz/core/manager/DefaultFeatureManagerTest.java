@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
@@ -125,15 +124,8 @@ public class DefaultFeatureManagerTest {
      * Feature under test
      */
     private static enum MyFeatures implements Feature {
-
         DELETE_USERS,
         EXPERIMENTAL;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
-
     }
 
 }

@@ -7,7 +7,6 @@ enum MyFeatures implements Feature {
 
     FEATURE_ONE;
 
-    @Override
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }

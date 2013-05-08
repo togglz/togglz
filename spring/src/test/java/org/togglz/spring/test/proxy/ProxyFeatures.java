@@ -7,7 +7,6 @@ public enum ProxyFeatures implements Feature {
 
     SERVICE_TOGGLE;
 
-    @Override
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }

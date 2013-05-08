@@ -1,7 +1,6 @@
 package org.togglz.core.util;
 
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 
 /**
  * This class can be used if just the name of a feature is known but not the enum type. It is similar to {@link UntypedFeature}
@@ -20,11 +19,6 @@ public class NamedFeature implements Feature {
     @Override
     public String name() {
         return name;
-    }
-
-    @Override
-    public boolean isActive() {
-        return FeatureContext.getFeatureManager().isActive(this);
     }
 
 }

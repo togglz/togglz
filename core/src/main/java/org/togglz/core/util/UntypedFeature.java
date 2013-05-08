@@ -30,11 +30,6 @@ public class UntypedFeature implements Feature {
         return getTypedFeature().name();
     }
 
-    @Override
-    public boolean isActive() {
-        return getTypedFeature().isActive();
-    }
-
     private Feature _feature;
 
     private Feature getTypedFeature() {

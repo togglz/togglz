@@ -7,7 +7,6 @@ import java.util.GregorianCalendar;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.SimpleFeatureUser;
 
@@ -138,14 +137,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     private enum ScriptFeature implements Feature {
-
         FEATURE;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
-
     }
 
 }

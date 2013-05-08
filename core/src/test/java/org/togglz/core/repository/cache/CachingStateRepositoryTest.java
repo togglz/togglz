@@ -111,14 +111,7 @@ public class CachingStateRepositoryTest {
     }
 
     private enum DummyFeature implements Feature {
-
         TEST;
-
-        @Override
-        public boolean isActive() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }

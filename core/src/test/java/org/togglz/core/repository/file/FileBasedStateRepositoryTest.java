@@ -16,7 +16,6 @@ import java.util.Properties;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 
 public class FileBasedStateRepositoryTest {
@@ -318,17 +317,10 @@ public class FileBasedStateRepositoryTest {
     }
 
     private static enum MyFeature implements Feature {
-
         FEATURE1,
         FEATURE2,
         FEATURE3,
         FEATURE4;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
-
     }
 
 }

@@ -96,11 +96,6 @@ public class FileBasedStateRepositoryConcurrencyTest {
             return name;
         }
 
-        @Override
-        public boolean isActive() {
-            throw new UnsupportedOperationException();
-        }
-
     }
 
 }

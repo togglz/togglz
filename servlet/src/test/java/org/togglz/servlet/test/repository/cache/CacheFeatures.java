@@ -7,7 +7,6 @@ public enum CacheFeatures implements Feature {
 
     F1, F2;
 
-    @Override
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
     }

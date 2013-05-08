@@ -41,7 +41,6 @@ public class TogglzRuleWithAnnotationTest {
         ONE,
         TWO;
 
-        @Override
         public boolean isActive() {
             return FeatureContext.getFeatureManager().isActive(this);
         }

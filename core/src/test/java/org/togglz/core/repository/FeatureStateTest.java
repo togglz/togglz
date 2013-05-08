@@ -55,11 +55,6 @@ public class FeatureStateTest {
 
     private static enum Features implements Feature {
         FEATURE1;
-
-        @Override
-        public boolean isActive() {
-            throw new IllegalStateException("Not supported");
-        }
     }
 
 }

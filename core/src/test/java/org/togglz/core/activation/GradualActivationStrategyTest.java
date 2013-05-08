@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -130,14 +129,7 @@ public class GradualActivationStrategyTest {
     }
 
     private enum GradualFeature implements Feature {
-
         FEATURE;
-
-        @Override
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
-
     }
 
     private class TestingGradualActivationStrategy extends GradualActivationStrategy {
