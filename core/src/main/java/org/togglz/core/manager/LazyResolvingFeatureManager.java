@@ -10,15 +10,25 @@ import org.togglz.core.user.FeatureUser;
 
 /**
  * 
- * A feature manager that delegates all calls to the manager obtained lazily via {@link FeatureContext#getFeatureManager()}.
+ * A feature manager that delegates all calls to the manager obtained lazily,
+ * either injected via the {@link #setDelegate(FeatureManager)} method or
+ * obtained via {@link FeatureContext#getFeatureManager()}.
  * 
  * @author Christian Kaltepoth
- * 
  */
 public class LazyResolvingFeatureManager implements FeatureManager {
 
+    private FeatureManager delegate;
+
     private FeatureManager getDelegate() {
-        return FeatureContext.getFeatureManager();
+        if (delegate == null) {
+            delegate = FeatureContext.getFeatureManager();
+        }
+        return delegate;
+    }
+
+    public void setDelegate(FeatureManager delegate) {
+        this.delegate = delegate;
     }
 
     @Override
