@@ -13,7 +13,7 @@ public class ActiveFeatureTag extends TagSupport {
 
     private static final long serialVersionUID = 1L;
 
-    protected FeatureManager featureManager;
+    protected LazyResolvingFeatureManager featureManager;
 
     protected String name;
 
@@ -42,6 +42,10 @@ public class ActiveFeatureTag extends TagSupport {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setManager(FeatureManager manager) {
+        this.featureManager.setDelegate(manager);
     }
 
 }

@@ -13,6 +13,12 @@
       <name>name</name>
       <required>true</required>
     </attribute>
+    <attribute>
+      <name>manager</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>org.togglz.core.manager.FeatureManager</type>
+    </attribute>
   </tag>
 </taglib>
 
