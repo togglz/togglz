@@ -44,4 +44,12 @@ public class ActiveFeatureTag extends TagSupport {
         this.name = name;
     }
 
+    public FeatureManager getFeatureManager() {
+        return featureManager;
+    }
+
+    public void setFeatureManager(FeatureManager featureManager) {
+        this.featureManager = featureManager;
+    }
+
 }
