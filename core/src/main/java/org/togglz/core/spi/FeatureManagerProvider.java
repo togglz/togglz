@@ -17,6 +17,7 @@ import org.togglz.core.util.Weighted;
  * <li>TestFeatureManagerProvider: 10</li>
  * <li>FallbackTestFeatureManagerProvider: 20</li>
  * <li>ThreadLocalFeatureManagerProvider: 50</li>
+ * <li>BeanFinderFeatureManagerProvider: 60</li>
  * <li>StaticFeatureManagerProvider: 70</li>
  * <li>WebAppFeatureManagerProvider: 100</li>
  * <li>JNDIFeatureManagerProvider: 200</li>

@@ -1,4 +1,5 @@
 org.togglz.core.context.ThreadLocalFeatureManagerProvider
+org.togglz.core.context.BeanFinderFeatureManagerProvider
 org.togglz.core.context.JNDIFeatureManagerProvider
 org.togglz.core.context.StaticFeatureManagerProvider
 org.togglz.core.context.ContextClassLoaderFeatureManagerProvider
