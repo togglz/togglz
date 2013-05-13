@@ -12,6 +12,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.cdi.Features;
 import org.togglz.test.Deployments;
 
 import com.gargoylesoftware.htmlunit.TextPage;
@@ -26,7 +27,7 @@ public class CDIBasicOperationTest {
                 .addAsLibrary(Deployments.getTogglzCDIArchive())
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClass(CDIFeatureConfiguration.class)
-                .addClass(BasicFeatures.class);
+                .addClass(Features.class);
     }
 
     @ArquillianResource

@@ -2,6 +2,7 @@ package org.togglz.cdi.test;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.togglz.cdi.Features;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.StateRepository;
@@ -14,7 +15,7 @@ public class CDIFeatureConfiguration implements TogglzConfig {
 
     @Override
     public Class<? extends Feature> getFeatureClass() {
-        return BasicFeatures.class;
+        return Features.class;
     }
 
     @Override

@@ -1,10 +1,10 @@
-package org.togglz.cdi.test;
+package org.togglz.cdi;
 
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.context.FeatureContext;
 
-public enum BasicFeatures implements Feature {
+public enum Features implements Feature {
 
     FEATURE1,
     
