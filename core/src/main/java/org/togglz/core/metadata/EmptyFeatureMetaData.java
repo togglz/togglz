@@ -25,6 +25,16 @@ public class EmptyFeatureMetaData implements FeatureMetaData {
     }
 
     @Override
+    public String getOwner() {
+        return null;
+    }
+
+    @Override
+    public String getInfoLink() {
+        return null;
+    }
+
+    @Override
     public boolean isEnabledByDefault() {
         return false;
     }

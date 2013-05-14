@@ -4,7 +4,9 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
+import org.togglz.core.annotation.InfoLink;
 import org.togglz.core.annotation.Label;
+import org.togglz.core.annotation.Owner;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 
@@ -25,7 +27,6 @@ public class EnumBasedFeatureProviderTest {
 
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         assertThat(provider.getFeatures())
-            .hasSize(2)
             .containsSequence(ValidFeatureEnum.FEATURE1, ValidFeatureEnum.FEATURE2);
 
     }
@@ -49,6 +50,34 @@ public class EnumBasedFeatureProviderTest {
 
     }
 
+    @Test
+    public void shouldReturnOwnerNameIfAnnotationPresent() {
+        FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
+        FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_OWNER);
+        assertThat(metaData.getOwner()).isEqualTo("Christian");
+    }
+
+    @Test
+    public void shouldReturnNullForOwnerNameByDefault() {
+        FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
+        FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
+        assertThat(metaData.getOwner()).isNull();
+    }
+
+    @Test
+    public void shouldReturnInfoLinkIfAnnotationPresent() {
+        FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
+        FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_LINK);
+        assertThat(metaData.getInfoLink()).isEqualTo("https://github.com/togglz/togglz/pull/33");
+    }
+
+    @Test
+    public void shouldReturnNullForInfoLinkByDefault() {
+        FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
+        FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
+        assertThat(metaData.getInfoLink()).isNull();
+    }
+
     private static class NotAnEnum implements Feature {
 
         @Override
@@ -63,7 +92,13 @@ public class EnumBasedFeatureProviderTest {
         @Label("First feature")
         FEATURE1,
 
-        FEATURE2;
+        FEATURE2,
+
+        @Owner("Christian")
+        WITH_OWNER,
+
+        @InfoLink("https://github.com/togglz/togglz/pull/33")
+        WITH_LINK;
 
     }
 

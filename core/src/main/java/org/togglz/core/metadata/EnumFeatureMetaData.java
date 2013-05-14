@@ -23,6 +23,10 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
     private final String label;
 
+    private final String owner;
+
+    private final String infoLink;
+
     private final boolean enabledByDefault;
 
     private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
@@ -31,6 +35,12 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
         // lookup label via @Label annotation
         this.label = FeatureAnnotations.getLabel(feature);
+
+        // lookup owner via @Owner annotation
+        this.owner = FeatureAnnotations.getOwner(feature);
+
+        // lookup info link via @InfoLink annotation
+        this.infoLink = FeatureAnnotations.getInfoLink(feature);
 
         // lookup default via @EnabledByDefault
         this.enabledByDefault = FeatureAnnotations.isEnabledByDefault(feature);
@@ -48,6 +58,14 @@ public class EnumFeatureMetaData implements FeatureMetaData {
     @Override
     public String getLabel() {
         return label;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getInfoLink() {
+        return infoLink;
     }
 
     @Override

@@ -68,4 +68,16 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
         return groups;
     }
 
+    @Override
+    public String getOwner() {
+        // currently not supported by this implementation
+        return null;
+    }
+
+    @Override
+    public String getInfoLink() {
+        // currently not supported by this implementation
+        return null;
+    }
+
 }

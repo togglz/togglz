@@ -18,6 +18,16 @@ public interface FeatureMetaData {
     String getLabel();
 
     /**
+     * Returns the name of the contact person for this feature.
+     */
+    String getOwner();
+
+    /**
+     * Returns a link for additional information for this feature.
+     */
+    String getInfoLink();
+
+    /**
      * If the feature should be enabled by default.
      */
     boolean isEnabledByDefault();
