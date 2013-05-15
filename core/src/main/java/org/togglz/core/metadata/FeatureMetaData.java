@@ -1,5 +1,6 @@
 package org.togglz.core.metadata;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -18,16 +19,6 @@ public interface FeatureMetaData {
     String getLabel();
 
     /**
-     * Returns the name of the contact person for this feature.
-     */
-    String getOwner();
-
-    /**
-     * Returns a link for additional information for this feature.
-     */
-    String getInfoLink();
-
-    /**
      * If the feature should be enabled by default.
      */
     boolean isEnabledByDefault();
@@ -36,5 +27,10 @@ public interface FeatureMetaData {
      * The feature groups to which the feature belongs.
      */
     Set<FeatureGroup> getGroups();
+
+    /**
+     * A map of custom feature attributes describing the feature
+     */
+    Map<String, String> getAttributes();
 
 }

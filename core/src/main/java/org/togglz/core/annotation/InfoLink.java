@@ -7,13 +7,14 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * Allows to set a link for additional information for this feature.
+ * Custom feature attribute that allows to set a link for additional information regarding this feature.
  * 
  * @author Eli Abramovitch
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.TYPE })
+@Target(ElementType.FIELD)
+@FeatureAttribute("InfoLink")
 public @interface InfoLink {
 
     /**

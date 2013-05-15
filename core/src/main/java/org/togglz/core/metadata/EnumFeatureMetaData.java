@@ -1,7 +1,10 @@
 package org.togglz.core.metadata;
 
 import java.lang.annotation.Annotation;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -23,34 +26,35 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
     private final String label;
 
-    private final String owner;
-
-    private final String infoLink;
-
     private final boolean enabledByDefault;
 
     private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+
+    private final Map<String, String> attributes = new LinkedHashMap<String, String>();
 
     public EnumFeatureMetaData(Feature feature) {
 
         // lookup label via @Label annotation
         this.label = FeatureAnnotations.getLabel(feature);
 
-        // lookup owner via @Owner annotation
-        this.owner = FeatureAnnotations.getOwner(feature);
-
-        // lookup info link via @InfoLink annotation
-        this.infoLink = FeatureAnnotations.getInfoLink(feature);
-
         // lookup default via @EnabledByDefault
         this.enabledByDefault = FeatureAnnotations.isEnabledByDefault(feature);
 
-        // lookup groups
+        // process annotations on the feature
         for (Annotation annotation : FeatureAnnotations.getAnnotations(feature)) {
+
+            // lookup groups
             FeatureGroup group = AnnotationFeatureGroup.build(annotation.annotationType());
             if (group != null) {
                 groups.add(group);
             }
+
+            // check if this annotation is a feature attribute
+            String[] attribute = FeatureAnnotations.getFeatureAttribute(annotation);
+            if (attribute != null) {
+                attributes.put(attribute[0], attribute[1]);
+            }
+
         }
 
     }
@@ -58,14 +62,6 @@ public class EnumFeatureMetaData implements FeatureMetaData {
     @Override
     public String getLabel() {
         return label;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public String getInfoLink() {
-        return infoLink;
     }
 
     @Override
@@ -76,6 +72,11 @@ public class EnumFeatureMetaData implements FeatureMetaData {
     @Override
     public Set<FeatureGroup> getGroups() {
         return groups;
+    }
+
+    @Override
+    public Map<String, String> getAttributes() {
+        return Collections.unmodifiableMap(attributes);
     }
 
 }

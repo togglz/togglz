@@ -1,6 +1,7 @@
 package org.togglz.core.metadata;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -25,16 +26,6 @@ public class EmptyFeatureMetaData implements FeatureMetaData {
     }
 
     @Override
-    public String getOwner() {
-        return null;
-    }
-
-    @Override
-    public String getInfoLink() {
-        return null;
-    }
-
-    @Override
     public boolean isEnabledByDefault() {
         return false;
     }
@@ -42,6 +33,11 @@ public class EmptyFeatureMetaData implements FeatureMetaData {
     @Override
     public Set<FeatureGroup> getGroups() {
         return Collections.emptySet();
+    }
+
+    @Override
+    public Map<String, String> getAttributes() {
+        return Collections.emptyMap();
     }
 
 }

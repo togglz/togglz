@@ -2,9 +2,12 @@ package org.togglz.core.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.FeatureAttribute;
 import org.togglz.core.annotation.InfoLink;
 import org.togglz.core.annotation.Label;
 import org.togglz.core.annotation.Owner;
@@ -73,6 +76,47 @@ public class FeatureAnnotations {
             // ignore
         }
         return null;
+    }
+
+    /**
+     * Checks whether the supplied annotation specifies a feature attribute. If so, it returns an String array containing the
+     * name of the attribute at the first and the value at the second position. Returns <code>null</code> if no attribute was
+     * found.
+     */
+    public static String[] getFeatureAttribute(Annotation annotation) {
+
+        try {
+
+            // only annotations which are annotated with @FeatureAttribute are interesting
+            FeatureAttribute details = annotation.annotationType().getAnnotation(FeatureAttribute.class);
+            if (details != null) {
+
+                // this is the name of the feature attribute
+                String attributeName = details.value();
+
+                // find the method to invoke on the annotation to read the value of the feature attribute
+                Method method = annotation.getClass().getMethod(details.annotationAttribute());
+                if (method != null) {
+                    String attributeValue = method.invoke(annotation).toString();
+                    return new String[] { attributeName, attributeValue };
+                }
+
+            }
+
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        } catch (SecurityException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return null;
+
     }
 
 }

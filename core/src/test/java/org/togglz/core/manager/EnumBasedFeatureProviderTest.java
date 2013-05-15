@@ -54,28 +54,32 @@ public class EnumBasedFeatureProviderTest {
     public void shouldReturnOwnerNameIfAnnotationPresent() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_OWNER);
-        assertThat(metaData.getOwner()).isEqualTo("Christian");
+        assertThat(metaData.getAttributes())
+            .containsValue("Christian");
     }
 
     @Test
     public void shouldReturnNullForOwnerNameByDefault() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
-        assertThat(metaData.getOwner()).isNull();
+        assertThat(metaData.getAttributes())
+            .doesNotContainValue("Christian");
     }
 
     @Test
     public void shouldReturnInfoLinkIfAnnotationPresent() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_LINK);
-        assertThat(metaData.getInfoLink()).isEqualTo("https://github.com/togglz/togglz/pull/33");
+        assertThat(metaData.getAttributes())
+            .containsValue("https://github.com/togglz/togglz/pull/33");
     }
 
     @Test
     public void shouldReturnNullForInfoLinkByDefault() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
-        assertThat(metaData.getInfoLink()).isNull();
+        assertThat(metaData.getAttributes())
+            .doesNotContainValue("https://github.com/togglz/togglz/pull/33");
     }
 
     private static class NotAnEnum implements Feature {

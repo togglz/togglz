@@ -7,17 +7,18 @@ import java.lang.annotation.Target;
 
 /**
  * 
- * Allows to set the name of the contact person for this feature.
+ * Custom feature attribute that allows to set the name of a contact person.
  * 
  * @author Eli Abramovitch
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD, ElementType.TYPE })
+@Target(ElementType.FIELD)
+@FeatureAttribute("Owner")
 public @interface Owner {
 
     /**
-     * The name of the contact person for the feature.
+     * The name of a contact person for the feature.
      */
     String value();
 

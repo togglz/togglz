@@ -1,6 +1,8 @@
 package org.togglz.core.metadata;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -69,15 +71,9 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
     }
 
     @Override
-    public String getOwner() {
+    public Map<String, String> getAttributes() {
         // currently not supported by this implementation
-        return null;
-    }
-
-    @Override
-    public String getInfoLink() {
-        // currently not supported by this implementation
-        return null;
+        return Collections.emptyMap();
     }
 
 }
