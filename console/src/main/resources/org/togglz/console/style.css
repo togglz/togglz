@@ -11,6 +11,13 @@ table.feature-overview td.feature-label, table.feature-overview th.feature-label
 	text-align: left;
 }
 
+table.feature-overview td.feature-label ul.attributes {
+  list-style: none;
+  margin: 0 0 0 15px;
+  font-size: 9pt;
+  color: gray;
+}
+
 table.feature-overview td.feature-status, table.feature-overview th.feature-status {
 	text-align: center;
   width: 15%;

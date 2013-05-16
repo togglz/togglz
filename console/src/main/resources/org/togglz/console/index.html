@@ -31,6 +31,18 @@
             <tr>
               <td class="feature-label">
                 <span title="${feature.name}">${feature.label}</span>
+                ${if feature.hasInfoLink}
+                  <a href="${feature.infoLink}">
+                    <img src="info.png" alt="infolink"/>
+                  </a>
+                ${end}
+                ${if feature.hasAttributes}
+                  <ul class="attributes">
+                  ${foreach feature.attributes attr}
+                    <li>${attr.key}: ${attr.value}</li>
+                  ${end}
+                  </ul>
+                ${end}
               </td>
               <td class="feature-status">
                 <img src="${if feature.enabled}ledgreen.png${else}ledred.png${end}" alt="toggle" 

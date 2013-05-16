@@ -3,7 +3,11 @@ package org.togglz.console.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +24,9 @@ public class FeatureModel {
     private final Feature feature;
     private final FeatureMetaData metadata;
 
+    private final Map<String, String> attributes;
+    private final String infoLink;
+
     private final List<StrategyModel> strategies = new ArrayList<StrategyModel>();
 
     private boolean enabled;
@@ -30,6 +37,9 @@ public class FeatureModel {
 
         this.feature = feature;
         this.metadata = metadata;
+
+        this.attributes = new LinkedHashMap<String, String>(metadata.getAttributes());
+        this.infoLink = this.attributes.remove("InfoLink");
 
         List<ActivationStrategy> sortedImpls = new ArrayList<ActivationStrategy>(impls);
         Collections.sort(sortedImpls, new Comparator<ActivationStrategy>() {
@@ -141,6 +151,22 @@ public class FeatureModel {
         }
 
         return state;
+    }
+
+    public boolean isHasInfoLink() {
+        return Strings.isNotBlank(infoLink);
+    }
+
+    public String getInfoLink() {
+        return infoLink;
+    }
+
+    public boolean isHasAttributes() {
+        return attributes.size() > 0;
+    }
+
+    public Set<Entry<String, String>> getAttributes() {
+        return attributes.entrySet();
     }
 
     public List<StrategyModel> getStrategies() {
