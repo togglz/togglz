@@ -82,6 +82,35 @@ public class EnumBasedFeatureProviderTest {
             .doesNotContainValue("https://github.com/togglz/togglz/pull/33");
     }
 
+    @Test
+    public void shouldReturnCombinedFeatureListForMultipleEnums() {
+
+        FeatureProvider provider = new EnumBasedFeatureProvider()
+            .addFeatureEnum(ValidFeatureEnum.class)
+            .addFeatureEnum(OtherFeatureEnum.class);
+
+        // all feature are in the list
+        assertThat(provider.getFeatures())
+            .hasSize(ValidFeatureEnum.values().length + OtherFeatureEnum.values().length)
+            .contains(ValidFeatureEnum.FEATURE1)
+            .contains(OtherFeatureEnum.ADDITIONAL_FEATURE);
+
+    }
+
+    @Test
+    public void shouldBuildMetadataForMultipleEnums() {
+
+        FeatureProvider provider = new EnumBasedFeatureProvider()
+            .addFeatureEnum(ValidFeatureEnum.class)
+            .addFeatureEnum(OtherFeatureEnum.class);
+
+        assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel())
+            .isEqualTo("First feature");
+        assertThat(provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel())
+            .isEqualTo("Additional Feature");
+
+    }
+
     private static class NotAnEnum implements Feature {
 
         @Override
@@ -103,6 +132,13 @@ public class EnumBasedFeatureProviderTest {
 
         @InfoLink("https://github.com/togglz/togglz/pull/33")
         WITH_LINK;
+
+    }
+
+    public static enum OtherFeatureEnum implements Feature {
+
+        @Label("Additional Feature")
+        ADDITIONAL_FEATURE;
 
     }
 
