@@ -32,7 +32,7 @@ public class ManagedFeatureManagerTest {
             .addAsWebInfResource("applicationContext-container.xml")
             .setWebXML(new StringAsset(
                 Descriptors.create(WebAppDescriptor.class)
-                    .contextParam("org.togglz.LOCAL_FEATURE_MANAGER", "false")
+                    .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
                     .contextParam("contextConfigLocation", "/WEB-INF/applicationContext*.xml")
                     .listener("org.springframework.web.context.ContextLoaderListener")
                     .exportAsString()));

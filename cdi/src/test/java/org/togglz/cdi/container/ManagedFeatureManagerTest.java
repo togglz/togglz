@@ -27,7 +27,7 @@ public class ManagedFeatureManagerTest {
             .addClass(ManagedFeatureManagerProvider.class)
             .setWebXML(new StringAsset(
                 Descriptors.create(WebAppDescriptor.class)
-                    .contextParam("org.togglz.LOCAL_FEATURE_MANAGER", "false")
+                    .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
                     .exportAsString()));
     }
 

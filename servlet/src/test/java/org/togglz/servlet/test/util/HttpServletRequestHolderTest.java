@@ -29,7 +29,7 @@ public class HttpServletRequestHolderTest {
             // we don't need to bootstrap Togglz here as we only test the request holder
             .setWebXML(new StringAsset(
                 Descriptors.create(WebAppDescriptor.class)
-                    .contextParam("org.togglz.LOCAL_FEATURE_MANAGER", "false")
+                    .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
                     .exportAsString()));
 
     }
