@@ -40,6 +40,29 @@ public class FeatureContext {
      */
     public static synchronized FeatureManager getFeatureManager() {
 
+        FeatureManager manager = getFeatureManagerOrNull();
+
+        if (manager != null) {
+            return manager;
+        }
+
+        throw new IllegalStateException("Could not find the FeatureManager. " +
+            "For web applications please verify that the TogglzFilter starts up correctly. " +
+            "In other deployment scenarios you will typically have to implement a FeatureManagerProvider " +
+            "as described in the 'Advanced Configuration' chapter of the documentation.");
+
+    }
+
+    /**
+     * 
+     * Returns the {@link FeatureManager} for the current application (context class loader). The method uses the
+     * {@link FeatureManagerProvider} SPI to find the correct {@link FeatureManager} instance. If not manager could be found,
+     * <code>null</code> is returned.
+     * 
+     * @return The {@link FeatureManager} for the application or <code>null</code>
+     */
+    public static synchronized FeatureManager getFeatureManagerOrNull() {
+
         // the classloader used for cache lookups
         ClassLoader classLoader = getContextClassLoader();
 
@@ -73,7 +96,8 @@ public class FeatureContext {
 
             if (log.isDebugEnabled()) {
                 if (featureManager != null) {
-                    log.debug("Provider " + provider.getClass().getName() + " returned a FeatureManager");
+                    log.debug("Provider " + provider.getClass().getName() + " returned FeatureManager: "
+                        + featureManager.getName());
                 } else {
                     log.debug("No FeatureManager provided by " + provider.getClass().getName());
                 }
@@ -92,10 +116,7 @@ public class FeatureContext {
             return featureManager;
         }
 
-        throw new IllegalStateException("Could not find the FeatureManager. " +
-            "For web applications please verify that the TogglzFilter starts up correctly. " +
-            "In other deployment scenarios you will typically have to implement a FeatureManagerProvider " +
-            "as described in the 'Advanced Configuration' chapter of the documentation.");
+        return null;
     }
 
     /**
