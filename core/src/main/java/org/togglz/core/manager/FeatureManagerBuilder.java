@@ -47,7 +47,7 @@ public class FeatureManagerBuilder {
      */
     public FeatureManagerBuilder featureEnum(Class<? extends Feature> featureEnum) {
         this.featureProvider = new EnumBasedFeatureProvider(featureEnum);
-        this.name = featureEnum.getSimpleName();
+        this.name = "FeatureManager[" + featureEnum.getSimpleName() + "]";
         return this;
     }
 
