@@ -2,16 +2,12 @@ package org.togglz.servlet;
 
 import javax.servlet.ServletContext;
 
-import org.togglz.core.manager.FeatureManager;
-
 /**
  * Encapsulates the configuration provided by the various web context parameters.
  * 
  * @author Christian Kaltepoth
  */
 class TogglzFilterConfig {
-
-    private static final String LOCAL_FEATURE_MANAGER = "org.togglz.LOCAL_FEATURE_MANAGER";
 
     private final ServletContext servletContext;
 
@@ -20,13 +16,34 @@ class TogglzFilterConfig {
     }
 
     /**
-     * Returns <code>true</code> if the filter should create a local {@link FeatureManager} for the web application.
+     * Returns <code>true</code> if the filter should perform the bootstrapping process. Returns <code>null</code> if the user
+     * didn't specify what to do.
      */
-    public boolean isCreateLocalFeatureManager() {
-        return !isFalse(servletContext.getInitParameter(LOCAL_FEATURE_MANAGER));
+    public Boolean isPerformBootstrap() {
+
+        // configuration for Togglz >= 2.0.0
+        String managerProvided = servletContext.getInitParameter("org.togglz.FEATURE_MANAGER_PROVIDED");
+        if (managerProvided != null) {
+            return !toBool(managerProvided);
+        }
+
+        // deprecated configuration
+        String localManager = servletContext.getInitParameter("org.togglz.LOCAL_FEATURE_MANAGER");
+        if (localManager != null) {
+            return toBool(localManager);
+        }
+
+        return null;
+
     }
 
-    private static boolean isFalse(String value) {
-        return value != null && "false".equalsIgnoreCase(value.trim());
+    private static boolean toBool(String value) {
+        if (value != null && "true".equalsIgnoreCase(value.trim())) {
+            return true;
+        }
+        if (value != null && "false".equalsIgnoreCase(value.trim())) {
+            return false;
+        }
+        throw new IllegalArgumentException("Not a valid boolean value: " + value);
     }
 }

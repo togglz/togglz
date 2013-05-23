@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.togglz.core.Togglz;
 import org.togglz.core.bootstrap.FeatureManagerBootstrapper;
 import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
+import org.togglz.core.context.FeatureContext;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
@@ -33,30 +34,50 @@ public class TogglzFilter implements Filter {
 
     private final Log log = LogFactory.getLog(TogglzFilter.class);
 
-    private TogglzFilterConfig config;
-
-    private FeatureManager featureManager;
+    private FeatureManager bootstrappedFeatureManager;
 
     private CompositeRequestListener requestListener;
 
     public void init(FilterConfig filterConfig) throws ServletException {
 
         // build the configuration object
-        config = new TogglzFilterConfig(filterConfig.getServletContext());
+        TogglzFilterConfig config = new TogglzFilterConfig(filterConfig.getServletContext());
 
         requestListener = new CompositeRequestListener(Services.getSorted(RequestListener.class));
 
-        // create FeatureManager if required
-        if (config.isCreateLocalFeatureManager()) {
+        // did the user specify whether to perform bootstrap or not?
+        Boolean bootstrap = config.isPerformBootstrap();
 
-            FeatureManagerBootstrapper boostrapper = new FeatureManagerBootstrapper();
-            featureManager = boostrapper.createFeatureManager(filterConfig.getServletContext());
+        // try to autodetect whether bootstrapping is required
+        if (bootstrap == null) {
 
-            for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
-                listener.start(featureManager);
+            FeatureManager existingFeatureManager = FeatureContext.getFeatureManagerOrNull();
+
+            if (existingFeatureManager == null) {
+                log.debug("Could not find any existing FeatureManager");
+                bootstrap = true;
+            } else {
+                log.debug("Found existing FeatureManager: " + existingFeatureManager.getName());
+                bootstrap = false;
             }
 
-            ContextClassLoaderFeatureManagerProvider.bind(featureManager);
+        }
+
+        // run bootstrap process
+        if (bootstrap) {
+
+            log.debug("Starting FeatureManager bootstrap process");
+
+            FeatureManagerBootstrapper boostrapper = new FeatureManagerBootstrapper();
+            bootstrappedFeatureManager = boostrapper.createFeatureManager(filterConfig.getServletContext());
+
+            for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
+                listener.start(bootstrappedFeatureManager);
+            }
+
+            ContextClassLoaderFeatureManagerProvider.bind(bootstrappedFeatureManager);
+
+            log.debug("FeatureManager has been created: " + bootstrappedFeatureManager.getName());
 
         }
 
@@ -90,11 +111,11 @@ public class TogglzFilter implements Filter {
     public void destroy() {
 
         // release only if the filter created it
-        if (featureManager != null) {
+        if (bootstrappedFeatureManager != null) {
 
             // notify listeners about the shutdown
             for (FeatureManagerListener listener : Services.getSorted(FeatureManagerListener.class)) {
-                listener.stop(featureManager);
+                listener.stop(bootstrappedFeatureManager);
             }
 
             // release
