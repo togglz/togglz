@@ -98,7 +98,7 @@ class SchemaUpdater {
         /*
          * step 3: remove the deprecated column
          */
-        execute("ALTER TABLE %TABLE% DROP FEATURE_USERS");
+        execute("ALTER TABLE %TABLE% DROP COLUMN FEATURE_USERS");
 
     }
 
