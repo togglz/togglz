@@ -44,13 +44,18 @@ public class FileBasedRepositoryPerformanceTest {
     }
 
     private void runPerformanceTest(Feature feature) {
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            repository.getFeatureState(feature);
-        }
-        long time = System.currentTimeMillis() - start;
 
-        System.out.println("Time for " + feature.name() + ": " + time);
+        for (int l = 0; l < 6; l++) {
+
+            long start = System.currentTimeMillis();
+            for (int i = 0; i < 100000; i++) {
+                repository.getFeatureState(feature);
+            }
+            long time = System.currentTimeMillis() - start;
+
+            System.out.println("Time for " + feature.name() + ": " + time);
+        }
+
     }
 
     private static enum PerformanceFeatures implements Feature {

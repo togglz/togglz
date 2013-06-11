@@ -25,41 +25,56 @@ class ReloadablePropertiesFile {
 
     private final File file;
 
+    private final int minCheckInterval;
+
     private Properties values = new Properties();
 
     private long lastRead = 0;
 
+    private long lastCheck = 0;
+
     public ReloadablePropertiesFile(File file) {
+        this(file, 1000);
+    }
+
+    public ReloadablePropertiesFile(File file, int maxCheckInterval) {
         this.file = file;
+        this.minCheckInterval = maxCheckInterval;
     }
 
     public synchronized void reloadIfUpdated() {
 
-        if (file.lastModified() > lastRead) {
+        long now = System.currentTimeMillis();
+        if (now - lastCheck > minCheckInterval) {
 
-            FileInputStream stream = null;
+            lastCheck = now;
 
-            try {
+            if (file.lastModified() > lastRead) {
 
-                // read new values
-                stream = new FileInputStream(file);
-                Properties newValues = new Properties();
-                newValues.load(stream);
+                FileInputStream stream = null;
 
-                // update state
-                values = newValues;
-                lastRead = System.currentTimeMillis();
+                try {
 
-                log.info("Reloaded file: " + file.getCanonicalPath());
+                    // read new values
+                    stream = new FileInputStream(file);
+                    Properties newValues = new Properties();
+                    newValues.load(stream);
 
-            } catch (FileNotFoundException e) {
-                log.debug("File not found: " + file);
-            } catch (IOException e) {
-                log.error("Failed to read file", e);
-            } finally {
-                IOUtils.close(stream);
+                    // update state
+                    values = newValues;
+                    lastRead = System.currentTimeMillis();
+
+                    log.info("Reloaded file: " + file.getCanonicalPath());
+
+                } catch (FileNotFoundException e) {
+                    log.debug("File not found: " + file);
+                } catch (IOException e) {
+                    log.error("Failed to read file", e);
+                } finally {
+                    IOUtils.close(stream);
+                }
+
             }
-
         }
 
     }
