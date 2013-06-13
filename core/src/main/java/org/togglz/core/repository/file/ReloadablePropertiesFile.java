@@ -116,6 +116,7 @@ class ReloadablePropertiesFile {
             throw new IllegalStateException("Failed to write new values", e);
         }
         lastRead = 0;
+        lastCheck = 0;
 
     }
 
