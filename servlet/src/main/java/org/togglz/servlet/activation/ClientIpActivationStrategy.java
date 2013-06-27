@@ -33,7 +33,7 @@ public class ClientIpActivationStrategy implements ActivationStrategy
    @Override
    public String getName()
    {
-      return "Client IP";
+      return "IP address (client)";
    }
 
    @Override

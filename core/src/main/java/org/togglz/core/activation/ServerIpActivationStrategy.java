@@ -49,7 +49,7 @@ public class ServerIpActivationStrategy implements ActivationStrategy {
 
     @Override
     public String getName() {
-        return "Server IP";
+        return "IP address (server)";
     }
 
     @Override

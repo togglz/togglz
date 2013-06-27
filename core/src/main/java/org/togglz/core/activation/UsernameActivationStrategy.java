@@ -25,7 +25,7 @@ public class UsernameActivationStrategy implements ActivationStrategy {
 
     @Override
     public String getName() {
-        return "Username";
+        return "Users by name";
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UsernameActivationStrategy implements ActivationStrategy {
     @Override
     public Parameter[] getParameters() {
         return new Parameter[] {
-                ParameterBuilder.create(PARAM_USERS).label("Usernames").largeText()
+                ParameterBuilder.create(PARAM_USERS).label("Users").largeText()
                     .description("A list of users for which the feature is active.")
         };
     }

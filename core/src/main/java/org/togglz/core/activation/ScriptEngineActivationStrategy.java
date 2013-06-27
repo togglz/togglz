@@ -37,7 +37,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     @Override
     public String getName() {
-        return "ScriptEngine";
+        return "Java Scripting API";
     }
 
     @Override
