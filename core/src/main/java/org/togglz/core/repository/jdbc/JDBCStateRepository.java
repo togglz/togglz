@@ -249,6 +249,10 @@ public class JDBCStateRepository implements StateRepository {
 
                 }
 
+                if (!connection.getAutoCommit()) {
+                    connection.commit();
+                }
+
             } finally {
                 DbUtils.closeQuietly(connection);
             }
