@@ -1,4 +1,4 @@
-package org.togglz.core.metadata;
+package org.togglz.core.metadata.enums;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -10,8 +10,8 @@ import java.util.Set;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.Label;
-import org.togglz.core.group.AnnotationFeatureGroup;
-import org.togglz.core.group.FeatureGroup;
+import org.togglz.core.metadata.FeatureGroup;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.util.FeatureAnnotations;
 
 /**

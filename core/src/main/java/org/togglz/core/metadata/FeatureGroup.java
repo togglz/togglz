@@ -1,4 +1,4 @@
-package org.togglz.core.group;
+package org.togglz.core.metadata;
 
 import org.togglz.core.Feature;
 

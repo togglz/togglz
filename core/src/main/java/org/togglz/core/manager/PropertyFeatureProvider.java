@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.togglz.core.Feature;
 import org.togglz.core.metadata.FeatureMetaData;
-import org.togglz.core.metadata.PropertyFeatureMetaData;
+import org.togglz.core.metadata.property.PropertyFeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.util.NamedFeature;
 

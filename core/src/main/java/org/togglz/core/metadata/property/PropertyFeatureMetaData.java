@@ -1,4 +1,4 @@
-package org.togglz.core.metadata;
+package org.togglz.core.metadata.property;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -6,9 +6,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.group.FeatureGroup;
-import org.togglz.core.group.SimpleFeatureGroup;
 import org.togglz.core.manager.PropertyFeatureProvider;
+import org.togglz.core.metadata.FeatureGroup;
+import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.SimpleFeatureGroup;
 import org.togglz.core.util.Strings;
 
 /**

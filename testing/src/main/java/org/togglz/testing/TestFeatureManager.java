@@ -6,8 +6,8 @@ import java.util.Set;
 
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.metadata.EnumFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.enums.EnumFeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Validate;

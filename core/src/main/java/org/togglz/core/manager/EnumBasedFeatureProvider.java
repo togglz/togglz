@@ -6,8 +6,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.metadata.EnumFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.enums.EnumFeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 
 /**

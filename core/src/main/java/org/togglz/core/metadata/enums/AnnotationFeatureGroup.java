@@ -1,9 +1,10 @@
-package org.togglz.core.group;
+package org.togglz.core.metadata.enums;
 
 import java.lang.annotation.Annotation;
 
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.Label;
+import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.util.FeatureAnnotations;
 
 /**
@@ -18,7 +19,7 @@ public class AnnotationFeatureGroup implements FeatureGroup {
     private final String label;
     private final Class<? extends Annotation> annotation;
 
-    public AnnotationFeatureGroup(Class<? extends Annotation> groupAnnotation) {
+    private AnnotationFeatureGroup(Class<? extends Annotation> groupAnnotation) {
         this.annotation = groupAnnotation;
         Label labelAnnotation = groupAnnotation.getAnnotation(Label.class);
         if (labelAnnotation != null) {

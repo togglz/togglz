@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
-import org.togglz.core.group.FeatureGroup;
+import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;

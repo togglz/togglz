@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.group.FeatureGroup;
 
 /**
  * Metadata of a {@link Feature}.

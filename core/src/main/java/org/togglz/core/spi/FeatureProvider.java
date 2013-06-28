@@ -3,8 +3,8 @@ package org.togglz.core.spi;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.metadata.EnumFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.enums.EnumFeatureMetaData;
 
 /**
  * Implementations of this interface are responsible for providing feature base data. The default implementation

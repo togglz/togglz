@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.group.FeatureGroup;
 
 /**
  * {@link FeatureMetaData} implementation that doesn't provide any information.

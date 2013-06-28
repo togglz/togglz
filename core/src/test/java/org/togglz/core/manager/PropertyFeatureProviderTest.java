@@ -8,7 +8,7 @@ import java.util.Set;
 import org.fest.assertions.core.Condition;
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.group.FeatureGroup;
+import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.util.NamedFeature;
 
