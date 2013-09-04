@@ -40,6 +40,8 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
     private Object inactive;
 
     private Class<?> proxyType;
+    
+    private boolean initialized = false;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -49,6 +51,7 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
         if (proxyType != null && !proxyType.isInterface()) {
             throw new IllegalArgumentException(proxyType.getClass().getName() + " is not an interface");
         }
+        initialized = true;
     }
 
     @Override
@@ -99,7 +102,11 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
 
     @Override
     public Class<?> getObjectType() {
-        return getEffectiveProxyType();
+        if (initialized) {
+            return getEffectiveProxyType();
+        } else {
+            return null;
+        }
     }
 
     @Override
