@@ -2,6 +2,7 @@ package org.togglz.core.repository.cache;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -44,6 +45,18 @@ public class CachingStateRepository implements StateRepository {
     public CachingStateRepository(StateRepository delegate, long ttl) {
         this.delegate = delegate;
         this.ttl = ttl;
+    }
+
+    /**
+     * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
+     * supplied TTL rounded down to milliseconds or if {@link #setFeatureState(FeatureState)} is invoked.
+     *
+     * @param delegate The repository to delegate invocations to
+     * @param ttl The time in a given {@code ttlTimeUnit} after which a cache entry will expire
+     * @param ttlTimeUnit The unit that {@code ttl} is expressed in
+     */
+    public CachingStateRepository(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit) {
+        this(delegate, ttlTimeUnit.toMillis(ttl));
     }
 
     @Override
