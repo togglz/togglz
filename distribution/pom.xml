@@ -94,6 +94,11 @@
       <artifactId>togglz-jsp</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency> 
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-appengine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Authentication Integration -->
     <dependency>
