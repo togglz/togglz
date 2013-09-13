@@ -1,4 +1,4 @@
-package org.togglez.appengine.repository;
+package org.togglz.appengine.repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ public class DatastoreStateRepository implements StateRepository {
 	public static final String ENABLED = "enabled";
 	
 	private DatastoreService datastoreService;
-	
-	public DatastoreStateRepository(DatastoreService datastoreService) {
+
+	public DatastoreStateRepository(final DatastoreService datastoreService) {
 		super();
 		this.datastoreService = datastoreService;
 	}

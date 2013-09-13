@@ -1,4 +1,4 @@
-package org.togglez.appengine.repository;
+package org.togglz.appengine.repository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
