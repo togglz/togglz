@@ -2,13 +2,14 @@ package org.togglz.appengine.user;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
 
 /**
+ * UserProvider implementation which leverages AppEngine's UserService.
  *
+ * @author Fábio Franco Uechi
  */
 public class UserServiceUserProvider implements UserProvider {
 

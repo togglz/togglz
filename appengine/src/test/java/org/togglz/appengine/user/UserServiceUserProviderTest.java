@@ -1,17 +1,13 @@
 package org.togglz.appengine.user;
 
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.togglz.appengine.repository.DatastoreStateRepository;
 import org.togglz.core.user.FeatureUser;
 
 import static org.junit.Assert.*;
