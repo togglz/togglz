@@ -34,19 +34,25 @@ public class DatastoreStateRepository implements StateRepository {
 	public static final String ENABLED = "enabled";
 	
 	private DatastoreService datastoreService;
+    private String kind = "FeatureToggle";
 
 	public DatastoreStateRepository(final DatastoreService datastoreService) {
 		super();
 		this.datastoreService = datastoreService;
 	}
 
-	@SuppressWarnings("unchecked")
+    public DatastoreStateRepository(final String kind, final DatastoreService datastoreService) {
+        this(datastoreService);
+        this.kind = kind;
+    }
+
+    @SuppressWarnings("unchecked")
 	@Override
 	public FeatureState getFeatureState(Feature feature) {
 		FeatureState state = null;
 		try {
 			
-			Key key = KeyFactory.createKey(getKind(), feature.name());
+			Key key = KeyFactory.createKey(kind(), feature.name());
 			Entity featureEntity = datastoreService.get(key);
 			
 			Boolean enabled = (Boolean) featureEntity.getProperty(ENABLED);
@@ -70,7 +76,7 @@ public class DatastoreStateRepository implements StateRepository {
 				}
 			}
 			
-		} catch (EntityNotFoundException e) {
+		} catch (EntityNotFoundException ignored) {
 		}
 		
 		return state;
@@ -78,7 +84,7 @@ public class DatastoreStateRepository implements StateRepository {
 
 	@Override
 	public void setFeatureState(FeatureState featureState) {
-		Entity featureEntity = new Entity(getKind(), featureState.getFeature().name());
+		Entity featureEntity = new Entity(kind(), featureState.getFeature().name());
 		featureEntity.setUnindexedProperty(ENABLED, featureState.isEnabled());
 		featureEntity.setUnindexedProperty(STRATEGY_ID, featureState.getStrategyId());
 		
@@ -96,11 +102,8 @@ public class DatastoreStateRepository implements StateRepository {
 		datastoreService.put(featureEntity);
 	}
 
-	/**
-	 * @return
-	 */
-	protected String getKind() {
-		return "FeatureToggle";
+	protected String kind() {
+		return this.kind;
 	}
 
 }

@@ -57,7 +57,7 @@ public class DatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-		Key key = KeyFactory.createKey(repository.getKind(), TestFeature.F1.name());
+		Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
 		Entity featureEntity = datastoreService.get(key);
 		
 		assertEquals(false, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
@@ -83,7 +83,7 @@ public class DatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-		Key key = KeyFactory.createKey(repository.getKind(), TestFeature.F1.name());
+		Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
 		Entity featureEntity = datastoreService.get(key);
 		
 		assertEquals(true, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
@@ -165,7 +165,7 @@ public class DatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-		Key key = KeyFactory.createKey(repository.getKind(), TestFeature.F1.name());
+		Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
 		Entity featureEntity = datastoreService.get(key);
 		
 		assertEquals(true, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
@@ -195,7 +195,7 @@ public class DatastoreStateRepositoryTest {
     
     
 	private void update(String name, boolean enabled, String strategyId, Map<String, String> params) {
-		Entity featureEntity = new Entity(repository.getKind(), name);
+		Entity featureEntity = new Entity(repository.kind(), name);
 		featureEntity.setUnindexedProperty(DatastoreStateRepository.ENABLED, enabled);
 		featureEntity.setUnindexedProperty(DatastoreStateRepository.STRATEGY_ID, strategyId);
 		
@@ -215,6 +215,6 @@ public class DatastoreStateRepositoryTest {
 
 
 	private static enum TestFeature implements Feature {
-        F1;
+        F1
     }
 }
