@@ -12,7 +12,11 @@ import org.togglz.core.user.UserProvider;
  */
 public class UserServiceUserProvider implements UserProvider {
 
-    private UserService userService = UserServiceFactory.getUserService();
+    private UserService userService;
+
+    public UserServiceUserProvider(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public FeatureUser getCurrentUser() {
