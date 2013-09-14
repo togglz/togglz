@@ -1,0 +1,97 @@
+package org.togglz.appengine.repository;
+
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.StateRepository;
+
+import static org.junit.Assert.assertTrue;
+
+/**
+ * Unit Tests for MemcacheStateRepository
+ *
+ * @author Fábio Franco Uechi
+ */
+public class MemcacheStateRepositoryTest {
+
+
+    private final LocalServiceTestHelper helper =
+            new LocalServiceTestHelper(new LocalMemcacheServiceTestConfig());
+
+    private MemcacheService ms = MemcacheServiceFactory.getMemcacheService();
+    private StateRepository delegate;
+
+
+    @Before
+    public void setUp() {
+        helper.setUp();
+        delegate = Mockito.mock(StateRepository.class);
+        Mockito.when(delegate.getFeatureState(TestFeature.F1))
+                .thenReturn(new FeatureState(TestFeature.F1, true));
+    }
+
+    @After
+    public void tearDown() {
+        helper.tearDown();
+        delegate = null;
+    }
+
+
+
+    @Test
+    public void testCachingOfReadOperationsWithTimeToLife() throws InterruptedException {
+
+        MemcacheStateRepository repository = new MemcacheStateRepository(delegate);
+
+        // do some lookups
+        for (int i = 0; i < 10; i++) {
+            assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
+            Thread.sleep(10);
+        }
+
+        // delegate only called once
+        Mockito.verify(delegate).getFeatureState(TestFeature.F1);
+        Mockito.verifyNoMoreInteractions(delegate);
+
+    }
+
+    @Test
+    public void testStateModifyExpiresCache() throws InterruptedException {
+
+        MemcacheStateRepository repository = new MemcacheStateRepository(delegate);
+
+        // do some lookups
+        for (int i = 0; i < 5; i++) {
+            assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
+            Thread.sleep(10);
+        }
+
+        // now modify the feature state
+        repository.setFeatureState(new FeatureState(TestFeature.F1, true));
+
+        // do some lookups
+        for (int i = 0; i < 5; i++) {
+            assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
+            Thread.sleep(10);
+        }
+
+        // Check for the correct number of invocations
+        Mockito.verify(delegate, Mockito.times(2)).getFeatureState(TestFeature.F1);
+        Mockito.verify(delegate).setFeatureState(Mockito.any(FeatureState.class));
+        Mockito.verifyNoMoreInteractions(delegate);
+
+    }
+
+
+    private static enum TestFeature implements Feature {
+        F1
+    }
+
+}
