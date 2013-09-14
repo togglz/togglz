@@ -12,6 +12,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -39,6 +40,7 @@ public class MemcacheStateRepositoryTest {
 
     @After
     public void tearDown() {
+        ms.clearAll();
         helper.tearDown();
         delegate = null;
     }
@@ -60,6 +62,8 @@ public class MemcacheStateRepositoryTest {
         Mockito.verify(delegate).getFeatureState(TestFeature.F1);
         Mockito.verifyNoMoreInteractions(delegate);
 
+        assertTrue(ms.contains(TestFeature.F1.name()));
+
     }
 
     @Test
@@ -72,9 +76,11 @@ public class MemcacheStateRepositoryTest {
             assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
             Thread.sleep(10);
         }
+        assertTrue(ms.contains(TestFeature.F1.name()));
 
         // now modify the feature state
         repository.setFeatureState(new FeatureState(TestFeature.F1, true));
+        assertFalse(ms.contains(TestFeature.F1.name()));
 
         // do some lookups
         for (int i = 0; i < 5; i++) {
@@ -82,6 +88,7 @@ public class MemcacheStateRepositoryTest {
             Thread.sleep(10);
         }
 
+        assertTrue(ms.contains(TestFeature.F1.name()));
         // Check for the correct number of invocations
         Mockito.verify(delegate, Mockito.times(2)).getFeatureState(TestFeature.F1);
         Mockito.verify(delegate).setFeatureState(Mockito.any(FeatureState.class));
@@ -89,6 +96,25 @@ public class MemcacheStateRepositoryTest {
 
     }
 
+
+
+    @Test
+    public void testCacheExpiryBecauseOfTimeToLife() throws InterruptedException {
+
+        int ttl = 5;
+        MemcacheStateRepository repository = new MemcacheStateRepository(delegate, ttl);
+
+        // do some lookups
+        for (int i = 0; i < 5; i++) {
+            assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
+            Thread.sleep(ttl + 10); // wait some minimal amount of time to let the cache expire
+        }
+
+
+        // delegate called 5 times
+        Mockito.verify(delegate, Mockito.times(5)).getFeatureState(TestFeature.F1);
+        Mockito.verifyNoMoreInteractions(delegate);
+    }
 
     private static enum TestFeature implements Feature {
         F1

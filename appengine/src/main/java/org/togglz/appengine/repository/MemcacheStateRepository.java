@@ -8,6 +8,9 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 /**
+ * Decorates a given StateRepository adding caching capabilities.
+ * Leverages GAE's MemcacheServices.
+ * Default expiration time is 3600 seconds.
  *
  * @author Fábio Franco Uechi
  */
@@ -23,7 +26,7 @@ public class MemcacheStateRepository implements StateRepository {
 
     public MemcacheStateRepository(StateRepository delegate, Integer ttlInSeconds) {
         this(delegate);
-        this.expiration = Expiration.byDeltaSeconds(ttlInSeconds);
+        this.expiration = Expiration.byDeltaMillis(ttlInSeconds);
     }
 
     @Override
