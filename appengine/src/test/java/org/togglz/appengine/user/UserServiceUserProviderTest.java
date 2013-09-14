@@ -12,11 +12,15 @@ import org.togglz.core.user.FeatureUser;
 
 import static org.junit.Assert.*;
 
+/**
+ * Unit tests for {@link UserServiceUserProvider}.
+ *
+ * @author Fábio Franco Uechi
+ */
 public class UserServiceUserProviderTest {
 
 
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalUserServiceTestConfig());
-
     private UserServiceUserProvider userProvider;
     private UserService userService = UserServiceFactory.getUserService();
 
@@ -37,7 +41,6 @@ public class UserServiceUserProviderTest {
         FeatureUser user = userProvider.getCurrentUser();
         assertNull(user);
     }
-
 
     @Test
     public void userIsLoggedIn() {
@@ -67,6 +70,5 @@ public class UserServiceUserProviderTest {
         assertEquals(userService.getCurrentUser().getEmail(),  user.getAttribute("email"));
         assertEquals(userService.getCurrentUser().getNickname(),  user.getAttribute("nickname"));
     }
-
 
 }
