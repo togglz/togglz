@@ -1,17 +1,17 @@
 package org.togglz.appengine.repository;
 
-import com.google.appengine.api.memcache.Expiration;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+
 /**
- * Decorates a given StateRepository adding caching capabilities.
- * Leverages GAE's MemcacheServices.
- * Default expiration time is 3600 seconds.
- *
+ * Decorates a given StateRepository adding caching capabilities. Leverages GAE's MemcacheServices. Default expiration time is
+ * 3600 seconds.
+ * 
  * @author Fábio Franco Uechi
  */
 public class MemcacheStateRepository implements StateRepository {

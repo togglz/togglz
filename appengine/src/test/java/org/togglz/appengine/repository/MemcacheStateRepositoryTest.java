@@ -1,9 +1,8 @@
 package org.togglz.appengine.repository;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
-import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,30 +11,30 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 /**
  * Unit Tests for MemcacheStateRepository
- *
+ * 
  * @author Fábio Franco Uechi
  */
 public class MemcacheStateRepositoryTest {
 
-
     private final LocalServiceTestHelper helper =
-            new LocalServiceTestHelper(new LocalMemcacheServiceTestConfig());
+        new LocalServiceTestHelper(new LocalMemcacheServiceTestConfig());
 
     private MemcacheService ms = MemcacheServiceFactory.getMemcacheService();
     private StateRepository delegate;
-
 
     @Before
     public void setUp() {
         helper.setUp();
         delegate = Mockito.mock(StateRepository.class);
         Mockito.when(delegate.getFeatureState(TestFeature.F1))
-                .thenReturn(new FeatureState(TestFeature.F1, true));
+            .thenReturn(new FeatureState(TestFeature.F1, true));
     }
 
     @After
@@ -44,8 +43,6 @@ public class MemcacheStateRepositoryTest {
         helper.tearDown();
         delegate = null;
     }
-
-
 
     @Test
     public void testCachingOfReadOperationsWithTimeToLife() throws InterruptedException {
@@ -96,8 +93,6 @@ public class MemcacheStateRepositoryTest {
 
     }
 
-
-
     @Test
     public void testCacheExpiryBecauseOfTimeToLife() throws InterruptedException {
 
@@ -109,7 +104,6 @@ public class MemcacheStateRepositoryTest {
             assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
             Thread.sleep(ttl + 10); // wait some minimal amount of time to let the cache expire
         }
-
 
         // delegate called 5 times
         Mockito.verify(delegate, Mockito.times(5)).getFeatureState(TestFeature.F1);
