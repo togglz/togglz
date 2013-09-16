@@ -128,6 +128,7 @@
     <module>testing</module>
     <module>junit</module>
     <module>appengine</module>
+    <module>guice</module>
     <module>distribution</module>
   </modules>
 

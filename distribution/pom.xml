@@ -99,7 +99,11 @@
       <artifactId>togglz-appengine</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+      <dependency>
+          <groupId>org.togglz</groupId>
+          <artifactId>togglz-guice</artifactId>
+          <version>${project.version}</version>
+      </dependency>
     <!-- Authentication Integration -->
     <dependency>
       <groupId>org.togglz</groupId>
