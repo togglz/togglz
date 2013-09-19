@@ -9,60 +9,66 @@ public class Deployments {
 
     public static WebArchive getBasicWebArchive() {
         return ShrinkWrap
-                .create(WebArchive.class, "test.war")
-                .addAsLibraries(
-                        getTogglzCoreArchive(),
-                        getTogglzSerlvetArchive())
-                .addClass(FeatureServlet.class)
-                .addClass(UserServlet.class);
+            .create(WebArchive.class, "test.war")
+            .addAsLibraries(
+                getTogglzCoreArchive(),
+                getTogglzSerlvetArchive())
+            .addClass(FeatureServlet.class)
+            .addClass(UserServlet.class);
     }
 
     public static JavaArchive getTogglzSerlvetArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-servlet.jar")
-                .importDirectory("../servlet/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../servlet/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzCoreArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-core.jar")
-                .importDirectory("../core/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../core/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzSpringArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-spring.jar")
-                .importDirectory("../spring/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../spring/target/classes")
+            .as(JavaArchive.class);
+    }
+
+    public static JavaArchive getTogglzGuiceArchive() {
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-guice.jar")
+            .importDirectory("../guice/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzCDIArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-cdi.jar")
-                .importDirectory("../cdi/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../cdi/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzJSFArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsf.jar")
-                .importDirectory("../jsf/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../jsf/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzSeamSecurityArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-seam-security.jar")
-                .importDirectory("../seam-security/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../seam-security/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzShiroArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-shiro.jar")
-                .importDirectory("../shiro/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../shiro/target/classes")
+            .as(JavaArchive.class);
     }
 
     public static JavaArchive getTogglzJSPArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsp.jar")
-                .importDirectory("../jsp/target/classes")
-                .as(JavaArchive.class);
+            .importDirectory("../jsp/target/classes")
+            .as(JavaArchive.class);
     }
 
 }
