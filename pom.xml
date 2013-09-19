@@ -118,17 +118,17 @@
     <module>servlet</module>
     <module>console</module>
     <module>cdi</module>
+    <module>guice</module>
     <module>spring</module>
     <module>spring-security</module>
     <module>deltaspike</module>
     <module>shiro</module>
     <module>jsf</module>
     <module>jsp</module>
+    <module>appengine</module>
     <module>seam-security</module>
     <module>testing</module>
     <module>junit</module>
-    <module>appengine</module>
-    <module>guice</module>
     <module>distribution</module>
   </modules>
 

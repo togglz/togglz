@@ -24,7 +24,7 @@ public class MemcacheStateRepository implements StateRepository {
         this.delegate = delegate;
     }
 
-    public MemcacheStateRepository(StateRepository delegate, Integer ttlInSeconds) {
+    public MemcacheStateRepository(StateRepository delegate, int ttlInSeconds) {
         this(delegate);
         this.expiration = Expiration.byDeltaMillis(ttlInSeconds);
     }
