@@ -31,16 +31,25 @@ public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
     @Override
     public FeatureManager getFeatureManager() {
 
-        try {
+        if (!isDisabled()) {
 
-            InitialContext initialContext = new InitialContext();
-            return (FeatureManager) initialContext.lookup(JNDI_NAME);
+            try {
 
-        } catch (NamingException e) {
-            log.debug("FeatureMananger not found: " + e.getMessage());
+                InitialContext initialContext = new InitialContext();
+                return (FeatureManager) initialContext.lookup(JNDI_NAME);
+
+            } catch (NamingException e) {
+                log.debug("FeatureMananger not found: " + e.getMessage());
+            }
+
         }
 
         return null;
 
     }
+
+    private boolean isDisabled() {
+        return "true".equals(System.getProperty("org.togglz.DISABLE_JNDI_LOOKUPS", ""));
+    }
+
 }
