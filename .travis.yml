@@ -1,7 +1,8 @@
 language: java
 env: 
   - MVN_PROFILE=jboss-as-managed
-script: "mvn -P $MVN_PROFILE -s settings.xml clean install"
+before_script: "mvn -P $MVN_PROFILE -s settings.xml -DskipTests=true install"
+script: "mvn -P $MVN_PROFILE -s settings.xml test"
 jdk:
   - oraclejdk7
   - openjdk6
