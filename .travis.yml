@@ -1,0 +1,7 @@
+language: java
+env: 
+  - MVN_PROFILE=jboss-as-managed
+script: "mvn -P$MVN_PROFILE clean install"
+jdk:
+  - oraclejdk7
+  - openjdk6
