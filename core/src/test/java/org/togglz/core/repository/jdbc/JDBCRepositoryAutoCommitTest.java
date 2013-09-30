@@ -93,9 +93,9 @@ public class JDBCRepositoryAutoCommitTest {
             return delegate.getLoginTimeout();
         }
 
-        @Override
+        // No @Override, because of interface compatibility issue
         public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-            return delegate.getParentLogger();
+            throw new SQLFeatureNotSupportedException();
         }
 
         @Override
