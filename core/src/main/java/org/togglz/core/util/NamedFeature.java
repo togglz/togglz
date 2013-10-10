@@ -21,4 +21,13 @@ public class NamedFeature implements Feature {
         return name;
     }
 
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return (o instanceof NamedFeature) ? this.name.equals(((NamedFeature)o).name()) : false;
+	}
 }
