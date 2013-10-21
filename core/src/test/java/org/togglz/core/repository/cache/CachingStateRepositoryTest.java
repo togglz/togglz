@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.util.NamedFeature;
 
 /**
  * 
@@ -23,8 +24,12 @@ public class CachingStateRepositoryTest {
     @Before
     public void setup() {
         delegate = Mockito.mock(StateRepository.class);
+        // the mock supports the ENUM
         Mockito.when(delegate.getFeatureState(DummyFeature.TEST))
-                .thenReturn(new FeatureState(DummyFeature.TEST, true));
+            .thenReturn(new FeatureState(DummyFeature.TEST, true));
+        // and NamedFeature
+        Mockito.when(delegate.getFeatureState(new NamedFeature("TEST")))
+            .thenReturn(new FeatureState(DummyFeature.TEST, true));
     }
 
     public void tearDown() {
@@ -39,6 +44,25 @@ public class CachingStateRepositoryTest {
         // do some lookups
         for (int i = 0; i < 10; i++) {
             assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled());
+            Thread.sleep(10);
+        }
+
+        // delegate only called once
+        Mockito.verify(delegate).getFeatureState(DummyFeature.TEST);
+        Mockito.verifyNoMoreInteractions(delegate);
+
+    }
+
+    @Test
+    public void testCacheWithDifferentFeatureImplementations() throws InterruptedException {
+
+        StateRepository repository = new CachingStateRepository(delegate, 0);
+
+        // do some lookups
+        for (int i = 0; i < 10; i++) {
+            Feature feature = (i % 2 == 0) ? DummyFeature.TEST :
+                new NamedFeature(DummyFeature.TEST.name());
+            assertTrue(repository.getFeatureState(feature).isEnabled());
             Thread.sleep(10);
         }
 

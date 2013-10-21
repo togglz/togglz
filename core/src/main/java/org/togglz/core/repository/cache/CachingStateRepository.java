@@ -20,7 +20,7 @@ public class CachingStateRepository implements StateRepository {
 
     private final StateRepository delegate;
 
-    private final Map<Feature, CacheEntry> cache = new HashMap<Feature, CacheEntry>();
+    private final Map<String, CacheEntry> cache = new HashMap<String, CacheEntry>();
 
     private long ttl;
 
@@ -63,7 +63,7 @@ public class CachingStateRepository implements StateRepository {
     public FeatureState getFeatureState(Feature feature) {
 
         // first try to find it from the cache
-        CacheEntry entry = cache.get(feature);
+        CacheEntry entry = cache.get(feature.name());
         if (entry != null && !isExpired(entry)) {
             return entry.getState() != null ? entry.getState().copy() : null;
         }
@@ -72,7 +72,7 @@ public class CachingStateRepository implements StateRepository {
         FeatureState featureState = delegate.getFeatureState(feature);
 
         // cache the result (may be null)
-        cache.put(feature, new CacheEntry(featureState != null ? featureState.copy() : null));
+        cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
 
         // return the result
         return featureState;
@@ -82,7 +82,7 @@ public class CachingStateRepository implements StateRepository {
     @Override
     public void setFeatureState(FeatureState featureState) {
         delegate.setFeatureState(featureState);
-        cache.remove(featureState.getFeature());
+        cache.remove(featureState.getFeature().name());
     }
 
     /**
