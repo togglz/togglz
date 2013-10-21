@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -21,6 +23,8 @@ import org.togglz.core.util.Strings;
  */
 public class ServerIpActivationStrategy implements ActivationStrategy {
 
+    private final Log log = LogFactory.getLog(ServerIpActivationStrategy.class);
+
     public static final String ID = "server-ip";
 
     public static final String PARAM_IPS = "ips";
@@ -31,14 +35,21 @@ public class ServerIpActivationStrategy implements ActivationStrategy {
     {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                Enumeration<InetAddress> interfacesAddresses = interfaces.nextElement().getInetAddresses();
-                while (interfacesAddresses.hasMoreElements()) {
-                    ipAddresses.add(interfacesAddresses.nextElement().getHostAddress());
+            if (interfaces != null) {
+                while (interfaces.hasMoreElements()) {
+                    Enumeration<InetAddress> addresses = interfaces.nextElement().getInetAddresses();
+                    if (addresses != null) {
+                        while (addresses.hasMoreElements()) {
+                            String hostAddress = addresses.nextElement().getHostAddress();
+                            if (hostAddress != null) {
+                                ipAddresses.add(hostAddress);
+                            }
+                        }
+                    }
                 }
             }
         } catch (SocketException e) {
-            throw new IllegalStateException("Unable to find IP addresses", e);
+            log.error("Unable to find IP addresses: " + e.getMessage());
         }
     }
 
