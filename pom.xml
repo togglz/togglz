@@ -109,6 +109,15 @@
       </plugins>
     </pluginManagement>
 
+    <!-- Workaround for: https://jira.codehaus.org/browse/MNG-5525 -->
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-http-lightweight</artifactId>
+        <version>1.0</version>
+      </extension>
+    </extensions>
+
   </build>
 
   <modules>
