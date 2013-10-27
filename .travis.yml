@@ -1,8 +1,8 @@
 language: java
 env: 
   - CONTAINER=jboss-as-managed
-install: "mvn -P ${CONTAINER} -s settings.xml -DskipTests=true -B install"
-script: "mvn -P ${CONTAINER} -s settings.xml test"
+install: "mvn -P ${CONTAINER} -DJBOSS_REPO=true -DskipTests=true -B install"
+script: "mvn -P ${CONTAINER} -DJBOSS_REPO=true test"
 jdk:
   - oraclejdk7
   - openjdk6
