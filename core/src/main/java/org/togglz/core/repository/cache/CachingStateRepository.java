@@ -41,8 +41,13 @@ public class CachingStateRepository implements StateRepository {
      * 
      * @param delegate The repository to delegate invocations to
      * @param ttl The time in milliseconds after which a cache entry will expire
+     * @throws IllegalArgumentException if the specified ttl is negative
      */
     public CachingStateRepository(StateRepository delegate, long ttl) {
+        if (ttl < 0) {
+            throw new IllegalArgumentException("Negative TTL value: " + ttl);
+        }
+
         this.delegate = delegate;
         this.ttl = ttl;
     }
@@ -89,10 +94,11 @@ public class CachingStateRepository implements StateRepository {
      * Checks whether this supplied {@link CacheEntry} should be ignored.
      */
     private boolean isExpired(CacheEntry entry) {
-        if (ttl > 0) {
-            return entry.getTimestamp() + ttl < System.currentTimeMillis();
+        if (ttl == 0) {
+            return false;
         }
-        return false;
+
+        return entry.getTimestamp() + ttl < System.currentTimeMillis();
     }
 
     /**

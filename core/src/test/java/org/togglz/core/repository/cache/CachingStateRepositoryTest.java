@@ -134,6 +134,11 @@ public class CachingStateRepositoryTest {
 
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailForNegativeTtl() {
+        new CachingStateRepository(delegate, -1);
+    }
+
     private enum DummyFeature implements Feature {
         TEST;
     }
