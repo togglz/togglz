@@ -12,7 +12,7 @@ import org.togglz.core.spi.FeatureManagerProvider;
  */
 public class StaticFeatureManagerProvider implements FeatureManagerProvider {
 
-    private static FeatureManager staticInstance = null;
+    private static volatile FeatureManager staticInstance = null;
 
     @Override
     public int priority() {
