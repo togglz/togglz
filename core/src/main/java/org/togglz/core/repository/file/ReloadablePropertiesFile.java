@@ -37,9 +37,9 @@ class ReloadablePropertiesFile {
         this(file, 1000);
     }
 
-    public ReloadablePropertiesFile(File file, int maxCheckInterval) {
+    public ReloadablePropertiesFile(File file, int minCheckInterval) {
         this.file = file;
-        this.minCheckInterval = maxCheckInterval;
+        this.minCheckInterval = minCheckInterval;
     }
 
     public synchronized void reloadIfUpdated() {
