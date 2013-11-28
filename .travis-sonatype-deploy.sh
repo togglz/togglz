@@ -11,7 +11,7 @@ echo "JBoss AS7 profile active:   $IS_AS7"
 echo "Secure variables available: $IS_SECURE"
 
 if [ $IS_JDK7 -eq 0 -a $IS_AS7 -eq 0 -a $IS_SECURE -eq 0  ]; then
-  mvn -s .travis-sonatype-settings.xml -DperformRelease -DskipTests deploy
+  mvn -s .travis-sonatype-settings.xml -DperformRelease -DskipTests -DJBOSS_REPO=true deploy
 else
   echo "Not deploying snapshots"
 fi
