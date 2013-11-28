@@ -49,7 +49,18 @@ public class FileBasedStateRepository implements StateRepository {
      * @param file A {@link File} representing the Java properties file to use.
      */
     public FileBasedStateRepository(File file) {
-        this.fileContent = new ReloadablePropertiesFile(file);
+        this(file, 1000);
+    }
+
+    /**
+     * Constructor for {@link FileBasedStateRepository}.
+     * 
+     * @param file A {@link File} representing the Java properties file to use.
+     * @param minCheckInterval the minimum amount of time in milliseconds to wait between checks of the file's modification
+     *        date.
+     */
+    public FileBasedStateRepository(File file, int minCheckInterval) {
+        this.fileContent = new ReloadablePropertiesFile(file, minCheckInterval);
         log.debug(this.getClass().getSimpleName() + " initialized with: " + file.getAbsolutePath());
     }
 
