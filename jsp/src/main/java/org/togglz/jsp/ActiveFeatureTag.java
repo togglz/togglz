@@ -1,6 +1,7 @@
 package org.togglz.jsp;
 
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -16,6 +17,8 @@ public class ActiveFeatureTag extends TagSupport {
     protected FeatureManager featureManager;
 
     protected String name;
+    
+    protected String var;
 
     public ActiveFeatureTag() {
         this.featureManager = new LazyResolvingFeatureManager();
@@ -23,10 +26,13 @@ public class ActiveFeatureTag extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
-        if (isFeatureActive()) {
-            return Tag.EVAL_BODY_INCLUDE;
-        }
-        return Tag.SKIP_BODY;
+    	boolean isActive = isFeatureActive();
+        
+        if (Strings.isNotBlank(var)) {
+             pageContext.setAttribute(var, isActive, PageContext.PAGE_SCOPE);
+         }
+        
+        return isActive ? Tag.EVAL_BODY_INCLUDE : Tag.SKIP_BODY;
     }
 
     protected boolean isFeatureActive() {
@@ -43,7 +49,15 @@ public class ActiveFeatureTag extends TagSupport {
     public void setName(String name) {
         this.name = name;
     }
-
+    
+    public String getVar() {
+    	return var;
+    }
+    
+    public void setVar(String var) {
+        this.var = var;
+    }
+    
     public FeatureManager getFeatureManager() {
         return featureManager;
     }

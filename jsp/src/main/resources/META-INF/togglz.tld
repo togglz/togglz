@@ -13,6 +13,11 @@
       <name>name</name>
       <required>true</required>
     </attribute>
+    <attribute>
+	<name>var</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+	</attribute>
   </tag>
 </taglib>
 
