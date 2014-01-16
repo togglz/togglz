@@ -1,16 +1,19 @@
 package org.togglz.spring.security;
 
+import java.util.Set;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
+import org.togglz.core.user.UserProvider;
 
 
 public class SpringSecurityUserProvider implements UserProvider {
+
+    public static final String USER_ATTRIBUTE_AUTHORITIES = "authorities";
 
     private final String featureAdminAuthority;
 
@@ -38,17 +41,18 @@ public class SpringSecurityUserProvider implements UserProvider {
                 name = principal.toString();
             }
 
+            Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+
             // check for the authority for feature admins
             boolean featureAdmin = false;
             if (featureAdminAuthority != null) {
-                for (GrantedAuthority authority : authentication.getAuthorities()) {
-                    if (authority.getAuthority().equals(featureAdminAuthority)) {
-                        featureAdmin = true;
-                    }
-                }
+                featureAdmin = authorities.contains(featureAdminAuthority);
             }
 
-            return new SimpleFeatureUser(name, featureAdmin);
+            SimpleFeatureUser user = new SimpleFeatureUser(name, featureAdmin);
+            user.setAttribute(USER_ATTRIBUTE_AUTHORITIES, authorities);
+
+            return user;
 
         }
         return null;

@@ -12,6 +12,12 @@
   <name>Togglz - Spring Security integration</name>
   <description>Togglz - Spring Security integration</description>
 
+  <properties>
+      <!-- unit testing dependencies -->
+      <mockito.version>1.9.5</mockito.version>
+      <powermock.version>1.5.3</powermock.version>
+  </properties>
+
   <dependencies>
 
     <dependency>
@@ -24,6 +30,25 @@
       <artifactId>spring-security-core</artifactId>
       <version>3.1.0.RELEASE</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
     </dependency>
 
   </dependencies>
