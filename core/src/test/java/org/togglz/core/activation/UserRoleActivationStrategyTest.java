@@ -36,11 +36,11 @@ public class UserRoleActivationStrategyTest {
     @Mock
     private FeatureUser user;
 
-    private Set<String> userAuthorities;
+    private Set<String> userRoles;
 
     @Before
     public void setUp() throws Exception {
-        userAuthorities = new HashSet<String>();
+        userRoles = new HashSet<String>();
     }
 
     @Test
@@ -54,7 +54,7 @@ public class UserRoleActivationStrategyTest {
     }
 
     @Test
-    public void getParametersWillReturnAuthorities() throws Exception {
+    public void getParametersWillReturnRoles() throws Exception {
         Parameter[] result = activationStrategy.getParameters();
 
         assertThat(result.length, is(1));
@@ -74,7 +74,7 @@ public class UserRoleActivationStrategyTest {
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenThereIsNoAuthoritiesAttribute() throws Exception {
+    public void isActiveWillReturnFalseWhenThereIsNoRolesAttribute() throws Exception {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(null);
 
         boolean result = activationStrategy.isActive(state, user);
@@ -83,8 +83,8 @@ public class UserRoleActivationStrategyTest {
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenThereIsNoAuthoritiesParam() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+    public void isActiveWillReturnFalseWhenThereIsNoRolesParam() throws Exception {
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn(null);
 
         boolean result = activationStrategy.isActive(state, user);
@@ -93,8 +93,8 @@ public class UserRoleActivationStrategyTest {
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenAuthoritiesParamIsBlank() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+    public void isActiveWillReturnFalseWhenRolesParamIsBlank() throws Exception {
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("   ");
 
         boolean result = activationStrategy.isActive(state, user);
@@ -103,8 +103,8 @@ public class UserRoleActivationStrategyTest {
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenUserHasNoneOfSelectedAuthorities() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+    public void isActiveWillReturnFalseWhenUserHasNoneOfSelectedRoles() throws Exception {
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
         boolean result = activationStrategy.isActive(state, user);
@@ -113,9 +113,9 @@ public class UserRoleActivationStrategyTest {
     }
 
     @Test
-    public void isActiveWillReturnTrueWhenUserHasAnyOfSelectedAuthorities() throws Exception {
-        userAuthorities.add("ROLE_2");
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+    public void isActiveWillReturnTrueWhenUserHasAnyOfSelectedRoles() throws Exception {
+        userRoles.add("ROLE_2");
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
         boolean result = activationStrategy.isActive(state, user);
