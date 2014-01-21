@@ -1,7 +1,7 @@
 package org.togglz.core.activation;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
@@ -44,7 +44,8 @@ public class UserRoleActivationStrategy implements ActivationStrategy {
 
         if (user != null) {
 
-            Set<String> userRoles = (Set<String>) user.getAttribute(USER_ATTRIBUTE_ROLES);
+            Collection<String> userRoles = 
+                (Collection<String>) user.getAttribute(USER_ATTRIBUTE_ROLES);
 
             if (userRoles != null) {
 

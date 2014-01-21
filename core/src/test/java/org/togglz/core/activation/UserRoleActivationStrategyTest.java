@@ -9,6 +9,8 @@ import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_
 import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_NAME;
 import static org.togglz.core.activation.UserRoleActivationStrategy.USER_ATTRIBUTE_ROLES;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -119,5 +121,20 @@ public class UserRoleActivationStrategyTest {
         boolean result = activationStrategy.isActive(state, user);
 
         assertThat(result, is(true));
+    }
+
+    @Test
+    public void doesntFailForOtherCollectionTypes() {
+
+        Collection<String> userRoles = new ArrayList<String>();
+        userRoles.add("SOME_ROLE");
+
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
+        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("SOME_ROLE");
+
+        boolean result = activationStrategy.isActive(state, user);
+
+        assertThat(result, is(true));
+
     }
 }
