@@ -5,11 +5,12 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_AUTHORITIES;
+import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,13 +25,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.togglz.core.user.FeatureUser;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({SecurityContextHolder.class})
+@PrepareForTest({ SecurityContextHolder.class })
 public class SpringSecurityUserProviderTest {
 
     private SpringSecurityUserProvider userProvider;
 
     @Mock
     private SecurityContext securityContext;
+
     @Mock
     private Authentication authentication;
 
@@ -89,7 +91,7 @@ public class SpringSecurityUserProviderTest {
         FeatureUser user = userProvider.getCurrentUser();
 
         // assert
-        Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_AUTHORITIES);
+        Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_ROLES);
 
         assertThat(authoritiesAttr, notNullValue());
         assertThat(authoritiesAttr, is(Set.class));

@@ -1,6 +1,7 @@
 package org.togglz.spring.security;
 
 import java.util.Set;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
@@ -10,10 +11,9 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
 
-
 public class SpringSecurityUserProvider implements UserProvider {
 
-    public static final String USER_ATTRIBUTE_AUTHORITIES = "authorities";
+    public static final String USER_ATTRIBUTE_ROLES = "roles";
 
     private final String featureAdminAuthority;
 
@@ -50,8 +50,7 @@ public class SpringSecurityUserProvider implements UserProvider {
             }
 
             SimpleFeatureUser user = new SimpleFeatureUser(name, featureAdmin);
-            user.setAttribute(USER_ATTRIBUTE_AUTHORITIES, authorities);
-
+            user.setAttribute(USER_ATTRIBUTE_ROLES, authorities);
             return user;
 
         }
