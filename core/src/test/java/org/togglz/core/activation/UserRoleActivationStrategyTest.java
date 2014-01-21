@@ -1,35 +1,36 @@
-package org.togglz.spring.security;
+package org.togglz.core.activation;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.togglz.spring.security.UserAuthorityActivationStrategy.ID;
-import static org.togglz.spring.security.UserAuthorityActivationStrategy.NAME;
-import static org.togglz.spring.security.UserAuthorityActivationStrategy.PARAM_AUTHORITIES_DESC;
-import static org.togglz.spring.security.UserAuthorityActivationStrategy.PARAM_AUTHORITIES_LABEL;
-import static org.togglz.spring.security.UserAuthorityActivationStrategy.PARAM_AUTHORITIES_NAME;
-import static org.togglz.spring.security.UserAuthorityActivationStrategy.USER_ATTRIBUTE_AUTHORITIES;
+import static org.togglz.core.activation.UserRoleActivationStrategy.ID;
+import static org.togglz.core.activation.UserRoleActivationStrategy.NAME;
+import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_DESC;
+import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_LABEL;
+import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_NAME;
+import static org.togglz.core.activation.UserRoleActivationStrategy.USER_ATTRIBUTE_ROLES;
 
 import java.util.HashSet;
 import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserAuthorityActivationStrategyTest {
+public class UserRoleActivationStrategyTest {
 
     @InjectMocks
-    private UserAuthorityActivationStrategy activationStrategy;
+    private UserRoleActivationStrategy activationStrategy;
 
     @Mock
     private FeatureState state;
+
     @Mock
     private FeatureUser user;
 
@@ -57,9 +58,9 @@ public class UserAuthorityActivationStrategyTest {
         assertThat(result.length, is(1));
 
         Parameter param = result[0];
-        assertThat(param.getName(), is(PARAM_AUTHORITIES_NAME));
-        assertThat(param.getDescription(), is(PARAM_AUTHORITIES_DESC));
-        assertThat(param.getLabel(), is(PARAM_AUTHORITIES_LABEL));
+        assertThat(param.getName(), is(PARAM_ROLES_NAME));
+        assertThat(param.getDescription(), is(PARAM_ROLES_DESC));
+        assertThat(param.getLabel(), is(PARAM_ROLES_LABEL));
         assertThat(param.isLargeText(), is(true));
     }
 
@@ -72,7 +73,7 @@ public class UserAuthorityActivationStrategyTest {
 
     @Test
     public void isActiveWillReturnFalseWhenThereIsNoAuthoritiesAttribute() throws Exception {
-        when(user.getAttribute(USER_ATTRIBUTE_AUTHORITIES)).thenReturn(null);
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(null);
 
         boolean result = activationStrategy.isActive(state, user);
 
@@ -81,8 +82,8 @@ public class UserAuthorityActivationStrategyTest {
 
     @Test
     public void isActiveWillReturnFalseWhenThereIsNoAuthoritiesParam() throws Exception {
-        when(user.getAttribute(USER_ATTRIBUTE_AUTHORITIES)).thenReturn(userAuthorities);
-        when(state.getParameter(PARAM_AUTHORITIES_NAME)).thenReturn(null);
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn(null);
 
         boolean result = activationStrategy.isActive(state, user);
 
@@ -91,8 +92,8 @@ public class UserAuthorityActivationStrategyTest {
 
     @Test
     public void isActiveWillReturnFalseWhenAuthoritiesParamIsBlank() throws Exception {
-        when(user.getAttribute(USER_ATTRIBUTE_AUTHORITIES)).thenReturn(userAuthorities);
-        when(state.getParameter(PARAM_AUTHORITIES_NAME)).thenReturn("   ");
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("   ");
 
         boolean result = activationStrategy.isActive(state, user);
 
@@ -101,8 +102,8 @@ public class UserAuthorityActivationStrategyTest {
 
     @Test
     public void isActiveWillReturnFalseWhenUserHasNoneOfSelectedAuthorities() throws Exception {
-        when(user.getAttribute(USER_ATTRIBUTE_AUTHORITIES)).thenReturn(userAuthorities);
-        when(state.getParameter(PARAM_AUTHORITIES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
         boolean result = activationStrategy.isActive(state, user);
 
@@ -112,8 +113,8 @@ public class UserAuthorityActivationStrategyTest {
     @Test
     public void isActiveWillReturnTrueWhenUserHasAnyOfSelectedAuthorities() throws Exception {
         userAuthorities.add("ROLE_2");
-        when(user.getAttribute(USER_ATTRIBUTE_AUTHORITIES)).thenReturn(userAuthorities);
-        when(state.getParameter(PARAM_AUTHORITIES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
+        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userAuthorities);
+        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
         boolean result = activationStrategy.isActive(state, user);
 
