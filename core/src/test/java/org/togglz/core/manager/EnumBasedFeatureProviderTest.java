@@ -18,6 +18,11 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void shouldFailForArrayWithNull() {
+        new EnumBasedFeatureProvider(ValidFeatureEnum.class, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void shouldFailForNonEnumType() {
         new EnumBasedFeatureProvider(NotAnEnum.class);
     }
@@ -110,6 +115,31 @@ public class EnumBasedFeatureProviderTest {
             .isEqualTo("Additional Feature");
 
     }
+
+    @Test
+        public void shouldReturnCombinedFeatureListForMultipleEnumsViaConstructor() {
+
+            FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
+
+            // all feature are in the list
+            assertThat(provider.getFeatures())
+                .hasSize(ValidFeatureEnum.values().length + OtherFeatureEnum.values().length)
+                .contains(ValidFeatureEnum.FEATURE1)
+                .contains(OtherFeatureEnum.ADDITIONAL_FEATURE);
+
+        }
+
+        @Test
+        public void shouldBuildMetadataForMultipleEnumsViaConstructor() {
+
+            FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
+
+            assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel())
+                .isEqualTo("First feature");
+            assertThat(provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel())
+                .isEqualTo("Additional Feature");
+
+        }
 
     private static class NotAnEnum implements Feature {
 

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.togglz.core.Feature;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.metadata.enums.EnumFeatureMetaData;
@@ -12,7 +11,7 @@ import org.togglz.core.spi.FeatureProvider;
 
 /**
  * Implementation of {@link FeatureProvider} that uses an Java enum to represent features.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class EnumBasedFeatureProvider implements FeatureProvider {
@@ -23,8 +22,13 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
         // nothing to do
     }
 
-    public EnumBasedFeatureProvider(Class<? extends Feature> featureEnum) {
-        addFeatureEnum(featureEnum);
+    public EnumBasedFeatureProvider(Class<? extends Feature>... featureEnums) {
+        if (featureEnums == null) {
+            throw new IllegalArgumentException("The featureEnums argument must not be null");
+        }
+        for (Class<? extends Feature> featureEnum : featureEnums) {
+            addFeatureEnum(featureEnum);
+        }
     }
 
     public EnumBasedFeatureProvider addFeatureEnum(Class<? extends Feature> featureEnum) {

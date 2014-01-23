@@ -62,7 +62,11 @@ public class FeatureManagerFactory implements FactoryBean<FeatureManager> {
     }
 
     public void setFeatureEnum(Class<? extends Feature> featureEnum) {
-        builder.featureEnum(featureEnum);
+        this.setFeatureEnums(featureEnum);
+    }
+
+    public void setFeatureEnums(Class<? extends Feature>... featureEnum) {
+        builder.featureEnums(featureEnum);
     }
 
     public void setName(String name) {
