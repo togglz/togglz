@@ -2,6 +2,8 @@ package org.togglz.core.manager;
 
 import java.util.UUID;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.ActivationStrategyProvider;
+import org.togglz.core.activation.DefaultActivationStrategyProvider;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.spi.FeatureProvider;
@@ -20,6 +22,7 @@ public class FeatureManagerBuilder {
     private FeatureProvider featureProvider = null;
     private StateRepository stateRepository = new InMemoryStateRepository();
     private UserProvider userProvider = new NoOpUserProvider();
+    private ActivationStrategyProvider activationStrategyProvider = new DefaultActivationStrategyProvider();
 
     /**
      * Use the supplied state repository for the feature manager.
@@ -82,6 +85,14 @@ public class FeatureManagerBuilder {
     }
 
     /**
+     * Use the supplied {@link ActivationStrategyProvider} for the activation strategies;
+     */
+    public FeatureManagerBuilder activationStrategyProvider(ActivationStrategyProvider activationStrategyProvider) {
+    	this.activationStrategyProvider = activationStrategyProvider;
+    	return this;
+    }
+        
+    /**
      * Initialize the builder with the configuration from the supplied {@link TogglzConfig} instance.
      */
     public FeatureManagerBuilder togglzConfig(TogglzConfig config) {
@@ -99,7 +110,8 @@ public class FeatureManagerBuilder {
         Validate.notNull(featureProvider, "No feature provider specified");
         Validate.notNull(stateRepository, "No state repository specified");
         Validate.notNull(userProvider, "No user provider specified");
-        return new DefaultFeatureManager(name, featureProvider, stateRepository, userProvider);
+        Validate.notNull(activationStrategyProvider, "No activation strategy provider specified");
+        return new DefaultFeatureManager(name, featureProvider, stateRepository, userProvider, activationStrategyProvider);
     }
 
 }

@@ -1,7 +1,5 @@
 package org.togglz.core.spi;
 
-import java.util.ServiceLoader;
-
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.activation.ParameterBuilder;
 import org.togglz.core.repository.FeatureState;
@@ -11,7 +9,7 @@ import org.togglz.core.user.UserProvider;
 
 /**
  * This interface represents a custom strategy for deciding whether a feature is active or not. Togglz ships with a few default
- * implementations. Implementations are discovered using the standard JDK {@link ServiceLoader} mechanism.
+ * implementations.
  * 
  * @author Christian Kaltepoth
  */

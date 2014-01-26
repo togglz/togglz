@@ -28,6 +28,8 @@ public class DefaultFeatureManagerTest {
         repository.setFeatureState(new FeatureState(MyFeatures.DELETE_USERS, true)
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "admin"));
+        repository.setFeatureState(new FeatureState(MyFeatures.MISSING_STRATEGY, true)
+        	.setStrategyId("NoSuchActivationStrategy"));
         repository.setFeatureState(new FeatureState(MyFeatures.EXPERIMENTAL, false));
 
         featureUserProvider = new TestFeatureUserProvider();
@@ -50,8 +52,7 @@ public class DefaultFeatureManagerTest {
     @Test
     public void testGetFeatures() {
         assertThat(manager.getFeatures())
-            .hasSize(2)
-            .containsExactly(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL);
+        	.contains(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL, MyFeatures.MISSING_STRATEGY);
     }
 
     @Test
@@ -73,6 +74,8 @@ public class DefaultFeatureManagerTest {
         featureUserProvider.setFeatureUser(null);
         assertEquals(false, manager.isActive(MyFeatures.EXPERIMENTAL));
 
+        // MISSING_STRATEGY disabled for all
+    	assertEquals(false, manager.isActive(MyFeatures.MISSING_STRATEGY));
     }
 
     @Test
@@ -125,7 +128,8 @@ public class DefaultFeatureManagerTest {
      */
     private static enum MyFeatures implements Feature {
         DELETE_USERS,
-        EXPERIMENTAL;
+        EXPERIMENTAL,
+        MISSING_STRATEGY;
     }
 
 }
