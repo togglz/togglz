@@ -1,10 +1,11 @@
 package org.togglz.core.util;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.FeatureAttribute;
@@ -13,12 +14,10 @@ import org.togglz.core.annotation.Label;
 import org.togglz.core.annotation.Owner;
 
 /**
- * 
  * Utility class to read annotation on feature enums.
- * 
+ *
  * @author Christian Kaltepoth
  * @author Eli Abramovitch
- * 
  */
 public class FeatureAnnotations {
 
@@ -54,22 +53,32 @@ public class FeatureAnnotations {
         return getAnnotation(feature, annotationType) != null;
     }
 
-    public static Annotation[] getAnnotations(Feature feature) {
+    public static Set<Annotation> getAnnotations(Feature feature) {
+        Set<Annotation> annotations = new HashSet<Annotation>();
         try {
-            Field field = feature.getClass().getField(feature.name());
-            return field.getAnnotations();
+            Class<? extends Feature> featureClass = feature.getClass();
+            Annotation[] fieldAnnotations = featureClass.getField(feature.name()).getAnnotations();
+            Annotation[] classAnnotations = featureClass.getAnnotations();
+
+            annotations.addAll(Arrays.asList(fieldAnnotations));
+            annotations.addAll(Arrays.asList(classAnnotations));
+
+            return annotations;
         } catch (SecurityException e) {
             // ignore
         } catch (NoSuchFieldException e) {
             // ignore
         }
-        return null;
+        return annotations;
     }
 
     public static <A extends Annotation> A getAnnotation(Feature feature, Class<A> annotationType) {
         try {
-            Field field = feature.getClass().getField(feature.name());
-            return field.getAnnotation(annotationType);
+            Class<? extends Feature> featureClass = feature.getClass();
+            A fieldAnnotation = featureClass.getField(feature.name()).getAnnotation(annotationType);
+            A classAnnotation = featureClass.getAnnotation(annotationType);
+
+            return fieldAnnotation != null ? fieldAnnotation : classAnnotation;
         } catch (SecurityException e) {
             // ignore
         } catch (NoSuchFieldException e) {
@@ -98,7 +107,7 @@ public class FeatureAnnotations {
                 Method method = annotation.getClass().getMethod(details.annotationAttribute());
                 if (method != null) {
                     String attributeValue = method.invoke(annotation).toString();
-                    return new String[] { attributeName, attributeValue };
+                    return new String[]{attributeName, attributeValue};
                 }
 
             }
