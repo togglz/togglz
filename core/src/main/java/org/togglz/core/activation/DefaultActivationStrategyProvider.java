@@ -7,6 +7,11 @@ import java.util.ServiceLoader;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Lists;
 
+/**
+ * Implementation of {@link ActivationStrategyProvider} that loads the strategies using the JDK {@link ServiceLoader}.
+ * 
+ * @author Jesse Kershaw
+ */
 public class DefaultActivationStrategyProvider implements ActivationStrategyProvider {
 
     private final List<ActivationStrategy> strategies;
@@ -16,7 +21,7 @@ public class DefaultActivationStrategyProvider implements ActivationStrategyProv
     }
 
     @Override
-    public List<ActivationStrategy> getActivationStrategys() {
+    public List<ActivationStrategy> getActivationStrategies() {
         return Collections.unmodifiableList(this.strategies);
     }
 

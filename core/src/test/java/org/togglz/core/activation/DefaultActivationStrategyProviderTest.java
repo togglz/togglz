@@ -22,7 +22,7 @@ public class DefaultActivationStrategyProviderTest {
 
     @Test
     public void testGetActivationStrategy() {
-        final List<ActivationStrategy> activationStrategys = this.activateStrategyProvider.getActivationStrategys();
+        final List<ActivationStrategy> activationStrategys = this.activateStrategyProvider.getActivationStrategies();
         // extract IDs from list of resolved strategies for assertion
         final List<String> strategyIds = Lists.transform(activationStrategys, new Function<ActivationStrategy, String>() {
             @Override

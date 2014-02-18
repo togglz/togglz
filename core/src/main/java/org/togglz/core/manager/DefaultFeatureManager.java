@@ -80,7 +80,7 @@ public class DefaultFeatureManager implements FeatureManager {
             FeatureUser user = userProvider.getCurrentUser();
 
             // check the selected strategy
-            for (ActivationStrategy strategy : activationStrategyProvider.getActivationStrategys()) {
+            for (ActivationStrategy strategy : activationStrategyProvider.getActivationStrategies()) {
                 if (strategy.getId().equalsIgnoreCase(strategyId)) {
                     return strategy.isActive(state, user);
                 }
