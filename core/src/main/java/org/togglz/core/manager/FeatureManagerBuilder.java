@@ -23,7 +23,7 @@ public class FeatureManagerBuilder {
     private FeatureProvider featureProvider = null;
     private StateRepository stateRepository = new InMemoryStateRepository();
     private UserProvider userProvider = new NoOpUserProvider();
-    private ActivationStrategyProvider activationStrategyProvider = new DefaultActivationStrategyProvider();
+    private ActivationStrategyProvider strategyProvider = new DefaultActivationStrategyProvider();
 
     /**
      * Use the supplied state repository for the feature manager.
@@ -88,8 +88,8 @@ public class FeatureManagerBuilder {
     /**
      * Use the supplied {@link ActivationStrategyProvider} for the activation strategies;
      */
-    public FeatureManagerBuilder activationStrategyProvider(ActivationStrategyProvider activationStrategyProvider) {
-        this.activationStrategyProvider = activationStrategyProvider;
+    public FeatureManagerBuilder activationStrategyProvider(ActivationStrategyProvider strategyProvider) {
+        this.strategyProvider = strategyProvider;
         return this;
     }
 
@@ -111,8 +111,8 @@ public class FeatureManagerBuilder {
         Validate.notNull(featureProvider, "No feature provider specified");
         Validate.notNull(stateRepository, "No state repository specified");
         Validate.notNull(userProvider, "No user provider specified");
-        Validate.notNull(activationStrategyProvider, "No activation strategy provider specified");
-        return new DefaultFeatureManager(name, featureProvider, stateRepository, userProvider, activationStrategyProvider);
+        Validate.notNull(strategyProvider, "No activation strategy provider specified");
+        return new DefaultFeatureManager(name, featureProvider, stateRepository, userProvider, strategyProvider);
     }
 
 }

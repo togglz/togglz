@@ -27,7 +27,7 @@ public class DefaultFeatureManager implements FeatureManager {
     private final StateRepository stateRepository;
     private final UserProvider userProvider;
     private final FeatureProvider featureProvider;
-    private final ActivationStrategyProvider activationStrategyProvider;
+    private final ActivationStrategyProvider strategyProvider;
 
     DefaultFeatureManager(String name, FeatureProvider featureProvider, StateRepository stateRepository,
         UserProvider userProvider, ActivationStrategyProvider activationStrategyProvider) {
@@ -35,7 +35,7 @@ public class DefaultFeatureManager implements FeatureManager {
         this.featureProvider = featureProvider;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
-        this.activationStrategyProvider = activationStrategyProvider;
+        this.strategyProvider = activationStrategyProvider;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DefaultFeatureManager implements FeatureManager {
             FeatureUser user = userProvider.getCurrentUser();
 
             // check the selected strategy
-            for (ActivationStrategy strategy : activationStrategyProvider.getActivationStrategies()) {
+            for (ActivationStrategy strategy : strategyProvider.getActivationStrategies()) {
                 if (strategy.getId().equalsIgnoreCase(strategyId)) {
                     return strategy.isActive(state, user);
                 }
