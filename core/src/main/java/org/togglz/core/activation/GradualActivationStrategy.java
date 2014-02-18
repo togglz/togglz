@@ -21,11 +21,12 @@ public class GradualActivationStrategy implements ActivationStrategy {
 
     private final Log log = LogFactory.getLog(GradualActivationStrategy.class);
     
+	public static final String ID = "gradual";
     public static final String PARAM_PERCENTAGE = "percentage";
 
     @Override
     public String getId() {
-        return "gradual";
+        return ID;
     }
 
     @Override

@@ -1,11 +1,10 @@
 package org.togglz.core.manager;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.metadata.EmptyFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
@@ -14,7 +13,6 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
-import org.togglz.core.util.Lists;
 import org.togglz.core.util.Validate;
 
 /**
@@ -28,17 +26,16 @@ public class DefaultFeatureManager implements FeatureManager {
     private final String name;
     private final StateRepository stateRepository;
     private final UserProvider userProvider;
-    private final List<ActivationStrategy> strategies;
     private final FeatureProvider featureProvider;
+	private final ActivationStrategyProvider activationStrategyProvider;
 
     DefaultFeatureManager(String name, FeatureProvider featureProvider, StateRepository stateRepository,
-        UserProvider userProvider) {
+        UserProvider userProvider, ActivationStrategyProvider activationStrategyProvider) {
         this.name = name;
         this.featureProvider = featureProvider;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
-        this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
-        Validate.notEmpty(strategies, "No ActivationStrategy implementations found");
+		this.activationStrategyProvider = activationStrategyProvider;
     }
 
     @Override
@@ -83,7 +80,7 @@ public class DefaultFeatureManager implements FeatureManager {
             FeatureUser user = userProvider.getCurrentUser();
 
             // check the selected strategy
-            for (ActivationStrategy strategy : strategies) {
+            for (ActivationStrategy strategy : activationStrategyProvider.getActivationStrategys()) {
                 if (strategy.getId().equalsIgnoreCase(strategyId)) {
                     return strategy.isActive(state, user);
                 }
