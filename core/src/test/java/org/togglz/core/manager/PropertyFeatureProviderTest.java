@@ -1,11 +1,11 @@
 package org.togglz.core.manager;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Properties;
 import java.util.Set;
 
-import org.fest.assertions.core.Condition;
+import org.assertj.core.api.Condition;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.metadata.FeatureGroup;

@@ -1,6 +1,6 @@
 package org.togglz.core.repository.file;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.fest.assertions.data.MapEntry;
+import org.assertj.core.data.MapEntry;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

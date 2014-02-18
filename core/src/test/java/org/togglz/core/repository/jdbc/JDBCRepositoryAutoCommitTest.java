@@ -1,6 +1,6 @@
 package org.togglz.core.repository.jdbc;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.PrintWriter;
 import java.sql.Connection;

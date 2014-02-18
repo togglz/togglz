@@ -1,11 +1,11 @@
 package org.togglz.core.repository.util;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.fest.assertions.data.MapEntry;
+import org.assertj.core.data.MapEntry;
 import org.junit.Test;
 
 public class DefaultMapSerializerTest {
