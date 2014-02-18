@@ -1,11 +1,12 @@
 package org.togglz.core.activation;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
 import org.togglz.core.spi.ActivationStrategy;
-import org.togglz.core.util.Lists;
 
 /**
  * Implementation of {@link ActivationStrategyProvider} that loads the strategies using the JDK {@link ServiceLoader}.
@@ -14,10 +15,17 @@ import org.togglz.core.util.Lists;
  */
 public class DefaultActivationStrategyProvider implements ActivationStrategyProvider {
 
-    private final List<ActivationStrategy> strategies;
+    private final List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
 
     public DefaultActivationStrategyProvider() {
-        this.strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
+        Iterator<ActivationStrategy> iterator = ServiceLoader.load(ActivationStrategy.class).iterator();
+        while (iterator.hasNext()) {
+            strategies.add((ActivationStrategy) iterator.next());
+        }
+    }
+
+    public void addActivationStrategy(ActivationStrategy strategy) {
+        this.strategies.add(strategy);
     }
 
     @Override

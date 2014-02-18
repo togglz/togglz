@@ -2,41 +2,69 @@ package org.togglz.core.activation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
-import org.junit.Before;
 import org.junit.Test;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import org.togglz.core.user.FeatureUser;
 
 public class DefaultActivationStrategyProviderTest {
 
-    private DefaultActivationStrategyProvider activateStrategyProvider;
+    private DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
 
-    @Before
-    public void setup() {
-        this.activateStrategyProvider = new DefaultActivationStrategyProvider();
+    @Test
+    public void shouldLoadDefaultStrategies() {
+
+        assertThat(provider.getActivationStrategies())
+            .extracting("id")
+            .contains(UsernameActivationStrategy.ID)
+            .contains(GradualActivationStrategy.ID)
+            .contains(ScriptEngineActivationStrategy.ID)
+            .contains(ReleaseDateActivationStrategy.ID)
+            .contains(ServerIpActivationStrategy.ID)
+            .contains(UserRoleActivationStrategy.ID);
+
     }
 
     @Test
-    public void testGetActivationStrategy() {
-        final List<ActivationStrategy> activationStrategys = this.activateStrategyProvider.getActivationStrategies();
-        // extract IDs from list of resolved strategies for assertion
-        final List<String> strategyIds = Lists.transform(activationStrategys, new Function<ActivationStrategy, String>() {
-            @Override
-            public String apply(ActivationStrategy strategy) {
-                return strategy.getId();
-            }
-        });
-        assertThat(strategyIds).contains(
-            UsernameActivationStrategy.ID,
-            GradualActivationStrategy.ID,
-            ScriptEngineActivationStrategy.ID,
-            ReleaseDateActivationStrategy.ID,
-            ServerIpActivationStrategy.ID,
-            UserRoleActivationStrategy.ID);
+    public void shouldNotContainCustomStrategyIfNotAdded() {
+
+        assertThat(provider.getActivationStrategies())
+            .extracting("id")
+            .doesNotContain(CustomActivationStrategy.class.getSimpleName());
+
     }
 
+    @Test
+    public void shouldContainCustomStrategyIfAddedBefore() {
+
+        provider.addActivationStrategy(new CustomActivationStrategy());
+
+        assertThat(provider.getActivationStrategies())
+            .extracting("id")
+            .contains(CustomActivationStrategy.class.getSimpleName());
+
+    }
+
+    private static class CustomActivationStrategy implements ActivationStrategy {
+
+        @Override
+        public boolean isActive(FeatureState featureState, FeatureUser user) {
+            return false;
+        }
+
+        @Override
+        public Parameter[] getParameters() {
+            return new Parameter[0];
+        }
+
+        @Override
+        public String getName() {
+            return getId();
+        }
+
+        @Override
+        public String getId() {
+            return this.getClass().getSimpleName();
+        }
+    };
 }
