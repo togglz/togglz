@@ -7,6 +7,7 @@ import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
+import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
@@ -91,6 +92,19 @@ public class FeatureManagerBuilder {
     public FeatureManagerBuilder activationStrategyProvider(ActivationStrategyProvider strategyProvider) {
         this.strategyProvider = strategyProvider;
         return this;
+    }
+
+    /**
+     * Adds an additional {@link ActivationStrategy} to the current {@link ActivationStrategyProvider}. This currently only
+     * works if you are using the {@link DefaultActivationStrategyProvider}.
+     */
+    public FeatureManagerBuilder activationStrategy(ActivationStrategy strategy) {
+        if (strategyProvider instanceof DefaultActivationStrategyProvider) {
+            ((DefaultActivationStrategyProvider) strategyProvider).addActivationStrategy(strategy);
+            return this;
+        }
+        throw new IllegalStateException("Adding ActivationStrategies is only allowed when using "
+            + DefaultActivationStrategyProvider.class.getSimpleName());
     }
 
     /**
