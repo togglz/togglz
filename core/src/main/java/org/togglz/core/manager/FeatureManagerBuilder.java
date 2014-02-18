@@ -27,6 +27,13 @@ public class FeatureManagerBuilder {
     private ActivationStrategyProvider strategyProvider = new DefaultActivationStrategyProvider();
 
     /**
+     * Create a new builder
+     */
+    public static FeatureManagerBuilder begin() {
+        return new FeatureManagerBuilder();
+    }
+
+    /**
      * Use the supplied state repository for the feature manager.
      */
     public FeatureManagerBuilder stateRepository(StateRepository stateRepository) {

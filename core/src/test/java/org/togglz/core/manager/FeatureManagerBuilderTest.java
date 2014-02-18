@@ -21,7 +21,7 @@ public class FeatureManagerBuilderTest {
 
         DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
 
-        new FeatureManagerBuilder()
+        FeatureManagerBuilder.begin()
             .featureEnum(Features.class)
             .activationStrategyProvider(provider)
             .activationStrategy(new CustomActivationStrategy())
@@ -38,7 +38,7 @@ public class FeatureManagerBuilderTest {
 
         CustomStrategyProvider provider = new CustomStrategyProvider();
 
-        new FeatureManagerBuilder()
+        FeatureManagerBuilder.begin()
             .featureEnum(Features.class)
             .activationStrategyProvider(provider)
             .activationStrategy(new CustomActivationStrategy())
