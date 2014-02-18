@@ -27,7 +27,7 @@ public class DefaultFeatureManager implements FeatureManager {
     private final StateRepository stateRepository;
     private final UserProvider userProvider;
     private final FeatureProvider featureProvider;
-	private final ActivationStrategyProvider activationStrategyProvider;
+    private final ActivationStrategyProvider activationStrategyProvider;
 
     DefaultFeatureManager(String name, FeatureProvider featureProvider, StateRepository stateRepository,
         UserProvider userProvider, ActivationStrategyProvider activationStrategyProvider) {
@@ -35,7 +35,7 @@ public class DefaultFeatureManager implements FeatureManager {
         this.featureProvider = featureProvider;
         this.stateRepository = stateRepository;
         this.userProvider = userProvider;
-		this.activationStrategyProvider = activationStrategyProvider;
+        this.activationStrategyProvider = activationStrategyProvider;
     }
 
     @Override

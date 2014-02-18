@@ -29,16 +29,16 @@ public class DefaultFeatureManagerTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "admin"));
         repository.setFeatureState(new FeatureState(MyFeatures.MISSING_STRATEGY, true)
-        	.setStrategyId("NoSuchActivationStrategy"));
+            .setStrategyId("NoSuchActivationStrategy"));
         repository.setFeatureState(new FeatureState(MyFeatures.EXPERIMENTAL, false));
 
         featureUserProvider = new TestFeatureUserProvider();
 
         manager = new FeatureManagerBuilder()
-                .featureEnum(MyFeatures.class)
-                .stateRepository(repository)
-                .userProvider(featureUserProvider)
-                .build();
+            .featureEnum(MyFeatures.class)
+            .stateRepository(repository)
+            .userProvider(featureUserProvider)
+            .build();
 
     }
 
@@ -52,7 +52,7 @@ public class DefaultFeatureManagerTest {
     @Test
     public void testGetFeatures() {
         assertThat(manager.getFeatures())
-        	.contains(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL, MyFeatures.MISSING_STRATEGY);
+            .contains(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL, MyFeatures.MISSING_STRATEGY);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class DefaultFeatureManagerTest {
         assertEquals(false, manager.isActive(MyFeatures.EXPERIMENTAL));
 
         // MISSING_STRATEGY disabled for all
-    	assertEquals(false, manager.isActive(MyFeatures.MISSING_STRATEGY));
+        assertEquals(false, manager.isActive(MyFeatures.MISSING_STRATEGY));
     }
 
     @Test

@@ -20,8 +20,8 @@ import org.togglz.core.util.Validate;
 public class GradualActivationStrategy implements ActivationStrategy {
 
     private final Log log = LogFactory.getLog(GradualActivationStrategy.class);
-    
-	public static final String ID = "gradual";
+
+    public static final String ID = "gradual";
     public static final String PARAM_PERCENTAGE = "percentage";
 
     @Override
@@ -59,7 +59,7 @@ public class GradualActivationStrategy implements ActivationStrategy {
         return false;
 
     }
-    
+
     protected int calculateHashCode(FeatureUser user) {
         Validate.notNull(user, "user is required");
         return user.getName().toLowerCase(Locale.ENGLISH).trim().hashCode();
@@ -68,8 +68,12 @@ public class GradualActivationStrategy implements ActivationStrategy {
     @Override
     public Parameter[] getParameters() {
         return new Parameter[] {
-                ParameterBuilder.create(PARAM_PERCENTAGE).label("Percentage").matching("\\d{1,3}")
-                    .description("Percentage of users for which the feature should be active (i.e. '25' for every fourth user).")
+                ParameterBuilder
+                    .create(PARAM_PERCENTAGE)
+                    .label("Percentage")
+                    .matching("\\d{1,3}")
+                    .description(
+                        "Percentage of users for which the feature should be active (i.e. '25' for every fourth user).")
         };
     }
 

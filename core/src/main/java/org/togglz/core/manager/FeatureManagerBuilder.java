@@ -1,6 +1,7 @@
 package org.togglz.core.manager;
 
 import java.util.UUID;
+
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
@@ -13,7 +14,7 @@ import org.togglz.core.util.Validate;
 
 /**
  * Builder of {@link DefaultFeatureManager}.
- *
+ * 
  * @author Christian Kaltepoth
  */
 public class FeatureManagerBuilder {
@@ -88,10 +89,10 @@ public class FeatureManagerBuilder {
      * Use the supplied {@link ActivationStrategyProvider} for the activation strategies;
      */
     public FeatureManagerBuilder activationStrategyProvider(ActivationStrategyProvider activationStrategyProvider) {
-    	this.activationStrategyProvider = activationStrategyProvider;
-    	return this;
+        this.activationStrategyProvider = activationStrategyProvider;
+        return this;
     }
-        
+
     /**
      * Initialize the builder with the configuration from the supplied {@link TogglzConfig} instance.
      */

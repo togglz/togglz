@@ -14,6 +14,6 @@ import org.togglz.core.spi.ActivationStrategy;
  */
 public interface ActivationStrategyProvider {
 
-	List<ActivationStrategy> getActivationStrategys();
-	
+    List<ActivationStrategy> getActivationStrategys();
+
 }
