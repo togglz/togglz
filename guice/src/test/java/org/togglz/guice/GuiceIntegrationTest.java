@@ -35,7 +35,7 @@ public class GuiceIntegrationTest {
                     .artifact("com.google.inject.extensions:guice-servlet:3.0")
                     .resolveAs(JavaArchive.class))
             .addPackage(GuiceIntegrationTest.class.getPackage())
-            .addPackages(true, "org.fest")
+            .addPackages(true, "org.assertj")
             .setWebXML(new StringAsset(
                 Descriptors.create(WebAppDescriptor.class)
                     .filter(GuiceFilter.class, "/*")
