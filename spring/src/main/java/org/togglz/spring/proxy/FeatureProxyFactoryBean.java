@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.beans.factory.InitializingBean;
 import org.togglz.core.Feature;
 import org.togglz.core.proxy.FeatureProxyInvocationHandler;
@@ -56,6 +57,11 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
 
     @Override
     public Object getObject() throws Exception {
+
+        // make sure the factory is fully initialized
+        if (!initialized) {
+            throw new FactoryBeanNotInitializedException();
+        }
 
         // create the invocation handler that switches between implementations
         Feature namedFeature = new NamedFeature(feature);
