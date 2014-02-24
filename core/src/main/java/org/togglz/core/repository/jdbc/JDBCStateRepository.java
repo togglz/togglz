@@ -60,6 +60,8 @@ public class JDBCStateRepository implements StateRepository {
 
     private final MapSerializer serializer;
 
+    private final boolean noCommit;
+
     /**
      * Constructor of {@link JDBCStateRepository}. A database table called <code>TOGGLZ</code> will be created automatically for
      * you.
@@ -101,9 +103,23 @@ public class JDBCStateRepository implements StateRepository {
      * @param serializer The {@link MapSerializer} for storing parameters
      */
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer) {
+        this(dataSource, tableName, createTable, serializer, false);
+    }
+
+    /**
+     * Constructor of {@link JDBCStateRepository}.
+     * 
+     * @param dataSource The JDBC {@link DataSource} to obtain connections from
+     * @param tableName The name of the database table to use
+     * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
+     * @param serializer The {@link MapSerializer} for storing parameters
+     */
+    public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer,
+        boolean noCommit) {
         this.dataSource = dataSource;
         this.tableName = tableName;
         this.serializer = serializer;
+        this.noCommit = noCommit;
         if (createTable) {
             migrateSchema();
         }
@@ -249,7 +265,7 @@ public class JDBCStateRepository implements StateRepository {
 
                 }
 
-                if (!connection.getAutoCommit()) {
+                if (!connection.getAutoCommit() && !noCommit) {
                     connection.commit();
                 }
 
