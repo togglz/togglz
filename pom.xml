@@ -135,6 +135,7 @@
     <module>jsf</module>
     <module>jsp</module>
     <module>appengine</module>
+    <module>mongodb</module>
     <module>seam-security</module>
     <module>testing</module>
     <module>junit</module>
