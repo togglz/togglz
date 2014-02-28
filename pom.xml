@@ -54,6 +54,14 @@
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.scm</groupId>
+            <artifactId>maven-scm-provider-gitexe</artifactId>
+            <!-- This version is necessary for use with git version 1.8.5 -->
+            <version>1.8.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <!-- Javadocs -->
