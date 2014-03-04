@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Transaction;
 import com.google.common.base.Strings;
 
 /**
@@ -33,7 +34,7 @@ public class DatastoreStateRepository implements StateRepository {
     public static final String STRATEGY_ID = "strategyId";
     public static final String ENABLED = "enabled";
 
-    private DatastoreService datastoreService;
+    private final DatastoreService datastoreService;
     private String kind = "FeatureToggle";
 
     public DatastoreStateRepository(final DatastoreService datastoreService) {
@@ -46,60 +47,96 @@ public class DatastoreStateRepository implements StateRepository {
         this.kind = kind;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public FeatureState getFeatureState(Feature feature) {
-        FeatureState state = null;
+    public FeatureState getFeatureState(final Feature feature) {
         try {
+            final Key key = KeyFactory.createKey(kind(), feature.name());
+            return createFeatureState(feature, getInsideTransaction(key));
+        } catch (final EntityNotFoundException ignored) {
+            return null;
+        }
+    }
 
-            Key key = KeyFactory.createKey(kind(), feature.name());
-            Entity featureEntity = datastoreService.get(key);
+    /**
+     * @param feature
+     * @param featureEntity
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private FeatureState createFeatureState(final Feature feature, final Entity featureEntity) {
+        final Boolean enabled = (Boolean) featureEntity.getProperty(ENABLED);
+        final FeatureState state = new FeatureState(feature, enabled);
 
-            Boolean enabled = (Boolean) featureEntity.getProperty(ENABLED);
-            state = new FeatureState(feature, enabled);
-
-            String strategyId = (String) featureEntity.getProperty(STRATEGY_ID);
-            if (!Strings.isNullOrEmpty(strategyId)) {
-                state.setStrategyId(strategyId.trim());
-            }
-
-            List<String> strategyParamsNames = (List<String>) featureEntity.getProperty(STRATEGY_PARAMS_NAMES);
-            List<String> strategyParamsValues = (List<String>) featureEntity.getProperty(STRATEGY_PARAMS_VALUES);
-            if (strategyParamsNames != null
-                && strategyParamsValues != null
-                && !strategyParamsNames.isEmpty()
-                && !strategyParamsValues.isEmpty()
-                && strategyParamsNames.size() == strategyParamsValues
-                    .size()) {
-                for (int i = 0; i < strategyParamsNames.size(); i++) {
-                    state.setParameter(strategyParamsNames.get(i), strategyParamsValues.get(i));
-                }
-            }
-
-        } catch (EntityNotFoundException ignored) {
+        final String strategyId = (String) featureEntity.getProperty(STRATEGY_ID);
+        if (!Strings.isNullOrEmpty(strategyId)) {
+            state.setStrategyId(strategyId.trim());
         }
 
+        final List<String> strategyParamsNames = (List<String>) featureEntity.getProperty(STRATEGY_PARAMS_NAMES);
+        final List<String> strategyParamsValues = (List<String>) featureEntity.getProperty(STRATEGY_PARAMS_VALUES);
+        if (strategyParamsNames != null && strategyParamsValues != null && !strategyParamsNames.isEmpty()
+            && !strategyParamsValues.isEmpty() && strategyParamsNames.size() == strategyParamsValues.size()) {
+            for (int i = 0; i < strategyParamsNames.size(); i++) {
+                state.setParameter(strategyParamsNames.get(i), strategyParamsValues.get(i));
+            }
+        }
         return state;
     }
 
     @Override
-    public void setFeatureState(FeatureState featureState) {
-        Entity featureEntity = new Entity(kind(), featureState.getFeature().name());
+    public void setFeatureState(final FeatureState featureState) {
+        final Entity featureEntity = new Entity(kind(), featureState.getFeature().name());
         featureEntity.setUnindexedProperty(ENABLED, featureState.isEnabled());
         featureEntity.setUnindexedProperty(STRATEGY_ID, featureState.getStrategyId());
 
-        Map<String, String> params = featureState.getParameterMap();
+        final Map<String, String> params = featureState.getParameterMap();
         if (params != null && !params.isEmpty()) {
-            List<String> strategyParamsNames = new ArrayList<String>(params.size());
-            List<String> strategyParamsValues = new ArrayList<String>(params.size());
-            for (String paramName : params.keySet()) {
+            final List<String> strategyParamsNames = new ArrayList<String>(params.size());
+            final List<String> strategyParamsValues = new ArrayList<String>(params.size());
+            for (final String paramName : params.keySet()) {
                 strategyParamsNames.add(paramName);
                 strategyParamsValues.add(params.get(paramName));
             }
             featureEntity.setUnindexedProperty(STRATEGY_PARAMS_NAMES, strategyParamsNames);
             featureEntity.setUnindexedProperty(STRATEGY_PARAMS_VALUES, strategyParamsValues);
         }
-        datastoreService.put(featureEntity);
+
+        putInsideTransaction(featureEntity);
+
+    }
+
+    /**
+     * @param featureEntity
+     */
+    protected void putInsideTransaction(final Entity featureEntity) {
+        final Transaction txn = this.datastoreService.beginTransaction();
+        try {
+            this.datastoreService.put(txn, featureEntity);
+            txn.commit();
+        } finally {
+            if (txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
+    /**
+     * @param key
+     * @return
+     * @throws EntityNotFoundException
+     */
+    protected Entity getInsideTransaction(final Key key) throws EntityNotFoundException {
+        final Transaction txn = this.datastoreService.beginTransaction();
+        Entity featureEntity;
+        try {
+            featureEntity = this.datastoreService.get(txn, key);
+            txn.commit();
+        } finally {
+            if (txn.isActive()) {
+                txn.rollback();
+            }
+        }
+        return featureEntity;
     }
 
     protected String kind() {

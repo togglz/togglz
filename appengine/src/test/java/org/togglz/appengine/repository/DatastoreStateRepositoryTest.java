@@ -1,7 +1,10 @@
 package org.togglz.appengine.repository;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +18,13 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
@@ -25,11 +34,12 @@ public class DatastoreStateRepositoryTest {
         new LocalDatastoreServiceTestConfig());
 
     private DatastoreStateRepository repository;
-    private DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+    private DatastoreService datastoreService;
 
     @Before
     public void setup() {
         helper.setUp();
+        datastoreService = DatastoreServiceFactory.getDatastoreService();
         repository = new DatastoreStateRepository(datastoreService);
     }
 
@@ -39,18 +49,34 @@ public class DatastoreStateRepositoryTest {
     }
 
     @Test
+    public void customKindName() throws EntityNotFoundException {
+        final String kind = "CustomKind";
+        repository = new DatastoreStateRepository(kind, datastoreService);
+        assertEquals(kind, repository.kind());
+    }
+
+    @Test
+    public void shouldWorkInsideRunningTransaction() {
+        update("F1", false, null, null, null);
+        final Transaction txn = datastoreService.beginTransaction();
+        update("F3", false, null, null, txn);
+        repository.getFeatureState(TestFeature.F1);
+        txn.commit();
+    }
+
+    @Test
     public void testShouldSaveStateWithoutStrategyOrParameters() throws EntityNotFoundException {
         /*
          * WHEN a feature without strategy is persisted
          */
-        FeatureState state = new FeatureState(TestFeature.F1).disable();
+        final FeatureState state = new FeatureState(TestFeature.F1).disable();
         repository.setFeatureState(state);
 
         /*
          * THEN there should be a corresponding entry in the database
          */
-        Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
-        Entity featureEntity = datastoreService.get(key);
+        final Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
+        final Entity featureEntity = datastoreService.get(key);
 
         assertEquals(false, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
         assertNull(featureEntity.getProperty(DatastoreStateRepository.STRATEGY_ID));
@@ -66,7 +92,7 @@ public class DatastoreStateRepositoryTest {
         /*
          * WHEN a feature without strategy is persisted
          */
-        FeatureState state = new FeatureState(TestFeature.F1)
+        final FeatureState state = new FeatureState(TestFeature.F1)
             .enable()
             .setStrategyId("someId")
             .setParameter("param", "foo");
@@ -75,8 +101,8 @@ public class DatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
-        Entity featureEntity = datastoreService.get(key);
+        final Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
+        final Entity featureEntity = datastoreService.get(key);
 
         assertEquals(true, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getProperty(DatastoreStateRepository.STRATEGY_ID));
@@ -87,17 +113,30 @@ public class DatastoreStateRepositoryTest {
     }
 
     @Test
+    public void shouldReturnNullWhenStateDoesntExist() {
+        /*
+         * GIVEN there is no feature state in the datastore WHEN the repository reads the state
+         */
+        final FeatureState state = repository.getFeatureState(TestFeature.F1);
+
+        /*
+         * THEN the properties should be set like expected
+         */
+        assertNull(state);
+    }
+
+    @Test
     public void testShouldReadStateWithoutStrategyAndParameters() {
 
         /*
          * GIVEN a database row containing a simple feature state
          */
-        update("F1", false, null, null);
+        update("F1", false, null, null, null);
 
         /*
          * WHEN the repository reads the state
          */
-        FeatureState state = repository.getFeatureState(TestFeature.F1);
+        final FeatureState state = repository.getFeatureState(TestFeature.F1);
 
         /*
          * THEN the properties should be set like expected
@@ -117,18 +156,18 @@ public class DatastoreStateRepositoryTest {
         /*
          * GIVEN a database row containing a simple feature state
          */
-        Map<String, String> map = new HashMap<String, String>() {
+        final Map<String, String> map = new HashMap<String, String>() {
             {
                 put("param23", "foobar");
             }
         };
 
-        update("F1", true, "myStrategy", map);
+        update("F1", true, "myStrategy", map, null);
 
         /*
          * WHEN the repository reads the state
          */
-        FeatureState state = repository.getFeatureState(TestFeature.F1);
+        final FeatureState state = repository.getFeatureState(TestFeature.F1);
 
         /*
          * THEN the properties should be set like expected
@@ -149,12 +188,12 @@ public class DatastoreStateRepositoryTest {
         /*
          * GIVEN a database row containing a simple feature state
          */
-        Map<String, String> map = new HashMap<String, String>() {
+        final Map<String, String> map = new HashMap<String, String>() {
             {
                 put("param23", "foobar");
             }
         };
-        update("F1", true, "myStrategy", map);
+        update("F1", true, "myStrategy", map, null);
 
         /*
          * AND the database entries are like expected
@@ -162,7 +201,7 @@ public class DatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
+        final Key key = KeyFactory.createKey(repository.kind(), TestFeature.F1.name());
         Entity featureEntity = datastoreService.get(key);
 
         assertEquals(true, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
@@ -175,7 +214,7 @@ public class DatastoreStateRepositoryTest {
         /*
          * WHEN the repository writes new state
          */
-        FeatureState state = new FeatureState(TestFeature.F1)
+        final FeatureState state = new FeatureState(TestFeature.F1)
             .disable()
             .setStrategyId("someId")
             .setParameter("param", "foo");
@@ -194,15 +233,16 @@ public class DatastoreStateRepositoryTest {
             is(Arrays.asList("foo")));
     }
 
-    private void update(String name, boolean enabled, String strategyId, Map<String, String> params) {
-        Entity featureEntity = new Entity(repository.kind(), name);
+    private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
+        final Transaction txn) {
+        final Entity featureEntity = new Entity(repository.kind(), name);
         featureEntity.setUnindexedProperty(DatastoreStateRepository.ENABLED, enabled);
         featureEntity.setUnindexedProperty(DatastoreStateRepository.STRATEGY_ID, strategyId);
 
         if (params != null) {
-            List<String> strategyParamsNames = new ArrayList<String>();
-            List<String> strategyParamsValues = new ArrayList<String>();
-            for (String paramName : params.keySet()) {
+            final List<String> strategyParamsNames = new ArrayList<String>();
+            final List<String> strategyParamsValues = new ArrayList<String>();
+            for (final String paramName : params.keySet()) {
                 strategyParamsNames.add(paramName);
                 strategyParamsValues.add(params.get(paramName));
             }
@@ -210,7 +250,11 @@ public class DatastoreStateRepositoryTest {
             featureEntity.setUnindexedProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES, strategyParamsValues);
         }
 
-        datastoreService.put(featureEntity);
+        if (txn == null) {
+            datastoreService.put(featureEntity);
+        } else {
+            datastoreService.put(txn, featureEntity);
+        }
     }
 
     private static enum TestFeature implements Feature {
