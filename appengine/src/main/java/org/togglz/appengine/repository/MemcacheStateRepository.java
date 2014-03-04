@@ -19,6 +19,7 @@ public class MemcacheStateRepository implements StateRepository {
     private StateRepository delegate;
     private MemcacheService cache = MemcacheServiceFactory.getMemcacheService();
     private Expiration expiration = Expiration.byDeltaSeconds(3600);
+    private static final String KEY_PREFIX = MemcacheStateRepository.class.getName();
 
     public MemcacheStateRepository(StateRepository delegate) {
         this.delegate = delegate;
@@ -31,12 +32,16 @@ public class MemcacheStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        FeatureState state = (FeatureState) cache.get(feature.name());
+        FeatureState state = (FeatureState) cache.get(key(feature.name()));
         if (state == null) {
             state = delegate.getFeatureState(feature);
-            cache.put(feature.name(), state, getExpiration());
+            cache.put(key(feature.name()), state, getExpiration());
         }
         return state;
+    }
+
+    String key(String featureName) {
+        return KEY_PREFIX + featureName;
     }
 
     private Expiration getExpiration() {
@@ -46,6 +51,6 @@ public class MemcacheStateRepository implements StateRepository {
     @Override
     public void setFeatureState(FeatureState featureState) {
         delegate.setFeatureState(featureState);
-        cache.delete(featureState.getFeature().name());
+        cache.delete(key(featureState.getFeature().name()));
     }
 }
