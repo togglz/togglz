@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Activation strategy that allows to activate features only for certain appengine application versions.
- *
+ * 
  * @author Fábio Franco Uechi
  */
 public class ApplicationVersionActivationStrategy implements ActivationStrategy {
@@ -51,7 +51,7 @@ public class ApplicationVersionActivationStrategy implements ActivationStrategy 
     public Parameter[] getParameters() {
         return new Parameter[] {
                 ParameterBuilder.create(PARAM_VERSIONS).label("Application Versions")
-                        .description("A comma-separated list of application versions for which the feature should be active.")
+                    .description("A comma-separated list of application versions for which the feature should be active.")
         };
     }
 

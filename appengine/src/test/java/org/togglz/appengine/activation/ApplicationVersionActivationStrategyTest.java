@@ -58,7 +58,7 @@ public class ApplicationVersionActivationStrategyTest {
     @Test
     public void shouldReturnTrueWhenAtLeastOneOfTheVersionsMatchServerCurrentVersion() {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
-        FeatureState state = aVersionState(CURRENT_VERSION+",alpha,dev,uat");
+        FeatureState state = aVersionState(CURRENT_VERSION + ",alpha,dev,uat");
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
         Assert.assertTrue(active);
     }
@@ -73,8 +73,8 @@ public class ApplicationVersionActivationStrategyTest {
 
     private FeatureState aVersionState(String lang) {
         return new FeatureState(ScriptFeature.FEATURE)
-                .setStrategyId(ApplicationVersionActivationStrategy.ID)
-                .setParameter(ApplicationVersionActivationStrategy.PARAM_VERSIONS, lang);
+            .setStrategyId(ApplicationVersionActivationStrategy.ID)
+            .setParameter(ApplicationVersionActivationStrategy.PARAM_VERSIONS, lang);
     }
 
     private SimpleFeatureUser aFeatureUser(String string) {
