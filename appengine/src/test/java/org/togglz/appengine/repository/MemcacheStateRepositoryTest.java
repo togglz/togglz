@@ -59,7 +59,7 @@ public class MemcacheStateRepositoryTest {
         Mockito.verify(delegate).getFeatureState(TestFeature.F1);
         Mockito.verifyNoMoreInteractions(delegate);
 
-        assertTrue(ms.contains(TestFeature.F1.name()));
+        assertTrue(ms.contains(repository.key(TestFeature.F1.name())));
 
     }
 
@@ -73,11 +73,11 @@ public class MemcacheStateRepositoryTest {
             assertTrue(repository.getFeatureState(TestFeature.F1).isEnabled());
             Thread.sleep(10);
         }
-        assertTrue(ms.contains(TestFeature.F1.name()));
+        assertTrue(ms.contains(repository.key(TestFeature.F1.name())));
 
         // now modify the feature state
         repository.setFeatureState(new FeatureState(TestFeature.F1, true));
-        assertFalse(ms.contains(TestFeature.F1.name()));
+        assertFalse(ms.contains(repository.key(TestFeature.F1.name())));
 
         // do some lookups
         for (int i = 0; i < 5; i++) {
@@ -85,7 +85,7 @@ public class MemcacheStateRepositoryTest {
             Thread.sleep(10);
         }
 
-        assertTrue(ms.contains(TestFeature.F1.name()));
+        assertTrue(ms.contains(repository.key(TestFeature.F1.name())));
         // Check for the correct number of invocations
         Mockito.verify(delegate, Mockito.times(2)).getFeatureState(TestFeature.F1);
         Mockito.verify(delegate).setFeatureState(Mockito.any(FeatureState.class));
