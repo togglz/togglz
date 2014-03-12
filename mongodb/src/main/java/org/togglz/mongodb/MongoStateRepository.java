@@ -143,10 +143,10 @@ public class MongoStateRepository implements StateRepository {
 
         private final MongoClient client;
         private final String dbname;
-        private String collection;
-        private String username;
-        private char[] password;
-        private WriteConcern writeConcern;
+        private String collection = "togglz";
+        private String username = null;
+        private char[] password = null;
+        private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
         public Builder(MongoClient client, String dbname) {
             this.client = client;
