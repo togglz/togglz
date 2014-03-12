@@ -43,6 +43,19 @@ import org.togglz.core.util.Strings;
  * </pre>
  * 
  * <p>
+ * The class provides a builder which can be used to configure the repository:
+ * </p>
+ * 
+ * <pre>
+ * StateRepository repository = JDBCStateRepository.newBuilder(dataSource)
+ *     .tableName(&quot;features&quot;)
+ *     .createTable(false)
+ *     .serializer(DefaultMapSerializer.singleline())
+ *     .noCommit(true)
+ *     .build();
+ * </pre>
+ * 
+ * <p>
  * Please note that the structure of the database table changed with version 2.0.0 because of the new extensible activation
  * strategy mechanism. The table structure will be automatically migrated to the new format.
  * </p>
@@ -70,7 +83,7 @@ public class JDBCStateRepository implements StateRepository {
      * @see #JDBCFeatureStateRepository(DataSource, String)
      */
     public JDBCStateRepository(DataSource dataSource) {
-        this(dataSource, "TOGGLZ");
+        this(new Builder(dataSource));
     }
 
     /**
@@ -80,7 +93,7 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
-        this(dataSource, tableName, true);
+        this(new Builder(dataSource).tableName(tableName));
     }
 
     /**
@@ -89,9 +102,12 @@ public class JDBCStateRepository implements StateRepository {
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @param tableName The name of the database table to use
      * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
+     * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
+     *             aspects of the repository in a fluent way
      */
+    @Deprecated
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable) {
-        this(dataSource, tableName, createTable, DefaultMapSerializer.multiline());
+        this(new Builder(dataSource).tableName(tableName).createTable(createTable));
     }
 
     /**
@@ -101,9 +117,12 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
      * @param serializer The {@link MapSerializer} for storing parameters
+     * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
+     *             aspects of the repository in a fluent way
      */
+    @Deprecated
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer) {
-        this(dataSource, tableName, createTable, serializer, false);
+        this(new Builder(dataSource).tableName(tableName).createTable(createTable).serializer(serializer));
     }
 
     /**
@@ -113,14 +132,23 @@ public class JDBCStateRepository implements StateRepository {
      * @param tableName The name of the database table to use
      * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
      * @param serializer The {@link MapSerializer} for storing parameters
+     * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
+     *             aspects of the repository in a fluent way
      */
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer,
         boolean noCommit) {
-        this.dataSource = dataSource;
-        this.tableName = tableName;
-        this.serializer = serializer;
-        this.noCommit = noCommit;
-        if (createTable) {
+        this(new Builder(dataSource).tableName(tableName).createTable(createTable).serializer(serializer).noCommit(noCommit));
+    }
+
+    /**
+     * Private constructor initializing the class from a builder
+     */
+    private JDBCStateRepository(Builder builder) {
+        this.dataSource = builder.dataSource;
+        this.tableName = builder.tableName;
+        this.serializer = builder.serializer;
+        this.noCommit = builder.noCommit;
+        if (builder.createTable) {
             migrateSchema();
         }
     }
@@ -281,6 +309,85 @@ public class JDBCStateRepository implements StateRepository {
 
     private String insertTableName(String s) {
         return s.replace("%TABLE%", tableName);
+    }
+
+    /**
+     * Creates a new builder for creating a {@link JDBCStateRepository}.
+     */
+    public static Builder newBuilder(DataSource dataSource) {
+        return new Builder(dataSource);
+    }
+
+    /**
+     * Builder for a {@link JDBCStateRepository}.
+     */
+    public static class Builder {
+
+        private DataSource dataSource;
+        private String tableName = "TOGGLZ";
+        private MapSerializer serializer = DefaultMapSerializer.multiline();
+        private boolean noCommit = false;
+        private boolean createTable = true;
+
+        /**
+         * Creates a new builder initialized with the provided {@link DataSource}
+         * 
+         * @param dataSource the {@link DataSource} Togglz should use to obtain JDBC connections
+         */
+        public Builder(DataSource dataSource) {
+            this.dataSource = dataSource;
+        }
+
+        /**
+         * Sets the table name to use for the Togglz feature state table. The default name is <code>TOGGLZ</code>.
+         * 
+         * @param tableName The database table name
+         */
+        public Builder tableName(String tableName) {
+            this.tableName = tableName;
+            return this;
+        }
+
+        /**
+         * The {@link MapSerializer} for storing parameters. By default the repository will use
+         * {@link DefaultMapSerializer#multiline()}.
+         * 
+         * @param serializer The serializer to use
+         */
+        public Builder serializer(MapSerializer serializer) {
+            this.serializer = serializer;
+            return this;
+        }
+
+        /**
+         * Can be used to suppress to commit after modifying data in the repository. Can be useful if Togglz uses managed
+         * connections provided by a JEE container. The default is <code>false</code>.
+         * 
+         * @param noCommit <code>true</code> to suppress commits
+         */
+        public Builder noCommit(boolean noCommit) {
+            this.noCommit = noCommit;
+            return this;
+        }
+
+        /**
+         * If set to <code>true</code>, the table will be automatically created if it is missing. The default is
+         * <code>true</code>.
+         * 
+         * @param createTable <code>true</code> if the table should be created automatically
+         */
+        public Builder createTable(boolean createTable) {
+            this.createTable = createTable;
+            return this;
+        }
+
+        /**
+         * Creates a {@link JDBCStateRepository} from the current configuration
+         */
+        public JDBCStateRepository build() {
+            return new JDBCStateRepository(this);
+        }
+
     }
 
 }
