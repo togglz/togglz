@@ -5,12 +5,29 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.WriteConcern;
 
 /**
+ * <p>
  * A state repository which stores the feature state in a MongoDB database.
+ * </p>
+ * 
+ * <p>
+ * The class provides a builder which can be used to configure the repository:
+ * </p>
+ * 
+ * <pre>
+ * StateRepository repository = MongoStateRepository
+ *     .newBuilder(mongoClient, &quot;mydb&quot;)
+ *     .collection(&quot;togglz&quot;)
+ *     .authentication(&quot;john&quot;, &quot;tiger&quot;)
+ *     .writeConcern(WriteConcern.REPLICA_ACKNOWLEDGED)
+ *     .build();
+ * </pre>
  * 
  * @author Christian Kaltepoth
  */
@@ -24,15 +41,17 @@ public class MongoStateRepository implements StateRepository {
     protected final MongoClient mongoClient;
     protected final String dbname;
     protected final String collection;
+    protected final String username;
+    protected final char[] password;
+    protected final WriteConcern writeConcert;
 
-    public MongoStateRepository(MongoClient mongoClient, String dbname) {
-        this(mongoClient, dbname, "togglz");
-    }
-
-    public MongoStateRepository(MongoClient mongoClient, String dbname, String collection) {
-        this.mongoClient = mongoClient;
-        this.dbname = dbname;
-        this.collection = collection;
+    private MongoStateRepository(Builder builder) {
+        this.mongoClient = builder.client;
+        this.dbname = builder.dbname;
+        this.collection = builder.collection;
+        this.username = builder.username;
+        this.password = builder.password;
+        this.writeConcert = builder.writeConcern;
     }
 
     @Override
@@ -102,7 +121,62 @@ public class MongoStateRepository implements StateRepository {
     }
 
     protected DBCollection togglzCollection() {
-        return mongoClient.getDB(dbname).getCollection(collection);
+        DB db = mongoClient.getDB(dbname);
+        db.setWriteConcern(writeConcert);
+        if (username != null && password != null) {
+            db.authenticate(username, password);
+        }
+        return db.getCollection(collection);
+    }
+
+    /**
+     * Creates a new builder for creating a {@link MongoStateRepository}.
+     */
+    public static Builder newBuilder(MongoClient client, String dbname) {
+        return new Builder(client, dbname);
+    }
+
+    /**
+     * Builder for a {@link MongoStateRepository}.
+     */
+    public static class Builder {
+
+        private final MongoClient client;
+        private final String dbname;
+        private String collection;
+        private String username;
+        private char[] password;
+        private WriteConcern writeConcern;
+
+        public Builder(MongoClient client, String dbname) {
+            this.client = client;
+            this.dbname = dbname;
+        }
+
+        public Builder collection(String collection) {
+            this.collection = collection;
+            return this;
+        }
+
+        public Builder authentication(String username, String password) {
+            return authentication(username, password.toCharArray());
+        }
+
+        public Builder authentication(String username, char[] password) {
+            this.username = username;
+            this.password = password;
+            return this;
+        }
+
+        public Builder writeConcern(WriteConcern writeConcern) {
+            this.writeConcern = writeConcern;
+            return this;
+        }
+
+        public MongoStateRepository build() {
+            return new MongoStateRepository(this);
+        }
+
     }
 
 }
