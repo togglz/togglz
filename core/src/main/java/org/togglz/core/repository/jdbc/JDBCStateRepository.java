@@ -313,6 +313,8 @@ public class JDBCStateRepository implements StateRepository {
 
     /**
      * Creates a new builder for creating a {@link JDBCStateRepository}.
+     * 
+     * @param dataSource the {@link DataSource} Togglz should use to obtain JDBC connections
      */
     public static Builder newBuilder(DataSource dataSource) {
         return new Builder(dataSource);
@@ -330,7 +332,7 @@ public class JDBCStateRepository implements StateRepository {
         private boolean createTable = true;
 
         /**
-         * Creates a new builder initialized with the provided {@link DataSource}
+         * Creates a new builder for creating a {@link JDBCStateRepository}.
          * 
          * @param dataSource the {@link DataSource} Togglz should use to obtain JDBC connections
          */

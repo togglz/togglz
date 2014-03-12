@@ -131,6 +131,9 @@ public class MongoStateRepository implements StateRepository {
 
     /**
      * Creates a new builder for creating a {@link MongoStateRepository}.
+     * 
+     * @param client the client instance to use for connecting to MongoDB
+     * @param dbname the database name used for storing features state.
      */
     public static Builder newBuilder(MongoClient client, String dbname) {
         return new Builder(client, dbname);
@@ -148,31 +151,65 @@ public class MongoStateRepository implements StateRepository {
         private char[] password = null;
         private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
 
+        /**
+         * Creates a new builder for a {@link MongoStateRepository}.
+         * 
+         * @param client the client instance to use for connecting to MongoDB
+         * @param dbname the database name used for storing features state.
+         */
         public Builder(MongoClient client, String dbname) {
             this.client = client;
             this.dbname = dbname;
         }
 
+        /**
+         * The name of the collection used by the repository to store the feature state. The default is <code>togglz</code>.
+         * 
+         * @param collection The name of the collection to use
+         */
         public Builder collection(String collection) {
             this.collection = collection;
             return this;
         }
 
+        /**
+         * Specifies the username and password used to authenticate against the server. By default no authentication will be
+         * performed.
+         * 
+         * @param username The username
+         * @param password The password
+         */
         public Builder authentication(String username, String password) {
             return authentication(username, password.toCharArray());
         }
 
+        /**
+         * Specifies the username and password used to authenticate against the server. By default no authentication will be
+         * performed.
+         * 
+         * @param username The username
+         * @param password The password
+         */
         public Builder authentication(String username, char[] password) {
             this.username = username;
             this.password = password;
             return this;
         }
 
+        /**
+         * The {@link WriteConcern} used when accessing the database. By default <code>ACKNOWLEDGED</code> will be used.
+         * 
+         * @param writeConcern The {@link WriteConcern} to use
+         * @return
+         */
         public Builder writeConcern(WriteConcern writeConcern) {
             this.writeConcern = writeConcern;
             return this;
         }
 
+        /**
+         * Creates a new {@link MongoStateRepository} using the current settings.
+         */
         public MongoStateRepository build() {
             return new MongoStateRepository(this);
         }
