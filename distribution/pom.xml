@@ -105,6 +105,11 @@
       <artifactId>togglz-appengine</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-mongodb</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Authentication Integration -->
     <dependency>
