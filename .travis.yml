@@ -4,7 +4,6 @@ script: "mvn -P ${CONTAINER} -DJBOSS_REPO=true test"
 after_success: "bash .travis-sonatype-deploy.sh"
 jdk:
   - oraclejdk7
-  - oraclejdk8
 env:
   global:
     - CONTAINER=jboss-as-managed
