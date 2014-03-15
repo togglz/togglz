@@ -49,7 +49,7 @@ public class EditPageHandler extends RequestHandlerBase {
         }
 
         FeatureMetaData metadata = featureManager.getMetaData(feature);
-        List<ActivationStrategy> impls = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
+        List<ActivationStrategy> impls = featureManager.getActivationStrategies();
         FeatureModel featureModel = new FeatureModel(feature, metadata, impls);
 
         // GET requests for this feature

@@ -1,6 +1,7 @@
 package org.togglz.core.manager;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -108,6 +109,12 @@ public class DefaultFeatureManager implements FeatureManager {
         Validate.notNull(state, "state is required");
         stateRepository.setFeatureState(state);
     }
+
+    @Override
+    public List<ActivationStrategy> getActivationStrategies() {
+        return strategyProvider.getActivationStrategies();
+    }
+
 
     @Override
     public FeatureUser getCurrentFeatureUser() {

@@ -29,7 +29,7 @@ public class IndexPageHandler extends RequestHandlerBase {
 
         FeatureManager featureManager = event.getFeatureManager();
 
-        List<ActivationStrategy> strategies = Lists.asList(ServiceLoader.load(ActivationStrategy.class).iterator());
+        List<ActivationStrategy> strategies = featureManager.getActivationStrategies();
 
         IndexPageTabView tabView = new IndexPageTabView(strategies);
 
