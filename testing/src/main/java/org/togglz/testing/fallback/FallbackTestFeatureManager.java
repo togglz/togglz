@@ -1,6 +1,7 @@
 package org.togglz.testing.fallback;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -8,6 +9,7 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.EmptyFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 
 /**
@@ -52,6 +54,11 @@ public class FallbackTestFeatureManager implements FeatureManager {
     @Override
     public void setFeatureState(FeatureState state) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<ActivationStrategy> getActivationStrategies() {
+        return Collections.emptyList();
     }
 
 }
