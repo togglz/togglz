@@ -1,12 +1,15 @@
 package org.togglz.core.manager;
 
+import java.util.List;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 
@@ -23,6 +26,7 @@ public interface FeatureManager {
     /**
      * A unique name for this feature manager.
      */
+
     String getName();
 
     /**
@@ -75,5 +79,11 @@ public interface FeatureManager {
      * @param state The new feature state.
      */
     void setFeatureState(FeatureState state);
+
+    /**
+     * Provides access to the {@link ActivationStrategy} list known by the manager
+     * @return list of {@link ActivationStrategy}
+     */
+    List<ActivationStrategy> getActivationStrategies();
 
 }

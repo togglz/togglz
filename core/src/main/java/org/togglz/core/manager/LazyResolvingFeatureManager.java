@@ -1,11 +1,14 @@
 package org.togglz.core.manager;
 
+import java.util.List;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 
 /**
@@ -55,5 +58,11 @@ public class LazyResolvingFeatureManager implements FeatureManager {
     public void setFeatureState(FeatureState state) {
         getDelegate().setFeatureState(state);
     }
+
+    @Override
+    public List<ActivationStrategy> getActivationStrategies() {
+        return getDelegate().getActivationStrategies();
+    }
+
 
 }
