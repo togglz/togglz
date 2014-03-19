@@ -1,6 +1,7 @@
 package org.togglz.core.proxy;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.togglz.core.Feature;
@@ -37,7 +38,12 @@ public class FeatureProxyInvocationHandler implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object target = featureManager.isActive(feature) ? active : inactive;
-        return method.invoke(target, args);
+        try {
+        	return method.invoke(target, args);
+        } catch (InvocationTargetException ex) {
+        	throw ex.getCause();
+        }
+        
     }
 
     public Feature getFeature() {
