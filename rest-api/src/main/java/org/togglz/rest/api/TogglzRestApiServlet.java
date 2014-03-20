@@ -21,6 +21,10 @@ import org.togglz.core.util.Strings;
 
 public class TogglzRestApiServlet extends HttpServlet {
 
+    private static final String CONTENT_TYPE = "Content-Type";
+
+    private static final String APPLICATION_JSON = "application/json";
+
     private static final long serialVersionUID = 1L;
 
     protected ServletContext servletContext;
@@ -39,14 +43,14 @@ public class TogglzRestApiServlet extends HttpServlet {
         String path = req.getRequestURI().substring(prefix.length());
         if( Strings.isBlank(path) || "/".equals(path) ) {
             resp.getWriter().write(features().toJSONString());
-            resp.addHeader("Content-Type", "application/json");
+            resp.addHeader(CONTENT_TYPE, APPLICATION_JSON);
             resp.setStatus(HttpServletResponse.SC_OK);
         } else {
             String featureName = path.substring(1);
             JSONObject featureJson = feature(featureName);
             if (featureJson != null) {
                 resp.getWriter().write(featureJson.toJSONString());
-                resp.addHeader("Content-Type", "application/json");
+                resp.addHeader(CONTENT_TYPE, APPLICATION_JSON);
                 resp.setStatus(HttpServletResponse.SC_OK);
             } else {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -61,8 +65,9 @@ public class TogglzRestApiServlet extends HttpServlet {
     
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(!req.getContentType().startsWith("application/json")) {
+        if(!req.getContentType().startsWith(APPLICATION_JSON)) {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, req.getContentType());
+            return;
         }
         JSONObject value = (JSONObject) JSONValue.parse(req.getReader());
         String featureName = (String) value.get("name");
@@ -71,6 +76,7 @@ public class TogglzRestApiServlet extends HttpServlet {
                 FeatureState state = featureManager.getFeatureState(f);
                 Boolean enabled = (Boolean) value.get("enabled");
                 state.setEnabled(enabled);
+                featureManager.setFeatureState(state);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 return;
             }
