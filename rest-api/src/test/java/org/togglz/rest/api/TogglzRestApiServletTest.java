@@ -27,6 +27,34 @@ public class TogglzRestApiServletTest {
         servletTester.addServlet(TogglzRestApiServlet.class, "/api/v1/featuretoggles/*");
         servletTester.start();
     }
+
+    @Test
+    public void postShouldReturnNotAllowed() throws Exception {
+        HttpTester request = getFeatureRequest("", "POST");
+        HttpTester response = response(request);
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+    }
+
+    @Test
+    public void deleteShouldReturnNotAllowed() throws Exception {
+        HttpTester request = getFeatureRequest("", "DELETE");
+        HttpTester response = response(request);
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+    }
+
+    @Test
+    public void optionsShouldReturnNotAllowed() throws Exception {
+        HttpTester request = getFeatureRequest("", "OPTIONS");
+        HttpTester response = response(request);
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+    }
+    
+    @Test
+    public void traceShouldReturnNotAllowed() throws Exception {
+        HttpTester request = getFeatureRequest("", "TRACE");
+        HttpTester response = response(request);
+        assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
+    }
     
     @Test
     public void testGetAllFeatures() throws Exception {

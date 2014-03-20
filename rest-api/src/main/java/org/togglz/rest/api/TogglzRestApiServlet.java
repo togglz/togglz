@@ -57,11 +57,6 @@ public class TogglzRestApiServlet extends HttpServlet {
             }
         }
     }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-    }
     
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -108,11 +103,9 @@ public class TogglzRestApiServlet extends HttpServlet {
         JSONObject obj=new JSONObject();
         obj.put("name",feature.name());
         obj.put("enabled",featureState.isEnabled());
-        
         if(featureState.getStrategyId() != null) {
             obj.put("strategy",strategy(featureState));
         }
-        
         return obj;
     }
 
@@ -125,4 +118,35 @@ public class TogglzRestApiServlet extends HttpServlet {
         return obj;
     }
 
+    
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        notAllowed(resp);
+    }
+
+    private void notAllowed(HttpServletResponse resp) throws IOException {
+        resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+    
+    @Override
+    protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        notAllowed(resp);
+    }
+    
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        notAllowed(resp);
+    }
+    
+    @Override
+    protected void doTrace(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        notAllowed(resp);
+    }
+    
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        notAllowed(resp);
+    }
+    
 }
