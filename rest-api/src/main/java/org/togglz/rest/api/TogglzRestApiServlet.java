@@ -20,11 +20,18 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
 /**
+ * Exposes a REST API for enabling/disabling Feature Toggles. 
  * 
+ * All services consumes and produces "application/json". 
+ * The supported methods are:
  * 
+ * GET basepath/
+ * 
+ * GET basepath/featureName
+ * 
+ * PUT basepath/featureName
  * 
  * @author fabio
- *
  */
 public class TogglzRestApiServlet extends HttpServlet {
 
