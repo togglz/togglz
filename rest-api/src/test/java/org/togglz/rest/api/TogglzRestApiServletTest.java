@@ -19,6 +19,10 @@ import org.togglz.core.annotation.EnabledByDefault;
 
 public class TogglzRestApiServletTest {
 
+    private static final String GET = "GET";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String APPLICATION_JSON = "application/json";
+    
     private ServletTester servletTester;
 
     @Before
@@ -57,33 +61,32 @@ public class TogglzRestApiServletTest {
     }
     
     @Test
-    public void testGetAllFeatures() throws Exception {
-        HttpTester request = getFeatureRequest("", "GET");
-        HttpTester response = response(request);
-        assertEquals(200, response.getStatus());
+    public void shouldReturnAllFeatures() throws Exception {
+        HttpTester request = getFeatureRequest("", GET);
+        assertAllFeatures(response(request));
+    }
+
+    private void assertAllFeatures(HttpTester response) {
         JSONArray value = (JSONArray) JSONValue.parse(response.getContent());
+        assertEquals(200, response.getStatus());
         assertNotNull(value);
         assertEquals(3, value.size());
         assertContentType(response);
     }
 
     @Test
-    public void testGetAllFeatures2() throws Exception {
-        HttpTester request = getFeatureRequest("", "GET");
+    public void getWithoutSlashShouldReturnAllFeatures() throws Exception {
+        HttpTester request = getFeatureRequest("", GET);
         request.setURI("/api/v1/featuretoggles");
-        HttpTester response = response(request);
-        assertEquals(200, response.getStatus());
-        assertEquals("[{\"enabled\":false,\"name\":\"F1\"},{\"enabled\":false,\"name\":\"F2\"},{\"enabled\":true,\"name\":\"F3\"}]",response.getContent());
-        assertContentType(response);
-    }
+        assertAllFeatures(response(request));    }
 
     private void assertContentType(HttpTester response) {
-        assertEquals("application/json",response.getHeader("Content-Type"));
+        assertEquals(APPLICATION_JSON,response.getHeader(CONTENT_TYPE));
     }
 
     @Test
     public void testGetOneFeature() throws Exception {
-        HttpTester request = getFeatureRequest("F1", "GET");
+        HttpTester request = getFeatureRequest("F1", GET);
         HttpTester response = response(request);
         assertEquals(200, response.getStatus());
         assertEquals("{\"enabled\":false,\"name\":\"F1\"}",response.getContent());
@@ -92,7 +95,7 @@ public class TogglzRestApiServletTest {
 
     @Test
     public void testGetNonExistentFeature() throws Exception {
-        HttpTester request = getFeatureRequest("F10", "GET");
+        HttpTester request = getFeatureRequest("F10", GET);
         HttpTester response = response(request);
         assertEquals(404, response.getStatus());
     }
@@ -102,7 +105,7 @@ public class TogglzRestApiServletTest {
         request.setMethod(method);
         request.setURI("/api/v1/featuretoggles/" + featureName);
         request.setVersion("HTTP/1.0");
-        request.addHeader("Content-Type", "application/json");
+        request.addHeader(CONTENT_TYPE, APPLICATION_JSON);
         return request;
     }
     
@@ -111,13 +114,13 @@ public class TogglzRestApiServletTest {
         HttpTester request = getFeatureRequest("F1", "PUT");
         request.setContent("{\"enabled\":true,\"name\":\"F1\"}");
         assertEquals(200, response(request).getStatus());
-        assertEquals("{\"enabled\":true,\"name\":\"F1\"}",response(getFeatureRequest("F1", "GET")).getContent());
+        assertEquals("{\"enabled\":true,\"name\":\"F1\"}",response(getFeatureRequest("F1", GET)).getContent());
     }
 
     @Test
     public void putFeatureInvalidHeaders() throws Exception {
         HttpTester request = getFeatureRequest("F1", "PUT");
-        request.setHeader("Content-Type", "text/xml");
+        request.setHeader(CONTENT_TYPE, "text/xml");
         assertEquals(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, response(request).getStatus());
     }
     
@@ -132,7 +135,6 @@ public class TogglzRestApiServletTest {
         F2,
         @EnabledByDefault
         F3
-        
     }
 
 }

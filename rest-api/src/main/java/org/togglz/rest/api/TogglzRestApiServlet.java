@@ -19,16 +19,21 @@ import org.togglz.core.manager.LazyResolvingFeatureManager;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
+/**
+ * 
+ * 
+ * 
+ * @author fabio
+ *
+ */
 public class TogglzRestApiServlet extends HttpServlet {
-
-    private static final String CONTENT_TYPE = "Content-Type";
-
-    private static final String APPLICATION_JSON = "application/json";
 
     private static final long serialVersionUID = 1L;
 
-    protected ServletContext servletContext;
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String APPLICATION_JSON = "application/json";
 
+    protected ServletContext servletContext;
     protected FeatureManager featureManager;
     
     @Override
@@ -117,8 +122,6 @@ public class TogglzRestApiServlet extends HttpServlet {
         }
         return obj;
     }
-
-    
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
