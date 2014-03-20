@@ -1,0 +1,4 @@
+org.togglz.console.handlers.edit.EditPageHandler
+org.togglz.console.handlers.index.IndexPageHandler
+org.togglz.console.handlers.InitialRedirectHandler
+org.togglz.console.handlers.ResourceHandler
