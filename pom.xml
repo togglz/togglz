@@ -140,6 +140,7 @@
     <module>testing</module>
     <module>junit</module>
     <module>distribution</module>
+    <module>rest-api</module>
   </modules>
 
   <developers>
