@@ -7,6 +7,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -45,6 +46,11 @@ public class LazyResolvingFeatureManager implements FeatureManager {
     }
 
     @Override
+    public boolean isActive(Feature feature, FeatureRuntimeAttributes attributes) {
+        return getDelegate().isActive(feature, attributes);
+    }
+
+    @Override
     public FeatureUser getCurrentFeatureUser() {
         return getDelegate().getCurrentFeatureUser();
     }
@@ -63,6 +69,5 @@ public class LazyResolvingFeatureManager implements FeatureManager {
     public List<ActivationStrategy> getActivationStrategies() {
         return getDelegate().getActivationStrategies();
     }
-
 
 }

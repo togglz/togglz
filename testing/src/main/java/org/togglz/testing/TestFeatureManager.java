@@ -8,6 +8,7 @@ import java.util.Set;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.metadata.enums.EnumFeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
@@ -50,6 +51,11 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
+        return activeFeatures.contains(feature.name());
+    }
+
+    @Override
+    public boolean isActive(Feature feature, FeatureRuntimeAttributes attributes) {
         return activeFeatures.contains(feature.name());
     }
 

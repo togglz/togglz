@@ -10,6 +10,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
 import org.togglz.core.activation.Parameter;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -62,7 +63,7 @@ public class FeatureManagerBuilderTest {
     private static class CustomActivationStrategy implements ActivationStrategy {
 
         @Override
-        public boolean isActive(FeatureState featureState, FeatureUser user) {
+        public boolean isActive(FeatureState featureState, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
             return false;
         }
 

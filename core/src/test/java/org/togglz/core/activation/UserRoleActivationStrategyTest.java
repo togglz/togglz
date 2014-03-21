@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 
@@ -68,7 +69,7 @@ public class UserRoleActivationStrategyTest {
 
     @Test
     public void isActiveWillReturnFalseWhenThereIsNoUser() throws Exception {
-        boolean result = activationStrategy.isActive(state, null);
+        boolean result = activationStrategy.isActive(state, null, new FeatureRuntimeAttributes());
 
         assertThat(result, is(false));
     }
@@ -77,7 +78,7 @@ public class UserRoleActivationStrategyTest {
     public void isActiveWillReturnFalseWhenThereIsNoRolesAttribute() throws Exception {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(null);
 
-        boolean result = activationStrategy.isActive(state, user);
+        boolean result = activationStrategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertThat(result, is(false));
     }
@@ -87,7 +88,7 @@ public class UserRoleActivationStrategyTest {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn(null);
 
-        boolean result = activationStrategy.isActive(state, user);
+        boolean result = activationStrategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertThat(result, is(false));
     }
@@ -97,7 +98,7 @@ public class UserRoleActivationStrategyTest {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("   ");
 
-        boolean result = activationStrategy.isActive(state, user);
+        boolean result = activationStrategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertThat(result, is(false));
     }
@@ -107,7 +108,7 @@ public class UserRoleActivationStrategyTest {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
-        boolean result = activationStrategy.isActive(state, user);
+        boolean result = activationStrategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertThat(result, is(false));
     }
@@ -118,7 +119,7 @@ public class UserRoleActivationStrategyTest {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
-        boolean result = activationStrategy.isActive(state, user);
+        boolean result = activationStrategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertThat(result, is(true));
     }
@@ -132,7 +133,7 @@ public class UserRoleActivationStrategyTest {
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
         Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("SOME_ROLE");
 
-        boolean result = activationStrategy.isActive(state, user);
+        boolean result = activationStrategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertThat(result, is(true));
 
