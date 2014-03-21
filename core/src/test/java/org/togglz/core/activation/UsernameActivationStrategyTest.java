@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
@@ -23,7 +24,7 @@ public class UsernameActivationStrategyTest {
             .enable()
             .setStrategyId(UsernameActivationStrategy.ID);
 
-        boolean active = strategy.isActive(state, user);
+        boolean active = strategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertEquals(false, active);
 
@@ -38,7 +39,7 @@ public class UsernameActivationStrategyTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "person1,ck,person2");
 
-        boolean active = strategy.isActive(state, user);
+        boolean active = strategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertEquals(false, active);
 
@@ -53,7 +54,7 @@ public class UsernameActivationStrategyTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "person1,ck,person2");
 
-        boolean active = strategy.isActive(state, user);
+        boolean active = strategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertEquals(false, active);
 
@@ -68,7 +69,7 @@ public class UsernameActivationStrategyTest {
             .setStrategyId(UsernameActivationStrategy.ID)
             .setParameter(UsernameActivationStrategy.PARAM_USERS, "person1,ck,person2");
 
-        boolean active = strategy.isActive(state, user);
+        boolean active = strategy.isActive(state, user, new FeatureRuntimeAttributes());
 
         assertEquals(true, active);
 

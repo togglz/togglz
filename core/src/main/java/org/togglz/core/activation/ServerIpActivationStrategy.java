@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -64,7 +65,7 @@ public class ServerIpActivationStrategy implements ActivationStrategy {
     }
 
     @Override
-    public boolean isActive(FeatureState featureState, FeatureUser user) {
+    public boolean isActive(FeatureState featureState, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
 
         String allowedIpsParam = featureState.getParameter(PARAM_IPS);
 

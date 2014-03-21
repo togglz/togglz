@@ -3,6 +3,7 @@ package org.togglz.appengine.activation;
 import com.google.appengine.api.utils.SystemProperty;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.activation.ParameterBuilder;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -31,7 +32,7 @@ public class ApplicationVersionActivationStrategy implements ActivationStrategy 
     }
 
     @Override
-    public boolean isActive(FeatureState featureState, FeatureUser user) {
+    public boolean isActive(FeatureState featureState, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
         String allowedVersionsParam = featureState.getParameter(PARAM_VERSIONS);
         if (Strings.isNotBlank(allowedVersionsParam)) {
             String currentVersion = SystemProperty.applicationVersion.get();

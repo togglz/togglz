@@ -3,6 +3,7 @@ package org.togglz.core.activation;
 import java.util.Collection;
 import java.util.List;
 
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -40,11 +41,11 @@ public class UserRoleActivationStrategy implements ActivationStrategy {
     }
 
     @Override
-    public boolean isActive(FeatureState state, FeatureUser user) {
+    public boolean isActive(FeatureState state, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
 
         if (user != null) {
 
-            Collection<String> userRoles = 
+            Collection<String> userRoles =
                 (Collection<String>) user.getAttribute(USER_ATTRIBUTE_ROLES);
 
             if (userRoles != null) {

@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -35,7 +36,7 @@ public class GradualActivationStrategy implements ActivationStrategy {
     }
 
     @Override
-    public boolean isActive(FeatureState state, FeatureUser user) {
+    public boolean isActive(FeatureState state, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
 
         if (user != null && Strings.isNotBlank(user.getName())) {
 

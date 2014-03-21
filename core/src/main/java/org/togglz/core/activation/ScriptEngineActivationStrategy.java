@@ -11,6 +11,7 @@ import javax.script.ScriptException;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -23,6 +24,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
     public static final String ID = "script";
     public static final String PARAM_SCRIPT = "script";
     public static final String PARAM_LANG = "lang";
+    public static final String PARAM_ATTRIBUTES = "attrs";
 
     private final ScriptEngineManager engineManager;
 
@@ -41,7 +43,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
     }
 
     @Override
-    public boolean isActive(FeatureState featureState, FeatureUser user) {
+    public boolean isActive(FeatureState featureState, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
 
         String lang = featureState.getParameter(PARAM_LANG);
         String script = featureState.getParameter(PARAM_SCRIPT);
@@ -54,6 +56,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
         engine.put("user", user);
         engine.put("date", new Date());
+        engine.put(PARAM_ATTRIBUTES, runtimeAttributes.getAttributes());
         try {
 
             Object result = engine.eval(script);

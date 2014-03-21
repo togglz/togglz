@@ -2,6 +2,7 @@ package org.togglz.core.activation;
 
 import java.util.List;
 
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -29,7 +30,7 @@ public class UsernameActivationStrategy implements ActivationStrategy {
     }
 
     @Override
-    public boolean isActive(FeatureState state, FeatureUser user) {
+    public boolean isActive(FeatureState state, FeatureUser user, FeatureRuntimeAttributes runtimeAttributes) {
 
         String usersAsString = state.getParameter(PARAM_USERS);
 
