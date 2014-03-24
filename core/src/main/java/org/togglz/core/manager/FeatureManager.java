@@ -7,6 +7,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
@@ -55,8 +56,19 @@ public interface FeatureManager {
     boolean isActive(Feature feature);
 
     /**
-     * Get the current feature user. This method will internally use the configured {@link UserProvider} to obtain the
-     * user.
+     * Checks whether the supplied feature is active or not. Please note that this method will internally use the
+     * {@link UserProvider} to obtain the currently acting user as it may be relevant if the feature is enabled only for
+     * specific set of users. The supplied attributes may be relevant to check if the feature is enabled only in certain
+     * situations not specific to the user.
+     * 
+     * @param feature The feature to check
+     * @param attributes Attributes associated to the feature needed to check if it is active
+     * @return <code>true</code> if the feature is active, <code>false</code> otherwise
+     */
+    boolean isActive(Feature feature, FeatureRuntimeAttributes attributes);
+
+    /**
+     * Get the current feature user. This method will internally use the configured {@link UserProvider} to obtain the user.
      * 
      * @return The current {@link FeatureUser} or null if the {@link UserProvider} didn't return any result.
      */
@@ -64,8 +76,8 @@ public interface FeatureManager {
 
     /**
      * Returns the {@link FeatureState} for the specified feature. This state represents the current configuration of the
-     * feature and is typically persisted by a {@link StateRepository} across JVM restarts. The state includes whether
-     * the feature is enabled or disabled and the use list.
+     * feature and is typically persisted by a {@link StateRepository} across JVM restarts. The state includes whether the
+     * feature is enabled or disabled and the use list.
      * 
      * @param feature The feature to get the state for
      * @return The current state of the feature, never <code>null</code>.
@@ -82,6 +94,7 @@ public interface FeatureManager {
 
     /**
      * Provides access to the {@link ActivationStrategy} list known by the manager
+     * 
      * @return list of {@link ActivationStrategy}
      */
     List<ActivationStrategy> getActivationStrategies();

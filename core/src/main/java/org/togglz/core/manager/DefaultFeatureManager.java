@@ -8,9 +8,11 @@ import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.metadata.EmptyFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.metadata.FeatureRuntimeAttributes;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.ActivationStrategyWithRuntimeAttributes;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
@@ -61,6 +63,11 @@ public class DefaultFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
+        return isActive(feature, new FeatureRuntimeAttributes());
+    }
+
+    @Override
+    public boolean isActive(Feature feature, FeatureRuntimeAttributes attributes) {
 
         Validate.notNull(feature, "feature is required");
 
@@ -83,6 +90,10 @@ public class DefaultFeatureManager implements FeatureManager {
             // check the selected strategy
             for (ActivationStrategy strategy : strategyProvider.getActivationStrategies()) {
                 if (strategy.getId().equalsIgnoreCase(strategyId)) {
+                    if (ActivationStrategyWithRuntimeAttributes.class.isInstance(strategy)) {
+                        return ActivationStrategyWithRuntimeAttributes.class.cast(strategy)
+                            .isActive(state, user, attributes);
+                    }
                     return strategy.isActive(state, user);
                 }
             }
@@ -90,7 +101,6 @@ public class DefaultFeatureManager implements FeatureManager {
 
         // if the strategy was not found, the feature should be off
         return false;
-
     }
 
     @Override
