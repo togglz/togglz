@@ -8,8 +8,10 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mortbay.jetty.testing.HttpTester;
@@ -19,11 +21,13 @@ import org.togglz.core.annotation.EnabledByDefault;
 
 public class TogglzRestApiServletTest {
 
+    private static final String F10 = "F10";
+    private static final String F1 = "F1";
     private static final String BASE_URI = "/api/v1/featuretoggles";
     private static final String GET = "GET";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
-    
+
     private ServletTester servletTester;
 
     @Before
@@ -31,6 +35,11 @@ public class TogglzRestApiServletTest {
         servletTester = new ServletTester();
         servletTester.addServlet(TogglzRestApiServlet.class, BASE_URI + "/*");
         servletTester.start();
+    }
+    
+    @After
+    public void after() throws Exception {
+        servletTester.stop();
     }
 
     @Test
@@ -53,14 +62,14 @@ public class TogglzRestApiServletTest {
         HttpTester response = response(request);
         assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
     }
-    
+
     @Test
     public void traceShouldReturnNotAllowed() throws Exception {
         HttpTester request = getFeatureRequest("", "TRACE");
         HttpTester response = response(request);
         assertEquals(HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
     }
-    
+
     @Test
     public void shouldReturnAllFeatures() throws Exception {
         HttpTester request = getFeatureRequest("", GET);
@@ -79,27 +88,32 @@ public class TogglzRestApiServletTest {
     public void getWithoutSlashShouldReturnAllFeatures() throws Exception {
         HttpTester request = getFeatureRequest("", GET);
         request.setURI(BASE_URI);
-        assertAllFeatures(response(request));    }
+        assertAllFeatures(response(request));
+    }
 
     private void assertContentType(HttpTester response) {
-        assertEquals(APPLICATION_JSON,response.getHeader(CONTENT_TYPE));
+        assertEquals(APPLICATION_JSON, response.getHeader(CONTENT_TYPE));
     }
 
     @Test
     public void testGetOneFeature() throws Exception {
-        HttpTester request = getFeatureRequest("F1", GET);
+        HttpTester request = getFeatureRequest(F1, GET);
         HttpTester response = response(request);
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-        
-        //(JSONObject) JSONValue.parse(response.getContent());
-        
-        assertEquals("{\"enabled\":false,\"name\":\"F1\"}",response.getContent());
+
+        assertEquals(false, (Boolean) featureAsJson(response).get("enabled"));
+        assertEquals(F1, (String) featureAsJson(response).get("name"));
+
         assertContentType(response);
+    }
+
+    private JSONObject featureAsJson(HttpTester response) {
+        return (JSONObject) JSONValue.parse(response.getContent());
     }
 
     @Test
     public void getNonExistentFeatureShouldReturnNotFound() throws Exception {
-        HttpTester request = getFeatureRequest("F10", GET);
+        HttpTester request = getFeatureRequest(F10, GET);
         HttpTester response = response(request);
         assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
@@ -107,33 +121,35 @@ public class TogglzRestApiServletTest {
     private HttpTester getFeatureRequest(String featureName, String method) {
         HttpTester request = new HttpTester();
         request.setMethod(method);
-        request.setURI("/api/v1/featuretoggles/" + featureName);
+        request.setURI(BASE_URI + "/" + featureName);
         request.setVersion("HTTP/1.0");
         request.addHeader(CONTENT_TYPE, APPLICATION_JSON);
         return request;
     }
-    
+
     @Test
     public void testPutFeature() throws Exception {
-        HttpTester request = getFeatureRequest("F1", "PUT");
-        request.setContent("{\"enabled\":true,\"name\":\"F1\"}");
+        final String f1EnabledAsJson = "{\"enabled\":true,\"name\":\"F1\"}";
+        HttpTester request = getFeatureRequest(F1, "PUT");
+        request.setContent(f1EnabledAsJson);
         assertEquals(HttpServletResponse.SC_OK, response(request).getStatus());
-        assertEquals("{\"enabled\":true,\"name\":\"F1\"}",response(getFeatureRequest("F1", GET)).getContent());
+
+        assertEquals(f1EnabledAsJson, response(getFeatureRequest(F1, GET)).getContent());
     }
 
     @Test
     public void putFeatureInvalidHeaders() throws Exception {
-        HttpTester request = getFeatureRequest("F1", "PUT");
+        HttpTester request = getFeatureRequest(F1, "PUT");
         request.setHeader(CONTENT_TYPE, "text/xml");
         assertEquals(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, response(request).getStatus());
     }
-    
+
     private HttpTester response(HttpTester request) throws IOException, Exception {
         HttpTester response = new HttpTester();
         response.parse(servletTester.getResponses(request.generate()));
         return response;
     }
-    
+
     public enum TestFeatures implements Feature {
         F1,
         F2,
