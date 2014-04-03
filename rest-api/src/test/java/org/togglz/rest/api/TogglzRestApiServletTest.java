@@ -19,6 +19,7 @@ import org.togglz.core.annotation.EnabledByDefault;
 
 public class TogglzRestApiServletTest {
 
+    private static final String BASE_URI = "/api/v1/featuretoggles";
     private static final String GET = "GET";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
@@ -28,7 +29,7 @@ public class TogglzRestApiServletTest {
     @Before
     public void setup() throws Exception {
         servletTester = new ServletTester();
-        servletTester.addServlet(TogglzRestApiServlet.class, "/api/v1/featuretoggles/*");
+        servletTester.addServlet(TogglzRestApiServlet.class, BASE_URI + "/*");
         servletTester.start();
     }
 
@@ -68,7 +69,7 @@ public class TogglzRestApiServletTest {
 
     private void assertAllFeatures(HttpTester response) {
         JSONArray value = (JSONArray) JSONValue.parse(response.getContent());
-        assertEquals(200, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         assertNotNull(value);
         assertEquals(3, value.size());
         assertContentType(response);
@@ -77,7 +78,7 @@ public class TogglzRestApiServletTest {
     @Test
     public void getWithoutSlashShouldReturnAllFeatures() throws Exception {
         HttpTester request = getFeatureRequest("", GET);
-        request.setURI("/api/v1/featuretoggles");
+        request.setURI(BASE_URI);
         assertAllFeatures(response(request));    }
 
     private void assertContentType(HttpTester response) {
@@ -88,16 +89,19 @@ public class TogglzRestApiServletTest {
     public void testGetOneFeature() throws Exception {
         HttpTester request = getFeatureRequest("F1", GET);
         HttpTester response = response(request);
-        assertEquals(200, response.getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+        
+        //(JSONObject) JSONValue.parse(response.getContent());
+        
         assertEquals("{\"enabled\":false,\"name\":\"F1\"}",response.getContent());
         assertContentType(response);
     }
 
     @Test
-    public void testGetNonExistentFeature() throws Exception {
+    public void getNonExistentFeatureShouldReturnNotFound() throws Exception {
         HttpTester request = getFeatureRequest("F10", GET);
         HttpTester response = response(request);
-        assertEquals(404, response.getStatus());
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, response.getStatus());
     }
 
     private HttpTester getFeatureRequest(String featureName, String method) {
@@ -113,7 +117,7 @@ public class TogglzRestApiServletTest {
     public void testPutFeature() throws Exception {
         HttpTester request = getFeatureRequest("F1", "PUT");
         request.setContent("{\"enabled\":true,\"name\":\"F1\"}");
-        assertEquals(200, response(request).getStatus());
+        assertEquals(HttpServletResponse.SC_OK, response(request).getStatus());
         assertEquals("{\"enabled\":true,\"name\":\"F1\"}",response(getFeatureRequest("F1", GET)).getContent());
     }
 
