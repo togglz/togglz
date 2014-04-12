@@ -129,7 +129,7 @@ public class TogglzRestApiServletTest {
 
     @Test
     public void testPutFeature() throws Exception {
-        final String f1EnabledAsJson = "{\"enabled\":true,\"name\":\"F1\"}";
+        final String f1EnabledAsJson = "{\"name\":\"F1\",\"enabled\":true}";
         HttpTester request = getFeatureRequest(F1, "PUT");
         request.setContent(f1EnabledAsJson);
         assertEquals(HttpServletResponse.SC_OK, response(request).getStatus());
