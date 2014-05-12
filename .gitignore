@@ -5,6 +5,7 @@
 target/
 bin/
 generated-sources/
+.idea/
 *.iml
 *.ipr
 test-output
