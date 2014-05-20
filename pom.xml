@@ -37,7 +37,7 @@
   </issueManagement>
 
   <properties>
-    <version.jbossas>7.1.1.Final</version.jbossas>
+    <version.jbossas>7.1.3.Final</version.jbossas>
   </properties>
 
   <build>
