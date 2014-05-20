@@ -1,2 +1,2 @@
 org.togglz.servlet.activation.ClientIpActivationStrategy
-org.togglz.servlet.activation.VhostNameActivationStrategy
+org.togglz.servlet.activation.ServerNameActivationStrategy
