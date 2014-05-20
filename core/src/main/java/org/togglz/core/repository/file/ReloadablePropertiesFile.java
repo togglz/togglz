@@ -113,8 +113,7 @@ class ReloadablePropertiesFile {
             fos.close();
 
         } catch (IOException e) {
-            log.error("Failed to persist feature state", e);
-            throw new IllegalStateException("Failed to persist feature state", e);
+            throw new IllegalStateException("Failed to write new values", e);
         }
         lastRead = 0;
         lastCheck = 0;
