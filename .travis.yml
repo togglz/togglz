@@ -6,7 +6,7 @@ jdk:
   - oraclejdk7
 env:
   global:
-    - CONTAINER=jboss-as-managed
+    - CONTAINER=wildfly-managed
     - secure: "OnYfX1bWd1nt4lU6fGEtiWc/AqNwac32YQEm8AdPaU83zOZGe2yyBOLX+fTxqp7CUPpbJM0kLCQzDTrurwXJNtd9D8b8C5rWBvvNS7tloVlwCMbfSiSXpJZK6bygGo0puQcnFtaivtmGD6DRZQWgbVKNdJf5iW/X+46k+nOZqtg="
     - secure: "mjX857IwiXKts1ZWrKDVQOQpkFN+vUrPmQNneYim4dVN+McXOiyyvM/iYgH14E2FFHlWe/1fHLU59Wf34r7K7T+cd8J79D78u6dIljHmxucMu5+O7giexzkvEqTXafAQQrLSan0iUnU3dgcYbqaZ9Fz5ZRjC7gLF48mRUsf+lIc="
 
