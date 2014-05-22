@@ -8,43 +8,48 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.test.Deployments;
+import org.togglz.test.Packaging;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 
+/**
+ * Disabled for now as Solder isn't compatible with CDI 1.1
+ * @see https://issues.jboss.org/browse/SOLDER-339
+ */
 @RunWith(Arquillian.class)
+@Ignore
 public class SeamSecurityUsersTest {
 
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
 
-                // add all required libraries
-                .addAsLibraries(Deployments.getTogglzSeamSecurityArchive())
-                .addAsLibrary(Deployments.getTogglzCDIArchive())
-                .addAsLibraries(DependencyResolvers.use(MavenDependencyResolver.class)
-                        .loadMetadataFromPom("src/test/resources/repository-pom.xml")
-                        .artifact("org.jboss.seam.security:seam-security:3.1.0.Final")
-                        .artifact("joda-time:joda-time:1.6.2")
-                        .resolveAs(JavaArchive.class))
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+            // add all required libraries
+            .addAsLibraries(Deployments.getTogglzSeamSecurityArchive())
+            .addAsLibrary(Deployments.getTogglzCDIArchive())
+            .addAsLibraries(Packaging.mavenDependencies()
+                .artifact("org.jboss.seam.security:seam-security:3.2.0.Final")
+                .artifact("org.jboss.solder:solder-impl:3.2.1.Final")
+                .artifact("org.javassist:javassist:3.18.1-GA")
+                .artifact("joda-time:joda-time:1.6.2")
+                .asFiles())
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
 
-                // Seam Security classes
-                .addClass(SeamSecurityAuthenticator.class)
-                .addClass(SeamSecurityAuthorizer.class)
-                .addClass(SeamSecurityLoginServlet.class)
-                .addClass(SeamSecurityLogoutServlet.class)
+            // Seam Security classes
+            .addClass(SeamSecurityAuthenticator.class)
+            .addClass(SeamSecurityAuthorizer.class)
+            .addClass(SeamSecurityLoginServlet.class)
+            .addClass(SeamSecurityLogoutServlet.class)
 
-                // Togglz classes
-                .addClass(SeamSecurityUsersConfiguration.class)
-                .addClass(TestFeature.class)
+            // Togglz classes
+            .addClass(SeamSecurityUsersConfiguration.class)
+            .addClass(TestFeature.class)
 
         ;
 

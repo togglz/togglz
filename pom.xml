@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -37,7 +38,7 @@
   </issueManagement>
 
   <properties>
-    <version.jbossas>7.1.1.Final</version.jbossas>
+    <wildfly.version>8.0.0.Final</wildfly.version>
   </properties>
 
   <build>
@@ -154,7 +155,7 @@
   <profiles>
 
     <profile>
-      <id>jboss-as-managed</id>
+      <id>wildfly-managed</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
@@ -165,7 +166,7 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <systemPropertyVariables>
-                <arquillian.launch>jboss-as-managed</arquillian.launch>
+                <arquillian.launch>wildfly-managed</arquillian.launch>
               </systemPropertyVariables>
             </configuration>
           </plugin>
@@ -175,7 +176,7 @@
             <version>2.4</version>
             <executions>
               <execution>
-                <id>unpack-as7</id>
+                <id>unpack-wildfly</id>
                 <phase>process-test-classes</phase>
                 <inherited>false</inherited>
                 <goals>
@@ -184,9 +185,9 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.jboss.as</groupId>
-                      <artifactId>jboss-as-dist</artifactId>
-                      <version>${version.jbossas}</version>
+                      <groupId>org.wildfly</groupId>
+                      <artifactId>wildfly-dist</artifactId>
+                      <version>${wildfly.version}</version>
                       <type>zip</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>target/container</outputDirectory>
@@ -200,21 +201,21 @@
       </build>
       <dependencies>
         <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-arquillian-container-managed</artifactId>
-          <version>${version.jbossas}</version>
+          <groupId>org.wildfly</groupId>
+          <artifactId>wildfly-arquillian-container-managed</artifactId>
+          <version>${wildfly.version}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
     </profile>
 
     <profile>
-      <id>jboss-as-remote</id>
+      <id>wildfly-remote</id>
       <dependencies>
         <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-arquillian-container-remote</artifactId>
-          <version>${version.jbossas}</version>
+          <groupId>org.wildfly</groupId>
+          <artifactId>wildfly-arquillian-container-remote</artifactId>
+          <version>${wildfly.version}</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -263,12 +264,6 @@
         <artifactId>cdi-api</artifactId>
         <version>1.0-SP4</version>
         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jboss.seam.security</groupId>
-        <artifactId>seam-security</artifactId>
-        <version>3.1.0.Final</version>
       </dependency>
 
       <dependency>

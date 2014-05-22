@@ -8,14 +8,12 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.test.Deployments;
+import org.togglz.test.Packaging;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -30,10 +28,9 @@ public class JspTaglibTest {
             .addClass(JspTaglibFeature.class)
             .addClass(JspTaglibConfiguration.class)
             .addAsWebResource("jsp-taglib-test.jsp")
-            .setWebXML(new StringAsset(
-                Descriptors.create(WebAppDescriptor.class)
-                    .contextParam(TogglzConfig.class.getName(), JspTaglibConfiguration.class.getName())
-                    .exportAsString()));
+            .setWebXML(Packaging.webAppDescriptor()
+                .contextParam(TogglzConfig.class.getName(), JspTaglibConfiguration.class.getName())
+                .exportAsAsset());
 
     }
 
