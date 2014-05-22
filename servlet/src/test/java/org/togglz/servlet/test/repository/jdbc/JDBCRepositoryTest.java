@@ -14,10 +14,7 @@ import javax.sql.DataSource;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +24,7 @@ import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.DbUtils;
 import org.togglz.test.Deployments;
+import org.togglz.test.Packaging;
 
 @RunWith(Arquillian.class)
 public class JDBCRepositoryTest {
@@ -36,10 +34,9 @@ public class JDBCRepositoryTest {
         return Deployments.getBasicWebArchive()
             .addClass(JDBCRepositoryConfiguration.class)
             .addClass(JDBCFeatures.class)
-            .setWebXML(new StringAsset(
-                Descriptors.create(WebAppDescriptor.class)
-                    .contextParam(TogglzConfig.class.getName(), JDBCRepositoryConfiguration.class.getName())
-                    .exportAsString()));
+            .setWebXML(Packaging.webAppDescriptor()
+                .contextParam(TogglzConfig.class.getName(), JDBCRepositoryConfiguration.class.getName())
+                .exportAsAsset());
     }
 
     @Resource(mappedName = "jboss/datasources/ExampleDS")
@@ -49,7 +46,7 @@ public class JDBCRepositoryTest {
     public void resetDatabase() {
         executeUpdate("DELETE FROM MYTABLE");
     }
-    
+
     @Test
     public void testGetFeatureStateFromJDBCRepository() throws IOException {
 

@@ -8,13 +8,11 @@ import java.net.URL;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.test.Deployments;
+import org.togglz.test.Packaging;
 
 import com.gargoylesoftware.htmlunit.TextPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -27,10 +25,9 @@ public class HttpServletRequestHolderTest {
         return Deployments.getBasicWebArchive()
             .addClass(HttpServletRequestHolderServlet.class)
             // we don't need to bootstrap Togglz here as we only test the request holder
-            .setWebXML(new StringAsset(
-                Descriptors.create(WebAppDescriptor.class)
-                    .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
-                    .exportAsString()));
+            .setWebXML(Packaging.webAppDescriptor()
+                .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
+                .exportAsAsset());
 
     }
 
