@@ -176,7 +176,7 @@ public class JDBCStateRepository implements StateRepository {
             }
 
         } catch (SQLException e) {
-            log.error("Failed", e);
+            throw new IllegalStateException("Failed to migrate the database schema", e);
         }
 
     }
@@ -233,7 +233,7 @@ public class JDBCStateRepository implements StateRepository {
             }
 
         } catch (SQLException e) {
-            log.error("Failed", e);
+            throw new IllegalStateException("Failed to fetch the feature's state from the database", e);
         }
 
         return null;
@@ -302,7 +302,7 @@ public class JDBCStateRepository implements StateRepository {
             }
 
         } catch (SQLException e) {
-            log.error("Failed", e);
+            throw new IllegalStateException("Failed to set the feature's state in the database", e);
         }
 
     }
