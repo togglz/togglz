@@ -26,12 +26,22 @@ public class ActiveFeatureTag extends TagSupport {
 
     @Override
     public int doStartTag() throws JspException {
+        boolean inverse = false;
+        if (name.startsWith("!")) {
+            inverse = true;
+            name = name.substring(1);
+        }
+
     	boolean isActive = isFeatureActive();
+
+        if (inverse) {
+            isActive = !isActive;
+        }
         
         if (Strings.isNotBlank(var)) {
              pageContext.setAttribute(var, isActive, PageContext.PAGE_SCOPE);
          }
-        
+
         return isActive ? Tag.EVAL_BODY_INCLUDE : Tag.SKIP_BODY;
     }
 
