@@ -69,4 +69,28 @@
     </dependency>
 
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <useDefaultManifestFile>true</useDefaultManifestFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.virgo.bundlor</groupId>
+        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
+        <version>1.1.2.RELEASE</version>
+        <executions>
+          <execution>
+            <id>bundlor</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

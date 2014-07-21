@@ -39,6 +39,8 @@
 
   <properties>
     <wildfly.version>8.0.0.Final</wildfly.version>
+    <!-- Set version of OSGi bundles without 'SNAPSHOT', etc. -->
+    <osgi.bundles.version>2.1.0</osgi.bundles.version>
   </properties>
 
   <build>
@@ -77,6 +79,39 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <!-- Bundlor -->
+      <plugin>
+        <groupId>org.eclipse.virgo.bundlor</groupId>
+        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
+        <version>1.1.2.RELEASE</version>
+        <executions>
+          <execution>
+            <id>bundlor</id>
+            <goals>
+              <goal>bundlor</goal>
+            </goals>
+            <configuration>
+              <failOnWarnings>true</failOnWarnings>
+              <osgiProfilePath>${project.parent.basedir}/java6-server.profile</osgiProfilePath>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- JAR -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <archive>
+            <manifestFile>
+              target/classes/META-INF/MANIFEST.MF
+            </manifestFile>
+          </archive>
+        </configuration>
       </plugin>
 
     </plugins>
