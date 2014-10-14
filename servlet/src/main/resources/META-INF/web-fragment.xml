@@ -10,6 +10,7 @@
   <filter>
     <filter-name>TogglzFilter</filter-name>
     <filter-class>org.togglz.servlet.TogglzFilter</filter-class>
+    <async-supported>true</async-supported>
   </filter>
   <filter-mapping>
     <filter-name>TogglzFilter</filter-name>
