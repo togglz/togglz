@@ -65,15 +65,15 @@ import org.togglz.core.util.Strings;
  */
 public class JDBCStateRepository implements StateRepository {
 
-    private final Log log = LogFactory.getLog(JDBCStateRepository.class);
+    protected final Log log = LogFactory.getLog(JDBCStateRepository.class);
 
-    private final DataSource dataSource;
+    protected final DataSource dataSource;
 
-    private final String tableName;
+    protected final String tableName;
 
-    private final MapSerializer serializer;
+    protected final MapSerializer serializer;
 
-    private final boolean noCommit;
+    protected final boolean noCommit;
 
     /**
      * Constructor of {@link JDBCStateRepository}. A database table called <code>TOGGLZ</code> will be created automatically for
@@ -163,6 +163,8 @@ public class JDBCStateRepository implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
+                beforeSchemaMigration(connection);
+
                 SchemaUpdater updater = new SchemaUpdater(connection, tableName, serializer);
                 if (!updater.doesTableExist()) {
                     updater.migrateToVersion1();
@@ -170,6 +172,9 @@ public class JDBCStateRepository implements StateRepository {
                 if (updater.isSchemaVersion1()) {
                     updater.migrateToVersion2();
                 }
+
+                afterSchemaMigration(connection);
+
 
             } finally {
                 DbUtils.closeQuietly(connection);
@@ -179,6 +184,20 @@ public class JDBCStateRepository implements StateRepository {
             throw new IllegalStateException("Failed to migrate the database schema", e);
         }
 
+    }
+
+    /**
+     * Method called <strong>before</strong> the database schema migration is performed.
+     */
+    protected void beforeSchemaMigration(Connection connection) {
+        // overwrite me
+    }
+
+    /**
+     * Method called <strong>after</strong> the database schema migration has been performed.
+     */
+    protected void afterSchemaMigration(Connection connection) {
+        // overwrite me
     }
 
     @Override
