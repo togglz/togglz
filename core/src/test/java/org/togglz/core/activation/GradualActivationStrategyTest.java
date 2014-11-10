@@ -137,12 +137,12 @@ public class GradualActivationStrategyTest {
         private final Pattern HASH_PATTERN = Pattern.compile("^hash\\-(\\d+)$");;
 
         @Override
-        protected int calculateHashCode(FeatureUser user) {
+        protected int calculateHashCode(FeatureUser user, Feature feature) {
             Matcher matcher = HASH_PATTERN.matcher(user.getName());
             if (matcher.matches()) {
                 return Integer.valueOf(matcher.group(1));
             }
-            return super.calculateHashCode(user);
+            return super.calculateHashCode(user, feature);
         }
 
     }

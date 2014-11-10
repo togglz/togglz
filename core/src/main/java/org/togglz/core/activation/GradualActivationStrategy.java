@@ -2,6 +2,7 @@ package org.togglz.core.activation;
 
 import java.util.Locale;
 
+import org.togglz.core.Feature;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
@@ -45,7 +46,7 @@ public class GradualActivationStrategy implements ActivationStrategy {
                 int percentage = Integer.valueOf(percentageAsString);
 
                 if (percentage > 0) {
-                    int hashCode = Math.abs(calculateHashCode(user));
+                    int hashCode = Math.abs(calculateHashCode(user, state.getFeature()));
                     return (hashCode % 100) < percentage;
                 }
 
@@ -60,9 +61,24 @@ public class GradualActivationStrategy implements ActivationStrategy {
 
     }
 
+    /**
+     * @deprecated Use {@link #calculateHashCode(FeatureUser, Feature)} instead
+     */
+    @Deprecated
     protected int calculateHashCode(FeatureUser user) {
+        return calculateHashCode(user, null);
+    }
+
+    protected int calculateHashCode(FeatureUser user, Feature feature) {
+
         Validate.notNull(user, "user is required");
-        return user.getName().toLowerCase(Locale.ENGLISH).trim().hashCode();
+
+        return new StringBuilder()
+            .append(user.getName().toLowerCase(Locale.ENGLISH).trim())
+            .append(":")
+            .append(feature != null ? feature.name() : "")
+            .toString().hashCode();
+
     }
 
     @Override
