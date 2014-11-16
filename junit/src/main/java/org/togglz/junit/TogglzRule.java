@@ -108,6 +108,7 @@ public class TogglzRule implements TestRule {
                 finally {
                     featureManager = null;
                     TestFeatureManagerProvider.setFeatureManager(null);
+                    FeatureContext.clearCache();
                 }
 
             }

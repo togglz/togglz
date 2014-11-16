@@ -13,6 +13,11 @@ public class InitialRedirectHandler implements RequestHandler {
     }
 
     @Override
+    public boolean adminOnly() {
+        return false;
+    }
+
+    @Override
     public void process(RequestEvent event) throws IOException {
 
         StringBuilder url = new StringBuilder();

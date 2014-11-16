@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.util.DefaultMapSerializer;
@@ -154,6 +155,58 @@ public class JDBCStateRepositoryTest {
         assertEquals("someId", query(dataSource, "SELECT STRATEGY_ID FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
         assertEquals("param=foo", query(dataSource, "SELECT STRATEGY_PARAMS FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
 
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testShouldPropagateTheExceptionWhenReadFails() throws SQLException {
+
+		/*
+		 * GIVEN a database row containing a simple feature state
+		 */
+		update(dataSource, "INSERT INTO TOGGLZ VALUES ('F1', 0, NULL, NULL)");
+
+		/**
+		 * AND the datasource throws an exception when we try to get a
+		 * connection
+		 */
+		DataSource spyedDataSource = Mockito.spy(dataSource);
+		repository = new JDBCStateRepository(spyedDataSource, "TOGGLZ", true, DefaultMapSerializer.multiline());
+		Mockito.when(spyedDataSource.getConnection()).thenThrow(new SQLException("Failed to get a connection"));
+
+		/*
+		 * WHEN the repository reads the state
+		 */
+		repository.getFeatureState(TestFeature.F1);
+
+		/*
+		 * THEN an IllegalStateException is thrown
+		 */
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testShouldPropagateTheExceptionWhenWriteFails() throws SQLException {
+
+		/*
+		 * GIVEN a feature state to persist
+		 */
+		FeatureState state = new FeatureState(TestFeature.F1).enable();
+
+		/**
+		 * AND the datasource throws an exception when we try to get a
+		 * connection
+		 */
+		DataSource spyedDataSource = Mockito.spy(dataSource);
+		repository = new JDBCStateRepository(spyedDataSource, "TOGGLZ", true, DefaultMapSerializer.multiline());
+		Mockito.when(spyedDataSource.getConnection()).thenThrow(new SQLException("Failed to get a connection"));
+
+		/*
+		 * WHEN the feature state is persisted
+		 */
+		repository.setFeatureState(state);
+
+		/*
+		 * THEN an IllegalStateException is thrown
+		 */
     }
 
     private Object query(DataSource dataSource, String sql) {

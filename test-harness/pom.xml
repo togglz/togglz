@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -29,14 +30,14 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>1.5.0</version>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Arquillian -->
     <dependency>
       <groupId>org.jboss.arquillian.junit</groupId>
       <artifactId>arquillian-junit-container</artifactId>
-      <version>1.0.1.Final</version>
+      <version>1.1.2.Final</version>
     </dependency>
 
     <!-- JEE APIs -->
@@ -55,25 +56,40 @@
       <version>2.9</version>
     </dependency>
 
-    <!-- Dependency on this is required because otherwise transitive dependencies are excluded. It also excludes the API because 
-      of version conflicts that happens otherwise. -->
     <dependency>
       <groupId>org.jboss.shrinkwrap.resolver</groupId>
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-      <version>1.0.0-beta-7</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>shrinkwrap-api</artifactId>
-          <groupId>org.jboss.shrinkwrap</groupId>
-        </exclusion>
-      </exclusions>
+      <version>2.1.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.shrinkwrap.descriptors</groupId>
-      <artifactId>shrinkwrap-descriptors-impl</artifactId>
-      <version>1.1.0-beta-1</version>
+      <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+      <version>2.0.0-alpha-6</version>
     </dependency>
 
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <useDefaultManifestFile>true</useDefaultManifestFile>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.virgo.bundlor</groupId>
+        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
+        <executions>
+          <execution>
+            <id>bundlor</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

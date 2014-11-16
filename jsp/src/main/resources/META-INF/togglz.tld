@@ -12,6 +12,7 @@
     <attribute>
       <name>name</name>
       <required>true</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
 	<name>var</name>

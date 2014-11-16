@@ -20,10 +20,15 @@ public class ResourceHandler extends RequestHandlerBase {
     }
 
     @Override
+    public boolean adminOnly() {
+        return false;
+    }
+
+    @Override
     public void process(RequestEvent event) throws IOException {
 
         HttpServletResponse response = event.getResponse();
-        
+
         Matcher matcher = PATTERN.matcher(event.getRequest().getRequestURI());
         if (matcher.matches()) {
 
@@ -49,5 +54,4 @@ public class ResourceHandler extends RequestHandlerBase {
         }
 
     }
-
 }

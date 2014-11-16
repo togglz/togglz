@@ -6,18 +6,13 @@ import java.io.IOException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.descriptor.api.Descriptors;
-import org.jboss.shrinkwrap.descriptor.api.spec.servlet.web.WebAppDescriptor;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.test.Deployments;
+import org.togglz.test.Packaging;
 
 import com.google.inject.servlet.GuiceFilter;
 
@@ -29,18 +24,16 @@ public class GuiceIntegrationTest {
 
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzGuiceArchive())
-            .addAsLibraries(
-                DependencyResolvers.use(MavenDependencyResolver.class)
+            .addAsLibraries(Packaging.mavenDependencies()
                     .artifact("com.google.inject:guice:3.0")
                     .artifact("com.google.inject.extensions:guice-servlet:3.0")
-                    .resolveAs(JavaArchive.class))
+                    .asFiles())
             .addPackage(GuiceIntegrationTest.class.getPackage())
             .addPackages(true, "org.assertj")
-            .setWebXML(new StringAsset(
-                Descriptors.create(WebAppDescriptor.class)
+            .setWebXML(Packaging.webAppDescriptor()
                     .filter(GuiceFilter.class, "/*")
                     .listener(SimpleGuiceServletListener.class)
-                    .exportAsString()));
+                    .exportAsAsset());
 
     }
 

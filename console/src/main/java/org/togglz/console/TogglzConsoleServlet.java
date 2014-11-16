@@ -45,28 +45,37 @@ public class TogglzConsoleServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        // first check the permission
-        FeatureUser user = featureManager.getCurrentFeatureUser();
-        if (user == null || !user.isFeatureAdmin()) {
-            response.sendError(403, "You are not allowed to access the Togglz Console");
-            return;
-        }
-
         RequestEvent consoleRequest =
             new RequestEvent(featureManager, servletContext, request, response);
         String path = consoleRequest.getPath();
 
-        for (RequestHandler page : handlers) {
+        RequestHandler handler = getHandlerFor(path);
 
-            if (page.handles(path)) {
-                page.process(consoleRequest);
-                return;
+        if (handler != null) {
+            if (!handler.adminOnly() || isFeatureAdmin()) {
+                handler.process(consoleRequest);
+            } else {
+                response.sendError(403, "You are not allowed to access the Togglz Console");
             }
-
+            return;
         }
 
         response.sendError(404);
 
+    }
+
+    private boolean isFeatureAdmin() {
+        FeatureUser user = featureManager.getCurrentFeatureUser();
+        return user != null && user.isFeatureAdmin();
+    }
+
+    private RequestHandler getHandlerFor(String path) {
+        for (RequestHandler page : handlers) {
+            if (page.handles(path)) {
+                return page;
+            }
+        }
+        return null;
     }
 
 }

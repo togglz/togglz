@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,6 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
-import org.togglz.core.util.Lists;
 
 import com.floreysoft.jmte.Engine;
 
@@ -26,6 +24,11 @@ public class EditPageHandler extends RequestHandlerBase {
     @Override
     public boolean handles(String path) {
         return path.equals("/edit");
+    }
+
+    @Override
+    public boolean adminOnly() {
+        return true;
     }
 
     @Override
@@ -95,5 +98,4 @@ public class EditPageHandler extends RequestHandlerBase {
         writeResponse(event, content);
 
     }
-
 }
