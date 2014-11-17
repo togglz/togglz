@@ -10,3 +10,4 @@ Import-Template:
  com.google.common.*;version="[10.0, 20.0)",
  com.google.appengine.*;version="[1.9.0, 2.0.0)",
  org.togglz.core.*;version="${osgi.bundles.version:default}"
+ javax.inject.*;version="[1]"
