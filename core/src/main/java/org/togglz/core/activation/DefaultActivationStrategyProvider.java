@@ -18,9 +18,8 @@ public class DefaultActivationStrategyProvider implements ActivationStrategyProv
     private final List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
 
     public DefaultActivationStrategyProvider() {
-        Iterator<ActivationStrategy> iterator = ServiceLoader.load(ActivationStrategy.class).iterator();
-        while (iterator.hasNext()) {
-            strategies.add((ActivationStrategy) iterator.next());
+        for (ActivationStrategy activationStrategy : ServiceLoader.load(ActivationStrategy.class)) {
+            strategies.add(activationStrategy);
         }
     }
 

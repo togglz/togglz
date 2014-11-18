@@ -80,9 +80,8 @@ public class FeatureManagerBootstrapper {
 
         Set<T> impls = new HashSet<T>();
 
-        Iterator<BeanFinder> iterator = ServiceLoader.load(BeanFinder.class).iterator();
-        while (iterator.hasNext()) {
-            Collection<T> result = iterator.next().find(clazz, context);
+        for (BeanFinder beanFinder : ServiceLoader.load(BeanFinder.class)) {
+            Collection<T> result = beanFinder.find(clazz, context);
             if (result != null) {
                 impls.addAll(result);
             }

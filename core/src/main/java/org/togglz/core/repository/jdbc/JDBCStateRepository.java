@@ -80,7 +80,7 @@ public class JDBCStateRepository implements StateRepository {
      * you.
      * 
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @see #JDBCFeatureStateRepository(DataSource, String)
+     * @see #JDBCStateRepository(DataSource, String)
      */
     public JDBCStateRepository(DataSource dataSource) {
         this(new Builder(dataSource));
@@ -189,6 +189,7 @@ public class JDBCStateRepository implements StateRepository {
     /**
      * Method called <strong>before</strong> the database schema migration is performed.
      */
+    @SuppressWarnings("unused")
     protected void beforeSchemaMigration(Connection connection) {
         // overwrite me
     }
@@ -196,6 +197,7 @@ public class JDBCStateRepository implements StateRepository {
     /**
      * Method called <strong>after</strong> the database schema migration has been performed.
      */
+    @SuppressWarnings("unused")
     protected void afterSchemaMigration(Connection connection) {
         // overwrite me
     }

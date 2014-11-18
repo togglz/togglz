@@ -66,5 +66,5 @@ public class DefaultActivationStrategyProviderTest {
         public String getId() {
             return this.getClass().getSimpleName();
         }
-    };
+    }
 }

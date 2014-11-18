@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;

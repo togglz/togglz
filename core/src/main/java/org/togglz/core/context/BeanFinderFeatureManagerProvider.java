@@ -34,9 +34,8 @@ public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider 
         Set<FeatureManager> managers = new HashSet<FeatureManager>();
 
         // ask all providers for managed FeatureManager
-        Iterator<BeanFinder> iterator = ServiceLoader.load(BeanFinder.class).iterator();
-        while (iterator.hasNext()) {
-            Collection<FeatureManager> result = iterator.next().find(FeatureManager.class, null);
+        for (BeanFinder beanFinder : ServiceLoader.load(BeanFinder.class)) {
+            Collection<FeatureManager> result = beanFinder.find(FeatureManager.class, null);
             if (result != null) {
                 managers.addAll(result);
             }

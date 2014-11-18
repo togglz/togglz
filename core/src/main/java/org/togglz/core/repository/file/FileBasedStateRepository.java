@@ -39,7 +39,7 @@ import org.togglz.core.util.Strings;
  */
 public class FileBasedStateRepository implements StateRepository {
 
-    private final Log log = LogFactory.getLog(FileBasedStateRepository.class);
+    private static final Log log = LogFactory.getLog(FileBasedStateRepository.class);
 
     private ReloadablePropertiesFile fileContent;
 
