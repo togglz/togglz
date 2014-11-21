@@ -74,7 +74,7 @@ public class DefaultFeatureManager implements FeatureManager {
 
             // if no strategy is selected, the decision is simple
             String strategyId = state.getStrategyId();
-            if (strategyId == null) {
+            if (strategyId == null || strategyId.isEmpty()) {
                 return true;
             }
 
