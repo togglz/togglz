@@ -8,7 +8,7 @@ import org.togglz.core.Feature;
 
 public class ContainsFeature extends BaseMatcher<Set<Feature>> {
 
-	private Feature feature;
+	private final Feature feature;
 
 	public ContainsFeature(Feature feature) {
 		this.feature = feature;
@@ -16,16 +16,14 @@ public class ContainsFeature extends BaseMatcher<Set<Feature>> {
 
 	@Override
 	public boolean matches(Object item) {
-		boolean found = false;
 		@SuppressWarnings("unchecked")
 		Set<Feature> features = (Set<Feature>) item;
 		for (Feature f : features) {
             if (f.name().equals(feature.name())) {
-				found = true;
-				continue;
+				return true;
 			}
 		}
-		return found;
+		return false;
 	}
 
 	@Override
