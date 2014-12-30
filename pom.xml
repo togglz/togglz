@@ -159,7 +159,8 @@
     <module>console</module>
     <module>cdi</module>
     <module>guice</module>
-    <module>spring</module>
+    <module>spring-core</module>
+    <module>spring-web</module>
     <module>spring-security</module>
     <module>deltaspike</module>
     <module>shiro</module>

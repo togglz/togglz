@@ -86,7 +86,12 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-spring</artifactId>
+      <artifactId>togglz-spring-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-web</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

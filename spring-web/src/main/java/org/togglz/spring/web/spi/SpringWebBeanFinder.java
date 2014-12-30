@@ -1,16 +1,15 @@
-package org.togglz.spring.spi;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.servlet.ServletContext;
+package org.togglz.spring.web.spi;
 
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.togglz.core.spi.BeanFinder;
 
-public class SpringBeanFinder implements BeanFinder {
+import javax.servlet.ServletContext;
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class SpringWebBeanFinder implements BeanFinder {
 
     @Override
     public <T> Collection<T> find(Class<T> clazz, Object context) {
