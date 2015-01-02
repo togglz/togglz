@@ -7,5 +7,6 @@ Bundle-Name: ${project.name}
 Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
- org.togglz.core.*;version="${osgi.bundles.version:default}",
+ javax.servlet.*;version="0",
+ org.togglz.*;version="${osgi.bundles.version:default}",
  org.springframework.security.*;version="[2.0,4.0)"
