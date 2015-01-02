@@ -1,15 +1,15 @@
 package org.togglz.console.handlers.edit;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
+import org.togglz.servlet.spi.CSRFToken;
+import org.togglz.servlet.spi.CSRFTokenProvider;
 import org.togglz.console.model.FeatureModel;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
@@ -18,6 +18,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 
 import com.floreysoft.jmte.Engine;
+import org.togglz.core.util.Services;
 
 public class EditPageHandler extends RequestHandlerBase {
 
@@ -90,8 +91,17 @@ public class EditPageHandler extends RequestHandlerBase {
 
     private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
 
+        List<CSRFToken> tokens = new ArrayList<CSRFToken>();
+        for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
+            CSRFToken token = provider.getToken(event.getRequest());
+            if (token != null) {
+                tokens.add(token);
+            }
+        }
+
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("model", featureModel);
+        model.put("tokens", tokens);
 
         String template = getResourceAsString("edit.html");
         String content = new Engine().transform(template, model);
