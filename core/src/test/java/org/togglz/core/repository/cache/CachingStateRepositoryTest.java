@@ -98,7 +98,7 @@ public class CachingStateRepositoryTest {
         // do some lookups
         for (int i = 0; i < 5; i++) {
             assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled());
-            Thread.sleep(ttl + 1); // wait some minimal amount of time to let the cache expire
+            Thread.sleep(ttl + 30); // wait some small amount of time to let the cache expire
         }
 
         // delegate called 5 times

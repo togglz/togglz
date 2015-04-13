@@ -26,6 +26,14 @@ public class EnumBasedFeatureProviderTest {
     public void shouldFailForNonEnumType() {
         new EnumBasedFeatureProvider(NotAnEnum.class);
     }
+    
+    @Test(expected = IllegalStateException.class)
+    public void shouldFailForDuplicateFeatureName() {
+        
+        EnumBasedFeatureProvider provider = new EnumBasedFeatureProvider();
+        provider.addFeatureEnum(ValidFeatureEnum.class);
+        provider.addFeatureEnum(DuplicateNameFeatureEnum.class); // should throw IllegalStateException
+    }
 
     @Test
     public void shouldReturnCorrectListOfFeaturesForEnum() {
@@ -169,6 +177,13 @@ public class EnumBasedFeatureProviderTest {
 
         @Label("Additional Feature")
         ADDITIONAL_FEATURE;
+
+    }
+
+    public static enum DuplicateNameFeatureEnum implements Feature {
+
+        @Label("Duplicate feature name")
+        FEATURE1;
 
     }
 
