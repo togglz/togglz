@@ -35,6 +35,7 @@ public interface PropertySource {
      * thread-safe manner.
      * 
      * @return an editor instance
+     * @throws UnsupportedOperationException if this property source does not support updates
      */
     Editor getEditor();
 

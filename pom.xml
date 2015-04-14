@@ -167,6 +167,7 @@
     <module>jsf</module>
     <module>jsp</module>
     <module>appengine</module>
+    <module>archaius</module>
     <module>mongodb</module>
     <module>seam-security</module>
     <module>testing</module>
