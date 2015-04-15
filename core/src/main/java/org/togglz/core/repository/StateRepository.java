@@ -26,6 +26,7 @@ public interface StateRepository {
      * {@link #getFeatureState(Feature)} return the same state as persisted using this method.
      * 
      * @param featureState The feature state to persist
+     * @throws UnsupportedOperationException if this state repository does not support updates
      */
     void setFeatureState(FeatureState featureState);
 
