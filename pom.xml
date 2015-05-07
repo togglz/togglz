@@ -173,6 +173,7 @@
     <module>testing</module>
     <module>junit</module>
     <module>distribution</module>
+    <module>cassandra</module>
   </modules>
 
   <developers>
