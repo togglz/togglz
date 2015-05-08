@@ -28,21 +28,29 @@ public class FeatureStateTest {
     	featureState.setStrategyId(STRATEGYID);
     	featureState.setParameter(PARAM_NAME, PARAM_VALUE);
     	featureState.setEnabled(true);
-		try (ByteArrayOutputStream os = new ByteArrayOutputStream();
-				ObjectOutputStream oos = new ObjectOutputStream(os)) {
+    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		try {
 			try {
 				oos.writeObject(featureState);
-				try (InputStream is = new ByteArrayInputStream(os.toByteArray())) {
-					ObjectInputStream ois = new ObjectInputStream(is);
+				InputStream is = new ByteArrayInputStream(os.toByteArray());
+				ObjectInputStream ois = new ObjectInputStream(is);
+				try {
 					FeatureState deserializedFeatureState = (FeatureState) ois.readObject();
 					assertEquals("FeatureState.feature was not correctly serialized/deserialized", featureState.getFeature(), deserializedFeatureState.getFeature());
 					assertEquals("FeatureState.strategyId was not correctly serialized/deserialized", featureState.getStrategyId(), deserializedFeatureState.getStrategyId());
 					assertEquals("FeatureState.parameters were not correctly serialized/deserialized", featureState.getParameter(PARAM_NAME), deserializedFeatureState.getParameter(PARAM_NAME));
 					assertEquals("FeatureState.enabled was not correctly serialized/deserialized", featureState.isEnabled(), deserializedFeatureState.isEnabled());
+				} finally {
+					is.close();
+					ois.close();
 				}
 			} catch (NotSerializableException e) {
 				fail("FeatureState is not serializable");
 			}
+		} finally {
+			os.close();
+			oos.close();
 		}
     }
 
