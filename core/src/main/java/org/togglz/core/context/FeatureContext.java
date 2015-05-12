@@ -14,12 +14,12 @@ import org.togglz.core.spi.FeatureManagerProvider;
 import org.togglz.core.util.Weighted;
 
 /**
- * 
+ *
  * This class is typically used to obtain the {@link FeatureManager} from application code. It uses the
  * {@link FeatureManagerProvider} to find the correct FeatureManager and caches it for each context class loader.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class FeatureContext {
 
@@ -31,14 +31,14 @@ public class FeatureContext {
     private static final WeakHashMap<ClassLoader, FeatureManager> cache = new WeakHashMap<ClassLoader, FeatureManager>();
 
     /**
-     * 
+     *
      * Returns the {@link FeatureManager} for the current application (context class loader). The method uses the
      * {@link FeatureManagerProvider} SPI to find the correct {@link FeatureManager} instance. It will throw a runtime exception
      * if no {@link FeatureManager} can be found.
-     * 
+     *
      * @return The {@link FeatureManager} for the application, never <code>null</code>
      */
-    public static synchronized FeatureManager getFeatureManager() {
+    public static FeatureManager getFeatureManager() {
 
         FeatureManager manager = getFeatureManagerOrNull();
 
@@ -54,27 +54,49 @@ public class FeatureContext {
     }
 
     /**
-     * 
+     *
      * Returns the {@link FeatureManager} for the current application (context class loader). The method uses the
      * {@link FeatureManagerProvider} SPI to find the correct {@link FeatureManager} instance. If not manager could be found,
      * <code>null</code> is returned.
-     * 
+     *
      * @return The {@link FeatureManager} for the application or <code>null</code>
      */
-    public static synchronized FeatureManager getFeatureManagerOrNull() {
+    public static FeatureManager getFeatureManagerOrNull() {
 
         // the classloader used for cache lookups
         ClassLoader classLoader = getContextClassLoader();
 
-        // first try to lookup from the cache
+        // try to lookup from the cache
         FeatureManager featureManager = cache.get(classLoader);
-        if (featureManager != null) {
-            return featureManager;
+        if (featureManager == null) {
+
+            // multiple threads could reach this point, but only one should do the lookup
+            synchronized (cache) {
+
+                // do another check (double-checked locking)
+                featureManager = cache.get(classLoader);
+                if (featureManager == null) {
+
+                    if (log.isDebugEnabled()) {
+                        log.debug("No cached FeatureManager for class loader: " + classLoader);
+                    }
+
+                    // lookup the feature manager
+                    featureManager = lookupFeatureManager();
+
+                    if (featureManager != null) {
+                        cache.put(classLoader, featureManager);
+                    }
+
+                }
+            }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("No cached FeatureManager for class loader: " + classLoader);
-        }
+        return featureManager;
+
+    }
+
+    private static FeatureManager lookupFeatureManager() {
 
         // build a sorted list of all SPI implementations
         Iterator<FeatureManagerProvider> providerIterator = ServiceLoader.load(FeatureManagerProvider.class).iterator();
@@ -87,6 +109,8 @@ public class FeatureContext {
         if (log.isDebugEnabled()) {
             log.debug("Found " + providerList.size() + " FeatureManagerProvider implementations...");
         }
+
+        FeatureManager featureManager = null;
 
         // try providers one by one to find a FeatureManager
         for (FeatureManagerProvider provider : providerList) {
@@ -110,13 +134,8 @@ public class FeatureContext {
 
         }
 
-        // cache the result for later lookups
-        if (featureManager != null) {
-            cache.put(classLoader, featureManager);
-            return featureManager;
-        }
+        return featureManager;
 
-        return null;
     }
 
     /**
