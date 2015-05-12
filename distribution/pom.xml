@@ -110,6 +110,11 @@
       <artifactId>togglz-archaius</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-cassandra</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Authentication Integration -->
     <dependency>
