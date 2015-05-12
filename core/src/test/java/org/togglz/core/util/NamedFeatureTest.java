@@ -17,28 +17,29 @@ public class NamedFeatureTest {
 
     @Test
     public void serializable() throws IOException, ClassNotFoundException {
-    	NamedFeature feature = new NamedFeature("SERIALIZABLE");
-    	ByteArrayOutputStream os = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(os);
-		try {
-			try {
-				oos.writeObject(feature);
-				InputStream is = new ByteArrayInputStream(os.toByteArray());
-				ObjectInputStream ois = new ObjectInputStream(is);
-				try {
-					Object deserializedFeature = ois.readObject();
-					assertEquals("NamedFeature was not correctly serialized/deserialized", feature, deserializedFeature);
-				} finally {
-					is.close();
-					ois.close();
-				}
-			} catch (NotSerializableException e) {
-				fail("NamedFeature is not serializable");
-			}
-		} finally {
-			os.close();
-			oos.close();
-		}
+        NamedFeature feature = new NamedFeature("SERIALIZABLE");
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(os);
+        try {
+            try {
+                oos.writeObject(feature);
+                InputStream is = new ByteArrayInputStream(os.toByteArray());
+                ObjectInputStream ois = new ObjectInputStream(is);
+                try {
+                    Object deserializedFeature = ois.readObject();
+                    assertEquals("NamedFeature was not correctly serialized/deserialized",
+                        feature, deserializedFeature);
+                } finally {
+                    is.close();
+                    ois.close();
+                }
+            } catch (NotSerializableException e) {
+                fail("NamedFeature is not serializable");
+            }
+        } finally {
+            os.close();
+            oos.close();
+        }
     }
 
 }
