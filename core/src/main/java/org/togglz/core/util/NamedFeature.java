@@ -1,5 +1,7 @@
 package org.togglz.core.util;
 
+import java.io.Serializable;
+
 import org.togglz.core.Feature;
 
 /**
@@ -8,7 +10,9 @@ import org.togglz.core.Feature;
  * 
  * @author Christian Kaltepoth
  */
-public class NamedFeature implements Feature {
+public class NamedFeature implements Feature, Serializable {
+
+	private static final long serialVersionUID = 7344455581363755625L;
 
     private final String name;
 
