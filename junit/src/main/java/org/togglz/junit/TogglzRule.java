@@ -7,6 +7,8 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
 import org.togglz.junit.vary.VariationSetBuilder;
@@ -17,94 +19,58 @@ import org.togglz.testing.TestFeatureManagerProvider;
  * <p>
  * JUnit rule that simplifies the process of controlling features in unit tests.
  * </p>
- * 
  * <p>
  * Example usage:
  * </p>
- * 
  * <pre>
  * public class TogglzRuleAllEnabledTest {
- * 
+ *
  *   &#064;Rule
  *   public TogglzRule togglzRule = TogglzRule.allEnabled(MyFeatures.class);
- * 
+ *
  *   &#064;Test
  *   public void testToggleFeature() {
- * 
+ *
  *     assertTrue(MyFeatures.FEATURE_ONE.isActive());
- * 
+ *
  *     togglzRule.disable(MyFeatures.FEATURE_ONE);
- *      
+ *
  *     assertFalse(MyFeatures.FEATURE_ONE.isActive());
- *     
+ *
  *   }
- * 
+ *
  * }
  * </pre>
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class TogglzRule implements TestRule {
 
+    private static final Log log = LogFactory.getLog(TogglzRule.class);
+
     private final Class<? extends Feature> featureClass;
 
-    private Feature[] initiallyActive;
+    private final Set<Set<Feature>> variants;
 
     private TestFeatureManager featureManager;
-    private VariationSetBuilder<Feature> variationSetBuilder;
 
-    public static class Builder<F extends Feature>  {
-        private final Class<F> featuresClass;
-        VariationSetBuilder<F> variationSetBuilder;
-
-        public Builder(final Class<F> featuresClass) {
-            this.featuresClass = featuresClass;
-            this.variationSetBuilder = VariationSetBuilder.create(featuresClass);
-        }
-
-        public Builder enable(final F f) {
-            variationSetBuilder.enable(f);
-            return this;
-        }
-
-        public Builder disable(final F f) {
-            variationSetBuilder.disable(f);
-            return this;
-        }
-
-        public Builder vary(final F f) {
-            variationSetBuilder.vary(f);
-            return this;
-        }
-
-        public TogglzRule build() {
-            return new TogglzRule(featuresClass, new Feature[0]).with(variationSetBuilder);
-        }
-    }
-
-    private TogglzRule with(final VariationSetBuilder variationSetBuilder) {
-        this.variationSetBuilder = variationSetBuilder;
-        return this;
-    }
-
-    public static <F extends Feature> Builder<F> builder(final Class<F> featuresClass) {
-        return new Builder<F>(featuresClass);
+    public static Builder builder(final Class<? extends Feature> featuresClass) {
+        return new Builder(featuresClass);
     }
 
     public static TogglzRule allEnabled(Class<? extends Feature> featureClass) {
-        return new TogglzRule(featureClass, featureClass.getEnumConstants());
+        return builder(featureClass).enableAll().build();
     }
 
     public static TogglzRule allDisabled(Class<? extends Feature> featureClass) {
-        return new TogglzRule(featureClass, new Feature[0]);
+        return builder(featureClass).disableAll().build();
     }
 
-    private TogglzRule(Class<? extends Feature> featureEnum, Feature[] initiallyActive) {
+    private TogglzRule(Class<? extends Feature> featureEnum, Set<Set<Feature>> variants) {
         Validate.notNull(featureEnum, "The featureEnum argument is required");
         Validate.isTrue(featureEnum.isEnum(), "This class only works with feature enums");
         this.featureClass = featureEnum;
-        this.initiallyActive = initiallyActive;
+        this.variants = variants;
     }
 
     @Override
@@ -122,41 +88,12 @@ public class TogglzRule implements TestRule {
                     }
 
                     WithFeature withFeature = description.getAnnotation(WithFeature.class);
-                    final boolean hasWithFeatureAnnotation = withFeature != null;
-                    final boolean togglzRuleHasVariations = variationSetBuilder != null;
 
-
-                    if(togglzRuleHasVariations) {
-
-                        if(hasWithFeatureAnnotation) {
-                            throw new IllegalStateException(
-                                    "Cannot combine @WithFeature with @Rule/vary()");
-                        }
-
-                        final Set<Set<Feature>> permutation = variationSetBuilder.getVariants();
-
-                        for (Set<Feature> activeFeatures : permutation) {
-
-                            // create blank instance and set initial state
-                            TestFeatureManager featureManager = new TestFeatureManager(featureClass);
-                            for (Feature feature : activeFeatures) {
-                                featureManager.enable(feature);
-                            }
-
-                            // register the test instance
-                            TestFeatureManagerProvider.setFeatureManager(featureManager);
-                            FeatureContext.clearCache();
-
-                            // run the test
-                            base.evaluate();
-
-                        }
-
-                    } else {
+                    for (Set<Feature> activeFeatures : variants) {
 
                         // create blank instance and set initial state
                         featureManager = new TestFeatureManager(featureClass);
-                        for (Feature feature : initiallyActive) {
+                        for (Feature feature : activeFeatures) {
                             featureManager.enable(feature);
                         }
 
@@ -164,25 +101,34 @@ public class TogglzRule implements TestRule {
                         TestFeatureManagerProvider.setFeatureManager(featureManager);
                         FeatureContext.clearCache();
 
+                        // apply @WithFeature annotation
+                        if (withFeature != null) {
 
-                        if (hasWithFeatureAnnotation) {
-                            for (String featureName : withFeature.value()) {
-                                if (withFeature.disable()) {
-                                    disable(new NamedFeature(featureName));
-                                } else {
-                                    enable(new NamedFeature(featureName));
+                            // @WithFeature is only supported if there are no variations
+                            if (variants.size() == 1) {
+                                for (String featureName : withFeature.value()) {
+                                    Feature feature = new NamedFeature(featureName);
+                                    if (withFeature.disable()) {
+                                        disable(feature);
+                                    } else {
+                                        enable(feature);
+                                    }
                                 }
                             }
 
+                            // warn the user
+                            else {
+                                log.info("Ignoring @ViewFeature because the rule defines feature variations");
+                            }
 
                         }
+
                         // run the test
                         base.evaluate();
 
                     }
-                }
 
-                finally {
+                } finally {
                     featureManager = null;
                     TestFeatureManagerProvider.setFeatureManager(null);
                     FeatureContext.clearCache();
@@ -211,6 +157,47 @@ public class TogglzRule implements TestRule {
 
     public void disableAll() {
         featureManager.disableAll();
+    }
+
+    public static class Builder {
+
+        private final Class<? extends Feature> featuresClass;
+        private final VariationSetBuilder<Feature> variationSetBuilder;
+
+        public Builder(final Class<? extends Feature> featuresClass) {
+            this.featuresClass = featuresClass;
+            this.variationSetBuilder = VariationSetBuilder.create((Class<Feature>) featuresClass);
+        }
+
+        public Builder enable(final Feature f) {
+            variationSetBuilder.enable(f);
+            return this;
+        }
+
+        public Builder enableAll() {
+            variationSetBuilder.enableAll();
+            return this;
+        }
+
+        public Builder disable(final Feature f) {
+            variationSetBuilder.disable(f);
+            return this;
+        }
+
+        public Builder disableAll() {
+            variationSetBuilder.disableAll();
+            return this;
+        }
+
+        public Builder vary(final Feature f) {
+            variationSetBuilder.vary(f);
+            return this;
+        }
+
+        public TogglzRule build() {
+            return new TogglzRule(featuresClass, variationSetBuilder.getVariants());
+        }
+
     }
 
 }
