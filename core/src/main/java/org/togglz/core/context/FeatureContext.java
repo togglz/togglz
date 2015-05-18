@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.WeakHashMap;
 
@@ -28,7 +29,8 @@ public class FeatureContext {
     /**
      * Cache for the {@link FeatureManager} instances looked up using the SPI
      */
-    private static final WeakHashMap<ClassLoader, FeatureManager> cache = new WeakHashMap<ClassLoader, FeatureManager>();
+    private static final Map<ClassLoader, FeatureManager> cache =
+        Collections.synchronizedMap(new WeakHashMap<ClassLoader, FeatureManager>());
 
     /**
      *
