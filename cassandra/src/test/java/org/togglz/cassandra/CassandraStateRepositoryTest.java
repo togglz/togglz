@@ -1,7 +1,11 @@
 package org.togglz.cassandra;
 
-import com.netflix.astyanax.Keyspace;
-import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
+import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
 import org.cassandraunit.AbstractCassandraUnit4TestCase;
 import org.cassandraunit.dataset.DataSet;
 import org.cassandraunit.dataset.yaml.ClassPathYamlDataSet;
@@ -12,10 +16,8 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
-
-import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import com.netflix.astyanax.Keyspace;
+import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 
 /**
  * Test for {@link CassandraStateRepository}
@@ -91,6 +93,24 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 
         assertNotNull(keyspace.describeKeyspace().getColumnFamily(columnFamilyName));
     }
+
+	@Test
+	public void testRemovingOfActivationStrategy() throws ConnectionException {
+		FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
+		savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
+		savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
+		stateRepository.setFeatureState(savedFeatureState);
+
+		FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
+		assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
+
+		// save same feature, but without activation strategy. should remove an existing one
+		FeatureState featureStateWithoutStrategy = new FeatureState(TestFeature.FEATURE);
+		stateRepository.setFeatureState(featureStateWithoutStrategy);
+		loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
+
+		assertThat(reflectionEquals(featureStateWithoutStrategy, loadedFeatureState), is(true));
+	}
 
     private static enum TestFeature implements Feature {
         FEATURE,

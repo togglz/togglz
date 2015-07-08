@@ -1,5 +1,15 @@
 package org.togglz.cassandra;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.util.DefaultMapSerializer;
+import org.togglz.core.repository.util.MapSerializer;
 import com.netflix.astyanax.ColumnListMutation;
 import com.netflix.astyanax.Keyspace;
 import com.netflix.astyanax.MutationBatch;
@@ -10,15 +20,6 @@ import com.netflix.astyanax.model.ColumnFamily;
 import com.netflix.astyanax.model.ColumnList;
 import com.netflix.astyanax.model.ConsistencyLevel;
 import com.netflix.astyanax.serializers.StringSerializer;
-import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.StateRepository;
-import org.togglz.core.repository.util.DefaultMapSerializer;
-import org.togglz.core.repository.util.MapSerializer;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * <p>
@@ -132,12 +133,8 @@ public class CassandraStateRepository implements StateRepository {
             .withRow(columnFamily, featureState.getFeature().name())
             .putColumn(ENABLED_COLUMN, featureState.isEnabled());
 
-        if (featureState.getStrategyId() != null) {
-            mutation.putColumn(STRATEGY_ID_COLUMN, featureState.getStrategyId());
-        }
-        if (!featureState.getParameterMap().isEmpty()) {
-            mutation.putColumn(STRATEGY_PARAMS_COLUMN, mapSerializer.serialize(featureState.getParameterMap()));
-        }
+        putOrDelete(mutation, STRATEGY_ID_COLUMN, featureState.getStrategyId());
+        putOrDelete(mutation, STRATEGY_PARAMS_COLUMN, mapSerializer.serialize(featureState.getParameterMap()));
 
         try {
             mutationBatch.execute();
@@ -146,6 +143,15 @@ public class CassandraStateRepository implements StateRepository {
             throw new RuntimeException(e);
         }
     }
+
+	private void putOrDelete(ColumnListMutation mutation, String column, String value) {
+		if (StringUtils.isBlank(value)) {
+			mutation.deleteColumn(column);
+		}
+		else {
+			mutation.putColumn(column, value);
+		}
+	}
 
     private FeatureState toFeatureState(Feature feature, ColumnList<String> state) {
         Column<String> enabled = state.getColumnByName(ENABLED_COLUMN);
