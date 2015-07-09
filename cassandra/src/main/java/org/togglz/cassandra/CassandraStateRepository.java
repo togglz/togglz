@@ -144,14 +144,14 @@ public class CassandraStateRepository implements StateRepository {
         }
     }
 
-	private void putOrDelete(ColumnListMutation mutation, String column, String value) {
-		if (StringUtils.isBlank(value)) {
-			mutation.deleteColumn(column);
-		}
-		else {
-			mutation.putColumn(column, value);
-		}
-	}
+    private void putOrDelete(ColumnListMutation<String> mutation, String column, String value) {
+        if (StringUtils.isBlank(value)) {
+            mutation.deleteColumn(column);
+        }
+        else {
+            mutation.putColumn(column, value);
+        }
+    }
 
     private FeatureState toFeatureState(Feature feature, ColumnList<String> state) {
         Column<String> enabled = state.getColumnByName(ENABLED_COLUMN);
