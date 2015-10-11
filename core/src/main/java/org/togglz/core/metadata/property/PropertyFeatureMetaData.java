@@ -10,6 +10,7 @@ import org.togglz.core.manager.PropertyFeatureProvider;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.metadata.SimpleFeatureGroup;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
 /**
@@ -18,10 +19,11 @@ import org.togglz.core.util.Strings;
 public class PropertyFeatureMetaData implements FeatureMetaData {
 
     private String label;
-    private boolean enabledByDefault = false;
+    private final FeatureState defaultFeatureState;
     private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
 
     public PropertyFeatureMetaData(Feature feature, String specification) {
+        boolean enabledByDefault = false;
 
         if (Strings.isNotBlank(specification)) {
             String[] parts = specification.split(";");
@@ -44,6 +46,8 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
             label = feature.name();
         }
 
+        defaultFeatureState = new FeatureState(feature, enabledByDefault);
+
     }
 
     private Set<FeatureGroup> parseFeatureGroups(String value) {
@@ -62,8 +66,8 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
     }
 
     @Override
-    public boolean isEnabledByDefault() {
-        return enabledByDefault;
+    public FeatureState getDefaultFeatureState() {
+        return defaultFeatureState;
     }
 
     @Override

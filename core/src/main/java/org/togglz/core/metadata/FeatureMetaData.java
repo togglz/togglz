@@ -1,13 +1,15 @@
 package org.togglz.core.metadata;
 
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.StateRepository;
+
 import java.util.Map;
 import java.util.Set;
 
-import org.togglz.core.Feature;
-
 /**
  * Metadata of a {@link Feature}.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public interface FeatureMetaData {
@@ -18,9 +20,9 @@ public interface FeatureMetaData {
     String getLabel();
 
     /**
-     * If the feature should be enabled by default.
+     * Default feature state, if it is not stored in a {@link StateRepository}.
      */
-    boolean isEnabledByDefault();
+    FeatureState getDefaultFeatureState();
 
     /**
      * The feature groups to which the feature belongs.
