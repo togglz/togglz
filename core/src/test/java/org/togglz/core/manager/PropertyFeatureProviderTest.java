@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
 
 public class PropertyFeatureProviderTest {
@@ -30,7 +31,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
         assertThat(metadata).isNotNull();
         assertThat(metadata.getLabel()).isEqualTo("F1");
-        assertThat(metadata.isEnabledByDefault()).isFalse();
+        FeatureState defaultFeatureState = metadata.getDefaultFeatureState();
+        assertThat(defaultFeatureState.isEnabled()).isFalse();
         assertThat(metadata.getGroups()).isEmpty();
 
     }
@@ -51,7 +53,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
         assertThat(metadata).isNotNull();
         assertThat(metadata.getLabel()).isEqualTo("My Feature");
-        assertThat(metadata.isEnabledByDefault()).isFalse();
+        FeatureState defaultFeatureState = metadata.getDefaultFeatureState();
+        assertThat(defaultFeatureState.isEnabled()).isFalse();
         assertThat(metadata.getGroups()).isEmpty();
 
     }
@@ -72,7 +75,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
         assertThat(metadata).isNotNull();
         assertThat(metadata.getLabel()).isEqualTo("My Feature");
-        assertThat(metadata.isEnabledByDefault()).isTrue();
+        FeatureState defaultFeatureState = metadata.getDefaultFeatureState();
+        assertThat(defaultFeatureState.isEnabled()).isTrue();
         assertThat(metadata.getGroups()).isEmpty();
 
     }
@@ -93,7 +97,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
         assertThat(metadata).isNotNull();
         assertThat(metadata.getLabel()).isEqualTo("My Feature");
-        assertThat(metadata.isEnabledByDefault()).isTrue();
+        FeatureState defaultFeatureState = metadata.getDefaultFeatureState();
+        assertThat(defaultFeatureState.isEnabled()).isTrue();
         assertThat(metadata.getGroups()).isEmpty();
 
     }
@@ -114,7 +119,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
         assertThat(metadata).isNotNull();
         assertThat(metadata.getLabel()).isEqualTo("My Feature");
-        assertThat(metadata.isEnabledByDefault()).isTrue();
+        FeatureState defaultFeatureState = metadata.getDefaultFeatureState();
+        assertThat(defaultFeatureState.isEnabled()).isTrue();
         assertThat(metadata.getGroups())
             .hasSize(1)
             .areExactly(1, groupNamed("Group1"));
@@ -140,7 +146,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata1 = provider.getMetaData(new NamedFeature("ID_1"));
         assertThat(metadata1).isNotNull();
         assertThat(metadata1.getLabel()).isEqualTo("ID 1");
-        assertThat(metadata1.isEnabledByDefault()).isTrue();
+        FeatureState defaultFeatureState1 = metadata1.getDefaultFeatureState();
+        assertThat(defaultFeatureState1.isEnabled()).isTrue();
         assertThat(metadata1.getGroups())
             .hasSize(2)
             .areExactly(1, groupNamed("Group 1"))
@@ -149,7 +156,8 @@ public class PropertyFeatureProviderTest {
         FeatureMetaData metadata2 = provider.getMetaData(new NamedFeature("ID_2"));
         assertThat(metadata2).isNotNull();
         assertThat(metadata2.getLabel()).isEqualTo("ID 2");
-        assertThat(metadata2.isEnabledByDefault()).isFalse();
+        FeatureState defaultFeatureState2 = metadata2.getDefaultFeatureState();
+        assertThat(defaultFeatureState2.isEnabled()).isFalse();
         assertThat(metadata2.getGroups())
             .hasSize(1)
             .areExactly(1, groupNamed("Group 2"));
