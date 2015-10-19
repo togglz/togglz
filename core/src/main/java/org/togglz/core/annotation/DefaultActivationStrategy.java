@@ -1,12 +1,12 @@
 package org.togglz.core.annotation;
 
-import org.togglz.core.repository.StateRepository;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.togglz.core.repository.StateRepository;
+import org.togglz.core.spi.ActivationStrategy;
 
 /**
  * 
@@ -32,6 +32,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface DefaultActivationStrategy {
+
+    /**
+     * The unique ID of the strategy. Corresponds to the value returned by
+     * {@link ActivationStrategy#getId()}
+     */
     String id();
-    ActivationParameter[] parameters();
+
+    /**
+     * Optional list of parameters to set for the strategy.
+     */
+    ActivationParameter[] parameters() default {};
+
 }
