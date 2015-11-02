@@ -67,14 +67,14 @@ public class DefaultFeatureManager implements FeatureManager {
         FeatureState state = stateRepository.getFeatureState(feature);
 
         if (state == null) {
-            return getMetaData(feature).isEnabledByDefault();
+            state = getMetaData(feature).getDefaultFeatureState();
         }
 
         if (state.isEnabled()) {
 
             // if no strategy is selected, the decision is simple
             String strategyId = state.getStrategyId();
-            if (strategyId == null) {
+            if (strategyId == null || strategyId.isEmpty()) {
                 return true;
             }
 
@@ -98,8 +98,7 @@ public class DefaultFeatureManager implements FeatureManager {
         Validate.notNull(feature, "feature is required");
         FeatureState state = stateRepository.getFeatureState(feature);
         if (state == null) {
-            boolean enabled = getMetaData(feature).isEnabledByDefault();
-            state = new FeatureState(feature, enabled);
+            state = getMetaData(feature).getDefaultFeatureState();
         }
         return state;
     }

@@ -2,6 +2,7 @@ package org.togglz.core.repository.cache;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.togglz.core.Feature;
@@ -20,7 +21,7 @@ public class CachingStateRepository implements StateRepository {
 
     private final StateRepository delegate;
 
-    private final Map<String, CacheEntry> cache = new HashMap<String, CacheEntry>();
+    private final Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
 
     private long ttl;
 

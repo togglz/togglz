@@ -8,25 +8,28 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
+import org.togglz.core.annotation.ActivationParameter;
+import org.togglz.core.annotation.DefaultActivationStrategy;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.Label;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
+import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.FeatureAnnotations;
 
 /**
- * 
- * Implementation of {@link FeatureMetaData} that looks for annotations like {@link Label} and {@link EnabledByDefault} on
- * feature enums.
- * 
+ *
+ * Implementation of {@link FeatureMetaData} that looks for annotations like {@link Label}, {@link EnabledByDefault} and
+ * {@link DefaultActivationStrategy} on feature enums.
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class EnumFeatureMetaData implements FeatureMetaData {
 
     private final String label;
 
-    private final boolean enabledByDefault;
+    private final FeatureState defaultFeatureState;
 
     private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
 
@@ -38,7 +41,19 @@ public class EnumFeatureMetaData implements FeatureMetaData {
         this.label = FeatureAnnotations.getLabel(feature);
 
         // lookup default via @EnabledByDefault
-        this.enabledByDefault = FeatureAnnotations.isEnabledByDefault(feature);
+        boolean enabledByDefault = FeatureAnnotations.isEnabledByDefault(feature);
+        this.defaultFeatureState = new FeatureState(feature, enabledByDefault);
+
+        // lookup default activation strategy @DefaultActivationStrategy
+        DefaultActivationStrategy defaultActivationStrategy = FeatureAnnotations
+            .getAnnotation(feature, DefaultActivationStrategy.class);
+        if (defaultActivationStrategy != null){
+            this.defaultFeatureState.setStrategyId(defaultActivationStrategy.id());
+
+            for (ActivationParameter parameter : defaultActivationStrategy.parameters()) {
+                this.defaultFeatureState.setParameter(parameter.name(), parameter.value());
+            }
+        }
 
         // process annotations on the feature
         for (Annotation annotation : FeatureAnnotations.getAnnotations(feature)) {
@@ -65,8 +80,8 @@ public class EnumFeatureMetaData implements FeatureMetaData {
     }
 
     @Override
-    public boolean isEnabledByDefault() {
-        return enabledByDefault;
+    public FeatureState getDefaultFeatureState() {
+        return defaultFeatureState;
     }
 
     @Override

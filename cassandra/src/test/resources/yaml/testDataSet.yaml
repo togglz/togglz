@@ -1,0 +1,5 @@
+name: TogglzTest
+columnFamilies:
+- name: Togglz
+  keyType: UTF8Type
+  comparatorType: UTF8Type

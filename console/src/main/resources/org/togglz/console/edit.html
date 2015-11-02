@@ -11,6 +11,10 @@
 
   <legend>${model.label}</legend>
 
+  ${foreach tokens token}
+  <input type="hidden" name="${token.name}" value="${token.value}"/>
+  ${end}
+
   <input type="hidden" name="f" value="${model.name}" />
   
 

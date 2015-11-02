@@ -1,6 +1,7 @@
 package org.togglz.junit.vary;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -97,7 +98,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     {
 
         // start with a single variant with all feature disabled
-        Set<Set<F>> variantSet = new HashSet<Set<F>>();
+        Set<Set<F>> variantSet = new LinkedHashSet<Set<F>>();
         variantSet.add(new HashSet<F>());
 
         for (F feature : featureClass.getEnumConstants()) {

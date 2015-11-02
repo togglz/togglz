@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>togglz-project</artifactId>
+        <groupId>org.togglz</groupId>
+        <version>2.3.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>togglz-cassandra</artifactId>
+    <name>Togglz - Cassandra integration</name>
+    <description>Togglz - Cassandra integration</description>
+
+    <properties>
+        <astyanax.version>2.0.2</astyanax.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.netflix.astyanax</groupId>
+            <artifactId>astyanax-core</artifactId>
+            <version>${astyanax.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.astyanax</groupId>
+            <artifactId>astyanax-thrift</artifactId>
+            <version>${astyanax.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netflix.astyanax</groupId>
+            <artifactId>astyanax-cassandra</artifactId>
+            <version>${astyanax.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.0.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.cassandraunit</groupId>
+            <artifactId>cassandra-unit</artifactId>
+            <version>1.2.0.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

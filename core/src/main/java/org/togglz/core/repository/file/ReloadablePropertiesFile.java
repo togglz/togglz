@@ -14,14 +14,15 @@ import java.util.Set;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.repository.property.PropertySource;
 import org.togglz.core.util.IOUtils;
 
 /**
  * Please note that this class is NOT thread-safe.
  */
-class ReloadablePropertiesFile {
+class ReloadablePropertiesFile implements PropertySource {
 
-    private final Log log = LogFactory.getLog(ReloadablePropertiesFile.class);
+    private static final Log log = LogFactory.getLog(ReloadablePropertiesFile.class);
 
     private final File file;
 
@@ -99,8 +100,8 @@ class ReloadablePropertiesFile {
 
     }
 
-    public Editor getEditor() {
-        return new Editor(values);
+    public PropertySource.Editor getEditor() {
+        return new PropertyFileEditor(values);
     }
 
     private void write(Properties newValues) {
@@ -120,11 +121,11 @@ class ReloadablePropertiesFile {
 
     }
 
-    public class Editor {
+    private class PropertyFileEditor implements PropertySource.Editor {
 
         private Properties newValues;
 
-        private Editor(Properties props) {
+        private PropertyFileEditor(Properties props) {
             newValues = new Properties();
             newValues.putAll(props);
         }

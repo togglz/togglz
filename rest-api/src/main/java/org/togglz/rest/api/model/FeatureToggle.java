@@ -47,7 +47,7 @@ public class FeatureToggle implements Serializable {
         featureToggle.setName(featureState.getFeature().name());
         featureToggle.setEnabled(featureState.isEnabled());
         if(featureState.getStrategyId() != null) {
-            //featureState.get
+            //TODO featureState.get
         }
         return featureToggle;
     }

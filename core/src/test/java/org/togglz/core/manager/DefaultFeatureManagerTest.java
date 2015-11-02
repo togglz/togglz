@@ -2,15 +2,20 @@ package org.togglz.core.manager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
+import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
@@ -31,6 +36,8 @@ public class DefaultFeatureManagerTest {
         repository.setFeatureState(new FeatureState(MyFeatures.MISSING_STRATEGY, true)
             .setStrategyId("NoSuchActivationStrategy"));
         repository.setFeatureState(new FeatureState(MyFeatures.EXPERIMENTAL, false));
+        repository.setFeatureState(new FeatureState(MyFeatures.EMPTY_STRATEGY, true)
+            .setStrategyId(""));
 
         featureUserProvider = new TestFeatureUserProvider();
 
@@ -76,6 +83,27 @@ public class DefaultFeatureManagerTest {
 
         // MISSING_STRATEGY disabled for all
         assertEquals(false, manager.isActive(MyFeatures.MISSING_STRATEGY));
+
+        // EMPTY_STRATEGY enabled for all
+        assertEquals(true, manager.isActive(MyFeatures.EMPTY_STRATEGY));
+    }
+
+    @Test
+    public void testIsActiveUsingDefaultFeatureState() {
+        FeatureProvider featureProvider = mock(FeatureProvider.class);
+        FeatureMetaData featureMetaData = mock(FeatureMetaData.class);
+        when(featureMetaData.getDefaultFeatureState()).thenReturn(new FeatureState(MyFeatures.NOT_STORED_FEATURE, true));
+        when(featureProvider.getMetaData(MyFeatures.NOT_STORED_FEATURE)).thenReturn(featureMetaData);
+
+        FeatureManager manager = new FeatureManagerBuilder()
+            .featureEnum(MyFeatures.class)
+            .stateRepository(repository)
+            .featureProvider(featureProvider)
+            .userProvider(featureUserProvider)
+            .build();
+
+        assertEquals(true, manager.isActive(MyFeatures.NOT_STORED_FEATURE));
+
     }
 
     @Test
@@ -105,6 +133,27 @@ public class DefaultFeatureManagerTest {
 
     }
 
+    @Test
+    public void testGetFeatureStateUsingDefaultFeatureState() {
+        FeatureProvider featureProvider = mock(FeatureProvider.class);
+        FeatureMetaData featureMetaData = mock(FeatureMetaData.class);
+        when(featureMetaData.getDefaultFeatureState()).thenReturn(new FeatureState(MyFeatures.NOT_STORED_FEATURE, true));
+        when(featureProvider.getMetaData(MyFeatures.NOT_STORED_FEATURE)).thenReturn(featureMetaData);
+
+        FeatureManager manager = new FeatureManagerBuilder()
+            .featureEnum(MyFeatures.class)
+            .stateRepository(repository)
+            .featureProvider(featureProvider)
+            .userProvider(featureUserProvider)
+            .build();
+
+
+        FeatureState state = manager.getFeatureState(MyFeatures.NOT_STORED_FEATURE);
+        assertEquals(MyFeatures.NOT_STORED_FEATURE, state.getFeature());
+        assertEquals(true, state.isEnabled());
+
+    }
+
     /**
      * {@link UserProvider} that allows to set the user directly
      */
@@ -129,7 +178,9 @@ public class DefaultFeatureManagerTest {
     private static enum MyFeatures implements Feature {
         DELETE_USERS,
         EXPERIMENTAL,
-        MISSING_STRATEGY;
+        MISSING_STRATEGY,
+        EMPTY_STRATEGY,
+        NOT_STORED_FEATURE;
     }
 
 }

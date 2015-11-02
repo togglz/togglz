@@ -1,7 +1,14 @@
 language: java
-install: "mvn -P ${CONTAINER} -DJBOSS_REPO=true -DskipTests=true -B install"
-script: "mvn -P ${CONTAINER} -DJBOSS_REPO=true test"
-after_success: "bash .travis-sonatype-deploy.sh"
+sudo: false
+cache:
+  directories:
+      - '$HOME/.m2/repository'
+install:
+  - "mvn -P ${CONTAINER} -DJBOSS_REPO=true -DskipTests=true -B install"
+script:
+  - "mvn -P ${CONTAINER} -DJBOSS_REPO=true test"
+after_success:
+  - "bash .travis-sonatype-deploy.sh"
 jdk:
   - oraclejdk7
   - oraclejdk8

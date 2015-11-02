@@ -19,7 +19,6 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.rest.api.model.FeatureToggle;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -39,27 +38,21 @@ import com.google.common.collect.ImmutableMap;
 public class TogglzRestApiServlet extends HttpServlet {
 
     private static final String FORWARD_SLASH = "/";
-
     private static final long serialVersionUID = 1L;
-
     private static final String CONTENT_TYPE = "Content-Type";
-    private static final String APPLICATION_JSON = "application/json";
-    private static final String APPLICATION_XML = "application/xml";
-
+    
     protected ServletContext servletContext;
     protected FeatureManager featureManager;
     protected Map<String, RequestHandler> registry;
-    
-    protected RequestHandler handler = new JsonRequestHandler();
     
     @Override
     public void init(ServletConfig config) throws ServletException {
         featureManager = new LazyResolvingFeatureManager();
         servletContext = config.getServletContext();
         registry = ImmutableMap.<String, RequestHandler>of(
-            APPLICATION_JSON, new JsonRequestHandler(),
-            APPLICATION_XML, new JsonRequestHandler()
-        );
+            JsonRequestHandler.APPLICATION_JSON, new JsonRequestHandler(),
+            XmlRequestHandler.APPLICATION_XML, new XmlRequestHandler()
+            );
     }
     
     @Override
@@ -67,43 +60,37 @@ public class TogglzRestApiServlet extends HttpServlet {
         String prefix = req.getContextPath() + req.getServletPath();
         String path = req.getRequestURI().substring(prefix.length());
         if( Strings.isBlank(path) || FORWARD_SLASH.equals(path) ) {
-            getFeatures(resp);
+            ok(req, resp, features());
         } else {
-            getFeature(resp, path);
+            getFeature(req, resp, path);
         }
     }
-
-    private void getFeature(HttpServletResponse resp, String path) throws IOException, JsonProcessingException {
+    
+    private void getFeature(HttpServletRequest req, HttpServletResponse resp, String path) throws IOException, ServletException {
         String featureName = path.startsWith(FORWARD_SLASH) ? path.substring(1) : path;
         FeatureToggle feature = feature(featureName);
         if (feature != null) {
-            resp.getWriter().write(handler.serialize(feature));
-            resp.addHeader(CONTENT_TYPE, handler.contentType());
-            resp.setStatus(HttpServletResponse.SC_OK);
+            ok(req, resp, feature);
         } else {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
-
-    private void getFeatures(HttpServletResponse resp) throws IOException, JsonProcessingException {
-        resp.getWriter().write( handler.serialize(features()));
-        resp.addHeader(CONTENT_TYPE, handler.contentType());
+    
+    private void ok(HttpServletRequest request, HttpServletResponse resp, Object obj) throws IOException, ServletException {
+        resp.getWriter().write(handler(request).serialize(obj));
+        resp.addHeader(CONTENT_TYPE, handler(request).contentType());
         resp.setStatus(HttpServletResponse.SC_OK);
     }
     
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if(!req.getContentType().startsWith(APPLICATION_JSON)) {
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, req.getContentType());
-            return;
-        }
-
-        FeatureToggle ft = handler.desserialize(req.getReader());
+        FeatureToggle ft = handler(req).desserialize(req.getReader());
         for(Feature f: featureManager.getFeatures()) {
             if( f.name().equals(ft.getName())) {
                 FeatureState state = featureManager.getFeatureState(f);
                 Boolean enabled = ft.getEnabled();
                 state.setEnabled(enabled);
+                //TODO handle activation strategy
                 featureManager.setFeatureState(state);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 return;
@@ -111,16 +98,16 @@ public class TogglzRestApiServlet extends HttpServlet {
         }
         resp.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
-
+    
     private RequestHandler handler(HttpServletRequest req) throws ServletException {
-      String acceptHeader = req.getHeader("Accept");
-      RequestHandler handler = registry.get(acceptHeader) ;
-      if (handler == null) {
-          throw new ServletException();
-      }
-      return handler;
+        String acceptHeader = req.getHeader("Accept");
+        RequestHandler handler = registry.get(acceptHeader) ;
+        if (handler == null) {
+            throw new ServletException();
+        }
+        return handler;
     }
-
+    
     private FeatureToggle feature(String featureName) {
         for(Feature f: featureManager.getFeatures()) {
             if( f.name().equals(featureName)) {
@@ -130,7 +117,7 @@ public class TogglzRestApiServlet extends HttpServlet {
         }
         return null;
     }
-
+    
     private List<FeatureToggle> features() {
         List<FeatureToggle> features = new ArrayList<FeatureToggle>();
         for(Feature f: featureManager.getFeatures()) {
@@ -140,11 +127,11 @@ public class TogglzRestApiServlet extends HttpServlet {
         }
         return features;
     }
-
+    
     private FeatureToggle feature(FeatureState featureState) {
         return FeatureToggle.from(featureState);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         notAllowed(resp);
@@ -174,3 +161,4 @@ public class TogglzRestApiServlet extends HttpServlet {
         resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
     }
 }
+

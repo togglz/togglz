@@ -1,9 +1,13 @@
 package org.togglz.core.activation;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import org.junit.Test;
 import org.togglz.core.Feature;
@@ -50,17 +54,38 @@ public class IPActivationStrategyTest {
         assertEquals(true, active);
     }
 
+    /**
+     * Returns the first IP of the current machine
+     */
     private String getMachineIP() {
+
         try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            if (interfaces != null) {
+                while (interfaces.hasMoreElements()) {
+                    Enumeration<InetAddress> addresses = interfaces.nextElement().getInetAddresses();
+                    if (addresses != null) {
+                        while (addresses.hasMoreElements()) {
+                            String hostAddress = addresses.nextElement().getHostAddress();
+                            if (hostAddress != null) {
+                                return hostAddress.trim();
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+
+        } catch (SocketException e) {
+            return "<no-ip>";
         }
-        return null;
+
     }
 
     private enum MyFeature implements Feature {
-        FEATURE;
+        FEATURE
     }
 
 }

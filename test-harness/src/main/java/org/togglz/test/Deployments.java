@@ -31,7 +31,8 @@ public class Deployments {
 
     public static JavaArchive getTogglzSpringArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-spring.jar")
-            .importDirectory("../spring/target/classes")
+            .importDirectory("../spring-core/target/classes")
+            .importDirectory("../spring-web/target/classes")
             .as(JavaArchive.class);
     }
 

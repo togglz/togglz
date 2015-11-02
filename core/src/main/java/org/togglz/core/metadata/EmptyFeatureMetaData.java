@@ -1,10 +1,11 @@
 package org.togglz.core.metadata;
 
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-
-import org.togglz.core.Feature;
 
 /**
  * {@link FeatureMetaData} implementation that doesn't provide any information.
@@ -25,8 +26,8 @@ public class EmptyFeatureMetaData implements FeatureMetaData {
     }
 
     @Override
-    public boolean isEnabledByDefault() {
-        return false;
+    public FeatureState getDefaultFeatureState() {
+        return new FeatureState(feature, false);
     }
 
     @Override

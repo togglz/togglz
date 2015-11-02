@@ -14,7 +14,7 @@ public class ClassUtils {
         try {
 
             Class<T> clazz = (Class<T>) Class.forName(classname, true, classLoader);
-            return (T) clazz.newInstance();
+            return clazz.newInstance();
 
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Unknown class: " + classname);

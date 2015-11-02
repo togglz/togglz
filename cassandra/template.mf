@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.togglz.cassandra
+Bundle-Vendor: http://www.togglz.org/
+Bundle-Version: ${osgi.bundles.version}
+Bundle-Name: ${project.name}
+Version-Patterns:
+ default;pattern="[=.=.=, =.+1.0)"
+Import-Template:
+ org.togglz.core.*;version="${osgi.bundles.version:default}",
+ com.netflix.astyanax.*;version="2.0.2",
+ org.apache.commons.lang.*;version="2.4"
+
+
