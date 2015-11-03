@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 import org.togglz.core.repository.FeatureState;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonInclude(Include.NON_NULL)
-public class FeatureToggle implements Serializable {
+public class FeatureToggleRepresentation implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +25,7 @@ public class FeatureToggle implements Serializable {
     
     @JsonProperty(required=false)
     @JacksonXmlProperty
-    private ActivationStrategy strategy;
+    private ActivationStrategyRepresentation strategy;
     
     public String getName() {
         return name;
@@ -42,15 +43,35 @@ public class FeatureToggle implements Serializable {
         this.enabled = enabled;
     }
     
-    public static FeatureToggle from(FeatureState featureState) {
-        FeatureToggle featureToggle = new FeatureToggle();
+    public static FeatureToggleRepresentation of(FeatureState featureState) {
+        FeatureToggleRepresentation featureToggle = new FeatureToggleRepresentation();
         featureToggle.setName(featureState.getFeature().name());
         featureToggle.setEnabled(featureState.isEnabled());
         if(featureState.getStrategyId() != null) {
-            //TODO featureState.get
+            featureToggle.strategy = ActivationStrategyRepresentation.of(featureState);
         }
         return featureToggle;
     }
-    
+
+    @JsonIgnore
+    public boolean hasActivationStrategy() {
+        return this.strategy != null;
+    }
+
+    @JsonIgnore
+    public String getStrategyId() {
+        return this.strategy.id();
+    }
+
+    @JsonIgnore
+    public Iterable<String> getParameterNames() {
+        return this.strategy.getParameterNames();
+    }
+
+    @JsonIgnore
+    public String getParameter(String paramName) {
+        return this.strategy.getParameter(paramName);
+    }
+
     
 }

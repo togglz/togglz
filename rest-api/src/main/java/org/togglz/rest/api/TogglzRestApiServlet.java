@@ -16,9 +16,11 @@ import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.LazyResolvingFeatureManager;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Strings;
-import org.togglz.rest.api.model.FeatureToggle;
+import org.togglz.rest.api.model.FeatureToggleRepresentation;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -40,6 +42,7 @@ public class TogglzRestApiServlet extends HttpServlet {
     private static final String FORWARD_SLASH = "/";
     private static final long serialVersionUID = 1L;
     private static final String CONTENT_TYPE = "Content-Type";
+    private static final String ACCEPT = "Accept";
     
     protected ServletContext servletContext;
     protected FeatureManager featureManager;
@@ -68,7 +71,7 @@ public class TogglzRestApiServlet extends HttpServlet {
     
     private void getFeature(HttpServletRequest req, HttpServletResponse resp, String path) throws IOException, ServletException {
         String featureName = path.startsWith(FORWARD_SLASH) ? path.substring(1) : path;
-        FeatureToggle feature = feature(featureName);
+        FeatureToggleRepresentation feature = feature(featureName);
         if (feature != null) {
             ok(req, resp, feature);
         } else {
@@ -77,38 +80,68 @@ public class TogglzRestApiServlet extends HttpServlet {
     }
     
     private void ok(HttpServletRequest request, HttpServletResponse resp, Object obj) throws IOException, ServletException {
-        resp.getWriter().write(handler(request).serialize(obj));
-        resp.addHeader(CONTENT_TYPE, handler(request).contentType());
-        resp.setStatus(HttpServletResponse.SC_OK);
+        Optional<RequestHandler> handler = handler(request, ACCEPT);
+        if(handler.isPresent()) {
+            resp.getWriter().write(handler.get().serialize(obj));
+            resp.addHeader(CONTENT_TYPE, handler.get().contentType());
+            resp.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+        }
     }
     
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        FeatureToggle ft = handler(req).desserialize(req.getReader());
-        for(Feature f: featureManager.getFeatures()) {
-            if( f.name().equals(ft.getName())) {
-                FeatureState state = featureManager.getFeatureState(f);
-                Boolean enabled = ft.getEnabled();
-                state.setEnabled(enabled);
-                //TODO handle activation strategy
-                featureManager.setFeatureState(state);
-                resp.setStatus(HttpServletResponse.SC_OK);
-                return;
+        Optional<RequestHandler> handler = handler(req, CONTENT_TYPE);
+        if(handler.isPresent()) {
+            FeatureToggleRepresentation ft = handler.get().desserialize(req.getReader());
+            for(Feature f: featureManager.getFeatures()) {
+                if( f.name().equals(ft.getName())) {
+                    FeatureState state = featureManager.getFeatureState(f);
+                    Boolean enabled = ft.getEnabled();
+                    state.setEnabled(enabled);
+                    
+                    if (ft.hasActivationStrategy()) {
+                        String strategyId = checkRegistered(ft.getStrategyId());
+                        
+                        if (Strings.isBlank(strategyId)) {
+                            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown strategy id: " + ft.getStrategyId());
+                            return;
+                        }
+                        
+                        state.setStrategyId(strategyId);
+                        for(String paramName: ft.getParameterNames()) {
+                            state.setParameter(paramName, ft.getParameter(paramName));
+                        }
+                    }
+                    
+                    featureManager.setFeatureState(state);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    return;
+                }
+            }
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, String.format("Supported media types are: %s", registry.keySet()));
+        }
+    }
+    
+    private String checkRegistered(String strategyId) {
+        for (ActivationStrategy activationStrategy : featureManager.getActivationStrategies()) {
+            if (activationStrategy.getId().equals(strategyId))  { 
+                return strategyId;
             }
         }
-        resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        return null;
+    }
+
+    private Optional<RequestHandler> handler(HttpServletRequest req, String headerName) throws ServletException {
+        String contentType = req.getHeader(headerName);
+        RequestHandler handler = registry.get(contentType) ;
+        return Optional.fromNullable(handler);
     }
     
-    private RequestHandler handler(HttpServletRequest req) throws ServletException {
-        String acceptHeader = req.getHeader("Accept");
-        RequestHandler handler = registry.get(acceptHeader) ;
-        if (handler == null) {
-            throw new ServletException();
-        }
-        return handler;
-    }
-    
-    private FeatureToggle feature(String featureName) {
+    private FeatureToggleRepresentation feature(String featureName) {
         for(Feature f: featureManager.getFeatures()) {
             if( f.name().equals(featureName)) {
                 FeatureState state = featureManager.getFeatureState(f);
@@ -118,18 +151,18 @@ public class TogglzRestApiServlet extends HttpServlet {
         return null;
     }
     
-    private List<FeatureToggle> features() {
-        List<FeatureToggle> features = new ArrayList<FeatureToggle>();
+    private List<FeatureToggleRepresentation> features() {
+        List<FeatureToggleRepresentation> features = new ArrayList<FeatureToggleRepresentation>();
         for(Feature f: featureManager.getFeatures()) {
             FeatureState state = featureManager.getFeatureState(f);
-            FeatureToggle obj = feature(state);
+            FeatureToggleRepresentation obj = feature(state);
             features.add(obj);
         }
         return features;
     }
     
-    private FeatureToggle feature(FeatureState featureState) {
-        return FeatureToggle.from(featureState);
+    private FeatureToggleRepresentation feature(FeatureState featureState) {
+        return FeatureToggleRepresentation.of(featureState);
     }
     
     @Override

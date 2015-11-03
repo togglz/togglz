@@ -17,16 +17,25 @@ import org.junit.Test;
 import org.mortbay.jetty.testing.HttpTester;
 import org.mortbay.jetty.testing.ServletTester;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.UsernameActivationStrategy;
+import org.togglz.core.annotation.ActivationParameter;
+import org.togglz.core.annotation.DefaultActivationStrategy;
 import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.rest.api.model.FeatureToggleRepresentation;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class TogglzRestApiServletTest {
 
     private static final String F10 = "F10";
     private static final String F1 = "F1";
+    private static final String F3 = "F3";
     private static final String BASE_URI = "/api/v1/featuretoggles";
     private static final String GET = "GET";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON = "application/json";
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     private ServletTester servletTester;
 
@@ -36,7 +45,7 @@ public class TogglzRestApiServletTest {
         servletTester.addServlet(TogglzRestApiServlet.class, BASE_URI + "/*");
         servletTester.start();
     }
-    
+
     @After
     public void after() throws Exception {
         servletTester.stop();
@@ -77,7 +86,10 @@ public class TogglzRestApiServletTest {
     }
 
     private void assertAllFeatures(HttpTester response) {
-        JSONArray value = (JSONArray) JSONValue.parse(response.getContent());
+        Object parse = JSONValue.parse(response.getContent());
+        System.out.println(parse);
+
+        JSONArray value = (JSONArray) parse;
         assertEquals(HttpServletResponse.SC_OK, response.getStatus());
         assertNotNull(value);
         assertEquals(3, value.size());
@@ -124,6 +136,7 @@ public class TogglzRestApiServletTest {
         request.setURI(BASE_URI + "/" + featureName);
         request.setVersion("HTTP/1.0");
         request.addHeader(CONTENT_TYPE, APPLICATION_JSON);
+        request.addHeader("Accept", APPLICATION_JSON);
         return request;
     }
 
@@ -138,7 +151,29 @@ public class TogglzRestApiServletTest {
     }
 
     @Test
-    public void putFeatureInvalidHeaders() throws Exception {
+    public void putFeatureChangingStrategyParam() throws Exception {
+        final String f1EnabledAsJson = "{\"enabled\":true,\"name\":\"F3\",\"strategy\":{\"id\":\"username\",\"parameters\":[{\"name\":\"users\",\"value\":\"person1\"}]}}";
+        HttpTester request = getFeatureRequest(F3, "PUT");
+        request.setContent(f1EnabledAsJson);
+        assertEquals(HttpServletResponse.SC_OK, response(request).getStatus());
+
+        FeatureToggleRepresentation response = mapper.readValue(response(getFeatureRequest(F3, GET)).getContent(),
+            FeatureToggleRepresentation.class);
+
+        assertEquals("username", response.getStrategyId());
+        assertEquals("person1", response.getParameter("users"));
+    }
+
+    @Test
+    public void unregisteredStrategyShouldReturnBadRequest() throws Exception {
+        final String f1EnabledAsJson = "{\"enabled\":true,\"name\":\"F1\",\"strategy\":{\"id\":\"unregistered\",\"parameters\":[{\"name\":\"users\",\"value\":\"person1\"}]}}";
+        HttpTester request = getFeatureRequest(F1, "PUT");
+        request.setContent(f1EnabledAsJson);
+        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response(request).getStatus());
+    }
+
+    @Test
+    public void putFeatureInvalidContentTYpe() throws Exception {
         HttpTester request = getFeatureRequest(F1, "PUT");
         request.setHeader(CONTENT_TYPE, "text/xml");
         assertEquals(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, response(request).getStatus());
@@ -154,6 +189,12 @@ public class TogglzRestApiServletTest {
         F1,
         F2,
         @EnabledByDefault
+        @DefaultActivationStrategy(
+            id = UsernameActivationStrategy.ID,
+            parameters = {
+                    @ActivationParameter(name = UsernameActivationStrategy.PARAM_USERS, value = "person1,ck,person2")
+            }
+        )
         F3
     }
 

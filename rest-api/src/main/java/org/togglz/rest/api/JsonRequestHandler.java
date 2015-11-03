@@ -3,7 +3,7 @@ package org.togglz.rest.api;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.togglz.rest.api.model.FeatureToggle;
+import org.togglz.rest.api.model.FeatureToggleRepresentation;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -21,8 +21,8 @@ public class JsonRequestHandler implements RequestHandler {
     }
 
     @Override
-    public FeatureToggle desserialize(Reader reader) throws JsonParseException, JsonMappingException, IOException {
-        return mapper.readValue(reader, FeatureToggle.class);
+    public FeatureToggleRepresentation desserialize(Reader reader) throws JsonParseException, JsonMappingException, IOException {
+        return mapper.readValue(reader, FeatureToggleRepresentation.class);
     }
 
     @Override
