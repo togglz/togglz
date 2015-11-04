@@ -1,6 +1,7 @@
 package org.togglz.testing;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,8 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Validate;
+
+import static java.util.Collections.emptyList;
 
 /**
  * 
@@ -74,7 +77,7 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public List<ActivationStrategy> getActivationStrategies() {
-        return null;
+        return emptyList();
     }
 
     public TestFeatureManager enable(Feature feature) {
