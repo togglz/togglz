@@ -1,6 +1,5 @@
 package org.togglz.core.repository.cache;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -91,6 +90,13 @@ public class CachingStateRepository implements StateRepository {
         cache.remove(featureState.getFeature().name());
     }
 
+    /**
+     * Clears the contents of the cache
+     */
+    public void clear() {
+        cache.clear();
+    }
+    
     /**
      * Checks whether this supplied {@link CacheEntry} should be ignored.
      */
