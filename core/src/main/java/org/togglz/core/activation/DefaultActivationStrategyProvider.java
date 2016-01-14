@@ -2,7 +2,6 @@ package org.togglz.core.activation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
@@ -25,6 +24,10 @@ public class DefaultActivationStrategyProvider implements ActivationStrategyProv
 
     public void addActivationStrategy(ActivationStrategy strategy) {
         this.strategies.add(strategy);
+    }
+
+    public void addActivationStrategies(List<ActivationStrategy> strategies) {
+        this.strategies.addAll(strategies);
     }
 
     @Override
