@@ -9,4 +9,5 @@ Version-Patterns:
 Import-Template:
  javax.servlet.*;version="0",
  org.togglz.core.*;version="${osgi.bundles.version:default}",
+ org.togglz.servlet.*;version="${osgi.bundles.version:default}",
  org.springframework.*;version="[3.0,4.0)" 
