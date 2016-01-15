@@ -1,20 +1,19 @@
 package org.togglz.spring.web.spi;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.togglz.core.spi.BeanFinder;
 import org.togglz.servlet.util.HttpServletRequestHolder;
+import org.togglz.spring.spi.AbstractSpringBeanFinder;
+import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
 
-public class SpringWebBeanFinder implements BeanFinder {
+public class SpringWebBeanFinder extends AbstractSpringBeanFinder {
 
     @Override
-    public <T> Collection<T> find(Class<T> clazz, Object context) {
+    protected ApplicationContext getApplicationContext(Object context) {
 
         // try to get the ServletContext from different sources
         ServletContext servletContext = null;
@@ -29,25 +28,18 @@ public class SpringWebBeanFinder implements BeanFinder {
         }
 
         // use the Spring API to obtain the WebApplicationContext
-        WebApplicationContext applicationContext = null;
+        ApplicationContext applicationContext = null;
         if (servletContext != null) {
             applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         }
         if (applicationContext == null) {
             applicationContext = ContextLoader.getCurrentWebApplicationContext();
         }
-
-        Collection<T> result = new ArrayList<T>();
-
-        // may be null if Spring hasn't started yet
-        if (applicationContext != null) {
-
-            // ask spring about beans of this type
-            result.addAll(applicationContext.getBeansOfType(clazz).values());
-
+        if (applicationContext == null) {
+            applicationContext = ContextClassLoaderApplicationContextHolder.get();
         }
 
-        return result;
+        return applicationContext;
 
     }
 
