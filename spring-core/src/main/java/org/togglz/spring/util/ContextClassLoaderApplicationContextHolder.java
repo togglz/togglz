@@ -14,10 +14,20 @@ public class ContextClassLoaderApplicationContextHolder {
     private static final ConcurrentHashMap<ClassLoader, ApplicationContext> contextMap = new ConcurrentHashMap<ClassLoader, ApplicationContext>();
 
     /**
-     * Returns the {@link ApplicationContext} bound to the current context class loader.
+     * Returns the {@link ApplicationContext} bound to the current context class loader or any of
+     * its parent class loaders. Walking up the class loader hierarchy is required to support
+     * special class loader scenarios like Spring Boot's reloading mechanism.
      */
     public static ApplicationContext get() {
-        return contextMap.get(getContextClassLoader());
+        ClassLoader classLoader = getContextClassLoader();
+        while (classLoader != null) {
+            ApplicationContext applicationContext = contextMap.get(classLoader);
+            if (applicationContext != null) {
+                return applicationContext;
+            }
+            classLoader = classLoader.getParent();
+        }
+        return null;
     }
 
     /**
