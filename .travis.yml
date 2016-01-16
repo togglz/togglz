@@ -12,6 +12,8 @@ after_success:
 jdk:
   - oraclejdk7
   - oraclejdk8
+notifications:
+  slack: togglz:HUoTsKGDzDcg2rInKEpzqaBH
 env:
   global:
     - CONTAINER=wildfly-managed
