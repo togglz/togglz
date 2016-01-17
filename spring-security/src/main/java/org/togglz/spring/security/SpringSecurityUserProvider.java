@@ -1,7 +1,5 @@
 package org.togglz.spring.security;
 
-import java.util.Set;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
@@ -10,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
+
+import java.util.Set;
 
 public class SpringSecurityUserProvider implements UserProvider {
 
@@ -30,24 +30,12 @@ public class SpringSecurityUserProvider implements UserProvider {
         // null if no authentication data is available for the current thread
         if (authentication != null) {
 
-            String name = null;
-
-            // try to obtain the name of thie user
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) principal;
-                name = userDetails.getUsername();
-            } else {
-                name = principal.toString();
-            }
-
-            Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+            // try to obtain the name of this user
+            String name = getUserName(authentication);
 
             // check for the authority for feature admins
-            boolean featureAdmin = false;
-            if (featureAdminAuthority != null) {
-                featureAdmin = authorities.contains(featureAdminAuthority);
-            }
+            Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+            boolean featureAdmin = isFeatureAdmin(authentication, authorities);
 
             SimpleFeatureUser user = new SimpleFeatureUser(name, featureAdmin);
             user.setAttribute(USER_ATTRIBUTE_ROLES, authorities);
@@ -55,6 +43,20 @@ public class SpringSecurityUserProvider implements UserProvider {
 
         }
         return null;
+    }
+
+    protected boolean isFeatureAdmin(Authentication authentication, Set<String> authorities) {
+        return featureAdminAuthority != null && authorities.contains(featureAdminAuthority);
+    }
+
+    protected String getUserName(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            return userDetails.getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 
 }
