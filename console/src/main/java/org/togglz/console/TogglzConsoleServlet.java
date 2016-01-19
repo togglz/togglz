@@ -52,7 +52,7 @@ public class TogglzConsoleServlet extends HttpServlet {
         RequestHandler handler = getHandlerFor(path);
 
         if (handler != null) {
-            if (!handler.adminOnly() || isFeatureAdmin()) {
+            if (!handler.adminOnly() || isFeatureAdmin(request)) {
                 handler.process(consoleRequest);
             } else {
                 response.sendError(403, "You are not allowed to access the Togglz Console");
@@ -64,7 +64,7 @@ public class TogglzConsoleServlet extends HttpServlet {
 
     }
 
-    private boolean isFeatureAdmin() {
+    protected boolean isFeatureAdmin(HttpServletRequest request) {
         FeatureUser user = featureManager.getCurrentFeatureUser();
         return user != null && user.isFeatureAdmin();
     }
