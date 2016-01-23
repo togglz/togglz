@@ -186,6 +186,7 @@
     <module>junit</module>
     <module>distribution</module>
     <module>cassandra</module>
+    <module>hazelcast</module>
   </modules>
 
   <developers>
