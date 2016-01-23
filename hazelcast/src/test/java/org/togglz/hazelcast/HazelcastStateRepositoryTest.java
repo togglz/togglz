@@ -1,5 +1,6 @@
 package org.togglz.hazelcast;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -14,7 +15,7 @@ public class HazelcastStateRepositoryTest {
 	private StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
 
 	@Test
-	public void testSetFeatureState() {
+	public void testSetFeatureStateNotExisitingInMap() {
 		Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
@@ -25,4 +26,22 @@ public class HazelcastStateRepositoryTest {
 		
 	}
 
+	@Test
+	public void testSetFeatureStateExistingInMap() {
+		Feature feature = new NamedFeature("SAMPLE_FEATURE");
+		FeatureState featureState = new FeatureState(feature, true);
+		stateRepository.setFeatureState(featureState);
+		
+		FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
+		assertTrue(storedFeatureState.isEnabled());
+		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
+
+		featureState.setEnabled(false);
+		stateRepository.setFeatureState(featureState);
+		storedFeatureState = stateRepository.getFeatureState(feature);
+		assertFalse(storedFeatureState.isEnabled());
+		
+		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
+		
+	}
 }

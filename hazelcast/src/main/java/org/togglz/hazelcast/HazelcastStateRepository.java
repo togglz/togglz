@@ -11,16 +11,16 @@ import com.hazelcast.core.IMap;
 
 /**
  * <p>
- * A state repository which stores the feature state in a MongoDB database.
+ * A state repository which stores the feature state in a Hazelcast distributed map.
  * </p>
  * 
  * <p>
- * The class provides a builder which can be used to configure the repository:
+ * The class provides a builder which can be used to configure the Hazelcast instance and map to be used:
  * </p>
  * 
  * <pre>
- * StateRepository repository = HazelcastStateRepository.newBuilder(mongoClient, &quot;mydb&quot;).collection(&quot;togglz&quot;)
- * 		.authentication(&quot;john&quot;, &quot;tiger&quot;).writeConcern(WriteConcern.REPLICA_ACKNOWLEDGED).build();
+ * StateRepository repository = HazelcastStateRepository.newBuilder().mapName(&quot;my_map&quot;)
+ * 		.config(hazelcastConfig).build();
  * </pre>
  * 
  * @author Camiel de Vleeschauwer
