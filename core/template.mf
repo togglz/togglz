@@ -5,4 +5,12 @@ Bundle-Vendor: http://www.togglz.org/
 Bundle-Version: ${osgi.bundles.version}
 Bundle-Name: ${project.name}
 Version-Patterns:
- default;pattern="[=.=.=, =.+1.0)" 
+ default;pattern="[=.=.=, =.+1.0)"
+Require-Capability:
+  osgi.extender;filter:="(osgi.extender=osgi.serviceloader.registrar)",
+  osgi.extender;filter:="(osgi.extender=osgi.serviceloader.processor)",
+  osgi.serviceloader;filter:="(osgi.serviceloader=org.togglz.core.spi.LogProvider)";cardinality:=multiple
+Provide-Capability:
+  osgi.serviceloader;osgi.serviceloader=org.togglz.core.spi.ActivationStrategy,
+  osgi.serviceloader;osgi.serviceloader=org.togglz.core.spi.FeatureManagerProvider,
+  osgi.serviceloader;osgi.serviceloader=org.togglz.core.spi.LogProvider
