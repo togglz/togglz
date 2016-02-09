@@ -87,6 +87,11 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-boot-starter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
       <artifactId>togglz-jsf</artifactId>
       <version>${project.version}</version>
     </dependency>
