@@ -37,6 +37,7 @@
         <include>org.togglz:togglz-spring-core:jar:*</include>
         <include>org.togglz:togglz-spring-web:jar:*</include>
         <include>org.togglz:togglz-spring-security:jar:*</include>
+        <include>org.togglz:togglz-spring-boot-starter:jar:*</include>
         <include>org.togglz:togglz-deltaspike:jar:*</include>
         <include>org.togglz:togglz-shiro:jar:*</include>
         <include>org.togglz:togglz-jsf:jar:*</include>
