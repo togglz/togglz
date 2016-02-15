@@ -12,7 +12,7 @@ after_success:
 jdk:
   - oraclejdk7
   - oraclejdk8
-otifications:
+notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/ce8c97d4907f0681aa48
