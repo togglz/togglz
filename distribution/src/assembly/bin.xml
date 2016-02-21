@@ -33,7 +33,6 @@
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>org.togglz:togglz-cdi:jar:*</include>
-        <include>org.togglz:togglz-seam-security:jar:*</include>
         <include>org.togglz:togglz-spring-core:jar:*</include>
         <include>org.togglz:togglz-spring-web:jar:*</include>
         <include>org.togglz:togglz-spring-security:jar:*</include>

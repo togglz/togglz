@@ -182,7 +182,6 @@
     <module>appengine</module>
     <module>archaius</module>
     <module>mongodb</module>
-    <module>seam-security</module>
     <module>testing</module>
     <module>junit</module>
     <module>distribution</module>
