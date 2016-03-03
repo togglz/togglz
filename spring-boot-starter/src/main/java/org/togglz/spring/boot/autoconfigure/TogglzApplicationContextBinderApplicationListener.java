@@ -21,6 +21,8 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
 /**
@@ -31,9 +33,15 @@ import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
  */
 public class TogglzApplicationContextBinderApplicationListener implements ApplicationListener {
 
+    private static final Log log = LogFactory.getLog(TogglzApplicationContextBinderApplicationListener.class);
+
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         if (event instanceof ContextRefreshedEvent) {
+            if (ContextClassLoaderApplicationContextHolder.get() != null) {
+                log.warn("ApplicationContext already bound to current context class loader, releasing it first");
+                ContextClassLoaderApplicationContextHolder.release();
+            }
             ApplicationContext applicationContext = ((ContextRefreshedEvent) event).getApplicationContext();
             ContextClassLoaderApplicationContextHolder.bind(applicationContext);
         } else if (event instanceof ContextClosedEvent) {

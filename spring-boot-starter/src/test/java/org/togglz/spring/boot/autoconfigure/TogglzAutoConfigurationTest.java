@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.test.EnvironmentTestUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -44,16 +43,14 @@ import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
 import java.util.Set;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link TogglzAutoConfiguration}.
  *
  * @author Marcel Overdijk
  */
-public class TogglzAutoConfigurationTests {
+public class TogglzAutoConfigurationTest {
 
     private AnnotationConfigWebApplicationContext context;
 
@@ -69,56 +66,63 @@ public class TogglzAutoConfigurationTests {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class});
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         Set<Feature> features = featureManager.getFeatures();
-        assertThat(featureManager, is(notNullValue()));
-        assertThat(features, hasSize(2));
-        assertThat(features, hasItem(MyFeatures.FEATURE_ONE));
-        assertThat(features, hasItem(MyFeatures.FEATURE_TWO));
-        assertThat(this.context.getBean(StateRepository.class), is(instanceOf(InMemoryStateRepository.class)));
-        assertThat(this.context.getBeansOfType(ServletRegistrationBean.class).size(), is(equalTo(1)));
-        assertThat(this.context.getBean(ServletRegistrationBean.class).getUrlMappings(), hasItem("/togglz-console/*"));
+
+        assertNotNull(featureManager);
+        assertSame(featureManager, FeatureContext.getFeatureManager());
+
+        assertSame(this.context, ContextClassLoaderApplicationContextHolder.get());
+
+        assertEquals(2, features.size());
+        assertTrue(features.contains(MyFeatures.FEATURE_ONE));
+        assertTrue(features.contains(MyFeatures.FEATURE_TWO));
+
+        assertTrue(this.context.getBean(StateRepository.class) instanceof InMemoryStateRepository);
+        assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+        assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/togglz-console/*"));
+
         TogglzEndpoint togglzEndpoint = this.context.getBean(TogglzEndpoint.class);
-        assertThat(togglzEndpoint.getId(), is("togglz"));
-        assertThat(togglzEndpoint.isEnabled(), is(true));
-        assertThat(togglzEndpoint.isSensitive(), is(true));
-        assertThat(ContextClassLoaderApplicationContextHolder.get(), is((ApplicationContext) this.context));
-        assertThat(FeatureContext.getFeatureManager(), is(sameInstance(featureManager)));
+        assertEquals("togglz", togglzEndpoint.getId());
+        assertTrue(togglzEndpoint.isEnabled());
+        assertTrue(togglzEndpoint.isSensitive());
     }
 
     @Test
     public void applicationContextBinder() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class});
-        assertThat(ContextClassLoaderApplicationContextHolder.get(), is((ApplicationContext) this.context));
+        assertSame(this.context, ContextClassLoaderApplicationContextHolder.get());
     }
 
     @Test
     public void disabled() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.enabled: false");
-        assertThat(this.context.getBeansOfType(FeatureManager.class).size(), is(0));
-        assertThat(this.context.getBeansOfType(ActivationStrategy.class).size(), is(0));
-        assertThat(this.context.getBeansOfType(StateRepository.class).size(), is(0));
-        assertThat(this.context.getBeansOfType(UserProvider.class).size(), is(0));
-        assertThat(this.context.getBeansOfType(ServletRegistrationBean.class).size(), is(0));
-        assertThat(this.context.getBeansOfType(TogglzEndpoint.class).size(), is(0));
-        assertThat(ContextClassLoaderApplicationContextHolder.get(), is(nullValue()));
         try {
-            assertThat(FeatureContext.getFeatureManager(), is(nullValue()));
+            FeatureContext.getFeatureManager();
             fail();
         } catch (IllegalStateException e) {
             // expected
         }
+
+        assertNull(ContextClassLoaderApplicationContextHolder.get());
+
+        assertEquals(0, this.context.getBeansOfType(FeatureManager.class).size());
+        assertEquals(0, this.context.getBeansOfType(ActivationStrategy.class).size());
+        assertEquals(0, this.context.getBeansOfType(StateRepository.class).size());
+        assertEquals(0, this.context.getBeansOfType(UserProvider.class).size());
+        assertEquals(0, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+        assertEquals(0, this.context.getBeansOfType(TogglzEndpoint.class).size());
     }
 
     @Test
     public void featureEnums() {
         load(new Class[]{TogglzAutoConfiguration.class},
-                "togglz.feature-enums: org.togglz.spring.boot.autoconfigure.TogglzAutoConfigurationTests.MyFeatures");
+                "togglz.feature-enums: org.togglz.spring.boot.autoconfigure.TogglzAutoConfigurationTest.MyFeatures");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         Set<Feature> features = featureManager.getFeatures();
-        assertThat(featureManager, is(notNullValue()));
-        assertThat(features, hasSize(2));
-        assertThat(features, hasItem(MyFeatures.FEATURE_ONE));
-        assertThat(features, hasItem(MyFeatures.FEATURE_TWO));
+        assertNotNull(featureManager);
+        assertEquals(2, features.size());
+        assertTrue(features.contains(MyFeatures.FEATURE_ONE));
+        assertTrue(features.contains(MyFeatures.FEATURE_TWO));
     }
 
     @Test(expected = BeanCreationException.class)
@@ -131,7 +135,7 @@ public class TogglzAutoConfigurationTests {
     public void customFeatureManagerName() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.feature-manager-name: Custom Feature Manager Name");
-        assertThat(this.context.getBean(FeatureManager.class).getName(), is("Custom Feature Manager Name"));
+        assertEquals("Custom Feature Manager Name", this.context.getBean(FeatureManager.class).getName());
     }
 
     @Test
@@ -140,9 +144,9 @@ public class TogglzAutoConfigurationTests {
                 "togglz.features.FEATURE_ONE: true",
                 "togglz.features.FEATURE_TWO: false");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
-        assertThat(featureManager.isActive(MyFeatures.FEATURE_ONE), is(true));
-        assertThat(featureManager.isActive(MyFeatures.FEATURE_TWO), is(false));
-        assertThat(this.context.getBean(StateRepository.class), is(instanceOf(PropertyBasedStateRepository.class)));
+        assertTrue(featureManager.isActive(MyFeatures.FEATURE_ONE));
+        assertFalse(featureManager.isActive(MyFeatures.FEATURE_TWO));
+        assertTrue(this.context.getBean(StateRepository.class) instanceof PropertyBasedStateRepository);
     }
 
     @Test
@@ -150,60 +154,60 @@ public class TogglzAutoConfigurationTests {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.features-file: classpath:/features-file/features.properties");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
-        assertThat(featureManager.isActive(MyFeatures.FEATURE_ONE), is(true));
-        assertThat(featureManager.isActive(MyFeatures.FEATURE_TWO), is(false));
-        assertThat(this.context.getBean(StateRepository.class), is(instanceOf(FileBasedStateRepository.class)));
+        assertTrue(featureManager.isActive(MyFeatures.FEATURE_ONE));
+        assertFalse(featureManager.isActive(MyFeatures.FEATURE_TWO));
+        assertTrue(this.context.getBean(StateRepository.class) instanceof FileBasedStateRepository);
     }
 
     @Test
     public void cacheEnabled() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.cache.enabled: true");
-        assertThat(this.context.getBean(StateRepository.class), is(instanceOf(CachingStateRepository.class)));
+        assertTrue(this.context.getBean(StateRepository.class) instanceof CachingStateRepository);
     }
 
     @Test
     public void consoleDisabled() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.console.enabled: false");
-        assertThat(this.context.getBeansOfType(ServletRegistrationBean.class).size(), is(0));
+        assertEquals(0, this.context.getBeansOfType(ServletRegistrationBean.class).size());
     }
 
     @Test
     public void customConsolePath() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.console.path: /custom");
-        assertThat(this.context.getBeansOfType(ServletRegistrationBean.class).size(), is(1));
-        assertThat(this.context.getBean(ServletRegistrationBean.class).getUrlMappings(), hasItem("/custom/*"));
+        assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+        assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/custom/*"));
     }
 
     @Test
     public void customConsolePathWithTrailingSlash() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.console.path: /custom/");
-        assertThat(this.context.getBeansOfType(ServletRegistrationBean.class).size(), is(1));
-        assertThat(this.context.getBean(ServletRegistrationBean.class).getUrlMappings(), hasItems("/custom/*"));
+        assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+        assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/custom/*"));
     }
 
     @Test
     public void endpointDisabled() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.endpoint.enabled: false");
-        assertThat(this.context.getBeansOfType(TogglzEndpoint.class).size(), is(0));
+        assertEquals(0, this.context.getBeansOfType(TogglzEndpoint.class).size());
     }
 
     @Test
     public void endpointNotSensitive() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.endpoint.sensitive: false");
-        assertThat(this.context.getBean(TogglzEndpoint.class).isSensitive(), is(false));
+        assertFalse(this.context.getBean(TogglzEndpoint.class).isSensitive());
     }
 
     @Test
     public void customEndpointId() {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.endpoint.id: features");
-        assertThat(this.context.getBean(TogglzEndpoint.class).getId(), is("features"));
+        assertEquals("features", this.context.getBean(TogglzEndpoint.class).getId());
     }
 
     @Test
@@ -211,7 +215,7 @@ public class TogglzAutoConfigurationTests {
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class, ActivationStrategyConfig.class});
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         CustomActivationStrategy customActivationStrategy = this.context.getBean(CustomActivationStrategy.class);
-        assertThat(featureManager.getActivationStrategies().contains(customActivationStrategy), is(true));
+        assertTrue(featureManager.getActivationStrategies().contains(customActivationStrategy));
     }
 
     private void load(Class<?>[] configs, String... environment) {

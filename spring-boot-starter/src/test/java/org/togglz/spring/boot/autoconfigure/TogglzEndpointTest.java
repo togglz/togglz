@@ -29,16 +29,14 @@ import org.togglz.core.spi.FeatureProvider;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Tests for {@link TogglzEndpoint}.
  *
  * @author Marcel Overdijk
  */
-public class TogglzEndpointTests {
+public class TogglzEndpointTest {
 
     private AnnotationConfigApplicationContext context;
 
@@ -57,19 +55,26 @@ public class TogglzEndpointTests {
                 "togglz.features.FEATURE_TWO.strategy: release-date",
                 "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
                 "togglz.features.FEATURE_TWO.param.time: 08:30:00");
+
         TogglzEndpoint endpoint = this.context.getBean(TogglzEndpoint.class);
         List<TogglzEndpoint.TogglzFeature> features = endpoint.invoke();
-        assertThat(features.size(), is(2));
-        assertThat(features.get(0).getName(), is("FEATURE_ONE"));
-        assertThat(features.get(0).isEnabled(), is(true));
-        assertThat(features.get(0).getStrategy(), is(nullValue()));
-        assertThat(features.get(0).getParams().size(), is(0));
-        assertThat(features.get(1).getName(), is("FEATURE_TWO"));
-        assertThat(features.get(1).isEnabled(), is(false));
-        assertThat(features.get(1).getStrategy(), is("release-date"));
-        assertThat(features.get(1).getParams().size(), is(2));
-        assertThat(features.get(1).getParams().get("date"), is("2016-07-01"));
-        assertThat(features.get(1).getParams().get("time"), is("08:30:00"));
+
+        // Assert we have 2 features
+        assertEquals(2, features.size());
+
+        // Assert feature one
+        assertEquals("FEATURE_ONE", features.get(0).getName());
+        assertTrue(features.get(0).isEnabled());
+        assertNull(features.get(0).getStrategy());
+        assertEquals(0, features.get(0).getParams().size());
+
+        // Assert feature two
+        assertEquals("FEATURE_TWO", features.get(1).getName());
+        assertFalse(features.get(1).isEnabled());
+        assertEquals("release-date", features.get(1).getStrategy());
+        assertEquals(2, features.get(1).getParams().size());
+        assertEquals("2016-07-01", features.get(1).getParams().get("date"));
+        assertEquals("08:30:00", features.get(1).getParams().get("time"));
     }
 
     private void load(Class<?>[] configs, String... environment) {
