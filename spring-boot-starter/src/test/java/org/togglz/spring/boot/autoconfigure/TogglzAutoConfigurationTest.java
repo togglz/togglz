@@ -94,15 +94,13 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void disabled() {
+        // Explicitly clear cache
+        FeatureContext.clearCache();
+
         load(new Class[]{TogglzAutoConfiguration.class, FeatureProviderConfig.class},
                 "togglz.enabled: false");
-        try {
-            FeatureContext.getFeatureManager();
-            fail();
-        } catch (IllegalStateException e) {
-            // expected
-        }
 
+        assertNull(FeatureContext.getFeatureManagerOrNull());
         assertNull(ContextClassLoaderApplicationContextHolder.get());
 
         assertEquals(0, this.context.getBeansOfType(FeatureManager.class).size());
