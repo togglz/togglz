@@ -48,6 +48,11 @@ public class Jdk14LogProvider implements LogProvider {
         }
 
         @Override
+        public void warn(String msg) {
+            logger.warning(msg);
+        }
+
+        @Override
         public void error(String msg) {
             logger.severe(msg);
         }
