@@ -5,13 +5,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
-import java.util.WeakHashMap;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
+import org.togglz.core.util.ConcurrentReferenceHashMap;
 import org.togglz.core.util.Weighted;
+
+import static org.togglz.core.util.ConcurrentReferenceHashMap.ReferenceType.STRONG;
+import static org.togglz.core.util.ConcurrentReferenceHashMap.ReferenceType.WEAK;
 
 /**
  * 
@@ -28,7 +31,8 @@ public class FeatureContext {
     /**
      * Cache for the {@link FeatureManager} instances looked up using the SPI
      */
-    private static final WeakHashMap<ClassLoader, FeatureManager> cache = new WeakHashMap<ClassLoader, FeatureManager>();
+    private static final ConcurrentReferenceHashMap<ClassLoader, FeatureManager> cache
+            = new ConcurrentReferenceHashMap<ClassLoader, FeatureManager>(WEAK, STRONG);
 
     /**
      * 
@@ -38,7 +42,7 @@ public class FeatureContext {
      * 
      * @return The {@link FeatureManager} for the application, never <code>null</code>
      */
-    public static synchronized FeatureManager getFeatureManager() {
+    public static FeatureManager getFeatureManager() {
 
         FeatureManager manager = getFeatureManagerOrNull();
 
@@ -61,17 +65,20 @@ public class FeatureContext {
      * 
      * @return The {@link FeatureManager} for the application or <code>null</code>
      */
-    public static synchronized FeatureManager getFeatureManagerOrNull() {
-
-        // the classloader used for cache lookups
+    public static FeatureManager getFeatureManagerOrNull() {
         ClassLoader classLoader = getContextClassLoader();
-
-        // first try to lookup from the cache
         FeatureManager featureManager = cache.get(classLoader);
         if (featureManager != null) {
             return featureManager;
         }
+        featureManager = findFeatureManagerInClassLoader(classLoader);
+        if (featureManager != null) {
+            cache.put(classLoader, featureManager);
+        }
+        return featureManager;
+    }
 
+    private static FeatureManager findFeatureManagerInClassLoader(ClassLoader classLoader) {
         if (log.isDebugEnabled()) {
             log.debug("No cached FeatureManager for class loader: " + classLoader);
         }
@@ -87,6 +94,8 @@ public class FeatureContext {
         if (log.isDebugEnabled()) {
             log.debug("Found " + providerList.size() + " FeatureManagerProvider implementations...");
         }
+
+        FeatureManager featureManager = null;
 
         // try providers one by one to find a FeatureManager
         for (FeatureManagerProvider provider : providerList) {
@@ -110,13 +119,7 @@ public class FeatureContext {
 
         }
 
-        // cache the result for later lookups
-        if (featureManager != null) {
-            cache.put(classLoader, featureManager);
-            return featureManager;
-        }
-
-        return null;
+        return featureManager;
     }
 
     /**
