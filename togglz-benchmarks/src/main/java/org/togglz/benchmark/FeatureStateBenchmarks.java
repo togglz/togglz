@@ -8,6 +8,7 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -27,12 +28,15 @@ import org.togglz.core.user.NoOpUserProvider;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Benchmark the performance of using an ActivationStrategy on the performance of a Togglz switch
+ *
  * @author Ryan Gardner
  * @date 5/12/16
  */
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.Throughput, Mode.SampleTime, Mode.SingleShotTime})
 @Measurement(iterations = 8, time = 1, timeUnit = TimeUnit.SECONDS)
+@Threads(7)
 @Warmup(iterations = 8, time = 1, timeUnit = TimeUnit.SECONDS)
 public class FeatureStateBenchmarks {
     FeatureManager manager;
@@ -112,8 +116,6 @@ public class FeatureStateBenchmarks {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(FeatureStateBenchmarks.class.getSimpleName())
-                .threads(7)
-                .forks(1)
                 .build();
 
         new Runner(opt).run();

@@ -8,6 +8,7 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -30,7 +31,8 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.Throughput, Mode.SampleTime, Mode.SingleShotTime})
 @Measurement(iterations = 6, time = 1, timeUnit = TimeUnit.SECONDS)
-@Warmup(iterations = 6, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Threads(7)
 public class TogglzOverheadBenchmark {
     FeatureManager manager;
     boolean enabled = false;
@@ -83,9 +85,6 @@ public class TogglzOverheadBenchmark {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(TogglzOverheadBenchmark.class.getSimpleName())
-                .warmupIterations(5)
-                .measurementIterations(4)
-                .threads(8)
                 .forks(1)
                 .build();
 

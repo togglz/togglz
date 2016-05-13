@@ -6,6 +6,7 @@
         <artifactId>togglz-project</artifactId>
         <groupId>org.togglz</groupId>
         <version>2.3.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
 
     <groupId>org.togglz.benchmark</groupId>
@@ -41,7 +42,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmh.version>1.12</jmh.version>
         <javac.target>1.6</javac.target>
-        <uberjar.name>benchmarks</uberjar.name>
+        <uberjar.name>togglz-benchmarks-uberjar</uberjar.name>
     </properties>
 
     <build>
@@ -92,47 +93,24 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <useDefaultManifestFile>true</useDefaultManifestFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.virgo.bundlor</groupId>
+                <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
+                <executions>
+                    <execution>
+                        <id>bundlor</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.9.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-site-plugin</artifactId>
-                    <version>3.3</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.17</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 
 </project>

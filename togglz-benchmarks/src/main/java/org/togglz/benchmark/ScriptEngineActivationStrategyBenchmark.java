@@ -8,6 +8,7 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.profile.GCProfiler;
 import org.openjdk.jmh.runner.Runner;
@@ -27,12 +28,16 @@ import org.togglz.core.user.NoOpUserProvider;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Benchmark the performance of the ScriptEngine-based activation strategy in
+ * terms of speed and memory footprint
+ *
  * @author Ryan Gardner
  * @date 5/13/16
  */
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.Throughput, Mode.SampleTime, Mode.SingleShotTime})
 @Measurement(iterations = 4, time = 10, timeUnit = TimeUnit.SECONDS)
+@Threads(7)
 @Warmup(iterations = 4, time = 5, timeUnit = TimeUnit.SECONDS)
 public class ScriptEngineActivationStrategyBenchmark {
     FeatureManager manager;
@@ -99,8 +104,6 @@ public class ScriptEngineActivationStrategyBenchmark {
         Options opt = new OptionsBuilder()
                 .include(ScriptEngineActivationStrategyBenchmark.class.getSimpleName())
                 .addProfiler(GCProfiler.class)
-                .threads(7)
-                .forks(1)
                 .build();
 
         new Runner(opt).run();
