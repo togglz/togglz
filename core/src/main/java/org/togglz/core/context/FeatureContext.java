@@ -73,7 +73,11 @@ public class FeatureContext {
         }
         featureManager = findFeatureManagerInClassLoader(classLoader);
         if (featureManager != null) {
-            cache.put(classLoader, featureManager);
+            FeatureManager previousFeatureManager = cache.putIfAbsent(classLoader, featureManager);
+            if (previousFeatureManager != null) {
+                // Return FeatureManager that was inserted first
+                return previousFeatureManager;
+            }
         }
         return featureManager;
     }
