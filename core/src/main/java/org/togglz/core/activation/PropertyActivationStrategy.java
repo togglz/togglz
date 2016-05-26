@@ -28,8 +28,7 @@ public class PropertyActivationStrategy implements ActivationStrategy{
         boolean active = false;
         String parameter = featureState.getParameter(PARAM_PROPERTY);
         String sysprop = System.getProperty(parameter);
-        String envProp = System.getenv(parameter);
-        return validate(sysprop) || validate(envProp);
+        return validate(sysprop);
 
     }
 
