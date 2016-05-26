@@ -8,7 +8,7 @@ import org.togglz.core.util.Strings;
 /**
  * Created by ddcchrisk on 5/26/16.
  */
-public class PropertyActivationStrategy implements ActivationStrategy{
+public class SystemPropertyActivationStrategy implements ActivationStrategy{
 
     public static final String ID = "property";
     public static final String PARAM_PROPERTY = "property";

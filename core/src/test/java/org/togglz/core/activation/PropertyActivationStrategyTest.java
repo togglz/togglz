@@ -13,7 +13,7 @@ import org.togglz.core.user.SimpleFeatureUser;
  */
 public class PropertyActivationStrategyTest {
 
-    private final PropertyActivationStrategy strategy = new PropertyActivationStrategy();
+    private final SystemPropertyActivationStrategy strategy = new SystemPropertyActivationStrategy();
     private FeatureUser user = new SimpleFeatureUser("who-cares-what-my-name-is");
     private FeatureState state ;
 
@@ -64,8 +64,8 @@ public class PropertyActivationStrategyTest {
 
     private void setState(String prop) {
         state = new FeatureState(ScriptFeature.FEATURE)
-                .setParameter(PropertyActivationStrategy.PARAM_PROPERTY, prop)
-                .setStrategyId(PropertyActivationStrategy.ID);
+                .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY, prop)
+                .setStrategyId(SystemPropertyActivationStrategy.ID);
     }
 
     private enum ScriptFeature implements Feature {
