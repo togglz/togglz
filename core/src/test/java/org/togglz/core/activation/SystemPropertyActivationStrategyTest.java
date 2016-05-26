@@ -11,7 +11,7 @@ import org.togglz.core.user.SimpleFeatureUser;
 /**
  * Created by ddcchrisk on 5/26/16.
  */
-public class PropertyActivationStrategyTest {
+public class SystemPropertyActivationStrategyTest {
 
     private final SystemPropertyActivationStrategy strategy = new SystemPropertyActivationStrategy();
     private FeatureUser user = new SimpleFeatureUser("who-cares-what-my-name-is");

@@ -41,8 +41,8 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
         return new Parameter[]
                 {
                         ParameterBuilder.create(PARAM_PROPERTY)
-                                .label("Property Based")
-                                .description("A system based property for which a feature can be enabled")
+                                .label("System Property")
+                                .description("A system property that can be set for which a feature should be active")
                                 .largeText()
                 };
     }
