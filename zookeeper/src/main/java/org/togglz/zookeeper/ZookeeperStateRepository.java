@@ -5,17 +5,19 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
-    private static final Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
+
+    private static final String FEAURES_PATH = "/features";
+
+    private static final Gson gson = new Gson();
 
     private TreeCache treeCache;
     private ConcurrentMap<String, FeatureState> states;
@@ -23,13 +25,14 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     protected final CuratorFramework curatorFramework;
     protected final String znode;
 
-    private ZookeeperStateRepository(Builder builder) {
+    private ZookeeperStateRepository(Builder builder) throws Exception {
         this.curatorFramework = builder.curatorFramework;
         this.znode = builder.znode;
 
         states = new ConcurrentHashMap<>();
         treeCache = new TreeCache(curatorFramework, znode);
         treeCache.getListenable().addListener(this);
+        treeCache.start();
     }
 
     @Override
@@ -39,21 +42,64 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     @Override
     public void setFeatureState(FeatureState featureState) {
-        Gson gson = new Gson();
         String json = gson.toJson(featureState);
 
         try {
-            curatorFramework.setData().forPath(znode + "/features/" + featureState.getFeature().name(), json.getBytes());
+            curatorFramework.setData().forPath(znode + FEAURES_PATH + "/" + featureState.getFeature().name(), json.getBytes());
             states.replace(featureState.getFeature().name(), featureState);
         } catch (Exception e) {
-            log.error("could not persist FeatureState to Zookeeper", e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent treeCacheEvent) throws Exception {
+    public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent event) throws Exception {
+        switch (event.getType()) {
+            case NODE_ADDED:
+                String addedPath = event.getData().getPath();
+                if (addedPath.contains(FEAURES_PATH)) {
+                    String featureName = addedPath.split(FEAURES_PATH)[1];
+                    if (featureName.contains("/")) {
+                        break;
+                    }
+                    FeatureState featureState = gson.fromJson(new String(event.getData().getData()), FeatureState.class);
+                    states.putIfAbsent(featureName, featureState);
+                }
+                break;
+            case NODE_UPDATED:
+                String updatedPath = event.getData().getPath();
+                if (updatedPath.contains(FEAURES_PATH)) {
+                    String featureName = updatedPath.split(FEAURES_PATH)[1];
+                    if (featureName.contains("/")) {
+                        break;
+                    }
+                    FeatureState featureState = gson.fromJson(new String(event.getData().getData()), FeatureState.class);
+                    states.replace(featureName, featureState);
+                }
+                break;
+            case NODE_REMOVED:
+                String removedPath = event.getData().getPath();
+                if (removedPath.contains(FEAURES_PATH)) {
+                    String featureName = removedPath.split(FEAURES_PATH)[1];
+                    if (featureName.contains("/")) {
+                        break;
+                    }
+                    states.remove(featureName);
+                }
+                break;
+            case INITIALIZED:
+                initializeFeatures();
+            default:
+                break;
+        }
+    }
 
+    private void initializeFeatures() throws Exception {
+        List<String> features = curatorFramework.getChildren().forPath(znode + FEAURES_PATH);
+        for (String feature : features) {
+            byte[] featureData = curatorFramework.getData().forPath(znode + FEAURES_PATH + "/" + feature);
+            states.put(feature, gson.fromJson(new String(featureData), FeatureState.class));
+        }
     }
 
     public static Builder newBuilder(CuratorFramework curatorFramework, String znode) {
@@ -68,6 +114,10 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         public Builder(CuratorFramework curatorFramework, String znode) {
             this.curatorFramework = curatorFramework;
             this.znode = znode;
+        }
+
+        public ZookeeperStateRepository build() throws Exception {
+            return new ZookeeperStateRepository(this);
         }
     }
 }
