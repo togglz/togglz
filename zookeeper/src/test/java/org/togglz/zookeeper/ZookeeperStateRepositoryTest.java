@@ -1,5 +1,6 @@
 package org.togglz.zookeeper;
 
+import com.google.gson.Gson;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
@@ -107,6 +108,26 @@ public class ZookeeperStateRepositoryTest {
         stateRepository.setFeatureState(savedFeatureState.disable());
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
         assertThat(loadedFeatureState.isEnabled(), is(false));
+    }
+
+    @Test
+    public void testZkNodeChangesUpdateFeatureState() throws Exception {
+        FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
+        savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
+        savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
+        stateRepository.setFeatureState(savedFeatureState);
+
+        FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
+        assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
+
+        // Modify data in ZK
+        FeatureState externallySetState = new FeatureState(TestFeature.FEATURE);
+        Gson gson = new Gson();
+        String json = gson.toJson(externallySetState);
+        serverClientPair.client.setData().forPath("/test/features/FEATURE", json.getBytes());
+
+        loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
+        assertThat(reflectionEquals(externallySetState, loadedFeatureState), is(true));
     }
 
     private static enum TestFeature implements Feature {

@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
 
-    private static final String FEAURES_PATH = "/features";
+    private static final String FEAURES_PATH = "/features/";
 
     private static final Gson gson = new Gson();
 
@@ -55,7 +55,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         String json = gson.toJson(featureState);
 
         try {
-            String path = znode + FEAURES_PATH + "/" + featureState.getFeature().name();
+            String path = znode + FEAURES_PATH + featureState.getFeature().name();
             curatorFramework.createContainers(path);
             curatorFramework.setData().forPath(path, json.getBytes());
             states.put(featureState.getFeature().name(), featureState);
@@ -86,7 +86,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
                         break;
                     }
                     FeatureState featureState = gson.fromJson(new String(event.getData().getData()), FeatureState.class);
-                    states.replace(featureName, featureState);
+                    states.put(featureName, featureState);
                 }
                 break;
             case NODE_REMOVED:
@@ -109,7 +109,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     private void initializeFeatures() throws Exception {
         List<String> features = curatorFramework.getChildren().forPath(znode + FEAURES_PATH);
         for (String feature : features) {
-            byte[] featureData = curatorFramework.getData().forPath(znode + FEAURES_PATH + "/" + feature);
+            byte[] featureData = curatorFramework.getData().forPath(znode + FEAURES_PATH + feature);
             states.put(feature, gson.fromJson(new String(featureData), FeatureState.class));
         }
     }
