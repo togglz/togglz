@@ -67,7 +67,7 @@ public class ZookeeperStateRepositoryTest {
 
     @Before
     public void setupTest() throws Exception {
-        ServerClientPair serverClientPair = startServer(new HashMap<>());
+        serverClientPair = startServer(new HashMap<String, String>());
         stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, "/test").build();
     }
 

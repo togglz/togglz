@@ -58,7 +58,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
             String path = znode + FEAURES_PATH + "/" + featureState.getFeature().name();
             curatorFramework.createContainers(path);
             curatorFramework.setData().forPath(path, json.getBytes());
-            states.replace(featureState.getFeature().name(), featureState);
+            states.put(featureState.getFeature().name(), featureState);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
