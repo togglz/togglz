@@ -29,10 +29,20 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         this.curatorFramework = builder.curatorFramework;
         this.znode = builder.znode;
 
+        initializeFeaturePath();
+
         states = new ConcurrentHashMap<>();
         treeCache = new TreeCache(curatorFramework, znode);
         treeCache.getListenable().addListener(this);
         treeCache.start();
+    }
+
+    private void initializeFeaturePath() {
+        try {
+            curatorFramework.createContainers(znode + FEAURES_PATH);
+        } catch (Exception e) {
+            throw new RuntimeException("couldn't initialize the zookeeper state repository", e);
+        }
     }
 
     @Override
@@ -45,7 +55,9 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         String json = gson.toJson(featureState);
 
         try {
-            curatorFramework.setData().forPath(znode + FEAURES_PATH + "/" + featureState.getFeature().name(), json.getBytes());
+            String path = znode + FEAURES_PATH + "/" + featureState.getFeature().name();
+            curatorFramework.createContainers(path);
+            curatorFramework.setData().forPath(path, json.getBytes());
             states.replace(featureState.getFeature().name(), featureState);
         } catch (Exception e) {
             throw new RuntimeException(e);
