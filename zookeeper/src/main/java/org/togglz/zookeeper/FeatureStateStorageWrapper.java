@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class FeatureStateStorageWrapper {
 
-    private boolean enabled;
+    private boolean enabled = false;
     private String strategyId;
     private final Map<String, String> parameters = new HashMap<>();
 

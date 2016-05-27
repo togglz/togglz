@@ -2,6 +2,7 @@ package org.togglz.zookeeper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.TreeCache;
 import org.apache.curator.framework.recipes.cache.TreeCacheEvent;
 import org.apache.curator.framework.recipes.cache.TreeCacheListener;
@@ -43,7 +44,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     private void initializeFeaturePath() {
         try {
-            curatorFramework.createContainers(znode + FEAURES_PATH);
+            curatorFramework.createContainers(znode);
         } catch (Exception e) {
             throw new RuntimeException("couldn't initialize the zookeeper state repository", e);
         }
@@ -51,7 +52,11 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        return featureStateForWrapper(feature, states.get(feature.name()));
+        FeatureStateStorageWrapper wrapper = states.get(feature.name());
+        if (wrapper != null) {
+            return featureStateForWrapper(feature, wrapper);
+        }
+        return null;
     }
 
     @Override
@@ -59,7 +64,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         FeatureStateStorageWrapper wrapper = wrapperForFeatureState(featureState);
         try {
             String json = objectMapper.writeValueAsString(wrapper);
-            String path = znode + FEAURES_PATH + "/" + featureState.getFeature().name();
+            String path = znode + "/" + featureState.getFeature().name();
             curatorFramework.createContainers(path);
             curatorFramework.setData().forPath(path, json.getBytes("UTF-8"));
             states.put(featureState.getFeature().name(), wrapper);
@@ -70,40 +75,39 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     @Override
     public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent event) throws Exception {
+        String featureName;
+        ChildData eventData = event.getData();
         switch (event.getType()) {
             case NODE_ADDED:
-                String addedPath = event.getData().getPath();
-                if (addedPath.contains(FEAURES_PATH + "/")) {
-                    String featureName = addedPath.split(FEAURES_PATH + "/")[1];
+                String addedPath = eventData.getPath();
+                if (pathHasAFeatureInIt(addedPath)) {
+                    featureName = getFeatureNameFromPath(addedPath);
+
                     if (featureName.contains("/")) {
                         break;
                     }
-                    if (event.getData().getData().length > 0) {
-                        FeatureStateStorageWrapper featureState = objectMapper.readValue(event.getData().getData(), FeatureStateStorageWrapper.class);
+                    if (eventData.getData().length > 0) {
+                        FeatureStateStorageWrapper featureState = objectMapper.readValue(eventData.getData(), FeatureStateStorageWrapper.class);
                         states.putIfAbsent(featureName, featureState);
                     }
                 }
+
                 break;
             case NODE_UPDATED:
-                String updatedPath = event.getData().getPath();
-                if (updatedPath.contains(FEAURES_PATH + "/")) {
-                    String featureName = updatedPath.split(FEAURES_PATH + "/")[1];
-                    if (featureName.contains("/")) {
-                        break;
-                    }
-                    FeatureStateStorageWrapper featureState = objectMapper.readValue(event.getData().getData(), FeatureStateStorageWrapper.class);
+                String updatedPath = eventData.getPath();
+                if (pathHasAFeatureInIt(updatedPath)) {
+                    featureName = getFeatureNameFromPath(updatedPath);
+                    FeatureStateStorageWrapper featureState = objectMapper.readValue(eventData.getData(), FeatureStateStorageWrapper.class);
                     states.put(featureName, featureState);
                 }
                 break;
             case NODE_REMOVED:
-                String removedPath = event.getData().getPath();
-                if (removedPath.contains(FEAURES_PATH + "/")) {
-                    String featureName = removedPath.split(FEAURES_PATH + "/")[1];
-                    if (featureName.contains("/")) {
-                        break;
-                    }
-                    states.remove(featureName);
+                String removedPath = eventData.getPath();
+                featureName = removedPath;
+                if (featureName.contains("/")) {
+                    break;
                 }
+                states.remove(featureName);
                 break;
             case INITIALIZED:
                 initializeFeatures();
@@ -112,10 +116,20 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         }
     }
 
+    private String getFeatureNameFromPath(String updatedPath) {
+        String featureName;
+        featureName = updatedPath.substring(znode.length() + 1);
+        return featureName;
+    }
+
+    private boolean pathHasAFeatureInIt(String updatedPath) {
+        return updatedPath.length() > znode.length();
+    }
+
     private void initializeFeatures() throws Exception {
-        List<String> features = curatorFramework.getChildren().forPath(znode + FEAURES_PATH);
+        List<String> features = curatorFramework.getChildren().forPath(znode);
         for (String feature : features) {
-            byte[] featureData = curatorFramework.getData().forPath(znode + FEAURES_PATH + feature);
+            byte[] featureData = curatorFramework.getData().forPath(znode + "/" + feature);
             states.put(feature, objectMapper.readValue(featureData, FeatureStateStorageWrapper.class));
         }
     }
@@ -133,7 +147,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         FeatureState featureState = new FeatureState(feature);
         featureState.setEnabled(wrapper.isEnabled());
         featureState.setStrategyId(wrapper.getStrategyId());
-        for (Map.Entry<String,String> e : wrapper.getParameters().entrySet()) {
+        for (Map.Entry<String, String> e : wrapper.getParameters().entrySet()) {
             featureState.setParameter(e.getKey(), e.getValue());
         }
 

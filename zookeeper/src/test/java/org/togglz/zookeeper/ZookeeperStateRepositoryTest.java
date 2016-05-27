@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,6 +31,7 @@ import static org.junit.Assert.assertThat;
  */
 public class ZookeeperStateRepositoryTest {
 
+    public static final String TEST_ZNODE = "/test/features";
     private ZookeeperStateRepository stateRepository;
 
     static class ServerClientPair {
@@ -70,7 +72,7 @@ public class ZookeeperStateRepositoryTest {
     @Before
     public void setupTest() throws Exception {
         serverClientPair = startServer(new HashMap<String, String>());
-        stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, "/test").build();
+        stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, TEST_ZNODE).build();
     }
 
     @After
@@ -111,6 +113,13 @@ public class ZookeeperStateRepositoryTest {
         assertThat(loadedFeatureState.isEnabled(), is(false));
     }
 
+//    @Test
+//    public void testLoadingWithSavedState() throws Exception {
+//        // re-setup the server
+//
+//        serverClientPair = startServer(new HashMap<String, String>());
+//    }
+
     @Test
     public void testZkNodeChangesUpdateFeatureState() throws Exception {
         FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
@@ -132,15 +141,15 @@ public class ZookeeperStateRepositoryTest {
             @Override
             public void run() {
                 try {
-                    serverClientPair.client.setData().forPath("/test/features/FEATURE", json.getBytes("UTF-8"));
+                    serverClientPair.client.setData().forPath(TEST_ZNODE + "/FEATURE", json.getBytes("UTF-8"));
                     latch.countDown();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
-        latch.await();
-        Thread.sleep(1000);
+        latch.await(2, TimeUnit.SECONDS);
+        Thread.sleep(25);
 
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
         assertThat(reflectionEquals(externallySetState, loadedFeatureState), is(true));
