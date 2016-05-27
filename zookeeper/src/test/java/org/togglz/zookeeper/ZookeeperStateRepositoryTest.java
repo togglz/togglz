@@ -1,6 +1,6 @@
 package org.togglz.zookeeper;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
@@ -16,6 +16,7 @@ import org.togglz.core.repository.FeatureState;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.hamcrest.CoreMatchers.is;
@@ -121,10 +122,25 @@ public class ZookeeperStateRepositoryTest {
         assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
 
         // Modify data in ZK
+        FeatureStateStorageWrapper externallySetStateWrapper = new FeatureStateStorageWrapper();
         FeatureState externallySetState = new FeatureState(TestFeature.FEATURE);
-        Gson gson = new Gson();
-        String json = gson.toJson(externallySetState);
-        serverClientPair.client.setData().forPath("/test/features/FEATURE", json.getBytes());
+        ObjectMapper objectMapper = new ObjectMapper();
+        final String json = objectMapper.writeValueAsString(externallySetStateWrapper);
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    serverClientPair.client.setData().forPath("/test/features/FEATURE", json.getBytes("UTF-8"));
+                    latch.countDown();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        latch.await();
+        Thread.sleep(1000);
 
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
         assertThat(reflectionEquals(externallySetState, loadedFeatureState), is(true));
