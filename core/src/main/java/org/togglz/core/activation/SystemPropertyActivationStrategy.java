@@ -11,7 +11,8 @@ import org.togglz.core.util.Strings;
 public class SystemPropertyActivationStrategy implements ActivationStrategy{
 
     public static final String ID = "property";
-    public static final String PARAM_PROPERTY = "property";
+    public static final String PARAM_PROPERTY_NAME = "name";
+    public static final String PARAM_PROPERTY_VALUE = "value";
 
     @Override
     public String getId() {
@@ -20,27 +21,27 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
 
     @Override
     public String getName() {
-        return PARAM_PROPERTY;
+        return PARAM_PROPERTY_NAME;
     }
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-        boolean active = false;
-        String parameter = featureState.getParameter(PARAM_PROPERTY);
-        String sysprop = System.getProperty(parameter);
-        return validate(sysprop);
+        String stateName = featureState.getParameter(PARAM_PROPERTY_NAME);
+        String stateValue = featureState.getParameter(PARAM_PROPERTY_VALUE);
+        String propValue = System.getProperty(stateName);
+        return validate(propValue, stateValue);
 
     }
 
-    private boolean validate(String prop) {
-        return (Strings.isNotBlank(prop) && Boolean.valueOf(prop));
+    private boolean validate(String sysValue, String stateValue) {
+        return (Strings.isNotBlank(sysValue) && (sysValue.equals(stateValue) || Boolean.valueOf(sysValue)));
     }
 
     @Override
     public Parameter[] getParameters() {
         return new Parameter[]
                 {
-                        ParameterBuilder.create(PARAM_PROPERTY)
+                        ParameterBuilder.create(PARAM_PROPERTY_NAME)
                                 .label("System Property")
                                 .description("A system property that can be set for which a feature should be active")
                                 .largeText()

@@ -19,7 +19,7 @@ public class SystemPropertyActivationStrategyTest {
 
     @Before
     public void setup() {
-        setState("foo.bar");
+        setState("foo.bar", "true");
     }
 
     @Test
@@ -49,6 +49,7 @@ public class SystemPropertyActivationStrategyTest {
 
     @Test
     public void shouldBeFalseIfPropertyExistsAndIsEmpty() {
+        setState("foo.bar", "");
         System.setProperty("foo.bar", "");
         assertFalse(strategy.isActive(state,user));
 
@@ -57,14 +58,15 @@ public class SystemPropertyActivationStrategyTest {
     @Test
     public void shouldBeFalseIfNoMatchingFeatureState() {
         System.setProperty("foo.bar", "true");
-        setState("foo.baz");
+        setState("foo.baz", "true");
         assertFalse(strategy.isActive(state,user));
 
     }
 
-    private void setState(String prop) {
+    private void setState(String propName, String propValue) {
         state = new FeatureState(ScriptFeature.FEATURE)
-                .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY, prop)
+                .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_NAME, propName)
+                .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_VALUE, propValue)
                 .setStrategyId(SystemPropertyActivationStrategy.ID);
     }
 
