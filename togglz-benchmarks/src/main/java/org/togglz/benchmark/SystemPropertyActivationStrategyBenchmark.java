@@ -50,7 +50,7 @@ public class SystemPropertyActivationStrategyBenchmark {
             .setEnabled(true)
             .setStrategyId(SystemPropertyActivationStrategy.ID)
             .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_NAME, "foo.bar")
-            .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_NAME, "true");
+            .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_VALUE, "true");
 
 
         manager.setFeatureState(propertBasedFeatureState);
