@@ -1,15 +1,17 @@
 package org.togglz.core.activation;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 
-import java.util.regex.Pattern;
-
 /**
- * Created by ddcchrisk on 5/26/16.
+ *
+ * ActivationStrategy based on a key value pair system property. To activate, the value of the property must match
+ * the string value, not case sensitve.
+ *
+ * Created by Chris Kelley on 5/26/16.
  */
 public class SystemPropertyActivationStrategy implements ActivationStrategy{
 
