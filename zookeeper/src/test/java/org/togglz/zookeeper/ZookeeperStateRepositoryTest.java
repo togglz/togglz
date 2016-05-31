@@ -16,6 +16,7 @@ import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -70,9 +71,12 @@ public class ZookeeperStateRepositoryTest {
 
     ServerClientPair serverClientPair;
 
-    @Before
-    public void setupTest() throws Exception {
-        serverClientPair = startServer(new HashMap<String, String>());
+    public void setupTestWithEmptyDatastore() throws Exception {
+        setupTestWithData(Collections.EMPTY_MAP);
+    }
+
+    public void setupTestWithData(Map<String,String> initialParameters) throws Exception {
+        serverClientPair = startServer(initialParameters);
         stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, TEST_ZNODE).build();
     }
 
@@ -82,7 +86,8 @@ public class ZookeeperStateRepositoryTest {
     }
 
     @Test
-    public void testFeatureSavingAndLoading() {
+    public void testFeatureSavingAndLoading() throws Exception {
+        setupTestWithEmptyDatastore();
         assertNull(stateRepository.getFeatureState(TestFeature.FEATURE));
         stateRepository.setFeatureState(new FeatureState(TestFeature.FEATURE));
 
@@ -90,7 +95,8 @@ public class ZookeeperStateRepositoryTest {
     }
 
     @Test
-    public void testActivationStrategySavingAndLoading() {
+    public void testActivationStrategySavingAndLoading() throws Exception {
+        setupTestWithEmptyDatastore();
         FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
         savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
         savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
@@ -102,7 +108,8 @@ public class ZookeeperStateRepositoryTest {
     }
 
     @Test
-    public void testEnabledStateSavingAndLoading() {
+    public void testEnabledStateSavingAndLoading() throws Exception {
+        setupTestWithEmptyDatastore();
         FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE).enable();
         stateRepository.setFeatureState(savedFeatureState);
 
@@ -116,6 +123,7 @@ public class ZookeeperStateRepositoryTest {
 
     @Test
     public void testZkNodeChangesUpdateFeatureState() throws Exception {
+        setupTestWithEmptyDatastore();
         FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
         savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
         savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
@@ -155,17 +163,13 @@ public class ZookeeperStateRepositoryTest {
         Map<String, String> initialData = new HashMap<>();
         initialData.put(TEST_ZNODE + "/FEATURE", "{\"enabled\":true,\"strategyId\":null,\"parameters\":{}}");
         // recreate the zookeeper server with the data we want for this test
-        stopServer(serverClientPair);
-        serverClientPair = startServer(initialData);
-        stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, TEST_ZNODE).build();
-
+        setupTestWithData(initialData);
 
         FeatureState expectedFeatureState = new FeatureState(TestFeature.FEATURE);
         expectedFeatureState.setEnabled(true);
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
         assertThat(reflectionEquals(expectedFeatureState, loadedFeatureState), is(true));
-        stopServer(serverClientPair);
     }
 
 
