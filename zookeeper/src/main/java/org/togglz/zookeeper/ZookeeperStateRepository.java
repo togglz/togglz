@@ -12,10 +12,11 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
     private Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
@@ -30,16 +31,29 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     protected final CuratorFramework curatorFramework;
     protected final String znode;
 
+    // the initialization happens in another thread asynchronously.
+    // rather than wait for
+    protected CountDownLatch initializationLatch = new CountDownLatch(1);
+
     private ZookeeperStateRepository(Builder builder) throws Exception {
         this.curatorFramework = builder.curatorFramework;
         this.znode = builder.znode;
-
         initializeFeaturePath();
+        initializeStateCache();
+    }
 
+    private void initializeStateCache() throws Exception {
         states = new ConcurrentHashMap<>();
+        // keep in memory representation of the zookeeper state.
         treeCache = new TreeCache(curatorFramework, znode);
         treeCache.getListenable().addListener(this);
         treeCache.start();
+
+        long startTime = System.nanoTime();
+        log.info("Waiting for zookeeper state to be fully read");
+        initializationLatch.await();
+        long duration = System.nanoTime() - startTime;
+        log.debug("Initizlied the zookeeper state repository in {} ms", TimeUnit.NANOSECONDS.toMillis(duration));
     }
 
     private void initializeFeaturePath() {
@@ -110,7 +124,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
                 states.remove(featureName);
                 break;
             case INITIALIZED:
-                initializeFeatures();
+                initializationLatch.countDown();
             default:
                 break;
         }
@@ -126,13 +140,6 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         return updatedPath.length() > znode.length();
     }
 
-    private void initializeFeatures() throws Exception {
-        List<String> features = curatorFramework.getChildren().forPath(znode);
-        for (String feature : features) {
-            byte[] featureData = curatorFramework.getData().forPath(znode + "/" + feature);
-            states.put(feature, objectMapper.readValue(featureData, FeatureStateStorageWrapper.class));
-        }
-    }
 
     private FeatureStateStorageWrapper wrapperForFeatureState(FeatureState featureState) {
         FeatureStateStorageWrapper wrapper = new FeatureStateStorageWrapper();
