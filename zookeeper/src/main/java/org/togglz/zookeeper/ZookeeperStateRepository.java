@@ -50,7 +50,8 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     private void initializeStateCache() throws Exception {
         states = new ConcurrentHashMap<>();
-        // keep in memory representation of the zookeeper state.
+        // the treecache will keep a copy of the data in memory along with
+        // setting up watchers for addition / removal of nodes
         treeCache = new TreeCache(curatorFramework, featuresZnode);
         treeCache.getListenable().addListener(this);
         treeCache.start();
@@ -100,7 +101,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
                     }
                     if (eventData.getData().length > 0) {
                         FeatureStateStorageWrapper featureState = objectMapper.readValue(eventData.getData(), FeatureStateStorageWrapper.class);
-                        states.putIfAbsent(featureName, featureState);
+                        states.put(featureName, featureState);
                     }
                 }
 
