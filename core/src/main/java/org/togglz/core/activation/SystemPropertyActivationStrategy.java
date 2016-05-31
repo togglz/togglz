@@ -38,15 +38,7 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
     }
 
     private boolean validate(String sysValue, String stateValue) {
-        if (Strings.isNotBlank(sysValue)) {
-            if (Pattern.compile("true|false", Pattern.CASE_INSENSITIVE).matcher(sysValue).matches()) {
-                return Boolean.valueOf(sysValue);
-            } else {
-                return sysValue.equalsIgnoreCase(stateValue);
-            }
-        } else {
-            return false;
-        }
+        return (Strings.isNotBlank(sysValue) && sysValue.equalsIgnoreCase(stateValue));
     }
 
     @Override

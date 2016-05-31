@@ -49,10 +49,10 @@ public class SystemPropertyActivationStrategyTest {
     }
 
     @Test
-    public void shouldBeTrueIfPropertySetToFalse() {
+    public void shouldBeTrueIfPropertyAndStateValueMatchFalse() {
         setState("foo.bar", "false");
         System.setProperty("foo.bar", "false");
-        assertFalse(strategy.isActive(state,user));
+        assertTrue(strategy.isActive(state,user));
     }
     @Test
     public void shouldBeTrueIfPropertyExistsAndIsTrue() {
