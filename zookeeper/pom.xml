@@ -13,7 +13,7 @@
   <description>Togglz - Apache Zookeeper Integration</description>
 
   <properties>
-    <zookeeper.version></zookeeper.version>
+    <curator.version>3.1.0</curator.version>
   </properties>
 
   <dependencies>
@@ -26,12 +26,12 @@
     <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-framework</artifactId>
-      <version>3.1.0</version>
+      <version>${curator.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-recipes</artifactId>
-      <version>3.1.0</version>
+      <version>${curator.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>org.apache.curator</groupId>
       <artifactId>curator-test</artifactId>
-      <version>3.1.0</version>
+      <version>${curator.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

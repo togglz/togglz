@@ -9,6 +9,8 @@ import org.apache.zookeeper.client.ZooKeeperSaslClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
@@ -44,7 +46,7 @@ public class ZookeeperStateRepositoryTest {
         }
     }
 
-    public static ServerClientPair startServer(Map<String,String> data) throws Exception {
+    public static ServerClientPair startServer(Map<String, String> data) throws Exception {
 
         TestingServer server = new TestingServer();
         CuratorFramework client;
@@ -54,8 +56,8 @@ public class ZookeeperStateRepositoryTest {
         client = CuratorFrameworkFactory.builder().connectString(server.getConnectString()).retryPolicy(new RetryOneTime(2000)).build();
         client.start();
 
-        for (Map.Entry<String,String> initialData : data.entrySet()) {
-            client.create().forPath(initialData.getKey(), initialData.getValue().getBytes("UTF-8"));
+        for (Map.Entry<String, String> initialData : data.entrySet()) {
+            client.create().creatingParentContainersIfNeeded().forPath(initialData.getKey(), initialData.getValue().getBytes("UTF-8"));
         }
         return new ServerClientPair(server, client);
     }
@@ -67,7 +69,6 @@ public class ZookeeperStateRepositoryTest {
     }
 
     ServerClientPair serverClientPair;
-
 
     @Before
     public void setupTest() throws Exception {
@@ -113,13 +114,6 @@ public class ZookeeperStateRepositoryTest {
         assertThat(loadedFeatureState.isEnabled(), is(false));
     }
 
-//    @Test
-//    public void testLoadingWithSavedState() throws Exception {
-//        // re-setup the server
-//
-//        serverClientPair = startServer(new HashMap<String, String>());
-//    }
-
     @Test
     public void testZkNodeChangesUpdateFeatureState() throws Exception {
         FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
@@ -154,6 +148,26 @@ public class ZookeeperStateRepositoryTest {
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
         assertThat(reflectionEquals(externallySetState, loadedFeatureState), is(true));
     }
+
+    @Test
+    public void testLoadingWithSavedState() throws Exception {
+        // re-setup the server
+        Map<String, String> initialData = new HashMap<>();
+        initialData.put(TEST_ZNODE + "/FEATURE", "{\"enabled\":true,\"strategyId\":null,\"parameters\":{}}");
+        // recreate the zookeeper server with the data we want for this test
+        stopServer(serverClientPair);
+        serverClientPair = startServer(initialData);
+        stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, TEST_ZNODE).build();
+
+
+        FeatureState expectedFeatureState = new FeatureState(TestFeature.FEATURE);
+        expectedFeatureState.setEnabled(true);
+
+        FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
+        assertThat(reflectionEquals(expectedFeatureState, loadedFeatureState), is(true));
+        stopServer(serverClientPair);
+    }
+
 
     private static enum TestFeature implements Feature {
         FEATURE,
