@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
-    private Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
