@@ -40,6 +40,14 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         initializeStateCache();
     }
 
+    private void initializeFeaturePath() {
+        try {
+            curatorFramework.createContainers(featuresZnode);
+        } catch (Exception e) {
+            throw new RuntimeException("couldn't initialize the zookeeper state repository", e);
+        }
+    }
+
     private void initializeStateCache() throws Exception {
         states = new ConcurrentHashMap<>();
         // keep in memory representation of the zookeeper state.
@@ -52,14 +60,6 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         initializationLatch.await();
         long duration = System.nanoTime() - startTime;
         log.debug("Initizlied the zookeeper state repository in {} ms", TimeUnit.NANOSECONDS.toMillis(duration));
-    }
-
-    private void initializeFeaturePath() {
-        try {
-            curatorFramework.createContainers(featuresZnode);
-        } catch (Exception e) {
-            throw new RuntimeException("couldn't initialize the zookeeper state repository", e);
-        }
     }
 
     @Override
