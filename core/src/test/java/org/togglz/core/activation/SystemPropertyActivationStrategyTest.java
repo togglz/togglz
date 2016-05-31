@@ -42,6 +42,19 @@ public class SystemPropertyActivationStrategyTest {
     }
 
     @Test
+    public void shouldBeTrueIfPropertyStringsMatch() {
+        setState("foo.bar", "foobar");
+        System.setProperty("foo.bar", "foobar");
+        assertTrue(strategy.isActive(state,user));
+    }
+
+    @Test
+    public void shouldBeTrueIfPropertySetToFalse() {
+        setState("foo.bar", "false");
+        System.setProperty("foo.bar", "false");
+        assertFalse(strategy.isActive(state,user));
+    }
+    @Test
     public void shouldBeTrueIfPropertyExistsAndIsTrue() {
         System.setProperty("foo.bar", "true");
         assertTrue(strategy.isActive(state,user));

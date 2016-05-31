@@ -1,9 +1,12 @@
 package org.togglz.core.activation;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by ddcchrisk on 5/26/16.
@@ -11,8 +14,9 @@ import org.togglz.core.util.Strings;
 public class SystemPropertyActivationStrategy implements ActivationStrategy{
 
     public static final String ID = "property";
-    public static final String PARAM_PROPERTY_NAME = "name";
+    public static final String PARAM_PROPERTY_NAME = "system-property";
     public static final String PARAM_PROPERTY_VALUE = "value";
+
 
     @Override
     public String getId() {
@@ -21,7 +25,7 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
 
     @Override
     public String getName() {
-        return PARAM_PROPERTY_NAME;
+        return "System Property";
     }
 
     @Override
@@ -34,7 +38,15 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
     }
 
     private boolean validate(String sysValue, String stateValue) {
-        return (Strings.isNotBlank(sysValue) && (sysValue.equals(stateValue) || Boolean.valueOf(sysValue)));
+        if (Strings.isNotBlank(sysValue)) {
+            if (Pattern.compile("true|false", Pattern.CASE_INSENSITIVE).matcher(sysValue).matches()) {
+                return Boolean.valueOf(sysValue);
+            } else {
+                return sysValue.equalsIgnoreCase(stateValue);
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -42,8 +54,12 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
         return new Parameter[]
                 {
                         ParameterBuilder.create(PARAM_PROPERTY_NAME)
-                                .label("System Property")
-                                .description("A system property that can be set for which a feature should be active")
+                                .label("System Property Name")
+                                .description("A system property name that can be set for which a feature should be active")
+                                .largeText(),
+                        ParameterBuilder.create(PARAM_PROPERTY_VALUE)
+                                .label("System Property Value")
+                                .description("A system property value that can be set for which a feature should be active")
                                 .largeText()
                 };
     }
