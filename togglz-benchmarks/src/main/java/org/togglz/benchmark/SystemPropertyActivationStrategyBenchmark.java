@@ -46,10 +46,12 @@ public class SystemPropertyActivationStrategyBenchmark {
         StaticFeatureManagerProvider.setFeatureManager(featureManager);
         manager = featureManager;
 
-        FeatureState propertBasedFeatureState = new FeatureState(SystemPropertyActivationStrategyFeatures.SYSTEM_BASED_FEATURE);
-        propertBasedFeatureState.setEnabled(true);
-        propertBasedFeatureState.setStrategyId(SystemPropertyActivationStrategy.ID);
-        propertBasedFeatureState.setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY, "foo.bar");
+        FeatureState propertBasedFeatureState = new FeatureState(SystemPropertyActivationStrategyFeatures.SYSTEM_BASED_FEATURE)
+            .setEnabled(true)
+            .setStrategyId(SystemPropertyActivationStrategy.ID)
+            .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_NAME, "foo.bar")
+            .setParameter(SystemPropertyActivationStrategy.PARAM_PROPERTY_NAME, "true");
+
 
         manager.setFeatureState(propertBasedFeatureState);
 
