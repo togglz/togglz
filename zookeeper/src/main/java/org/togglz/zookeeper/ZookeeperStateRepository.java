@@ -21,15 +21,13 @@ import java.util.concurrent.TimeUnit;
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
     private Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
 
-    private static final String FEAURES_PATH = "/features";
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private TreeCache treeCache;
     private ConcurrentMap<String, FeatureStateStorageWrapper> states;
 
     protected final CuratorFramework curatorFramework;
-    protected final String znode;
+    protected final String featuresZnode;
 
     // the initialization happens in another thread asynchronously.
     // rather than wait for
@@ -37,7 +35,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     private ZookeeperStateRepository(Builder builder) throws Exception {
         this.curatorFramework = builder.curatorFramework;
-        this.znode = builder.znode;
+        this.featuresZnode = builder.featuresZnode;
         initializeFeaturePath();
         initializeStateCache();
     }
@@ -45,7 +43,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     private void initializeStateCache() throws Exception {
         states = new ConcurrentHashMap<>();
         // keep in memory representation of the zookeeper state.
-        treeCache = new TreeCache(curatorFramework, znode);
+        treeCache = new TreeCache(curatorFramework, featuresZnode);
         treeCache.getListenable().addListener(this);
         treeCache.start();
 
@@ -58,7 +56,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     private void initializeFeaturePath() {
         try {
-            curatorFramework.createContainers(znode);
+            curatorFramework.createContainers(featuresZnode);
         } catch (Exception e) {
             throw new RuntimeException("couldn't initialize the zookeeper state repository", e);
         }
@@ -78,7 +76,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         FeatureStateStorageWrapper wrapper = wrapperForFeatureState(featureState);
         try {
             String json = objectMapper.writeValueAsString(wrapper);
-            String path = znode + "/" + featureState.getFeature().name();
+            String path = featuresZnode + "/" + featureState.getFeature().name();
             curatorFramework.createContainers(path);
             curatorFramework.setData().forPath(path, json.getBytes("UTF-8"));
             states.put(featureState.getFeature().name(), wrapper);
@@ -132,12 +130,12 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     private String getFeatureNameFromPath(String updatedPath) {
         String featureName;
-        featureName = updatedPath.substring(znode.length() + 1);
+        featureName = updatedPath.substring(featuresZnode.length() + 1);
         return featureName;
     }
 
     private boolean pathHasAFeatureInIt(String updatedPath) {
-        return updatedPath.length() > znode.length();
+        return updatedPath.length() > featuresZnode.length();
     }
 
 
@@ -161,18 +159,18 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         return featureState;
     }
 
-    public static Builder newBuilder(CuratorFramework curatorFramework, String znode) {
-        return new Builder(curatorFramework, znode);
+    public static Builder newBuilder(CuratorFramework curatorFramework, String featuresZnode) {
+        return new Builder(curatorFramework, featuresZnode);
     }
 
     public static class Builder {
 
         private final CuratorFramework curatorFramework;
-        private final String znode;
+        private final String featuresZnode;
 
-        public Builder(CuratorFramework curatorFramework, String znode) {
+        public Builder(CuratorFramework curatorFramework, String featuresZnode) {
             this.curatorFramework = curatorFramework;
-            this.znode = znode;
+            this.featuresZnode = featuresZnode;
         }
 
         public ZookeeperStateRepository build() throws Exception {
