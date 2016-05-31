@@ -51,7 +51,7 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
                                 .largeText(),
                         ParameterBuilder.create(PARAM_PROPERTY_VALUE)
                                 .label("System Property Value")
-                                .description("A system property value that can be set for which a feature should be active")
+                                .description("Enable the feature when this value matches the system property value")
                                 .largeText()
                 };
     }

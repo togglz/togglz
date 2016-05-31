@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.Throughput, Mode.SampleTime})
-@Measurement(iterations = 10, time = 2, timeUnit = TimeUnit.SECONDS, batchSize = 10000)
+@Measurement(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS, batchSize = 10000)
 @Threads(7)
 @Warmup(iterations = 5, time = 3, timeUnit = TimeUnit.SECONDS)
 public class SystemPropertyActivationStrategyBenchmark {
