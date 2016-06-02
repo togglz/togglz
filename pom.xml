@@ -189,6 +189,7 @@
     <module>distribution</module>
     <module>cassandra</module>
     <module>hazelcast</module>
+    <module>zookeeper</module>
     <module>togglz-benchmarks</module>
   </modules>
 
