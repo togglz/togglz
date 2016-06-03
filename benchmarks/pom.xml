@@ -13,7 +13,7 @@
     <artifactId>togglz-benchmarks</artifactId>
     <packaging>jar</packaging>
 
-    <name>JMH benchmarks for Togglz</name>
+    <name>Togglz - JMH benchmarks</name>
 
     <prerequisites>
         <maven>3.0</maven>

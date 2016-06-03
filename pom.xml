@@ -190,7 +190,7 @@
     <module>cassandra</module>
     <module>hazelcast</module>
     <module>zookeeper</module>
-    <module>togglz-benchmarks</module>
+    <module>benchmarks</module>
   </modules>
 
   <developers>
