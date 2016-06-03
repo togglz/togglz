@@ -120,6 +120,16 @@
       <artifactId>togglz-cassandra</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-hazelcast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-zookeeper</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Authentication Integration -->
     <dependency>
