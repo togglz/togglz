@@ -23,7 +23,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -61,8 +63,24 @@ import java.util.Properties;
  */
 @Configuration
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
+@Conditional({TogglzAutoConfiguration.OnFeatureProviderBeanOrFeatureEnumsProperty.class})
 @EnableConfigurationProperties(TogglzProperties.class)
 public class TogglzAutoConfiguration {
+
+    static class OnFeatureProviderBeanOrFeatureEnumsProperty extends AnyNestedCondition {
+
+        public OnFeatureProviderBeanOrFeatureEnumsProperty() {
+            super(ConfigurationPhase.REGISTER_BEAN);
+        }
+
+        @ConditionalOnBean(FeatureProvider.class)
+        static class OnFeatureProviderBean {
+        }
+
+        @ConditionalOnProperty(prefix = "togglz", name = "feature-enums")
+        static class OnFeatureEnumsProperty {
+        }
+    }
 
     @Bean
     public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener() {
