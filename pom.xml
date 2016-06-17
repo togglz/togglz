@@ -43,7 +43,7 @@
     <maven.compiler.target>1.7</maven.compiler.target>
 
     <!-- Wildfly version used for integration tests -->
-    <wildfly.version>8.0.0.Final</wildfly.version>
+    <wildfly.version>8.2.1.Final</wildfly.version>
 
     <!-- Set version of OSGi bundles without 'SNAPSHOT', etc. -->
     <osgi.bundles.version>2.3.0</osgi.bundles.version>
