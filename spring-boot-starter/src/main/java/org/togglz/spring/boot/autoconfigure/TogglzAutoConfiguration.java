@@ -116,6 +116,9 @@ public class TogglzAutoConfiguration {
             } else if (stateRepositories.size() > 1) {
                 stateRepository = new CompositeStateRepository(stateRepositories.toArray(new StateRepository[stateRepositories.size()]));
             }
+            if (properties.getCache().isEnabled() && !(stateRepository instanceof CachingStateRepository)) {
+                stateRepository = new CachingStateRepository(stateRepository, properties.getCache().getTimeToLive(), properties.getCache().getTimeUnit());
+            }
             FeatureManagerBuilder featureManagerBuilder = new FeatureManagerBuilder();
             String name = properties.getFeatureManagerName();
             if (name != null && name.length() > 0) {
