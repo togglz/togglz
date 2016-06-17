@@ -203,7 +203,9 @@
     <profile>
       <id>wildfly-managed</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>!wildfly-remote</name>
+        </property>
       </activation>
       <build>
         <plugins>
@@ -257,6 +259,11 @@
 
     <profile>
       <id>wildfly-remote</id>
+      <activation>
+        <property>
+          <name>wildfly-remote</name>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>org.wildfly</groupId>
