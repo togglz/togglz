@@ -116,6 +116,10 @@ public class TogglzAutoConfiguration {
             } else if (stateRepositories.size() > 1) {
                 stateRepository = new CompositeStateRepository(stateRepositories.toArray(new StateRepository[stateRepositories.size()]));
             }
+            // If caching is enabled wrap state repository in caching state repository.
+            // Note that we explicitly check if the state repository is not already a caching state repository,
+            // as the auto configuration of the state repository already creates a caching state repository if needed.
+            // The below wrapping only occurs if the user provided the state repository manually and caching is enabled.
             if (properties.getCache().isEnabled() && !(stateRepository instanceof CachingStateRepository)) {
                 stateRepository = new CachingStateRepository(stateRepository, properties.getCache().getTimeToLive(), properties.getCache().getTimeUnit());
             }
@@ -182,6 +186,7 @@ public class TogglzAutoConfiguration {
             } else {
                 stateRepository = new InMemoryStateRepository();
             }
+            // If caching is enabled wrap state repository in caching state repository.
             if (properties.getCache().isEnabled()) {
                 stateRepository = new CachingStateRepository(stateRepository, properties.getCache().getTimeToLive(), properties.getCache().getTimeUnit());
             }
