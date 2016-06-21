@@ -33,9 +33,9 @@ import java.util.concurrent.TimeUnit;
 @ConfigurationProperties(prefix = "togglz", ignoreUnknownFields = true)
 public class TogglzProperties {
 
-	/**
-	 * Enable Togglz for the application.
-	 */
+    /**
+     * Enable Togglz for the application.
+    */
     private boolean enabled = true;
 
     /**
@@ -72,7 +72,7 @@ public class TogglzProperties {
     private Console console = new Console();
 
     /**
-     * Togglz actuator endpoint
+     * Togglz actuator endpoint.
      */
     private Endpoint endpoint = new Endpoint();
 
