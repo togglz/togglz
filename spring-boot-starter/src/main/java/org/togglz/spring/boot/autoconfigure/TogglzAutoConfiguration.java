@@ -17,13 +17,13 @@
 package org.togglz.spring.boot.autoconfigure;
 
 import com.github.heneke.thymeleaf.togglz.TogglzDialect;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.Endpoint;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -244,7 +244,7 @@ public class TogglzAutoConfiguration {
     @Configuration
     @ConditionalOnWebApplication
     @ConditionalOnClass(HandlerInterceptorAdapter.class)
-    @ConditionalOnProperty(prefix = "togglz.web", name = "registerFeatureInterceptor")
+    @ConditionalOnProperty(prefix = "togglz.web", name = "registerFeatureInterceptor", havingValue = "true")
     protected static class TogglzFeatureInterceptorConfiguration extends WebMvcConfigurerAdapter {
         @Override
         public void addInterceptors(InterceptorRegistry registry) {

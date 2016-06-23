@@ -49,6 +49,11 @@
 
     <dependency>
       <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-security</artifactId>
       <optional>true</optional>
     </dependency>

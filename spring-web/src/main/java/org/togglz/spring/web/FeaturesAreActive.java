@@ -1,9 +1,7 @@
 package org.togglz.spring.web;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.togglz.core.Feature;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 
 import java.lang.annotation.*;
 
@@ -34,7 +32,7 @@ import java.lang.annotation.*;
  * }
  * </pre>
  * The {@link FeatureInterceptor} needs to be registered in Spring MVC for this to work. This is automatically
- * done by the {@link TogglzAutoConfiguration} config which is loaded if {@link EnableAutoConfiguration @EnableAutoConfiguration}
+ * done by the TogglzAutoConfiguration config which is loaded if @EnableAutoConfiguration
  * is used in your project.
  */
 @Retention(RetentionPolicy.RUNTIME)
