@@ -13,7 +13,7 @@
   <description>Togglz - Spring Web integration</description>
 
   <properties>
-    <spring.version>3.0.7.RELEASE</spring.version>
+    <spring.version>3.2.17.RELEASE</spring.version>
   </properties>
 
   <dependencies>
@@ -39,6 +39,20 @@
       <artifactId>spring-web</artifactId>
       <version>${spring.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
