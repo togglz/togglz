@@ -7,6 +7,9 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DefaultActivationStrategyProviderTest {
 
     private DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
@@ -30,7 +33,8 @@ public class DefaultActivationStrategyProviderTest {
 
         assertThat(provider.getActivationStrategies())
             .extracting("id")
-            .doesNotContain(CustomActivationStrategy.class.getSimpleName());
+            .doesNotContain(CustomActivationStrategy.class.getSimpleName())
+            .doesNotContain(AnotherCustomActivationStrategy.class.getSimpleName());
 
     }
 
@@ -45,7 +49,46 @@ public class DefaultActivationStrategyProviderTest {
 
     }
 
+    @Test
+    public void shouldContainCustomStrategyIfAddedMultipleBefore() {
+
+        List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
+        strategies.add(new CustomActivationStrategy());
+        strategies.add(new AnotherCustomActivationStrategy());
+
+        provider.addActivationStrategies(strategies);
+
+        assertThat(provider.getActivationStrategies())
+                .extracting("id")
+                .contains(CustomActivationStrategy.class.getSimpleName())
+                .contains(AnotherCustomActivationStrategy.class.getSimpleName());
+
+    }
+
     private static class CustomActivationStrategy implements ActivationStrategy {
+
+        @Override
+        public boolean isActive(FeatureState featureState, FeatureUser user) {
+            return false;
+        }
+
+        @Override
+        public Parameter[] getParameters() {
+            return new Parameter[0];
+        }
+
+        @Override
+        public String getName() {
+            return getId();
+        }
+
+        @Override
+        public String getId() {
+            return this.getClass().getSimpleName();
+        }
+    }
+
+    private static class AnotherCustomActivationStrategy implements ActivationStrategy {
 
         @Override
         public boolean isActive(FeatureState featureState, FeatureUser user) {

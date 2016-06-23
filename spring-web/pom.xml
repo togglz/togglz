@@ -20,6 +20,12 @@
 
     <dependency>
       <groupId>org.togglz</groupId>
+      <artifactId>togglz-servlet</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-core</artifactId>
       <version>${project.version}</version>
     </dependency>

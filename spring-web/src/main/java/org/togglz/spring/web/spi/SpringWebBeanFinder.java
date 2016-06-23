@@ -1,39 +1,45 @@
 package org.togglz.spring.web.spi;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.togglz.core.spi.BeanFinder;
+import org.togglz.servlet.util.HttpServletRequestHolder;
+import org.togglz.spring.spi.AbstractSpringBeanFinder;
+import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
 import javax.servlet.ServletContext;
-import java.util.ArrayList;
-import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
 
-public class SpringWebBeanFinder implements BeanFinder {
+public class SpringWebBeanFinder extends AbstractSpringBeanFinder {
 
     @Override
-    public <T> Collection<T> find(Class<T> clazz, Object context) {
+    protected ApplicationContext getApplicationContext(Object context) {
 
-        Collection<T> result = new ArrayList<T>();
+        // try to get the ServletContext from different sources
+        ServletContext servletContext = null;
+        if (context instanceof ServletContext) {
+            servletContext = (ServletContext) context;
+        }
+        if (servletContext == null) {
+            HttpServletRequest request = HttpServletRequestHolder.get();
+            if (request != null) {
+                servletContext = request.getServletContext();
+            }
+        }
 
         // use the Spring API to obtain the WebApplicationContext
-        WebApplicationContext applicationContext = null;
-        if (context instanceof ServletContext) {
-            applicationContext = WebApplicationContextUtils.getWebApplicationContext((ServletContext) context);
+        ApplicationContext applicationContext = null;
+        if (servletContext != null) {
+            applicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         }
         if (applicationContext == null) {
             applicationContext = ContextLoader.getCurrentWebApplicationContext();
         }
-
-        // may be null if Spring hasn't started yet
-        if (applicationContext != null) {
-
-            // ask spring about beans of this type
-            result.addAll(applicationContext.getBeansOfType(clazz).values());
-
+        if (applicationContext == null) {
+            applicationContext = ContextClassLoaderApplicationContextHolder.get();
         }
 
-        return result;
+        return applicationContext;
 
     }
 

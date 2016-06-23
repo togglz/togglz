@@ -87,6 +87,11 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-boot-starter</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
       <artifactId>togglz-jsf</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -115,16 +120,21 @@
       <artifactId>togglz-cassandra</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-hazelcast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-zookeeper</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Authentication Integration -->
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-security</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-seam-security</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

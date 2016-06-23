@@ -48,6 +48,11 @@ public class Slf4jLogProvider implements LogProvider {
         }
 
         @Override
+        public void warn(String msg) {
+            log.warn(msg);
+        }
+
+        @Override
         public void error(String msg) {
             log.error(msg);
         }

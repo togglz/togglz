@@ -1,8 +1,7 @@
 package org.togglz.core.repository.composite;
 
-import static org.togglz.core.repository.util.Collections.merge;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,13 +32,11 @@ public class CompositeStateRepository implements StateRepository {
      * Creates a composite state repository using the specified underlying state
      * repositories.
      * 
-     * @param repository a state repository
-     * @param repositories additional repositories
+     * @param repositories state repositories
      */
-    public CompositeStateRepository(StateRepository repository,
-            StateRepository... repositories) {
+    public CompositeStateRepository(StateRepository... repositories) {
 
-        this.repositories = merge(repository, repositories);
+        this.repositories = Arrays.asList(repositories);
     }
 
     /**

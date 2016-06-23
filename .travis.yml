@@ -12,6 +12,13 @@ after_success:
 jdk:
   - oraclejdk7
   - oraclejdk8
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/ce8c97d4907f0681aa48
+    on_success: change
+    on_failure: always
+    on_start: never
 env:
   global:
     - CONTAINER=wildfly-managed

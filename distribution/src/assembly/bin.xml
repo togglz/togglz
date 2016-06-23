@@ -33,10 +33,10 @@
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>org.togglz:togglz-cdi:jar:*</include>
-        <include>org.togglz:togglz-seam-security:jar:*</include>
         <include>org.togglz:togglz-spring-core:jar:*</include>
         <include>org.togglz:togglz-spring-web:jar:*</include>
         <include>org.togglz:togglz-spring-security:jar:*</include>
+        <include>org.togglz:togglz-spring-boot-starter:jar:*</include>
         <include>org.togglz:togglz-deltaspike:jar:*</include>
         <include>org.togglz:togglz-shiro:jar:*</include>
         <include>org.togglz:togglz-jsf:jar:*</include>
@@ -46,6 +46,8 @@
         <include>org.togglz:togglz-mongodb:jar:*</include>
         <include>org.togglz:togglz-archaius:jar:*</include>
         <include>org.togglz:togglz-cassandra:jar:*</include>
+        <include>org.togglz:togglz-hazelcast:jar:*</include>
+        <include>org.togglz:togglz-zookeeper:jar:*</include>
       </includes>
     </dependencySet>
 
