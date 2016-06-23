@@ -19,11 +19,12 @@ package org.togglz.spring.boot.autoconfigure;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.togglz.core.Feature;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Configuration properties for Togglz.
@@ -75,6 +76,8 @@ public class TogglzProperties {
      * Togglz actuator endpoint.
      */
     private Endpoint endpoint = new Endpoint();
+
+    private Web web = new Web();
 
     public boolean isEnabled() {
         return enabled;
@@ -150,9 +153,9 @@ public class TogglzProperties {
 
     public static class Cache {
 
-    	/**
-    	 * Enable feature state caching.
-    	 */
+        /**
+         * Enable feature state caching.
+         */
         private boolean enabled = false;
 
         /**
@@ -192,9 +195,9 @@ public class TogglzProperties {
 
     public static class Console {
 
-    	/**
-    	 * Enable admin console.
-    	 */
+        /**
+         * Enable admin console.
+         */
         private boolean enabled = true;
 
         /**
@@ -247,11 +250,28 @@ public class TogglzProperties {
         }
     }
 
+    public static class Web {
+
+        /**
+         * Register the FeatureInterceptor that allows you to activate a controller or contoller methods
+         * based on features.
+         */
+        private boolean registerFeatureInterceptor = false;
+
+        public boolean isRegisterFeatureInterceptor() {
+            return registerFeatureInterceptor;
+        }
+
+        public void setRegisterFeatureInterceptor(boolean registerFeatureInterceptor) {
+            this.registerFeatureInterceptor = registerFeatureInterceptor;
+        }
+    }
+
     public static class Endpoint {
 
-    	/**
-    	 * The endpoint identifier.
-    	 */
+        /**
+         * The endpoint identifier.
+         */
         private String id = "togglz";
 
         /**
