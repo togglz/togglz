@@ -21,7 +21,6 @@
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-cdi</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>

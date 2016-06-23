@@ -38,20 +38,17 @@
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-console</artifactId>
-      <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-core</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-security</artifactId>
-      <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
 

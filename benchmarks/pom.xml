@@ -34,17 +34,14 @@
         <dependency>
             <groupId>org.togglz</groupId>
             <artifactId>togglz-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.togglz</groupId>
             <artifactId>togglz-spring-boot-starter</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.togglz</groupId>
             <artifactId>togglz-zookeeper</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
