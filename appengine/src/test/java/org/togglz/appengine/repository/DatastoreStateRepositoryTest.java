@@ -12,26 +12,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.appengine.api.datastore.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Transaction;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 public class DatastoreStateRepositoryTest {
 
+    public static final int MAX_ENTITY_GROUPS = 25;
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
-        new LocalDatastoreServiceTestConfig());
+        new LocalDatastoreServiceTestConfig().setApplyAllHighRepJobPolicy());
 
     private DatastoreStateRepository repository;
     private DatastoreService datastoreService;
@@ -53,6 +49,27 @@ public class DatastoreStateRepositoryTest {
         final String kind = "CustomKind";
         repository = new DatastoreStateRepository(kind, datastoreService);
         assertEquals(kind, repository.kind());
+    }
+
+    @Test
+    public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
+        update("F", false, null, null, null);
+        final Transaction txn = datastoreService.beginTransaction( TransactionOptions.Builder.withXG(true));
+        for (int i = 0; i < MAX_ENTITY_GROUPS - 1; i++) {
+            update("F" + i, false, null, null, txn);
+        }
+        update("F", false, null, null, txn);
+        repository.getFeatureState(TestFeature.F1);
+        txn.commit();
+    }
+
+    @Test
+    public void shouldNotStartNewTransaction() {
+        update("F1", false, null, null, null);
+        DatastoreService spyDatastoreService = Mockito.spy(DelegateDatastoreService.getInstance(datastoreService));
+        repository = new DatastoreStateRepository(spyDatastoreService);
+        repository.getFeatureState(TestFeature.F1);
+        Mockito.verify(spyDatastoreService, Mockito.never()).beginTransaction();
     }
 
     @Test
