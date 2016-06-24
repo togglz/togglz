@@ -1,6 +1,7 @@
 package org.togglz.appengine.repository;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -110,8 +111,24 @@ public class MemcacheStateRepositoryTest {
         Mockito.verifyNoMoreInteractions(delegate);
     }
 
-    private static enum TestFeature implements Feature {
-        F1
+    @Test
+    public void testNullCaching() throws InterruptedException {
+        MemcacheStateRepository repository = new MemcacheStateRepository(delegate);
+
+        // do some lookups
+        for (int i = 0; i < 10; i++) {
+            assertNull(repository.getFeatureState(TestFeature.F2));
+            Thread.sleep(10);
+        }
+
+        // delegate only called once
+        Mockito.verify(delegate).getFeatureState(TestFeature.F2);
+        Mockito.verifyNoMoreInteractions(delegate);
+        assertTrue(ms.contains(repository.key(TestFeature.F2.name())));
+    }
+
+    private enum TestFeature implements Feature {
+        F1, F2
     }
 
 }
