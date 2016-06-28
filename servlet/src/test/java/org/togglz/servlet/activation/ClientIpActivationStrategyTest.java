@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequest.requestFrom;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequestAssert.assertThat;
 
-import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class ClientIpActivationStrategyTest {
       }
    }
 
-   protected static class MockRequestAssert extends AbstractAssert<MockRequestAssert, MockRequest> {
+   protected static class MockRequestAssert extends org.assertj.core.api.AbstractAssert<MockRequestAssert, MockRequest> {
       protected MockRequestAssert(MockRequest actual) {
          super(actual, MockRequestAssert.class);
       }
