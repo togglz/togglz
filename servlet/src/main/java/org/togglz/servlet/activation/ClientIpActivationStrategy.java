@@ -1,7 +1,6 @@
 package org.togglz.servlet.activation;
 
 import org.togglz.core.activation.Parameter;
-import org.togglz.core.activation.ParameterBuilder;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
@@ -12,7 +11,6 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,32 +48,24 @@ public class ClientIpActivationStrategy implements ActivationStrategy
 
          List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
 
-         List<InetAddress> ips = new ArrayList<>();
-         List<CIDRUtils> cidrUtils = new ArrayList<>();
          for (String part : parts) {
+            String remoteAddr = request.getRemoteAddr();
+            if (part.equals(remoteAddr)) { // shortcut
+               return true;
+            }
+            
             try {
                if (part.contains("/")) {
-                  cidrUtils.add(new CIDRUtils(part));
-               } else {
-                  ips.add(InetAddress.getByName(part));
+                  CIDRUtils cidrUtil = new CIDRUtils(part);
+                  if (cidrUtil.isInRange(remoteAddr)) {
+                     return true;
+                  }
+               } else if (InetAddress.getByName(remoteAddr).equals(InetAddress.getByName(part))) {
+                  return true;
                }
             } catch (Exception e) {
                log.warn("Ignoring illegal IP address or CIDR range " + part);
             }
-         }
-
-         try {
-            if (ips.contains(InetAddress.getByName(request.getRemoteAddr()))) {
-               return true;
-            }
-   
-            for (CIDRUtils cidrUtil : cidrUtils) {
-               if (cidrUtil.isInRange(request.getRemoteAddr())) {
-                  return true;
-               }
-            }
-         } catch (UnknownHostException e) {
-            log.error("Illegal address " + request.getRemoteAddr());
          }
       }
 
@@ -85,10 +75,59 @@ public class ClientIpActivationStrategy implements ActivationStrategy
    @Override
    public Parameter[] getParameters()
    {
-      return new Parameter[] {
-               ParameterBuilder.create(PARAM_IPS).label("Client IPs")
-                        .description("A comma-separated list of client IPs or address ranges in CIDR notation (e.g. 10.1.2.0/24) for which the feature should be active.")
-      };
+      return new Parameter[] { new AddressParameter() };
+   }
+
+   protected static class AddressParameter implements Parameter {
+
+      @Override
+      public String getName() {
+         return PARAM_IPS;
+      }
+
+      @Override
+      public String getLabel() {
+         return "Client IPs";
+      }
+
+      @Override
+      public String getDescription() {
+         return "A comma-separated list of client IPs or address ranges in CIDR notation (e.g. 10.1.2.0/24) for which the feature should be active.";
+      }
+
+      @Override
+      public boolean isOptional() {
+         return false;
+      }
+
+      @Override
+      public boolean isLargeText() {
+         return false;
+      }
+
+      @Override
+      public boolean isValid(String address) {
+         if (Strings.isBlank(address)) {
+            return false;
+         }
+
+         if (address.contains("/")) {
+            try {
+               new CIDRUtils(address);
+            } catch (UnknownHostException | IllegalArgumentException e) {
+               return false;
+            }
+         } else {
+            try {
+               InetAddress.getByName(address);
+            } catch (UnknownHostException e) {
+               return false;
+            }
+         }
+         
+         return true;
+      }
+      
    }
 
 }

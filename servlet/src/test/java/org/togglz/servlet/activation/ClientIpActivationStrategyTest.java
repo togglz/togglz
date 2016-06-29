@@ -1,5 +1,8 @@
 package org.togglz.servlet.activation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequest.requestFrom;
@@ -10,6 +13,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.servlet.activation.ClientIpActivationStrategy.AddressParameter;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -147,5 +151,63 @@ public class ClientIpActivationStrategyTest {
     @Test
     public void shouldBeActiveForMatchingIpv6Range() throws Exception {
        assertThat(requestFrom("2001:db8:0:0:0:0:0:1")).isActiveWithParams("2001:db8::/24");
+    }
+    
+    @Test
+    public void addressParameterProperties() {
+       AddressParameter param = addressParam();
+       assertThat(param.getDescription()).isNotEmpty();
+       assertThat(param.getLabel()).isNotEmpty();
+       assertThat(param.getName()).isEqualTo(ClientIpActivationStrategy.PARAM_IPS);
+       assertThat(param.isLargeText()).isFalse();
+       assertThat(param.isOptional()).isFalse();
+    }
+
+    @Test
+    public void addressParameterShouldBeInvalidWithEmptyInput() {
+       assertFalse(addressParam().isValid(null));
+       assertFalse(addressParam().isValid(""));
+    }
+
+    @Test
+    public void addressParameterShouldBeInvalidWithWrongCidrFormat() {
+       assertFalse(addressParam().isValid("abc/24"));
+    }
+
+    @Test
+    public void addressParameterShouldBeValidWithIpv4Address() {
+       assertTrue(addressParam().isValid("10.1.2.3"));
+    }
+
+    @Test
+    public void addressParameterShouldBeInvalidWithWrongIpv4Address() {
+       assertFalse(addressParam().isValid("1.2....."));
+    }
+
+    @Test
+    public void addressParameterShouldBeInvalidWithWrongIpv6Address() {
+       assertFalse(addressParam().isValid("[2001:db8::1"));
+       assertFalse(addressParam().isValid("2001:db8:::1"));
+    }
+
+    @Test
+    public void addressParameterShouldBeValidWithIpv4AddressRange() {
+       assertTrue(addressParam().isValid("10.1.2.0/24"));
+    }
+
+    @Test
+    public void addressParameterShouldBeValidWithIpv6Address() {
+       assertTrue(addressParam().isValid("2001:db8:0:0:0:0:0:1"));
+       assertTrue(addressParam().isValid("2001:db8::1"));
+    }
+
+    @Test
+    public void addressParameterShouldBeValidWithIpv6AddressRange() {
+       assertTrue(addressParam().isValid("2001:db8:0:0:0:0:0:0/24"));
+       assertTrue(addressParam().isValid("2001:db8::/24"));
+    }
+
+    private AddressParameter addressParam() {
+       return new AddressParameter();
     }
 }
