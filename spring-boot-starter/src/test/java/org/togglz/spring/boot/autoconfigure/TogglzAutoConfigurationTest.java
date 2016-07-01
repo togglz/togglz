@@ -118,8 +118,10 @@ public class TogglzAutoConfigurationTest {
 
         load(new Class[]{TogglzAutoConfiguration.class});
 
-        assertNull(FeatureContext.getFeatureManagerOrNull());
-        assertNull(ContextClassLoaderApplicationContextHolder.get());
+        FeatureManager featureManager = this.context.getBean(FeatureManager.class);
+        Set<Feature> features = featureManager.getFeatures();
+        assertNotNull(featureManager);
+        assertEquals(0, features.size());
     }
 
     @Test

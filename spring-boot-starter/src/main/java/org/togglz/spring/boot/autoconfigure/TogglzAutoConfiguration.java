@@ -25,7 +25,6 @@ import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -33,11 +32,15 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.togglz.console.TogglzConsoleServlet;
+import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.composite.CompositeStateRepository;
@@ -52,9 +55,11 @@ import org.togglz.core.user.UserProvider;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz.
@@ -63,24 +68,10 @@ import java.util.Properties;
  */
 @Configuration
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
-@Conditional({TogglzAutoConfiguration.OnFeatureProviderBeanOrFeatureEnumsProperty.class})
 @EnableConfigurationProperties(TogglzProperties.class)
 public class TogglzAutoConfiguration {
 
-    static class OnFeatureProviderBeanOrFeatureEnumsProperty extends AnyNestedCondition {
-
-        public OnFeatureProviderBeanOrFeatureEnumsProperty() {
-            super(ConfigurationPhase.REGISTER_BEAN);
-        }
-
-        @ConditionalOnBean(FeatureProvider.class)
-        static class OnFeatureProviderBean {
-        }
-
-        @ConditionalOnProperty(prefix = "togglz", name = "feature-enums")
-        static class OnFeatureEnumsProperty {
-        }
-    }
+    private static final Log log = LogFactory.getLog(TogglzAutoConfiguration.class);
 
     @Bean
     public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener() {
@@ -89,7 +80,6 @@ public class TogglzAutoConfiguration {
 
     @Configuration
     @ConditionalOnMissingBean(FeatureProvider.class)
-    @ConditionalOnProperty(prefix = "togglz", name = "feature-enums")
     protected static class FeatureProviderConfiguration {
 
         @Autowired
@@ -97,7 +87,24 @@ public class TogglzAutoConfiguration {
 
         @Bean
         public FeatureProvider featureProvider() {
-            return new EnumBasedFeatureProvider(properties.getFeatureEnums());
+            Class<? extends Feature>[] featureEnums = properties.getFeatureEnums();
+            if (featureEnums != null && featureEnums.length > 0) {
+                return new EnumBasedFeatureProvider(featureEnums);
+            } else {
+                log.warn("Creating a dummy feature provider as neither a FeatureProvider bean was provided nor the 'togglz.feature-enums' property was set!");
+                return new FeatureProvider() {
+
+                    @Override
+                    public Set<Feature> getFeatures() {
+                        return new HashSet<Feature>();
+                    }
+
+                    @Override
+                    public FeatureMetaData getMetaData(Feature feature) {
+                        return null;
+                    }
+                };
+            }
         }
     }
 
