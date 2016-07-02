@@ -37,6 +37,7 @@ import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -92,18 +93,7 @@ public class TogglzAutoConfiguration {
                 return new EnumBasedFeatureProvider(featureEnums);
             } else {
                 log.warn("Creating a dummy feature provider as neither a FeatureProvider bean was provided nor the 'togglz.feature-enums' property was set!");
-                return new FeatureProvider() {
-
-                    @Override
-                    public Set<Feature> getFeatures() {
-                        return new HashSet<Feature>();
-                    }
-
-                    @Override
-                    public FeatureMetaData getMetaData(Feature feature) {
-                        return null;
-                    }
-                };
+                return new EmptyFeatureProvider();
             }
         }
     }

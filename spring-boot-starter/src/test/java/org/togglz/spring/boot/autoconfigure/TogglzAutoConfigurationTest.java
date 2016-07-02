@@ -27,6 +27,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.togglz.core.Feature;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
@@ -113,15 +114,8 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void noFeatureProviderBeanAndFeatureEnumsProperty() {
-        // Explicitly clear cache
-        FeatureContext.clearCache();
-
         load(new Class[]{TogglzAutoConfiguration.class});
-
-        FeatureManager featureManager = this.context.getBean(FeatureManager.class);
-        Set<Feature> features = featureManager.getFeatures();
-        assertNotNull(featureManager);
-        assertEquals(0, features.size());
+        assertTrue(this.context.getBean(FeatureProvider.class) instanceof EmptyFeatureProvider);
     }
 
     @Test
