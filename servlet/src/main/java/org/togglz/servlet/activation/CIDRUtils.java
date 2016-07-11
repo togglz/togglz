@@ -102,7 +102,7 @@ public class CIDRUtils {
 
     private byte[] toBytes(byte[] array, int targetSize) {
         int counter = 0;
-        List<Byte> newArr = new ArrayList<Byte>();
+        List<Byte> newArr = new ArrayList<>();
         while (counter < targetSize && (array.length - 1 - counter >= 0)) {
             newArr.add(0, array[array.length - 1 - counter]);
             counter++;
@@ -130,8 +130,7 @@ public class CIDRUtils {
         return this.endAddress.getHostAddress();
     }
 
-    public boolean isInRange(String ipAddress) throws UnknownHostException {
-        InetAddress address = InetAddress.getByName(ipAddress);
+    public boolean isInRange(InetAddress address) throws UnknownHostException {
         BigInteger start = new BigInteger(1, this.startAddress.getAddress());
         BigInteger end = new BigInteger(1, this.endAddress.getAddress());
         BigInteger target = new BigInteger(1, address.getAddress());
@@ -140,5 +139,9 @@ public class CIDRUtils {
         int te = target.compareTo(end);
 
         return (st == -1 || st == 0) && (te == -1 || te == 0);
+    }
+
+    public boolean isInRange(String ipAddress) throws UnknownHostException {
+       return isInRange(InetAddress.getByName(ipAddress));
     }
 }

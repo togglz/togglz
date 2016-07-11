@@ -48,24 +48,25 @@ public class ClientIpActivationStrategy implements ActivationStrategy
 
          List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
 
-         for (String part : parts) {
+         try {
             String remoteAddr = request.getRemoteAddr();
-            if (part.equals(remoteAddr)) { // shortcut
-               return true;
-            }
-            
-            try {
-               if (part.contains("/")) {
-                  CIDRUtils cidrUtil = new CIDRUtils(part);
-                  if (cidrUtil.isInRange(remoteAddr)) {
-                     return true;
-                  }
-               } else if (InetAddress.getByName(remoteAddr).equals(InetAddress.getByName(part))) {
+            InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
+            for (String part : parts) {
+               if (part.equals(remoteAddr)) { // shortcut
                   return true;
                }
-            } catch (Exception e) {
-               log.warn("Ignoring illegal IP address or CIDR range " + part);
+
+               if (part.contains("/")) {
+                  CIDRUtils cidrUtil = new CIDRUtils(part);
+                  if (cidrUtil.isInRange(remoteInetAddress)) {
+                     return true;
+                  }
+               } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
+                  return true;
+               }
             }
+         } catch (UnknownHostException | IllegalArgumentException e) {
+            log.warn("Ignoring illegal IP address or CIDR range ");
          }
       }
 
