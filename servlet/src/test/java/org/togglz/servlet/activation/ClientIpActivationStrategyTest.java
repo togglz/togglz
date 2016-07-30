@@ -171,7 +171,7 @@ public class ClientIpActivationStrategyTest {
 
     @Test
     public void addressParameterShouldBeInvalidWithWrongCidrFormat() {
-       assertFalse(addressParam().isValid("abc/24"));
+       assertFalse(addressParam().isValid("some-invalid-string/24"));
     }
 
     @Test
