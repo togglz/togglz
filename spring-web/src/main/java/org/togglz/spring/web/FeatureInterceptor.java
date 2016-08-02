@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * This interceptor checks if a controller or controller method is annotaged with the
+ * This interceptor checks if a controller or controller method is annotated with the
  * {@link FeaturesAreActive} annotation to determine if a controller should be 
  * activated or not.
  * <p>
