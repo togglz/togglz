@@ -49,7 +49,7 @@ public class TogglzEndpointTest {
 
     @Test
     public void invoke() throws Exception {
-        load(new Class[]{JacksonAutoConfiguration.class, TogglzAutoConfiguration.class, FeatureProviderConfig.class},
+        load(new Class[]{FeatureProviderConfig.class, JacksonAutoConfiguration.class, TogglzAutoConfiguration.class},
                 "togglz.features.FEATURE_ONE: true",
                 "togglz.features.FEATURE_TWO: false",
                 "togglz.features.FEATURE_TWO.strategy: release-date",

@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -31,11 +32,16 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.togglz.console.TogglzConsoleServlet;
+import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
+import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.composite.CompositeStateRepository;
@@ -50,9 +56,11 @@ import org.togglz.core.user.UserProvider;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz.
@@ -64,6 +72,8 @@ import java.util.Properties;
 @EnableConfigurationProperties(TogglzProperties.class)
 public class TogglzAutoConfiguration {
 
+    private static final Log log = LogFactory.getLog(TogglzAutoConfiguration.class);
+
     @Bean
     public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener() {
         return new TogglzApplicationContextBinderApplicationListener();
@@ -71,7 +81,6 @@ public class TogglzAutoConfiguration {
 
     @Configuration
     @ConditionalOnMissingBean(FeatureProvider.class)
-    @ConditionalOnProperty(prefix = "togglz", name = "feature-enums")
     protected static class FeatureProviderConfiguration {
 
         @Autowired
@@ -79,7 +88,13 @@ public class TogglzAutoConfiguration {
 
         @Bean
         public FeatureProvider featureProvider() {
-            return new EnumBasedFeatureProvider(properties.getFeatureEnums());
+            Class<? extends Feature>[] featureEnums = properties.getFeatureEnums();
+            if (featureEnums != null && featureEnums.length > 0) {
+                return new EnumBasedFeatureProvider(featureEnums);
+            } else {
+                log.warn("Creating a dummy feature provider as neither a FeatureProvider bean was provided nor the 'togglz.feature-enums' property was set!");
+                return new EmptyFeatureProvider();
+            }
         }
     }
 
@@ -97,6 +112,13 @@ public class TogglzAutoConfiguration {
                 stateRepository = stateRepositories.get(0);
             } else if (stateRepositories.size() > 1) {
                 stateRepository = new CompositeStateRepository(stateRepositories.toArray(new StateRepository[stateRepositories.size()]));
+            }
+            // If caching is enabled wrap state repository in caching state repository.
+            // Note that we explicitly check if the state repository is not already a caching state repository,
+            // as the auto configuration of the state repository already creates a caching state repository if needed.
+            // The below wrapping only occurs if the user provided the state repository manually and caching is enabled.
+            if (properties.getCache().isEnabled() && !(stateRepository instanceof CachingStateRepository)) {
+                stateRepository = new CachingStateRepository(stateRepository, properties.getCache().getTimeToLive(), properties.getCache().getTimeUnit());
             }
             FeatureManagerBuilder featureManagerBuilder = new FeatureManagerBuilder();
             String name = properties.getFeatureManagerName();
@@ -161,6 +183,7 @@ public class TogglzAutoConfiguration {
             } else {
                 stateRepository = new InMemoryStateRepository();
             }
+            // If caching is enabled wrap state repository in caching state repository.
             if (properties.getCache().isEnabled()) {
                 stateRepository = new CachingStateRepository(stateRepository, properties.getCache().getTimeToLive(), properties.getCache().getTimeUnit());
             }
@@ -183,7 +206,7 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({EnableWebSecurity.class, AuthenticationEntryPoint.class})
+    @ConditionalOnClass({EnableWebSecurity.class, AuthenticationEntryPoint.class, SpringSecurityUserProvider.class})
     @ConditionalOnMissingBean(UserProvider.class)
     protected static class SpringSecurityUserProviderConfiguration {
 

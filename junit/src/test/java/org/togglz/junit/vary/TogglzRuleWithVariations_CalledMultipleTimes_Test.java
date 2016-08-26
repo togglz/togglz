@@ -24,26 +24,26 @@ public class TogglzRuleWithVariations_CalledMultipleTimes_Test {
 
         switch (counter) {
             case 1:
-                assertEquals(false, MyFeatures.F1.isActive());
-                assertEquals(false, MyFeatures.F2.isActive());
-                assertEquals(false, MyFeatures.F3.isActive());
+                assertEquals("C1, F1", false, MyFeatures.F1.isActive());
+                assertEquals("C1, F2", false, MyFeatures.F2.isActive());
+                assertEquals("C1, F3", false, MyFeatures.F3.isActive());
                 break;
 
             case 2:
-                assertEquals(false, MyFeatures.F1.isActive());
-                assertEquals(true, MyFeatures.F2.isActive());
-                assertEquals(false, MyFeatures.F3.isActive());
+                assertEquals("C2, F1", false, MyFeatures.F1.isActive());
+                assertEquals("C2, F2", true, MyFeatures.F2.isActive());
+                assertEquals("C2, F3", false, MyFeatures.F3.isActive());
                 break;
             case 3:
-                assertEquals(false, MyFeatures.F1.isActive());
-                assertEquals(false, MyFeatures.F2.isActive());
-                assertEquals(true, MyFeatures.F3.isActive());
+                assertEquals("C3, F1", false, MyFeatures.F1.isActive());
+                assertEquals("C3, F2", false, MyFeatures.F2.isActive());
+                assertEquals("C3, F3", true, MyFeatures.F3.isActive());
                 break;
 
             case 4:
-                assertEquals(false, MyFeatures.F1.isActive());
-                assertEquals(true, MyFeatures.F2.isActive());
-                assertEquals(true, MyFeatures.F3.isActive());
+                assertEquals("C4, F1", false, MyFeatures.F1.isActive());
+                assertEquals("C4, F2", true, MyFeatures.F2.isActive());
+                assertEquals("C4, F3", true, MyFeatures.F3.isActive());
                 break;
 
             default:
