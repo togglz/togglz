@@ -17,9 +17,9 @@ import java.io.IOException;
 
 /**
  * A state repository that uses Amazon's DynamoDB.
- *
+ * <p>
  * The repository is configured using the {@link DynamoDBStateRepositoryBuilder}
- *
+ * <p>
  * You must already have a table provisioned before you create this repository.
  *
  * @author Ryan Gardner
@@ -52,11 +52,15 @@ public class DynamoDBStateRepository implements StateRepository {
     @Override
     public FeatureState getFeatureState(Feature feature) {
         Item documentItem = table.getItem(new GetItemSpec().withPrimaryKey(primaryKeyAttribute, feature.name()).withAttributesToGet(FEATURE_STATE_ATTRIBUTE_NAME));
-        try {
-            FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(documentItem.getJSON(FEATURE_STATE_ATTRIBUTE_NAME));
-            return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
-        } catch (IOException e) {
-            throw new RuntimeException("Couldn't parse the feature state", e);
+        if (documentItem != null) {
+            try {
+                FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(documentItem.getJSON(FEATURE_STATE_ATTRIBUTE_NAME));
+                return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+            } catch (IOException e) {
+                throw new RuntimeException("Couldn't parse the feature state", e);
+            }
+        } else {
+            return null;
         }
     }
 
