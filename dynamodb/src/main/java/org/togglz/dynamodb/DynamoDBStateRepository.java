@@ -1,10 +1,12 @@
 package org.togglz.dynamodb;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
+import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,10 +44,6 @@ public class DynamoDBStateRepository implements StateRepository {
         this.objectMapper = builder.objectMapper;
         this.table = builder.table;
         this.primaryKeyAttribute = builder.primaryKey;
-
-        TableDescription tableDescription = table.describe();
-        log.info("Creating DynamoDBStateRepository with table named: {}", table.getTableName());
-        log.info("Table description: {}", tableDescription.toString());
     }
 
 
@@ -97,15 +95,16 @@ public class DynamoDBStateRepository implements StateRepository {
      * @author ryan.gardner@dealer.com
      */
     public static class DynamoDBStateRepositoryBuilder {
-        private String tableName = "togglz";
-        private AmazonDynamoDBClient amazonDynamoDBClient;
+        public static final String DEFAULT_TABLE_NAME = "togglz";
+        private String tableName = DEFAULT_TABLE_NAME;
+        private AmazonDynamoDB amazonDynamoDBClient;
         private ObjectMapper objectMapper;
         private String primaryKey = "featureName";
         private Table table;
         private DynamoDB dynamoDB;
 
 
-        public DynamoDBStateRepositoryBuilder(AmazonDynamoDBClient dbClient) {
+        public DynamoDBStateRepositoryBuilder(AmazonDynamoDB dbClient) {
             this.amazonDynamoDBClient = dbClient;
         }
 
@@ -120,6 +119,7 @@ public class DynamoDBStateRepository implements StateRepository {
         }
 
         public DynamoDBStateRepository build() {
+
             this.dynamoDB = new DynamoDB(this.amazonDynamoDBClient);
             initializeObjectMapper();
             initializeTable();
@@ -128,6 +128,26 @@ public class DynamoDBStateRepository implements StateRepository {
 
         private void initializeTable() {
             this.table = dynamoDB.getTable(this.tableName);
+
+            if (table == null) {
+                throw new RuntimeException("Couldn't create a state repository using the table name provided");
+            } else {
+                try {
+                    TableDescription tableDescription = table.describe();
+                    log.info("Creating DynamoDBStateRepository with table named: {}", table.getTableName());
+                    log.info("Table description: {}", tableDescription.toString());
+                } catch (ResourceNotFoundException e) {
+                    if (tableName.equals(DEFAULT_TABLE_NAME)) {
+                        log.error("The table with the default name '{}' could not be found. You must either create this table, or provide the name of an existing table to the builder to use as the state repository", DEFAULT_TABLE_NAME);
+                    } else {
+                        log.error("The table named '{}' can not be found. Please verify that the table is created in the region you are trying to run before using it to store the togglz state", tableName);
+                    }
+                    throw new RuntimeException("The table specified couldn't be found", e);
+                } catch (Exception e) {
+                    log.error("Couldn't describe the table for an unknown reason. Please verify the table exists and you are able to access it", e);
+                    throw new RuntimeException("Couldn't create a state repository using the supplied table", e);
+                }
+            }
         }
 
         // create a new object mapper if one wasn't passed into the builder
