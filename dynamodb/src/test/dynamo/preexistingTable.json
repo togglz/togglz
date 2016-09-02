@@ -1,0 +1,20 @@
+{
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "featureName",
+      "AttributeType": "S"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "WriteCapacityUnits": 5,
+    "ReadCapacityUnits": 5
+  },
+  "TableName": "preexistingTable",
+  "TableStatus": "ACTIVE",
+  "KeySchema": [
+    {
+      "KeyType": "HASH",
+      "AttributeName": "featureName"
+    }
+  ]
+}
