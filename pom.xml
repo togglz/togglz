@@ -188,6 +188,7 @@
     <module>zookeeper</module>
     <module>dynamodb</module>
     <module>benchmarks</module>
+    <module>cloud-datastore</module>
   </modules>
 
   <developers>
