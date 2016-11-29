@@ -21,7 +21,6 @@ import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 public class SpringProfileActivationStrategy implements ActivationStrategy {
 
     public static final String ID = "spring-profile";
-    static final String NAME = "Spring Profile";
     public static final String PARAM_PROFILES = "profiles";
 
     @Override
@@ -31,7 +30,7 @@ public class SpringProfileActivationStrategy implements ActivationStrategy {
 
     @Override
     public String getName() {
-        return NAME;
+        return "Spring Profile";
     }
 
     @Override
