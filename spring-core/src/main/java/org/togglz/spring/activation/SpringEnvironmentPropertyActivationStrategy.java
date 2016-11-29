@@ -25,7 +25,6 @@ import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 public class SpringEnvironmentPropertyActivationStrategy implements ActivationStrategy {
 
     public static final String ID = "spring-environment-property";
-    static final String NAME = "Spring Environment Property";
     public static final String PARAM_NAME = "name";
 
     private static String getPropertyName(FeatureState featureState) {
@@ -45,7 +44,7 @@ public class SpringEnvironmentPropertyActivationStrategy implements ActivationSt
 
     @Override
     public String getName() {
-        return NAME;
+        return "Spring Environment Property";
     }
 
     @Override

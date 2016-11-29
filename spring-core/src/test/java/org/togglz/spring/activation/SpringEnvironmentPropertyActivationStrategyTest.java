@@ -61,7 +61,7 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
 
     @Test
     public void testGetName() {
-        assertEquals(SpringEnvironmentPropertyActivationStrategy.NAME, strategy.getName());
+        assertTrue(Strings.isNotBlank(strategy.getName()));
     }
 
     @Theory
