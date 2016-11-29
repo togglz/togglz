@@ -41,7 +41,6 @@ import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
-import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.composite.CompositeStateRepository;
@@ -53,14 +52,13 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
+import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz.
