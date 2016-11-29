@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
+package org.togglz.spring.listener;
 
 import org.junit.After;
 import org.junit.Before;
