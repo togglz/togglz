@@ -51,7 +51,8 @@ public class SpringEnvironmentPropertyActivationStrategy implements ActivationSt
     public boolean isActive(FeatureState featureState, FeatureUser user) {
         ApplicationContext applicationContext = ContextClassLoaderApplicationContextHolder.get();
         if (applicationContext == null) {
-            return false;
+            throw new IllegalStateException("ApplicationContext could not be found, which can occur if there is no bean for "
+                + "TogglzApplicationContextBinderApplicationListener when TogglzAutoConfiguration is not being used");
         }
 
         Environment environment = applicationContext.getEnvironment();
