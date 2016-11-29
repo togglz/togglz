@@ -37,7 +37,8 @@ public class SpringProfileActivationStrategy implements ActivationStrategy {
     public boolean isActive(FeatureState featureState, FeatureUser user) {
         ApplicationContext applicationContext = ContextClassLoaderApplicationContextHolder.get();
         if (applicationContext == null) {
-            return false;
+            throw new IllegalStateException("ApplicationContext could not be found, which can occur if there is no bean for "
+                + "TogglzApplicationContextBinderApplicationListener when TogglzAutoConfiguration is not being used");
         }
 
         List<String> activeProfiles = Arrays.asList(applicationContext.getEnvironment().getActiveProfiles());

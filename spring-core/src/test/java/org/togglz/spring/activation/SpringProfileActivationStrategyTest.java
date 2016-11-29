@@ -120,11 +120,11 @@ public class SpringProfileActivationStrategyTest {
         assertFalse(strategy.isActive(featureState, null));
     }
 
-    @Test
-    public void testIsActiveWithNoApplicationContext() {
+    @Test(expected = IllegalStateException.class)
+    public void testIsActiveThrowsWhenNoApplicationContext() {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, true);
 
-        assertFalse(strategy.isActive(featureState, null));
+        strategy.isActive(featureState, null);
     }
 
     @Test
