@@ -180,6 +180,7 @@
     <module>appengine</module>
     <module>archaius</module>
     <module>mongodb</module>
+    <module>mongodb-v3</module>
     <module>testing</module>
     <module>junit</module>
     <module>distribution</module>
