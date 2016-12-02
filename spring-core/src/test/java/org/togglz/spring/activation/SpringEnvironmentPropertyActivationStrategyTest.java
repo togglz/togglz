@@ -70,9 +70,7 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
 
         ContextClassLoaderApplicationContextHolder.bind(mockApplicationContext);
 
-        when(mockEnvironment.getProperty(
-            "org.togglz.spring.activation.SpringEnvironmentPropertyActivationStrategyTest$TestFeatures.FEATURE_ONE",
-            Boolean.TYPE, false)).thenReturn(enabled);
+        when(mockEnvironment.getProperty("togglz.FEATURE_ONE", Boolean.TYPE, false)).thenReturn(enabled);
 
         assertEquals(enabled, strategy.isActive(featureState, null));
     }
