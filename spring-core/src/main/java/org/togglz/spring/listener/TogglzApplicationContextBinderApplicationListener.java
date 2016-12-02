@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
+package org.togglz.spring.listener;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
