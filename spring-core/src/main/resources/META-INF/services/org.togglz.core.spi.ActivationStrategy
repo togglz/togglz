@@ -1,1 +1,2 @@
+org.togglz.spring.activation.SpringEnvironmentPropertyActivationStrategy
 org.togglz.spring.activation.SpringProfileActivationStrategy
