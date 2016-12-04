@@ -179,6 +179,16 @@ public class TogglzAutoConfigurationTest {
     }
 
     @Test
+    public void consoleWithCustomManagementContextPath() {
+        // With TogglzManagementContextConfiguration responsible for creating the admin console servlet registration bean,
+        // if a custom managememnt context path is provided it should be used as prefix.
+        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class},
+                "management.context-path: /manage");
+        assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+        assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/manage/togglz-console/*"));
+    }
+
+    @Test
     public void consoleUseManagementPortIsFalseWithoutTogglzManagementContextConfiguration() {
         // With togglz.console.use-management-port: false the TogglzAutoConfiguration is responsible for creating the admin console servlet
         // registration bean.
@@ -187,6 +197,7 @@ public class TogglzAutoConfigurationTest {
         load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class},
                 "togglz.console.use-management-port: false");
         assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+        assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/togglz-console/*"));
     }
 
     @Test
