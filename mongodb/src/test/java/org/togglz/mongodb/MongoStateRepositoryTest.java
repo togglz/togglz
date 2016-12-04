@@ -1,4 +1,4 @@
-package org.togglz.mongodbv3;
+package org.togglz.mongodb;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.MongoClient;
