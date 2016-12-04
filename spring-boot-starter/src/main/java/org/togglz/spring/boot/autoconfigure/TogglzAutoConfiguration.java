@@ -25,6 +25,7 @@ import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -220,7 +221,7 @@ public class TogglzAutoConfiguration {
     @Configuration
     @ConditionalOnWebApplication
     @ConditionalOnClass(TogglzConsoleServlet.class)
-    @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+    @Conditional(OnConsoleAndNotUseManagementPort.class)
     protected static class TogglzConsoleConfiguration {
 
         @Autowired
@@ -234,6 +235,22 @@ public class TogglzAutoConfiguration {
             servlet.setSecured(properties.getConsole().isSecured());
             return new ServletRegistrationBean(servlet, urlMapping);
         }
+    }
+
+    static class OnConsoleAndNotUseManagementPort extends AllNestedConditions {
+
+        OnConsoleAndNotUseManagementPort() {
+            super(ConfigurationPhase.REGISTER_BEAN);
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+        static class OnConsole {
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "false")
+        static class OnNotUseManagementPort {
+        }
+
     }
 
     @Configuration
