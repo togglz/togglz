@@ -8,4 +8,5 @@ Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
  org.togglz.core.*;version="${osgi.bundles.version:default}",
- com.mongodb.*;version="[2.11.4, 3.0)" 
+ com.mongodb.*;version="3.4.0",
+ org.bson.*;version="3.4.0"
