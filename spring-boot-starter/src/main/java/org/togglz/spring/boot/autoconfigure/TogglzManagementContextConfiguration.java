@@ -35,7 +35,7 @@ import org.togglz.console.TogglzConsoleServlet;
  */
 @ManagementContextConfiguration
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
-@EnableConfigurationProperties({TogglzProperties.class, ManagementServerProperties.class})
+@EnableConfigurationProperties({TogglzProperties.class})
 public class TogglzManagementContextConfiguration {
 
     @Autowired
