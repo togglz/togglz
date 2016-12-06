@@ -21,6 +21,7 @@ import org.springframework.boot.actuate.autoconfigure.ManagementContextConfigura
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,6 +35,7 @@ import org.togglz.console.TogglzConsoleServlet;
  * @author Marcel Overdijk
  */
 @ManagementContextConfiguration
+@ConditionalOnBean(ManagementServerProperties.class)
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties({TogglzProperties.class})
 public class TogglzManagementContextConfiguration {

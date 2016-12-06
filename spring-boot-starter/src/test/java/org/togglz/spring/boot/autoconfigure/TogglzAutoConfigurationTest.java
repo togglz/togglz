@@ -43,6 +43,9 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -65,7 +68,7 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void defaultTogglz() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class});
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class});
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         Set<Feature> features = featureManager.getFeatures();
 
@@ -90,7 +93,7 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void applicationContextBinder() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class});
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class});
         assertSame(this.context, ContextClassLoaderApplicationContextHolder.get());
     }
 
@@ -99,7 +102,7 @@ public class TogglzAutoConfigurationTest {
         // Explicitly clear cache
         FeatureContext.clearCache();
 
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.enabled: false");
 
         assertNull(FeatureContext.getFeatureManagerOrNull());
@@ -115,14 +118,13 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void noFeatureProviderBeanAndFeatureEnumsProperty() {
-        load(new Class[]{TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class});
+        loadWithDefaults();
         assertTrue(this.context.getBean(FeatureProvider.class) instanceof EmptyFeatureProvider);
     }
 
     @Test
     public void featureEnums() {
-        load(new Class[]{TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
-                "togglz.feature-enums: org.togglz.spring.boot.autoconfigure.TogglzAutoConfigurationTest.MyFeatures");
+        loadWithDefaults("togglz.feature-enums: org.togglz.spring.boot.autoconfigure.TogglzAutoConfigurationTest.MyFeatures");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         Set<Feature> features = featureManager.getFeatures();
         assertNotNull(featureManager);
@@ -133,20 +135,19 @@ public class TogglzAutoConfigurationTest {
 
     @Test(expected = BeanCreationException.class)
     public void featureEnumsClassNotFound() {
-        load(new Class[]{TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
-                "togglz.feature-enums: i.dont.exist.features");
+        loadWithDefaults("togglz.feature-enums: i.dont.exist.features");
     }
 
     @Test
     public void customFeatureManagerName() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.feature-manager-name: Custom Feature Manager Name");
         assertEquals("Custom Feature Manager Name", this.context.getBean(FeatureManager.class).getName());
     }
 
     @Test
     public void features() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.features.FEATURE_ONE: true",
                 "togglz.features.FEATURE_TWO: false");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
@@ -157,7 +158,7 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void featuresFile() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.features-file: classpath:/features-file/features.properties");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         assertTrue(featureManager.isActive(MyFeatures.FEATURE_ONE));
@@ -167,14 +168,14 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void cacheEnabled() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.cache.enabled: true");
         assertTrue(this.context.getBean(StateRepository.class) instanceof CachingStateRepository);
     }
 
     @Test
     public void consoleDisabled() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.console.enabled: false");
         assertEquals(0, this.context.getBeansOfType(ServletRegistrationBean.class).size());
     }
@@ -183,7 +184,7 @@ public class TogglzAutoConfigurationTest {
     public void consoleWithCustomManagementContextPath() {
         // With TogglzManagementContextConfiguration responsible for creating the admin console servlet registration bean,
         // if a custom managememnt context path is provided it should be used as prefix.
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "management.context-path: /manage");
         assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
         assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/manage/togglz-console/*"));
@@ -195,7 +196,7 @@ public class TogglzAutoConfigurationTest {
         // registration bean.
         // We explicitly do not load the TogglzManagementContextConfiguration to test the registration bean is created by the
         // TogglzAutoConfiguration, hence asserting on 1 bean.
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        load(new Class[]{ManagementServerPropertiesAutoConfiguration.class, FeatureProviderConfig.class, TogglzAutoConfiguration.class},
                 "togglz.console.use-management-port: false");
         assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
         assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/togglz-console/*"));
@@ -207,14 +208,14 @@ public class TogglzAutoConfigurationTest {
         // console servlet registration bean.
         // We explicitly do not load the TogglzManagementContextConfiguration to test the registration bean is not added to the context,
         // hence asserting on 0 beans.
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        load(new Class[]{ManagementServerPropertiesAutoConfiguration.class, FeatureProviderConfig.class, TogglzAutoConfiguration.class},
                 "togglz.console.use-management-port: true");
         assertEquals(0, this.context.getBeansOfType(ServletRegistrationBean.class).size());
     }
 
     @Test
     public void customConsolePath() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.console.path: /custom");
         assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
         assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/custom/*"));
@@ -222,7 +223,7 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void customConsolePathWithTrailingSlash() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.console.path: /custom/");
         assertEquals(1, this.context.getBeansOfType(ServletRegistrationBean.class).size());
         assertTrue(this.context.getBean(ServletRegistrationBean.class).getUrlMappings().contains("/custom/*"));
@@ -230,31 +231,44 @@ public class TogglzAutoConfigurationTest {
 
     @Test
     public void endpointDisabled() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.endpoint.enabled: false");
         assertEquals(0, this.context.getBeansOfType(TogglzEndpoint.class).size());
     }
 
     @Test
     public void endpointNotSensitive() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.endpoint.sensitive: false");
         assertFalse(this.context.getBean(TogglzEndpoint.class).isSensitive());
     }
 
     @Test
     public void customEndpointId() {
-        load(new Class[]{FeatureProviderConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class},
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
                 "togglz.endpoint.id: features");
         assertEquals("features", this.context.getBean(TogglzEndpoint.class).getId());
     }
 
     @Test
     public void customActivationStrategy() {
-        load(new Class[]{FeatureProviderConfig.class, ActivationStrategyConfig.class, TogglzAutoConfiguration.class, TogglzManagementContextConfiguration.class, ManagementServerPropertiesAutoConfiguration.class});
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class, ActivationStrategyConfig.class});
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         CustomActivationStrategy customActivationStrategy = this.context.getBean(CustomActivationStrategy.class);
         assertTrue(featureManager.getActivationStrategies().contains(customActivationStrategy));
+    }
+
+    private void loadWithDefaults(String... environment) {
+        loadWithDefaults(new Class[]{}, environment);
+    }
+
+    private void loadWithDefaults(Class<?>[] configs, String... environment) {
+        List<Class<?>> mergedConfigs = new ArrayList<>();
+        mergedConfigs.add(ManagementServerPropertiesAutoConfiguration.class);
+        mergedConfigs.add(TogglzAutoConfiguration.class);
+        mergedConfigs.add(TogglzManagementContextConfiguration.class);
+        mergedConfigs.addAll(Arrays.asList(configs));
+        load(mergedConfigs.toArray(new Class[mergedConfigs.size()]), environment);
     }
 
     private void load(Class<?>[] configs, String... environment) {
