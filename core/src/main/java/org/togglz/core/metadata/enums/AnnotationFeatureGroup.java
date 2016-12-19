@@ -15,7 +15,9 @@ import org.togglz.core.util.FeatureAnnotations;
  * 
  */
 public class AnnotationFeatureGroup implements FeatureGroup {
-
+    
+    private static final long serialVersionUID = 1L;
+    
     private final String label;
     private final Class<? extends Annotation> annotation;
 

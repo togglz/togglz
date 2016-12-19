@@ -1,5 +1,7 @@
 package org.togglz.core.metadata;
 
+import java.io.Serializable;
+
 import org.togglz.core.Feature;
 
 /**
@@ -9,7 +11,7 @@ import org.togglz.core.Feature;
  * @author Christian Kaltepoth
  * 
  */
-public interface FeatureGroup {
+public interface FeatureGroup extends Serializable {
 
     String getLabel();
 
