@@ -189,6 +189,7 @@
     <module>dynamodb</module>
     <module>benchmarks</module>
     <module>spring-mobile</module>
+    <module>slack</module>
   </modules>
 
   <developers>
