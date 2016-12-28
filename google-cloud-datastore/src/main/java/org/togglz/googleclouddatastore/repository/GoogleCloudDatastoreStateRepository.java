@@ -1,4 +1,4 @@
-package org.togglz.clouddatastore.repository;
+package org.togglz.googleclouddatastore.repository;
 
 import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.Datastore;
@@ -18,7 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by fabio on 30/09/16.
+ * <p>
+ * This repository implementation can be used to store the feature state
+ * in <a href="https://cloud.google.com/datastore/docs/">Google Cloud Datastore</>
+ * </p>
+ *
+ * <p>
+ * {@link GoogleCloudDatastoreStateRepository} stores the feature state in the FeatureToggle kind.
+ * </p>
+ *
+ * @author Fábio Franco Uechi
  */
 public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
@@ -31,11 +40,15 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     private final Datastore datastore;
     private final KeyFactory keyFactory;
 
-
     @Inject
     public GoogleCloudDatastoreStateRepository(Datastore datastore) {
         this.datastore = datastore;
         keyFactory = this.datastore.newKeyFactory().setKind(kind());
+    }
+
+    public GoogleCloudDatastoreStateRepository(final String kind, final Datastore datastore) {
+        this(datastore);
+        this.kind = kind;
     }
 
     @Override
@@ -103,10 +116,8 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         this.datastore.put(builder.build());
     }
 
-
     protected String kind() {
         return this.kind;
     }
-
 
 }

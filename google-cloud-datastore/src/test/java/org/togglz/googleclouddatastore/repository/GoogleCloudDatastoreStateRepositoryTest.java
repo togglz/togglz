@@ -1,4 +1,4 @@
-package org.togglz.clouddatastore.repository;
+package org.togglz.googleclouddatastore.repository;
 
 import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.Datastore;
@@ -63,6 +63,13 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @After
     public void tearDown() throws Exception {
         helper.reset();
+    }
+
+    @Test
+    public void customKindName() {
+        final String kind = "CustomKind";
+        repository = new GoogleCloudDatastoreStateRepository(kind, datastore);
+        assertEquals(kind, repository.kind());
     }
 
     @Test
@@ -269,7 +276,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         }
     }
 
-    private static enum TestFeature implements Feature {
+    private enum TestFeature implements Feature {
         F1
     }
 
