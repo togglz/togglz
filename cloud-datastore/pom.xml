@@ -13,7 +13,7 @@
     <description>Togglz - Google Cloud Datastore Integration</description>
 
     <properties>
-        <gcloud.version>0.4.0</gcloud.version>
+        <gcloud.version>0.8.0-beta</gcloud.version>
     </properties>
 
     <dependencies>
@@ -23,7 +23,6 @@
             <artifactId>togglz-core</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.google.cloud/gcloud-java-core -->
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-datastore</artifactId>
@@ -42,8 +41,6 @@
             <version>1</version>
             <scope>provided</scope>
         </dependency>
-
-
 
         <!-- Test Dependencies -->
         <dependency>
