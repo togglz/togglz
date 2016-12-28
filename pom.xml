@@ -189,7 +189,7 @@
     <module>dynamodb</module>
     <module>benchmarks</module>
     <module>spring-mobile</module>
-    <module>cloud-datastore</module>
+    <module>google-cloud-datastore</module>
   </modules>
 
   <developers>
