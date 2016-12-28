@@ -38,10 +38,10 @@ import static org.junit.Assert.assertThat;
  */
 public class GoogleCloudDatastoreStateRepositoryTest {
 
+    private static final int MAX_ENTITY_GROUPS = 25;
     private static LocalDatastoreHelper helper = LocalDatastoreHelper.create(1.0);
     private static final DatastoreOptions options = helper.getOptions();
     private static final Datastore datastore = options.getService();
-    private static final String PROJECT_ID = options.getProjectId();
 
     private GoogleCloudDatastoreStateRepository repository;
 
@@ -247,6 +247,29 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
+
+    @Test
+    public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
+        update("F", false, null, null, null);
+        final Transaction txn = datastore.newTransaction();
+        for (int i = 0; i < MAX_ENTITY_GROUPS - 1; i++) {
+            update("F" + i, false, null, null, txn);
+        }
+        update("F", false, null, null, txn);
+        repository.getFeatureState(TestFeature.F1);
+        txn.commit();
+    }
+
+    @Test
+    public void shouldWorkInsideRunningTransaction() {
+        update("F1", false, null, null, null);
+        final Transaction txn = datastore.newTransaction();
+        update("F3", false, null, null, txn);
+        repository.getFeatureState(TestFeature.F1);
+        txn.commit();
+    }
+
+
     private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
                         final Transaction txn) {
 
@@ -272,7 +295,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         if (txn == null) {
             datastore.put(builder.build());
         } else {
-            //datastore.put(txn, featureEntity);
+            txn.put(builder.build());
         }
     }
 
