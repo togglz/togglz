@@ -21,52 +21,51 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @date 12/27/16
  */
 public class S3StateRepository implements StateRepository {
-	
-	// http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
-	private static final String ERR_NO_SUCH_KEY = "NoSuchKey";
-	
-	private ObjectMapper objectMapper = new ObjectMapper();
-	
-	protected final AmazonS3Client client;
-	protected final String bucketName;
-	protected final String keyPrefix;
-	
-	private S3StateRepository(Builder builder) {
-		this.client = builder.client;
-		this.bucketName = builder.bucketName;
-		this.keyPrefix = builder.keyPrefix;
-	}
 
-	@Override
-	public FeatureState getFeatureState(Feature feature) {
-		try (S3Object object = client.getObject(bucketName, keyPrefix + feature.name())) {
-			if (object != null) {
-				FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(object.getObjectContent());
-				return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
-			}
-		} catch (AmazonS3Exception ae) {
-			if (ERR_NO_SUCH_KEY.equals(ae.getErrorCode())) {
-				return null;
-			}
-			throw ae;
-		} catch (Exception e) {
-			 throw new RuntimeException("Failed to get the feature state", e);
-		}
-		
-		return null;
-	}
+    // http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
+    private static final String ERR_NO_SUCH_KEY = "NoSuchKey";
 
-	@Override
-	public void setFeatureState(FeatureState featureState) {
-		try {
-			String json = objectMapper.writeValueAsString(FeatureStateStorageWrapper.wrapperForFeatureState(featureState));
-			
-			client.putObject(bucketName, keyPrefix + featureState.getFeature().name(), json);
-		} catch (Exception e) {
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+    protected final AmazonS3Client client;
+    protected final String bucketName;
+    protected final String keyPrefix;
+
+    private S3StateRepository(Builder builder) {
+        this.client = builder.client;
+        this.bucketName = builder.bucketName;
+        this.keyPrefix = builder.keyPrefix;
+    }
+
+    @Override
+    public FeatureState getFeatureState(Feature feature) {
+        try (S3Object object = client.getObject(bucketName, keyPrefix + feature.name())) {
+            if (object != null) {
+                FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(object.getObjectContent());
+                return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+            }
+        } catch (AmazonS3Exception ae) {
+            if (ERR_NO_SUCH_KEY.equals(ae.getErrorCode())) {
+                return null;
+            }
+            throw ae;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get the feature state", e);
+        }
+
+        return null;
+    }
+
+    @Override
+    public void setFeatureState(FeatureState featureState) {
+        try {
+            String json = objectMapper.writeValueAsString(FeatureStateStorageWrapper.wrapperForFeatureState(featureState));
+            client.putObject(bucketName, keyPrefix + featureState.getFeature().name(), json);
+        } catch (Exception e) {
             throw new RuntimeException("Failed to set the feature state", e);
         }
-	}
-	
+    }
+
     /**
      * Creates a new builder for creating a {@link S3StateRepository}.
      *
@@ -77,7 +76,7 @@ public class S3StateRepository implements StateRepository {
     public static Builder newBuilder(AmazonS3Client client, String bucketName) {
         return new Builder(client, bucketName);
     }
-	
+
     /**
      * Builder for a {@link S3StateRepository}.
      */
@@ -97,7 +96,7 @@ public class S3StateRepository implements StateRepository {
             this.client = client;
             this.bucketName = bucketName;
         }
-        
+
         /**
          * Optional prefixes to prepend on to each key
          * 
@@ -105,8 +104,8 @@ public class S3StateRepository implements StateRepository {
          * @return
          */
         public Builder prefix(String keyPrefix) {
-        	this.keyPrefix = keyPrefix == null? "" : keyPrefix;
-        	return this;
+            this.keyPrefix = keyPrefix == null ? "" : keyPrefix;
+            return this;
         }
 
         /**
@@ -115,6 +114,5 @@ public class S3StateRepository implements StateRepository {
         public S3StateRepository build() {
             return new S3StateRepository(this);
         }
-
     }
 }
