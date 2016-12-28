@@ -8,6 +8,6 @@ Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
  com.google.common.*;version="[10.0, 20.0)",
- com.google.cloud.datastore.*;version="[0.8.0-beta, 1.0.0)",
+ com.google.cloud.datastore;version="[0.8.0-beta, 1.0.0)",
  javax.inject.*;version="[1, 2)",
  org.togglz.core.*;version="${osgi.bundles.version:default}"
