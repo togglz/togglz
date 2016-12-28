@@ -25,6 +25,7 @@ import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -41,7 +42,6 @@ import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
-import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.composite.CompositeStateRepository;
@@ -53,14 +53,13 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
+import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz.
@@ -222,7 +221,7 @@ public class TogglzAutoConfiguration {
     @Configuration
     @ConditionalOnWebApplication
     @ConditionalOnClass(TogglzConsoleServlet.class)
-    @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+    @Conditional(OnConsoleAndNotUseManagementPort.class)
     protected static class TogglzConsoleConfiguration {
 
         @Autowired
@@ -236,6 +235,22 @@ public class TogglzAutoConfiguration {
             servlet.setSecured(properties.getConsole().isSecured());
             return new ServletRegistrationBean(servlet, urlMapping);
         }
+    }
+
+    static class OnConsoleAndNotUseManagementPort extends AllNestedConditions {
+
+        OnConsoleAndNotUseManagementPort() {
+            super(ConfigurationPhase.REGISTER_BEAN);
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+        static class OnConsole {
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "false")
+        static class OnNotUseManagementPort {
+        }
+
     }
 
     @Configuration

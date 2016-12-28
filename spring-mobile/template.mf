@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.togglz.spring.mobile
+Bundle-Vendor: http://www.togglz.org/
+Bundle-Version: ${project.version}
+Bundle-Name: ${project.name}
+Version-Patterns:
+ default;pattern="[=.=.=, =.+1.0)"
+Import-Template:
+ javax.servlet.*;version="0",
+ org.togglz.*;version="${osgi.bundles.version:default}",
+ org.springframework.mobile.*;version="1.1.4.RELEASE"
