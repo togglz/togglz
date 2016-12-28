@@ -52,17 +52,21 @@ public class CloudDatastoreStateRepository implements StateRepository {
         final Boolean enabled = featureEntity.getBoolean(ENABLED);
         final FeatureState state = new FeatureState(feature, enabled);
 
-        final String strategyId = featureEntity.getString(STRATEGY_ID);
-        if (!Strings.isNullOrEmpty(strategyId)) {
-            state.setStrategyId(strategyId.trim());
+        if (featureEntity.contains(STRATEGY_ID)) {
+            final String strategyId = featureEntity.getString(STRATEGY_ID);
+            if (!Strings.isNullOrEmpty(strategyId)) {
+                state.setStrategyId(strategyId.trim());
+            }
         }
 
-        List<Value<String>> strategyParamsNames = featureEntity.getList(STRATEGY_PARAMS_NAMES);
-        List<Value<String>> strategyParamsValues = featureEntity.getList(STRATEGY_PARAMS_VALUES);
-        if (strategyParamsNames != null && strategyParamsValues != null && !strategyParamsNames.isEmpty()
-                && !strategyParamsValues.isEmpty() && strategyParamsNames.size() == strategyParamsValues.size()) {
-            for (int i = 0; i < strategyParamsNames.size(); i++) {
-                state.setParameter(strategyParamsNames.get(i).get(), strategyParamsValues.get(i).get());
+        if (featureEntity.contains(STRATEGY_PARAMS_NAMES) && featureEntity.contains(STRATEGY_PARAMS_VALUES)) {
+            List<Value<String>> strategyParamsNames = featureEntity.getList(STRATEGY_PARAMS_NAMES);
+            List<Value<String>> strategyParamsValues = featureEntity.getList(STRATEGY_PARAMS_VALUES);
+            if (strategyParamsNames != null && strategyParamsValues != null && !strategyParamsNames.isEmpty()
+                    && !strategyParamsValues.isEmpty() && strategyParamsNames.size() == strategyParamsValues.size()) {
+                for (int i = 0; i < strategyParamsNames.size(); i++) {
+                    state.setParameter(strategyParamsNames.get(i).get(), strategyParamsValues.get(i).get());
+                }
             }
         }
         return state;
@@ -71,17 +75,20 @@ public class CloudDatastoreStateRepository implements StateRepository {
     @Override
     public void setFeatureState(FeatureState featureState) {
         final Key key = keyFactory.newKey(featureState.getFeature().name());
-        final Entity.Builder builder = Entity.builder(key)
-                .set(ENABLED, BooleanValue.builder(featureState.isEnabled()).excludeFromIndexes(true).build())
-                .set(STRATEGY_ID, StringValue.builder(featureState.getStrategyId()).excludeFromIndexes(true).build());
+        final Entity.Builder builder = Entity.newBuilder(key)
+                .set(ENABLED, BooleanValue.newBuilder(featureState.isEnabled()).setExcludeFromIndexes(true).build());
+
+        if (featureState.getStrategyId() != null) {
+            builder.set(STRATEGY_ID, StringValue.newBuilder(featureState.getStrategyId()).setExcludeFromIndexes(true).build());
+        }
 
         final Map<String, String> params = featureState.getParameterMap();
         if (params != null && !params.isEmpty()) {
             final List<Value<String>> strategyParamsNames = new ArrayList<>(params.size());
             final List<Value<String>> strategyParamsValues = new ArrayList<>(params.size());
             for (final String paramName : params.keySet()) {
-                strategyParamsNames.add(StringValue.builder(paramName).excludeFromIndexes(true).build());
-                strategyParamsValues.add(StringValue.builder(params.get(paramName)).excludeFromIndexes(true).build());
+                strategyParamsNames.add(StringValue.newBuilder(paramName).setExcludeFromIndexes(true).build());
+                strategyParamsValues.add(StringValue.newBuilder(params.get(paramName)).setExcludeFromIndexes(true).build());
             }
             builder.set(STRATEGY_PARAMS_NAMES, strategyParamsNames);
             builder.set(STRATEGY_PARAMS_VALUES, strategyParamsValues);
