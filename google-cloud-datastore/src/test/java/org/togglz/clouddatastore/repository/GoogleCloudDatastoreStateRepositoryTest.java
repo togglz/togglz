@@ -27,19 +27,23 @@ import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by fabio on 30/09/16.
  */
-public class CloudDatastoreStateRepositoryTest {
+public class GoogleCloudDatastoreStateRepositoryTest {
 
     private static LocalDatastoreHelper helper = LocalDatastoreHelper.create(1.0);
     private static final DatastoreOptions options = helper.getOptions();
     private static final Datastore datastore = options.getService();
     private static final String PROJECT_ID = options.getProjectId();
 
-    private CloudDatastoreStateRepository repository;
+    private GoogleCloudDatastoreStateRepository repository;
 
     @BeforeClass
     public static void beforeClass() throws IOException, InterruptedException {
@@ -48,7 +52,7 @@ public class CloudDatastoreStateRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        repository = new CloudDatastoreStateRepository(datastore);
+        repository = new GoogleCloudDatastoreStateRepository(datastore);
     }
 
     @AfterClass
@@ -75,10 +79,10 @@ public class CloudDatastoreStateRepositoryTest {
         final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(TestFeature.F1.name());
         final Entity featureEntity = datastore.get(key);
 
-        assertEquals(false, featureEntity.getBoolean(CloudDatastoreStateRepository.ENABLED));
-        assertFalse(featureEntity.contains(CloudDatastoreStateRepository.STRATEGY_ID));
-        assertFalse(featureEntity.contains(CloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES));
-        assertFalse(featureEntity.contains(CloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES));
+        assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
+        assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES));
+        assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES));
 
     }
 
@@ -101,13 +105,13 @@ public class CloudDatastoreStateRepositoryTest {
         final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(TestFeature.F1.name());
         final Entity featureEntity = datastore.get(key);
 
-        assertEquals(true, featureEntity.getBoolean(CloudDatastoreStateRepository.ENABLED));
-        assertEquals("someId", featureEntity.getString(CloudDatastoreStateRepository.STRATEGY_ID));
+        assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         final StringValue param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
-        assertThat(featureEntity.<StringValue>getList(CloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
+        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(Arrays.asList(param)));
         final StringValue foo = StringValue.newBuilder("foo").setExcludeFromIndexes(true).build();
-        assertThat(featureEntity.<StringValue>getList(CloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
+        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(Arrays.asList(foo)));
     }
 
@@ -203,13 +207,13 @@ public class CloudDatastoreStateRepositoryTest {
         final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(TestFeature.F1.name());
         Entity featureEntity = datastore.get(key);
 
-        assertEquals(true, featureEntity.getBoolean(CloudDatastoreStateRepository.ENABLED));
-        assertEquals("myStrategy", featureEntity.getString(CloudDatastoreStateRepository.STRATEGY_ID));
+        assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertEquals("myStrategy", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         StringValue param = StringValue.newBuilder("param23").setExcludeFromIndexes(true).build();
-        assertThat(featureEntity.<StringValue>getList(CloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
+        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(Arrays.asList(param)));
         StringValue foo = StringValue.newBuilder("foobar").setExcludeFromIndexes(true).build();
-        assertThat(featureEntity.<StringValue>getList(CloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
+        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(Arrays.asList(foo)));
 
         /*
@@ -225,13 +229,13 @@ public class CloudDatastoreStateRepositoryTest {
          * THEN the properties should be set like expected
          */
         featureEntity = datastore.get(key);
-        assertEquals(false, featureEntity.getBoolean(CloudDatastoreStateRepository.ENABLED));
-        assertEquals("someId", featureEntity.getString(CloudDatastoreStateRepository.STRATEGY_ID));
+        assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
-        assertThat(featureEntity.<StringValue>getList(CloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
+        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(Arrays.asList(param)));
         foo = StringValue.newBuilder("foo").setExcludeFromIndexes(true).build();
-        assertThat(featureEntity.<StringValue>getList(CloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
+        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(Arrays.asList(foo)));
 
     }
@@ -241,10 +245,10 @@ public class CloudDatastoreStateRepositoryTest {
 
         final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(name);
         final Entity.Builder builder = Entity.newBuilder(key)
-                .set(CloudDatastoreStateRepository.ENABLED, BooleanValue.newBuilder(enabled).setExcludeFromIndexes(true).build());
+                .set(GoogleCloudDatastoreStateRepository.ENABLED, BooleanValue.newBuilder(enabled).setExcludeFromIndexes(true).build());
 
         if (strategyId != null) {
-            builder.set(CloudDatastoreStateRepository.STRATEGY_ID, StringValue.newBuilder(strategyId).setExcludeFromIndexes(true).build());
+            builder.set(GoogleCloudDatastoreStateRepository.STRATEGY_ID, StringValue.newBuilder(strategyId).setExcludeFromIndexes(true).build());
         }
 
         if (params != null && !params.isEmpty()) {
@@ -254,8 +258,8 @@ public class CloudDatastoreStateRepositoryTest {
                 strategyParamsNames.add(StringValue.newBuilder(paramName).setExcludeFromIndexes(true).build());
                 strategyParamsValues.add(StringValue.newBuilder(params.get(paramName)).setExcludeFromIndexes(true).build());
             }
-            builder.set(CloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES, strategyParamsNames);
-            builder.set(CloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES, strategyParamsValues);
+            builder.set(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES, strategyParamsNames);
+            builder.set(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES, strategyParamsValues);
         }
 
         if (txn == null) {

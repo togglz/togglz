@@ -1,6 +1,12 @@
 package org.togglz.clouddatastore.repository;
 
-import com.google.cloud.datastore.*;
+import com.google.cloud.datastore.BooleanValue;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.Key;
+import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.StringValue;
+import com.google.cloud.datastore.Value;
 import com.google.common.base.Strings;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -14,7 +20,7 @@ import java.util.Map;
 /**
  * Created by fabio on 30/09/16.
  */
-public class CloudDatastoreStateRepository implements StateRepository {
+public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
     public static final String STRATEGY_PARAMS_VALUES = "strategyParamsValues";
     public static final String STRATEGY_PARAMS_NAMES = "strategyParamsNames";
@@ -27,9 +33,9 @@ public class CloudDatastoreStateRepository implements StateRepository {
 
 
     @Inject
-    public CloudDatastoreStateRepository(Datastore datastore) {
+    public GoogleCloudDatastoreStateRepository(Datastore datastore) {
         this.datastore = datastore;
-        keyFactory = this.datastore.newKeyFactory().kind(kind());
+        keyFactory = this.datastore.newKeyFactory().setKind(kind());
     }
 
     @Override

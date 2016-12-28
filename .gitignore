@@ -9,4 +9,5 @@ generated-sources/
 *.iml
 *.ipr
 *.versionsBackup
+*.orig
 test-output
