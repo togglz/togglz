@@ -80,15 +80,11 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     @Test
     public void testShouldSaveStateWithoutStrategyOrParameters() {
-        /*
-         * WHEN a feature without strategy is persisted
-         */
+        //WHEN a feature without strategy is persisted
         final FeatureState state = new FeatureState(TestFeature.F1).disable();
         repository.setFeatureState(state);
 
-        /*
-         * THEN there should be a corresponding entry in the database
-         */
+        //THEN there should be a corresponding entry in the database
         final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
         final Entity featureEntity = DATASTORE.get(key);
 
@@ -103,18 +99,14 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void testShouldSaveStateStrategyAndParameters() {
 
-        /*
-         * WHEN a feature without strategy is persisted
-         */
+        // WHEN a feature without strategy is persisted
         final FeatureState state = new FeatureState(TestFeature.F1)
                 .enable()
                 .setStrategyId("someId")
                 .setParameter("param", "foo");
         repository.setFeatureState(state);
 
-        /*
-         * THEN there should be a corresponding entry in the database
-         */
+        // THEN there should be a corresponding entry in the database
         final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
         final Entity featureEntity = DATASTORE.get(key);
 
@@ -130,33 +122,23 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     @Test
     public void shouldReturnNullWhenStateDoesntExist() {
-        /*
-         * GIVEN there is no feature state in the DATASTORE WHEN the repository reads the state
-         */
+        // GIVEN there is no feature state in the DATASTORE WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
 
-        /*
-         * THEN the properties should be set like expected
-         */
+        // THEN the properties should be set like expected
         assertNull(state);
     }
 
     @Test
     public void testShouldReadStateWithoutStrategyAndParameters() {
 
-        /*
-         * GIVEN a database row containing a simple feature state
-         */
+        // GIVEN a database row containing a simple feature state
         update("F1", false, null, null, null);
 
-        /*
-         * WHEN the repository reads the state
-         */
+        // WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
 
-        /*
-         * THEN the properties should be set like expected
-         */
+        // THEN the properties should be set like expected
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
         assertEquals(false, state.isEnabled());
@@ -169,9 +151,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void testShouldReadStateWithStrategyAndParameters() {
 
-        /*
-         * GIVEN a database row containing a simple feature state
-         */
+        // GIVEN a database row containing a simple feature state
         final Map<String, String> map = new HashMap<String, String>() {
             {
                 put("param23", "foobar");
@@ -180,14 +160,10 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
         update("F1", true, "myStrategy", map, null);
 
-        /*
-         * WHEN the repository reads the state
-         */
+        // WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
 
-        /*
-         * THEN the properties should be set like expected
-         */
+        // THEN the properties should be set like expected
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
         assertEquals(true, state.isEnabled());
@@ -201,9 +177,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void testShouldUpdateExistingDatabaseEntry() {
 
-        /*
-         * GIVEN a database row containing a simple feature state
-         */
+        // GIVEN a database row containing a simple feature state
         final Map<String, String> map = new HashMap<String, String>() {
             {
                 put("param23", "foobar");
@@ -211,12 +185,8 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         };
         update("F1", true, "myStrategy", map, null);
 
-        /*
-         * AND the database entries are like expected
-         */
-        /*
-         * THEN there should be a corresponding entry in the database
-         */
+        // AND the database entries are like expected
+        // THEN there should be a corresponding entry in the database
         final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
         Entity featureEntity = DATASTORE.get(key);
 
@@ -229,18 +199,14 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(Arrays.asList(foo)));
 
-        /*
-         * WHEN the repository writes new state
-         */
+        // WHEN the repository writes new state
         final FeatureState state = new FeatureState(TestFeature.F1)
                 .disable()
                 .setStrategyId("someId")
                 .setParameter("param", "foo");
         repository.setFeatureState(state);
 
-        /*
-         * THEN the properties should be set like expected
-         */
+        // THEN the properties should be set like expected
         featureEntity = DATASTORE.get(key);
         assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
