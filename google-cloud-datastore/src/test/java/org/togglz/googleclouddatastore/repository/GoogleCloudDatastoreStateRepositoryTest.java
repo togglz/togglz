@@ -2,7 +2,6 @@ package org.togglz.googleclouddatastore.repository;
 
 import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.Datastore;
-import com.google.cloud.datastore.DatastoreOptions;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.StringValue;
@@ -37,30 +36,29 @@ import static org.togglz.googleclouddatastore.repository.GoogleCloudDatastoreSta
 public class GoogleCloudDatastoreStateRepositoryTest {
 
     private static final int MAX_ENTITY_GROUPS = 25;
-    private static LocalDatastoreHelper helper = LocalDatastoreHelper.create(1.0);
-    private static final DatastoreOptions options = helper.getOptions();
-    private static final Datastore datastore = options.getService();
+    private static final LocalDatastoreHelper HELPER = LocalDatastoreHelper.create(1.0);
+    private static final Datastore DATASTORE = HELPER.getOptions().getService();
 
     private GoogleCloudDatastoreStateRepository repository;
 
     @BeforeClass
     public static void beforeClass() throws IOException, InterruptedException {
-        helper.start();
+        HELPER.start();
     }
 
     @Before
     public void setUp() throws Exception {
-        repository = new GoogleCloudDatastoreStateRepository(datastore);
+        repository = new GoogleCloudDatastoreStateRepository(DATASTORE);
     }
 
     @AfterClass
     public static void afterClass() throws IOException, InterruptedException, TimeoutException {
-        helper.stop(Duration.standardMinutes(1));
+        HELPER.stop(Duration.standardMinutes(1));
     }
 
     @After
     public void tearDown() throws Exception {
-        helper.reset();
+        HELPER.reset();
     }
 
     @Test
@@ -68,15 +66,15 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
         // GIVEN a repo with a custom kind
         final String kind = "CustomKind";
-        repository = new GoogleCloudDatastoreStateRepository(datastore, kind);
+        repository = new GoogleCloudDatastoreStateRepository(DATASTORE, kind);
 
         // WHEN a feature is persisted
         final FeatureState state = new FeatureState(TestFeature.F1);
         repository.setFeatureState(state);
 
         // THEN new entities should be persisted within it
-        final Key key = datastore.newKeyFactory().setKind(kind).newKey(TestFeature.F1.name());
-        final Entity entity = datastore.get(key);
+        final Key key = DATASTORE.newKeyFactory().setKind(kind).newKey(TestFeature.F1.name());
+        final Entity entity = DATASTORE.get(key);
         assertNotNull(entity);
     }
 
@@ -91,8 +89,8 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
-        final Entity featureEntity = datastore.get(key);
+        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
+        final Entity featureEntity = DATASTORE.get(key);
 
         assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
@@ -117,8 +115,8 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
-        final Entity featureEntity = datastore.get(key);
+        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
+        final Entity featureEntity = DATASTORE.get(key);
 
         assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
@@ -133,7 +131,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void shouldReturnNullWhenStateDoesntExist() {
         /*
-         * GIVEN there is no feature state in the datastore WHEN the repository reads the state
+         * GIVEN there is no feature state in the DATASTORE WHEN the repository reads the state
          */
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
 
@@ -219,8 +217,8 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
-        Entity featureEntity = datastore.get(key);
+        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
+        Entity featureEntity = DATASTORE.get(key);
 
         assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("myStrategy", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
@@ -243,7 +241,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN the properties should be set like expected
          */
-        featureEntity = datastore.get(key);
+        featureEntity = DATASTORE.get(key);
         assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
@@ -258,7 +256,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
         update("F", false, null, null, null);
-        final Transaction txn = datastore.newTransaction();
+        final Transaction txn = DATASTORE.newTransaction();
         for (int i = 0; i < MAX_ENTITY_GROUPS - 1; i++) {
             update("F" + i, false, null, null, txn);
         }
@@ -270,7 +268,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void shouldWorkInsideRunningTransaction() {
         update("F1", false, null, null, null);
-        final Transaction txn = datastore.newTransaction();
+        final Transaction txn = DATASTORE.newTransaction();
         update("F3", false, null, null, txn);
         repository.getFeatureState(TestFeature.F1);
         txn.commit();
@@ -279,7 +277,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
                         final Transaction txn) {
 
-        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
+        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
         final Entity.Builder builder = Entity.newBuilder(key)
                 .set(GoogleCloudDatastoreStateRepository.ENABLED, BooleanValue.newBuilder(enabled).setExcludeFromIndexes(true).build());
 
@@ -299,7 +297,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         }
 
         if (txn == null) {
-            datastore.put(builder.build());
+            DATASTORE.put(builder.build());
         } else {
             txn.put(builder.build());
         }
