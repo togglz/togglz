@@ -85,7 +85,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         repository.setFeatureState(state);
 
         //THEN there should be a corresponding entry in the database
-        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
+        final Key key = createKey(TestFeature.F1.name());
         final Entity featureEntity = DATASTORE.get(key);
 
         assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
@@ -107,7 +107,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         repository.setFeatureState(state);
 
         // THEN there should be a corresponding entry in the database
-        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
+        final Key key = createKey(TestFeature.F1.name());
         final Entity featureEntity = DATASTORE.get(key);
 
         assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
@@ -187,7 +187,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
         // AND the database entries are like expected
         // THEN there should be a corresponding entry in the database
-        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
+        final Key key = createKey(TestFeature.F1.name());
         Entity featureEntity = DATASTORE.get(key);
 
         assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
@@ -219,6 +219,10 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
+    private Key createKey(String name) {
+        return DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
+    }
+
     @Test
     public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
         update("F", false, null, null, null);
@@ -243,7 +247,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
                         final Transaction txn) {
 
-        final Key key = DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
+        final Key key = createKey(name);
         final Entity.Builder builder = Entity.newBuilder(key)
                 .set(GoogleCloudDatastoreStateRepository.ENABLED, BooleanValue.newBuilder(enabled).setExcludeFromIndexes(true).build());
 
