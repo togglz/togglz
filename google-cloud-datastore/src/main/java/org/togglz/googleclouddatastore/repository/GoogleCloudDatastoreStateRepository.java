@@ -31,24 +31,25 @@ import java.util.Map;
  */
 public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
-    public static final String STRATEGY_PARAMS_VALUES = "strategyParamsValues";
-    public static final String STRATEGY_PARAMS_NAMES = "strategyParamsNames";
-    public static final String STRATEGY_ID = "strategyId";
-    public static final String ENABLED = "enabled";
-    private String kind = "FeatureToggle";
+    static final String STRATEGY_PARAMS_VALUES = "strategyParamsValues";
+    static final String STRATEGY_PARAMS_NAMES = "strategyParamsNames";
+    static final String STRATEGY_ID = "strategyId";
+    static final String ENABLED = "enabled";
+    private static final String KIND_DEFAULT = "FeatureToggle";
+    private final String kind;
 
     private final Datastore datastore;
     private final KeyFactory keyFactory;
 
     @Inject
     public GoogleCloudDatastoreStateRepository(Datastore datastore) {
-        this.datastore = datastore;
-        keyFactory = this.datastore.newKeyFactory().setKind(kind());
+        this(datastore, KIND_DEFAULT);
     }
 
-    public GoogleCloudDatastoreStateRepository(final String kind, final Datastore datastore) {
-        this(datastore);
+    public GoogleCloudDatastoreStateRepository(final Datastore datastore, final String kind) {
+        this.datastore = datastore;
         this.kind = kind;
+        this.keyFactory = this.datastore.newKeyFactory().setKind(kind);
     }
 
     @Override
@@ -58,11 +59,6 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         return createFeatureState(feature, featureEntity);
     }
 
-    /**
-     * @param feature
-     * @param featureEntity
-     * @return
-     */
     private FeatureState createFeatureState(final Feature feature, final Entity featureEntity) {
         if (featureEntity == null) {
             return null;
