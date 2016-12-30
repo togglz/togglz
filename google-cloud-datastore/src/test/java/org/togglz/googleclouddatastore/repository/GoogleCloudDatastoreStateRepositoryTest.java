@@ -21,7 +21,7 @@ import org.togglz.core.repository.FeatureState;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -97,7 +97,6 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testShouldSaveStateStrategyAndParameters() {
 
@@ -149,7 +148,6 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
-    @SuppressWarnings("serial")
     @Test
     public void testShouldReadStateWithStrategyAndParameters() {
 
@@ -171,7 +169,6 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
-    @SuppressWarnings({ "unchecked", "serial" })
     @Test
     public void testShouldUpdateExistingDatabaseEntry() {
 
@@ -188,10 +185,10 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertEquals("myStrategy", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         StringValue param = StringValue.newBuilder("param23").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(Arrays.asList(param)));
+                is(Collections.singletonList(param)));
         StringValue foo = StringValue.newBuilder("foobar").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(Arrays.asList(foo)));
+                is(Collections.singletonList(foo)));
 
         // WHEN the repository writes new state
         final FeatureState state = new FeatureState(TestFeature.F1)
