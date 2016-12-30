@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.togglz.googleclouddatastore.repository.GoogleCloudDatastoreStateRepository.KIND_DEFAULT;
 
-public class GoogleCloudDatastoreStateRepositoryTest {
+public class GoogleCloudDatastoreStateRepositoryIT {
 
     private static final int MAX_ENTITY_GROUPS = 25;
     private static final LocalDatastoreHelper HELPER = LocalDatastoreHelper.create(1.0);
