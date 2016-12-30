@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -115,10 +116,10 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         final StringValue param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(Arrays.asList(param)));
+                is(singletonList(param)));
         final StringValue foo = StringValue.newBuilder("foo").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(Arrays.asList(foo)));
+                is(singletonList(foo)));
     }
 
     @Test
@@ -134,7 +135,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     public void testShouldReadStateWithoutStrategyAndParameters() {
 
         // GIVEN a database row containing a simple feature state
-        update("F1", false, null, null, null);
+        put("F1", false);
 
         // WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
@@ -152,9 +153,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     public void testShouldReadStateWithStrategyAndParameters() {
 
         // GIVEN a database row containing a simple feature state
-        final Map<String, String> map = ImmutableMap.of("param23", "foobar");
-
-        update("F1", true, "myStrategy", map, null);
+        put("F1", true, "myStrategy", ImmutableMap.of("param23", "foobar"));
 
         // WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
@@ -166,15 +165,12 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertEquals("myStrategy", state.getStrategyId());
         assertEquals(1, state.getParameterNames().size());
         assertEquals("foobar", state.getParameter("param23"));
-
     }
 
     @Test
     public void testShouldUpdateExistingDatabaseEntry() {
-
         // GIVEN a database row containing a simple feature state
-        final Map<String, String> map = ImmutableMap.of("param23", "foobar");
-        update("F1", true, "myStrategy", map, null);
+        put("F1", true, "myStrategy", ImmutableMap.of("param23", "foobar"));
 
         // AND the database entries are like expected
         // THEN there should be a corresponding entry in the database
@@ -185,10 +181,10 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertEquals("myStrategy", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         StringValue param = StringValue.newBuilder("param23").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(Collections.singletonList(param)));
+                is(singletonList(param)));
         StringValue foo = StringValue.newBuilder("foobar").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(Collections.singletonList(foo)));
+                is(singletonList(foo)));
 
         // WHEN the repository writes new state
         final FeatureState state = new FeatureState(TestFeature.F1)
@@ -203,10 +199,10 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(Arrays.asList(param)));
+                is(singletonList(param)));
         foo = StringValue.newBuilder("foo").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(Arrays.asList(foo)));
+                is(singletonList(foo)));
 
     }
 
@@ -216,26 +212,38 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     @Test
     public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
-        update("F", false, null, null, null);
+        put("F", false);
         final Transaction txn = DATASTORE.newTransaction();
         for (int i = 0; i < MAX_ENTITY_GROUPS - 1; i++) {
-            update("F" + i, false, null, null, txn);
+            putWithinTransaction("F" + i, false, txn);
         }
-        update("F", false, null, null, txn);
+        putWithinTransaction("F", false, txn);
         repository.getFeatureState(TestFeature.F1);
         txn.commit();
     }
 
     @Test
     public void shouldWorkInsideRunningTransaction() {
-        update("F1", false, null, null, null);
+        put("F1", false);
         final Transaction txn = DATASTORE.newTransaction();
-        update("F3", false, null, null, txn);
+        putWithinTransaction("F3", false, txn);
         repository.getFeatureState(TestFeature.F1);
         txn.commit();
     }
 
-    private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
+    private void put(final String name, final boolean enabled) {
+        put(name, enabled, null, null, null);
+    }
+
+    private void putWithinTransaction(final String name, final boolean enabled, final Transaction txn) {
+        put(name, enabled, null, null, txn);
+    }
+
+    private void put(final String name, final boolean enabled, final String strategyId, final Map<String, String> params) {
+        put(name, enabled, strategyId, params, null);
+    }
+
+    private void put(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
                         final Transaction txn) {
 
         final Key key = createKey(name);
