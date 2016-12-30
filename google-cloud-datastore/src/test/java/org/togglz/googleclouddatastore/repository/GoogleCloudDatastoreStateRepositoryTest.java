@@ -8,6 +8,7 @@ import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Transaction;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
+import com.google.common.collect.ImmutableMap;
 import org.joda.time.Duration;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -153,11 +154,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     public void testShouldReadStateWithStrategyAndParameters() {
 
         // GIVEN a database row containing a simple feature state
-        final Map<String, String> map = new HashMap<String, String>() {
-            {
-                put("param23", "foobar");
-            }
-        };
+        final Map<String, String> map = ImmutableMap.of("param23", "foobar");
 
         update("F1", true, "myStrategy", map, null);
 
@@ -179,11 +176,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     public void testShouldUpdateExistingDatabaseEntry() {
 
         // GIVEN a database row containing a simple feature state
-        final Map<String, String> map = new HashMap<String, String>() {
-            {
-                put("param23", "foobar");
-            }
-        };
+        final Map<String, String> map = ImmutableMap.of("param23", "foobar");
         update("F1", true, "myStrategy", map, null);
 
         // AND the database entries are like expected
