@@ -191,7 +191,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         final Key key = createKey(TestFeature.F1.name());
         Entity featureEntity = DATASTORE.get(key);
 
-        assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("myStrategy", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         StringValue param = StringValue.newBuilder("param23").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
