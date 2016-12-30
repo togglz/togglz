@@ -32,6 +32,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.togglz.googleclouddatastore.repository.GoogleCloudDatastoreStateRepository.KIND_DEFAULT;
 
 public class GoogleCloudDatastoreStateRepositoryTest {
 
@@ -63,10 +64,20 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     }
 
     @Test
-    public void customKindName() {
+    public void shouldUseGiveKindWhenPersisting() {
+
+        // GIVEN a repo with a custom kind
         final String kind = "CustomKind";
         repository = new GoogleCloudDatastoreStateRepository(datastore, kind);
-        assertEquals(kind, repository.kind());
+
+        // WHEN a feature is persisted
+        final FeatureState state = new FeatureState(TestFeature.F1);
+        repository.setFeatureState(state);
+
+        // THEN new entities should be persisted within it
+        final Key key = datastore.newKeyFactory().setKind(kind).newKey(TestFeature.F1.name());
+        final Entity entity = datastore.get(key);
+        assertNotNull(entity);
     }
 
     @Test
@@ -80,7 +91,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(TestFeature.F1.name());
+        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
         final Entity featureEntity = datastore.get(key);
 
         assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
@@ -106,7 +117,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(TestFeature.F1.name());
+        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
         final Entity featureEntity = datastore.get(key);
 
         assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
@@ -208,7 +219,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(TestFeature.F1.name());
+        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(TestFeature.F1.name());
         Entity featureEntity = datastore.get(key);
 
         assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
@@ -268,7 +279,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
                         final Transaction txn) {
 
-        final Key key = datastore.newKeyFactory().setKind(repository.kind()).newKey(name);
+        final Key key = datastore.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
         final Entity.Builder builder = Entity.newBuilder(key)
                 .set(GoogleCloudDatastoreStateRepository.ENABLED, BooleanValue.newBuilder(enabled).setExcludeFromIndexes(true).build());
 

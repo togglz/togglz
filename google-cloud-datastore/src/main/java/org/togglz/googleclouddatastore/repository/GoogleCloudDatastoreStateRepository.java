@@ -37,7 +37,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     static final String STRATEGY_PARAMS_NAMES = "strategyParamsNames";
     static final String STRATEGY_ID = "strategyId";
     static final String ENABLED = "enabled";
-    private static final String KIND_DEFAULT = "FeatureToggle";
+    static final String KIND_DEFAULT = "FeatureToggle";
     private final String kind;
 
     private final Datastore datastore;
@@ -125,10 +125,6 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         }
 
         this.datastore.put(builder.build());
-    }
-
-    protected String kind() {
-        return this.kind;
     }
 
     private static class NonIndexed {
