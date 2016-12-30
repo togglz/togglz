@@ -7,6 +7,7 @@ import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -14,6 +15,7 @@ import org.togglz.core.repository.StateRepository;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -67,24 +69,33 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         final Boolean enabled = featureEntity.getBoolean(ENABLED);
         final FeatureState state = new FeatureState(feature, enabled);
 
+        state.setStrategyId(getStrategyId(featureEntity));
+
+        List<Value<String>> names = valueList(featureEntity, STRATEGY_PARAMS_NAMES);
+        List<Value<String>> values = valueList(featureEntity, STRATEGY_PARAMS_VALUES);
+        Preconditions.checkState(names.size() == values.size());
+        for (int i = 0; i < names.size(); i++) {
+            String name = names.get(i).get();
+            String value = values.get(i).get();
+            state.setParameter(name, value);
+        }
+
+        return state;
+    }
+
+    private List<Value<String>> valueList(Entity entity, String propertyName) {
+        return entity.contains(propertyName) ?
+                entity.<Value<String>>getList(propertyName) : Collections.<Value<String>>emptyList();
+    }
+
+    private String getStrategyId(Entity featureEntity) {
         if (featureEntity.contains(STRATEGY_ID)) {
             final String strategyId = featureEntity.getString(STRATEGY_ID);
             if (!Strings.isNullOrEmpty(strategyId)) {
-                state.setStrategyId(strategyId.trim());
+                return strategyId.trim();
             }
         }
-
-        if (featureEntity.contains(STRATEGY_PARAMS_NAMES) && featureEntity.contains(STRATEGY_PARAMS_VALUES)) {
-            List<Value<String>> strategyParamsNames = featureEntity.getList(STRATEGY_PARAMS_NAMES);
-            List<Value<String>> strategyParamsValues = featureEntity.getList(STRATEGY_PARAMS_VALUES);
-            if (strategyParamsNames != null && strategyParamsValues != null && !strategyParamsNames.isEmpty()
-                    && !strategyParamsValues.isEmpty() && strategyParamsNames.size() == strategyParamsValues.size()) {
-                for (int i = 0; i < strategyParamsNames.size(); i++) {
-                    state.setParameter(strategyParamsNames.get(i).get(), strategyParamsValues.get(i).get());
-                }
-            }
-        }
-        return state;
+        return null;
     }
 
     @Override
