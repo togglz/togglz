@@ -20,8 +20,6 @@ import org.togglz.core.repository.FeatureState;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -41,6 +39,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     private static final int MAX_ENTITY_GROUPS = 25;
     private static final LocalDatastoreHelper HELPER = LocalDatastoreHelper.create(1.0);
     private static final Datastore DATASTORE = HELPER.getOptions().getService();
+    public static final String STRATEGY_ID = "myStrategy";
 
     private GoogleCloudDatastoreStateRepository repository;
 
@@ -135,7 +134,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     public void testShouldReadStateWithoutStrategyAndParameters() {
 
         // GIVEN a database row containing a simple feature state
-        put("F1", false);
+        givenDisabledFeature("F1");
 
         // WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
@@ -153,7 +152,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     public void testShouldReadStateWithStrategyAndParameters() {
 
         // GIVEN a database row containing a simple feature state
-        put("F1", true, "myStrategy", ImmutableMap.of("param23", "foobar"));
+        givenEnabledFeatureWithStrategy("F1");
 
         // WHEN the repository reads the state
         final FeatureState state = repository.getFeatureState(TestFeature.F1);
@@ -162,7 +161,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
         assertEquals(true, state.isEnabled());
-        assertEquals("myStrategy", state.getStrategyId());
+        assertEquals(STRATEGY_ID, state.getStrategyId());
         assertEquals(1, state.getParameterNames().size());
         assertEquals("foobar", state.getParameter("param23"));
     }
@@ -170,7 +169,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void testShouldUpdateExistingDatabaseEntry() {
         // GIVEN a database row containing a simple feature state
-        put("F1", true, "myStrategy", ImmutableMap.of("param23", "foobar"));
+        givenEnabledFeatureWithStrategy("F1");
 
         // AND the database entries are like expected
         // THEN there should be a corresponding entry in the database
@@ -178,7 +177,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         Entity featureEntity = DATASTORE.get(key);
 
         assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
-        assertEquals("myStrategy", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
+        assertEquals(STRATEGY_ID, featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         StringValue param = StringValue.newBuilder("param23").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(singletonList(param)));
@@ -206,13 +205,9 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
-    private Key createKey(String name) {
-        return DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
-    }
-
     @Test
     public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
-        put("F", false);
+        givenDisabledFeature("F");
         final Transaction txn = DATASTORE.newTransaction();
         for (int i = 0; i < MAX_ENTITY_GROUPS - 1; i++) {
             putWithinTransaction("F" + i, false, txn);
@@ -224,15 +219,23 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     @Test
     public void shouldWorkInsideRunningTransaction() {
-        put("F1", false);
+        givenDisabledFeature("F1");
         final Transaction txn = DATASTORE.newTransaction();
         putWithinTransaction("F3", false, txn);
         repository.getFeatureState(TestFeature.F1);
         txn.commit();
     }
 
-    private void put(final String name, final boolean enabled) {
-        put(name, enabled, null, null, null);
+    private Key createKey(String name) {
+        return DATASTORE.newKeyFactory().setKind(KIND_DEFAULT).newKey(name);
+    }
+
+    private void givenDisabledFeature(String featureName) {
+        put(featureName, false, null, null, null);
+    }
+
+    private void givenEnabledFeatureWithStrategy(String featureName) {
+        put(featureName, true, STRATEGY_ID, ImmutableMap.of("param23", "foobar"));
     }
 
     private void putWithinTransaction(final String name, final boolean enabled, final Transaction txn) {

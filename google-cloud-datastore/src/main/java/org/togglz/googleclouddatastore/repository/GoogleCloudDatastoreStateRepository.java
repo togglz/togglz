@@ -127,7 +127,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         this.datastore.put(builder.build());
     }
 
-    private static class NonIndexed {
+    static class NonIndexed {
 
         static BooleanValue valueOf(Boolean input) {
             return  BooleanValue.newBuilder(input)
