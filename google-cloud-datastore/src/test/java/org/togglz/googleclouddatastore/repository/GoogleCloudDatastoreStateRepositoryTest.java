@@ -31,6 +31,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.togglz.googleclouddatastore.repository.GoogleCloudDatastoreStateRepository.KIND_DEFAULT;
 
 public class GoogleCloudDatastoreStateRepositoryTest {
@@ -88,7 +89,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         final Key key = createKey(TestFeature.F1.name());
         final Entity featureEntity = DATASTORE.get(key);
 
-        assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertFalse(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES));
         assertFalse(featureEntity.contains(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES));
@@ -110,7 +111,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         final Key key = createKey(TestFeature.F1.name());
         final Entity featureEntity = DATASTORE.get(key);
 
-        assertEquals(true, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         final StringValue param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
