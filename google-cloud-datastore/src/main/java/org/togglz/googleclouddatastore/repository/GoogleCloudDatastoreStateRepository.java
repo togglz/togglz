@@ -56,9 +56,13 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        final Key key = keyFactory.newKey(feature.name());
+        final Key key = createKey(feature);
         final Entity featureEntity = this.datastore.get(key);
         return createFeatureState(feature, featureEntity);
+    }
+
+    private Key createKey(Feature feature) {
+        return keyFactory.newKey(feature.name());
     }
 
     private FeatureState createFeatureState(final Feature feature, final Entity featureEntity) {
@@ -100,12 +104,12 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
     @Override
     public void setFeatureState(FeatureState featureState) {
-        final Key key = keyFactory.newKey(featureState.getFeature().name());
+        final Key key = createKey(featureState.getFeature());
         final Entity.Builder builder = Entity.newBuilder(key)
-                .set(ENABLED, BooleanValue.newBuilder(featureState.isEnabled()).setExcludeFromIndexes(true).build());
+                .set(ENABLED, NonIndexed.valueOf(featureState.isEnabled()));
 
         if (featureState.getStrategyId() != null) {
-            builder.set(STRATEGY_ID, StringValue.newBuilder(featureState.getStrategyId()).setExcludeFromIndexes(true).build());
+            builder.set(STRATEGY_ID, NonIndexed.valueOf(featureState.getStrategyId()));
         }
 
         final Map<String, String> params = featureState.getParameterMap();
@@ -113,8 +117,8 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
             final List<Value<String>> strategyParamsNames = new ArrayList<>(params.size());
             final List<Value<String>> strategyParamsValues = new ArrayList<>(params.size());
             for (final String paramName : params.keySet()) {
-                strategyParamsNames.add(StringValue.newBuilder(paramName).setExcludeFromIndexes(true).build());
-                strategyParamsValues.add(StringValue.newBuilder(params.get(paramName)).setExcludeFromIndexes(true).build());
+                strategyParamsNames.add(NonIndexed.valueOf(paramName));
+                strategyParamsValues.add(NonIndexed.valueOf(params.get(paramName)));
             }
             builder.set(STRATEGY_PARAMS_NAMES, strategyParamsNames);
             builder.set(STRATEGY_PARAMS_VALUES, strategyParamsValues);
@@ -125,6 +129,20 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
     protected String kind() {
         return this.kind;
+    }
+
+    private static class NonIndexed {
+
+        static BooleanValue valueOf(Boolean input) {
+            return  BooleanValue.newBuilder(input)
+                    .setExcludeFromIndexes(true).build();
+        }
+
+        static StringValue valueOf(String input){
+            return StringValue.newBuilder(input)
+                    .setExcludeFromIndexes(true)
+                    .build();
+        }
     }
 
 }
