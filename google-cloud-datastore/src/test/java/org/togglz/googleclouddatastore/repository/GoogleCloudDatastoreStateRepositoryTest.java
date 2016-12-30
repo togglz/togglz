@@ -33,9 +33,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by fabio on 30/09/16.
- */
 public class GoogleCloudDatastoreStateRepositoryTest {
 
     private static final int MAX_ENTITY_GROUPS = 25;
@@ -68,7 +65,7 @@ public class GoogleCloudDatastoreStateRepositoryTest {
     @Test
     public void customKindName() {
         final String kind = "CustomKind";
-        repository = new GoogleCloudDatastoreStateRepository(kind, datastore);
+        repository = new GoogleCloudDatastoreStateRepository(datastore, kind);
         assertEquals(kind, repository.kind());
     }
 
@@ -247,7 +244,6 @@ public class GoogleCloudDatastoreStateRepositoryTest {
 
     }
 
-
     @Test
     public void shouldNotAddNewEntityGroupToCurrentCrossGroupTransaction() {
         update("F", false, null, null, null);
@@ -268,7 +264,6 @@ public class GoogleCloudDatastoreStateRepositoryTest {
         repository.getFeatureState(TestFeature.F1);
         txn.commit();
     }
-
 
     private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,
                         final Transaction txn) {
