@@ -38,7 +38,6 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     static final String STRATEGY_ID = "strategyId";
     static final String ENABLED = "enabled";
     static final String KIND_DEFAULT = "FeatureToggle";
-    private final String kind;
 
     private final Datastore datastore;
     private final KeyFactory keyFactory;
@@ -48,9 +47,9 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         this(datastore, KIND_DEFAULT);
     }
 
+    @Inject
     public GoogleCloudDatastoreStateRepository(final Datastore datastore, final String kind) {
         this.datastore = datastore;
-        this.kind = kind;
         this.keyFactory = this.datastore.newKeyFactory().setKind(kind);
     }
 
