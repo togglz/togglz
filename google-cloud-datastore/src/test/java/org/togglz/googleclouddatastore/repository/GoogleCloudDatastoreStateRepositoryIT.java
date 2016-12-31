@@ -39,7 +39,7 @@ public class GoogleCloudDatastoreStateRepositoryIT {
     private static final int MAX_ENTITY_GROUPS = 25;
     private static final LocalDatastoreHelper HELPER = LocalDatastoreHelper.create(1.0);
     private static final Datastore DATASTORE = HELPER.getOptions().getService();
-    public static final String STRATEGY_ID = "myStrategy";
+    private static final String STRATEGY_ID = "myStrategy";
 
     private GoogleCloudDatastoreStateRepository repository;
 
@@ -113,10 +113,10 @@ public class GoogleCloudDatastoreStateRepositoryIT {
 
         assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
-        final StringValue param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
+        final StringValue param = NonIndexed.valueOf("param");
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(singletonList(param)));
-        final StringValue foo = StringValue.newBuilder("foo").setExcludeFromIndexes(true).build();
+        final StringValue foo = NonIndexed.valueOf("foo");
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(singletonList(foo)));
     }
@@ -178,10 +178,10 @@ public class GoogleCloudDatastoreStateRepositoryIT {
 
         assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals(STRATEGY_ID, featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
-        StringValue param = StringValue.newBuilder("param23").setExcludeFromIndexes(true).build();
+        StringValue param = NonIndexed.valueOf("param23");
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(singletonList(param)));
-        StringValue foo = StringValue.newBuilder("foobar").setExcludeFromIndexes(true).build();
+        StringValue foo = NonIndexed.valueOf("foobar");
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(singletonList(foo)));
 
@@ -196,10 +196,10 @@ public class GoogleCloudDatastoreStateRepositoryIT {
         featureEntity = DATASTORE.get(key);
         assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
-        param = StringValue.newBuilder("param").setExcludeFromIndexes(true).build();
+        param = NonIndexed.valueOf("param");
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
                 is(singletonList(param)));
-        foo = StringValue.newBuilder("foo").setExcludeFromIndexes(true).build();
+        foo = NonIndexed.valueOf("foo");
         assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
                 is(singletonList(foo)));
 

@@ -1,11 +1,9 @@
 package org.togglz.googleclouddatastore.repository;
 
-import com.google.cloud.datastore.BooleanValue;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
-import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Value;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -74,8 +72,8 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
 
         state.setStrategyId(getStrategyId(featureEntity));
 
-        List<Value<String>> names = valueList(featureEntity, STRATEGY_PARAMS_NAMES);
-        List<Value<String>> values = valueList(featureEntity, STRATEGY_PARAMS_VALUES);
+        List<Value<String>> names = valuesList(featureEntity, STRATEGY_PARAMS_NAMES);
+        List<Value<String>> values = valuesList(featureEntity, STRATEGY_PARAMS_VALUES);
         Preconditions.checkState(names.size() == values.size());
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i).get();
@@ -86,7 +84,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         return state;
     }
 
-    private List<Value<String>> valueList(Entity entity, String propertyName) {
+    private List<Value<String>> valuesList(Entity entity, String propertyName) {
         return entity.contains(propertyName) ?
                 entity.<Value<String>>getList(propertyName) : Collections.<Value<String>>emptyList();
     }
@@ -124,20 +122,6 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
         }
 
         this.datastore.put(builder.build());
-    }
-
-    static class NonIndexed {
-
-        static BooleanValue valueOf(Boolean input) {
-            return  BooleanValue.newBuilder(input)
-                    .setExcludeFromIndexes(true).build();
-        }
-
-        static StringValue valueOf(String input){
-            return StringValue.newBuilder(input)
-                    .setExcludeFromIndexes(true)
-                    .build();
-        }
     }
 
 }
