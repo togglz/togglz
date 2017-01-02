@@ -1,11 +1,12 @@
 package org.togglz.slack.config;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.togglz.core.util.Strings.isNotBlank;
 
 public class NotificationConfiguration {
 
@@ -18,13 +19,14 @@ public class NotificationConfiguration {
     private final String appName;
     private final String messageFormat;
 
-    public static NotificationConfigurationBuilder builder(){
+    public static NotificationConfigurationBuilder builder() {
         return NotificationConfigurationBuilder.create();
     }
 
-    public NotificationConfiguration(String slackHookUrl, List<String> channels, String togglzAdminConsoleUrl, String appName,
-        String messageFormat) {
-        this.slackHookUrl = checkNotNull(slackHookUrl, "slackHookUrl is required");
+    NotificationConfiguration(String slackHookUrl, List<String> channels, String togglzAdminConsoleUrl, String appName, String messageFormat) {
+        checkArgument(isNotBlank(slackHookUrl), "slackHookUrl is required");
+        checkArgument(slackHookUrl.startsWith("http"), "slackHookUrl isn't valid url: %s", slackHookUrl);
+        this.slackHookUrl = slackHookUrl;
         this.channels = firstNonNull(channels, DEFAULT_CHANNELS);
         this.togglzAdminConsoleUrl = firstNonNull(togglzAdminConsoleUrl, "");
         this.appName = firstNonNull(appName, "");

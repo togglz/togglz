@@ -5,8 +5,8 @@ import org.togglz.core.repository.composite.CompositeStateRepository;
 
 public class SlackWrapperStateRepository extends CompositeStateRepository {
 
-    public SlackWrapperStateRepository(SlackStateRepository slack, StateRepository other) {
-        super(slack, other);
+    public SlackWrapperStateRepository(StateRepository wrapped, SlackStateRepository slack) {
+        super(wrapped, slack);
         this.setSetterSelection(SetterSelection.ALL);
     }
 }

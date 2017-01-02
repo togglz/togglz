@@ -4,35 +4,37 @@ import spock.lang.Specification
 
 class NotificationConfigurationBuilderSpec extends Specification {
 
+    static final String HOOK_URL = "https://hooks..."
+
     def "should require withSlackHookUrl property"() {
         when:
             NotificationConfigurationBuilder.create()
                     .build()
         then:
-            Exception e = thrown(NullPointerException)
+            Exception e = thrown(IllegalArgumentException)
             e.message.startsWith("slackHookUrl is required")
     }
 
     def "should only withSlackHookUrl property be required"() {
         when:
             NotificationConfiguration config = NotificationConfigurationBuilder.create()
-                    .withSlackHookUrl("hook")
+                    .withSlackHookUrl(HOOK_URL)
                     .build()
         then:
-            config.slackHookUrl == "hook"
+            config.slackHookUrl == HOOK_URL
     }
 
-    def "should build configuration from properties"() {
+    def "should build complex configuration"() {
         when:
             NotificationConfiguration config = NotificationConfigurationBuilder.create()
-                    .withSlackHookUrl("hook")
+                    .withSlackHookUrl(HOOK_URL)
                     .withChannels(["channel"])
                     .withTogglzAdminConsoleUrl("console")
                     .withAppName("app")
                     .withMessageFormat("format")
                     .build()
         then:
-            config.slackHookUrl == "hook"
+            config.slackHookUrl == HOOK_URL
             config.channels == ["channel"]
             config.togglzAdminConsoleUrl == "console"
             config.appName == "app"

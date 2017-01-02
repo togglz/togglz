@@ -23,7 +23,7 @@ class SlackWrapperStateRepositorySpec extends Specification {
     SlackStateRepository notifications = new SlackStateRepository(composer, messenger, channelsProvider)
     StateRepository wrapped = Mock()
     @Subject
-    SlackWrapperStateRepository mainRepository = new SlackWrapperStateRepository(notifications, wrapped);
+    SlackWrapperStateRepository mainRepository = new SlackWrapperStateRepository(wrapped, notifications);
 
     def "should use wrapped repository and send notification"() {
         given:
