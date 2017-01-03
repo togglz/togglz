@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -21,50 +22,71 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 public class S3StateRepositoryTest {
-    @SuppressWarnings("serial")
-    @Test
-    public void test() {
-        AmazonS3Client client = new AmazonS3ClientMOCK(new AnonymousAWSCredentials());
+	private AmazonS3Client client;
+	private S3StateRepository repository;
+	
+	@Before
+	public void setup() {
+        client = new AmazonS3ClientMOCK(new AnonymousAWSCredentials());
         client.withEndpoint(String.format("http://localhost:8001"));
         client.createBucket("testbucket");
 
-        S3StateRepository repository = S3StateRepository.newBuilder(client, "testbucket").build();
-
+        repository = S3StateRepository.newBuilder(client, "testbucket").build();
+	}
+	
+	@SuppressWarnings("serial")
+	@Test
+	public void testGetSetFeatureState() {
         assertNull(repository.getFeatureState(TestFeature.FEATURE_1));
 
-        FeatureState initFs = new FeatureState(TestFeature.FEATURE_1)
+        FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
             .setEnabled(true)
             .setStrategyId("abc")
             .setParameter("key1", "value1");
 
-        repository.setFeatureState(initFs);
+        repository.setFeatureState(initState);
 
-        FeatureState actualFs = repository.getFeatureState(TestFeature.FEATURE_1);
+        FeatureState actualState = repository.getFeatureState(TestFeature.FEATURE_1);
 
-        assertThat(actualFs.getFeature()).isEqualTo(initFs.getFeature());
-        assertThat(actualFs.getStrategyId()).isEqualTo("abc");
-        assertThat(actualFs.isEnabled()).isEqualTo(true);
-        assertThat(actualFs.getParameter("key1")).isEqualTo("value1");
-        assertThat(actualFs.getParameterNames()).isEqualTo(new HashSet<String>() {
+        assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
+        assertThat(actualState.getStrategyId()).isEqualTo("abc");
+        assertThat(actualState.isEnabled()).isEqualTo(true);
+        assertThat(actualState.getParameter("key1")).isEqualTo("value1");
+        assertThat(actualState.getParameterNames()).isEqualTo(new HashSet<String>() {
             {
                 add("key1");
             }
         });
+	}
+	
+    @SuppressWarnings("serial")
+    @Test
+    public void testUpdateFeatureState() {
+        FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
+            .setEnabled(true)
+            .setStrategyId("abc")
+            .setParameter("key1", "value1");
 
-        FeatureState updatedFs = new FeatureState(TestFeature.FEATURE_1)
+        repository.setFeatureState(initState);
+
+        FeatureState actualState = repository.getFeatureState(TestFeature.FEATURE_1);
+
+        assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
+
+        FeatureState updatedState = new FeatureState(TestFeature.FEATURE_1)
             .setEnabled(false)
             .setStrategyId("def")
             .setParameter("key2", "value2");
 
-        repository.setFeatureState(updatedFs);
+        repository.setFeatureState(updatedState);
 
-        actualFs = repository.getFeatureState(TestFeature.FEATURE_1);
+        actualState = repository.getFeatureState(TestFeature.FEATURE_1);
 
-        assertThat(actualFs.getFeature()).isEqualTo(initFs.getFeature());
-        assertThat(actualFs.getStrategyId()).isEqualTo("def");
-        assertThat(actualFs.isEnabled()).isEqualTo(false);
-        assertThat(actualFs.getParameter("key2")).isEqualTo("value2");
-        assertThat(actualFs.getParameterNames()).isEqualTo(new HashSet<String>() {
+        assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
+        assertThat(actualState.getStrategyId()).isEqualTo("def");
+        assertThat(actualState.isEnabled()).isEqualTo(false);
+        assertThat(actualState.getParameter("key2")).isEqualTo("value2");
+        assertThat(actualState.getParameterNames()).isEqualTo(new HashSet<String>() {
             {
                 add("key2");
             }

@@ -25,7 +25,7 @@ public class S3StateRepository implements StateRepository {
     // http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
     private static final String ERR_NO_SUCH_KEY = "NoSuchKey";
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     protected final AmazonS3Client client;
     protected final String bucketName;
@@ -41,7 +41,9 @@ public class S3StateRepository implements StateRepository {
     public FeatureState getFeatureState(Feature feature) {
         try (S3Object object = client.getObject(bucketName, keyPrefix + feature.name())) {
             if (object != null) {
-                FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(object.getObjectContent());
+                FeatureStateStorageWrapper wrapper = objectMapper.reader()
+                		.forType(FeatureStateStorageWrapper.class)
+                		.readValue(object.getObjectContent());
                 return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
             }
         } catch (AmazonS3Exception ae) {
@@ -59,7 +61,8 @@ public class S3StateRepository implements StateRepository {
     @Override
     public void setFeatureState(FeatureState featureState) {
         try {
-            String json = objectMapper.writeValueAsString(FeatureStateStorageWrapper.wrapperForFeatureState(featureState));
+        	FeatureStateStorageWrapper storageWrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
+            String json = objectMapper.writeValueAsString(storageWrapper);
             client.putObject(bucketName, keyPrefix + featureState.getFeature().name(), json);
         } catch (Exception e) {
             throw new RuntimeException("Failed to set the feature state", e);
