@@ -13,4 +13,8 @@ class MessageFixture {
         message.setMarkdown(true);
         return message
     }
+
+    static String createAsJson() {
+        return '{"channel":"toggles","username":"togglz.slack","text":"test message","icon_emoji":":robot_face:","mrkdwn":true}'
+    }
 }
