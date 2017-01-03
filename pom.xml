@@ -187,7 +187,7 @@
     <module>hazelcast</module>
     <module>zookeeper</module>
     <module>dynamodb</module>
-    <module>s3</module>
+    <module>amazon-s3</module>
     <module>benchmarks</module>
     <module>spring-mobile</module>
   </modules>

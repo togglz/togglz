@@ -9,7 +9,7 @@
 		<version>2.4.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>togglz-s3</artifactId>
+	<artifactId>togglz-amazon-s3</artifactId>
 	<name>Togglz - Amazon s3 integration</name>
 	<description>Togglz - Amazon s3 integration</description>
 
