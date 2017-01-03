@@ -1,7 +1,7 @@
 package org.togglz.slack.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 public class Message {
 
@@ -62,7 +62,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
+        return Objects.toStringHelper(this)
                 .add("channel", channel)
                 .add("username", username)
                 .add("text", text)

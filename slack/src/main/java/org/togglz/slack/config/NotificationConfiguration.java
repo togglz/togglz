@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.togglz.core.util.Strings.isNotBlank;
 
