@@ -12,7 +12,7 @@ public interface RequestHandler {
 
     String contentType();
 
-    FeatureToggleRepresentation desserialize(Reader reader) throws JsonParseException, JsonMappingException, IOException;
+    FeatureToggleRepresentation deserialize(Reader reader) throws IOException;
 
     String serialize(Object obj) throws IOException;
 

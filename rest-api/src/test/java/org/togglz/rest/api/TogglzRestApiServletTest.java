@@ -1,21 +1,14 @@
 package org.togglz.rest.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
-
+import org.eclipse.jetty.testing.HttpTester;
+import org.eclipse.jetty.testing.ServletTester;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mortbay.jetty.testing.HttpTester;
-import org.mortbay.jetty.testing.ServletTester;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.annotation.ActivationParameter;
@@ -23,7 +16,12 @@ import org.togglz.core.annotation.DefaultActivationStrategy;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.rest.api.model.FeatureToggleRepresentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class TogglzRestApiServletTest {
 
@@ -104,7 +102,7 @@ public class TogglzRestApiServletTest {
     }
 
     private void assertContentType(HttpTester response) {
-        assertEquals(APPLICATION_JSON, response.getHeader(CONTENT_TYPE));
+        assertTrue(response.getHeader(CONTENT_TYPE).startsWith(APPLICATION_JSON));
     }
 
     @Test
