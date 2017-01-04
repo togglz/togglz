@@ -8,6 +8,8 @@ import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+import java.io.Serializable;
+
 /**
  * Decorates a given StateRepository adding caching capabilities. Leverages GAE's MemcacheServices. Default expiration time is
  * 3600 seconds.
@@ -32,12 +34,20 @@ public class MemcacheStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        FeatureState state = (FeatureState) cache.get(key(feature.name()));
-        if (state == null) {
-            state = delegate.getFeatureState(feature);
-            cache.put(key(feature.name()), state, getExpiration());
+        // first try to find it from the cache
+        CacheEntry entry = (CacheEntry) cache.get(key(feature.name()));
+        if (entry != null) {
+            return entry.getState() != null ? entry.getState() : null;
         }
-        return state;
+
+        // no cache hit
+        FeatureState featureState = delegate.getFeatureState(feature);
+
+        // cache the result (may be null)
+        cache.put(key(feature.name()), new CacheEntry(featureState != null ? featureState : null), getExpiration());
+
+        // return the result
+        return featureState;
     }
 
     String key(String featureName) {
@@ -52,5 +62,22 @@ public class MemcacheStateRepository implements StateRepository {
     public void setFeatureState(FeatureState featureState) {
         delegate.setFeatureState(featureState);
         cache.delete(key(featureState.getFeature().name()));
+    }
+
+    /**
+     * This class represents a cached repository lookup
+     */
+    private static class CacheEntry implements Serializable {
+
+        private final FeatureState state;
+
+        public CacheEntry(FeatureState state) {
+            this.state = state;
+        }
+
+        public FeatureState getState() {
+            return state;
+        }
+
     }
 }

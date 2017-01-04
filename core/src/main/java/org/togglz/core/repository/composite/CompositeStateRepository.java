@@ -154,7 +154,14 @@ public class CompositeStateRepository implements StateRepository {
             }
         },
         
-        ;
+        /**
+         * Use all repositories in this composite to set the state.
+         */
+        ALL {
+            public List<StateRepository> getSelected(List<StateRepository> from) {
+                return from;
+            }
+        };
         
         private static List<StateRepository> get(List<StateRepository> from, int index) {
             List<StateRepository> result = new ArrayList<StateRepository>(1);

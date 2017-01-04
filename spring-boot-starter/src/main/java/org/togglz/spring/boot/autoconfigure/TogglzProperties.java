@@ -214,6 +214,11 @@ public class TogglzProperties {
          */
         private boolean secured = true;
 
+        /**
+         * Indicates if the admin console runs on the management port.
+         */
+        private boolean useManagementPort = true;
+
         public boolean isEnabled() {
             return enabled;
         }
@@ -244,6 +249,14 @@ public class TogglzProperties {
 
         public void setSecured(boolean secured) {
             this.secured = secured;
+        }
+
+        public boolean isUseManagementPort() {
+            return useManagementPort;
+        }
+
+        public void setUseManagementPort(boolean useManagementPort) {
+            this.useManagementPort = useManagementPort;
         }
     }
 

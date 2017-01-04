@@ -109,13 +109,17 @@ public class DatastoreStateRepository implements StateRepository {
      * @param featureEntity
      */
     protected void putInsideTransaction(final Entity featureEntity) {
-        final Transaction txn = this.datastoreService.beginTransaction();
-        try {
-            this.datastoreService.put(txn, featureEntity);
-            txn.commit();
-        } finally {
-            if (txn.isActive()) {
-                txn.rollback();
+        if (this.datastoreService.getCurrentTransaction(null) == null) {
+            this.datastoreService.put(featureEntity);
+        } else {
+            final Transaction txn = this.datastoreService.beginTransaction();
+            try {
+                this.datastoreService.put(txn, featureEntity);
+                txn.commit();
+            } finally {
+                if (txn.isActive()) {
+                    txn.rollback();
+                }
             }
         }
     }
@@ -126,14 +130,18 @@ public class DatastoreStateRepository implements StateRepository {
      * @throws EntityNotFoundException
      */
     protected Entity getInsideTransaction(final Key key) throws EntityNotFoundException {
-        final Transaction txn = this.datastoreService.beginTransaction();
         Entity featureEntity;
-        try {
-            featureEntity = this.datastoreService.get(txn, key);
-            txn.commit();
-        } finally {
-            if (txn.isActive()) {
-                txn.rollback();
+        if (this.datastoreService.getCurrentTransaction(null) == null) {
+            featureEntity = this.datastoreService.get(key);
+        } else {
+            final Transaction txn = this.datastoreService.beginTransaction();
+            try {
+                featureEntity = this.datastoreService.get(txn, key);
+                txn.commit();
+            } finally {
+                if (txn.isActive()) {
+                    txn.rollback();
+                }
             }
         }
         return featureEntity;
