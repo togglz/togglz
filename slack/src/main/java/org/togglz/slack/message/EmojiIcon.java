@@ -1,34 +1,26 @@
 package org.togglz.slack.message;
 
-class EmojiIcon {
+public class EmojiIcon {
 
-    static final String ICON_FORMAT = ":%s:";
+    private static final String ICON_FORMAT = ":%s:";
 
-    static final String TRUE = "large_blue_circle";
-
-    static final String FALSE = "white_circle";
-
-    static final String FLAG_PREFIX = "flag-";
+    private static final String FLAG_PREFIX = "flag-";
 
     private final String name;
 
-    public EmojiIcon(String name) {
-        this.name = name;
+    private EmojiIcon(String name) {
+        this.name = name.replaceAll(":", "");
     }
 
-    static EmojiIcon valueOf(String name) {
+    public static EmojiIcon valueOf(String name) {
         return new EmojiIcon(name);
     }
 
-    static EmojiIcon valueOf(boolean enabled) {
-        return valueOf(enabled ? TRUE : FALSE);
-    }
-
-    static EmojiIcon flagOf(String countryCode) {
+    public static EmojiIcon flagOf(String countryCode) {
         return valueOf(FLAG_PREFIX + countryCode.toLowerCase());
     }
 
-    String format() {
+    public String format() {
         return String.format(ICON_FORMAT, name);
     }
 

@@ -1,5 +1,7 @@
 package org.togglz.slack.config;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.List;
 
 public final class NotificationConfigurationBuilder {
@@ -14,20 +16,19 @@ public final class NotificationConfigurationBuilder {
 
     private String messageFormat;
 
-    private NotificationConfigurationBuilder() {
-    }
+    private String appIcon;
 
-    public static NotificationConfigurationBuilder create() {
-        return new NotificationConfigurationBuilder();
-    }
+    private List<String> statesIcons;
+
+    private boolean disabledAsyncSender;
 
     public NotificationConfigurationBuilder withSlackHookUrl(String slackHookUrl) {
         this.slackHookUrl = slackHookUrl;
         return this;
     }
 
-    public NotificationConfigurationBuilder withChannels(List<String> channels) {
-        this.channels = channels;
+    public NotificationConfigurationBuilder withChannels(String... channels) {
+        this.channels = ImmutableList.copyOf(channels);
         return this;
     }
 
@@ -46,7 +47,38 @@ public final class NotificationConfigurationBuilder {
         return this;
     }
 
+    /**
+     * @param appIcon name, eg. robot_face
+     */
+    public NotificationConfigurationBuilder withAppIcon(String appIcon) {
+        this.appIcon = appIcon;
+        return this;
+    }
+
+    /**
+     * @param enabled  icon name, eg. green_apple
+     * @param disabled icon name, eg. apple
+     */
+    public NotificationConfigurationBuilder withStatesIcons(String enabled, String disabled) {
+        this.statesIcons = ImmutableList.of(enabled, disabled);
+        return this;
+    }
+
+    public NotificationConfigurationBuilder disableAsyncSender() {
+        this.disabledAsyncSender = true;
+        return this;
+    }
+
     public NotificationConfiguration build() {
-        return new NotificationConfiguration(slackHookUrl, channels, togglzAdminConsoleUrl, appName, messageFormat);
+        return new NotificationConfiguration(
+                slackHookUrl,
+                channels,
+                togglzAdminConsoleUrl,
+                appName,
+                messageFormat,
+                appIcon,
+                statesIcons,
+                disabledAsyncSender
+        );
     }
 }

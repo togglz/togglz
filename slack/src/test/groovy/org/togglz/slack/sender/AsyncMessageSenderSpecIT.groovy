@@ -10,6 +10,7 @@ import spock.lang.Specification
 
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.awaitility.Awaitility.await
+import static org.togglz.slack.message.MessageFixture.exampleMessage
 
 class AsyncMessageSenderSpecIT extends Specification {
 
@@ -26,12 +27,12 @@ class AsyncMessageSenderSpecIT extends Specification {
         and:
             AsyncMessenger messenger = new AsyncMessenger("http://localhost:$serverRule.port/slack")
         when:
-            messenger.send(MessageFixture.create())
+            messenger.send(exampleMessage())
             await().atMost(3, SECONDS).until { -> isAnyRequestRetrieved() }
 
         then:
             server.verify(HttpRequest.request("/slack")
-                    .withBody(MessageFixture.createAsJson()))
+                    .withBody(MessageFixture.exampleMessageAsJson()))
     }
 
     boolean isAnyRequestRetrieved() {

@@ -4,7 +4,7 @@ class MessageFixture {
 
     private static final String DEFAULT_ICON = EmojiIcon.valueOf("robot_face").format()
 
-    static Message create() {
+    static Message exampleMessage() {
         Message message = new Message();
         message.setChannel("toggles");
         message.setUsername("togglz.slack");
@@ -14,7 +14,7 @@ class MessageFixture {
         return message
     }
 
-    static String createAsJson() {
+    static String exampleMessageAsJson() {
         return '{"channel":"toggles","username":"togglz.slack","text":"test message","icon_emoji":":robot_face:","mrkdwn":true}'
     }
 }

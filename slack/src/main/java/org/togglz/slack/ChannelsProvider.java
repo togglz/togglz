@@ -1,11 +1,10 @@
 package org.togglz.slack;
 
-import java.util.List;
-
+import com.google.common.base.Preconditions;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 
-import com.google.common.base.Preconditions;
+import java.util.List;
 
 class ChannelsProvider {
 
@@ -19,7 +18,7 @@ class ChannelsProvider {
         log.info("Slack toggles channels: " + this.channels);
     }
 
-    public List<String> getRecipients() {
+    List<String> getRecipients() {
         return channels;
     }
 }

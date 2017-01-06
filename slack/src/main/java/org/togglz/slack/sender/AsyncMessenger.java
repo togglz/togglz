@@ -1,14 +1,15 @@
 package org.togglz.slack.sender;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import org.togglz.slack.message.Message;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.togglz.slack.message.Message;
-
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 public class AsyncMessenger implements MessageSender {
+
+    private static final String NAME_FORMAT = "togglz-slack-%d";
 
     private final MessageSender delegate;
 
@@ -35,8 +36,8 @@ public class AsyncMessenger implements MessageSender {
 
     private static ExecutorService singleThreadExecutor() {
         return Executors.newSingleThreadExecutor(
-            new ThreadFactoryBuilder()
-                .setNameFormat("togglz-slack-%d")
-                .build());
+                new ThreadFactoryBuilder()
+                        .setNameFormat(NAME_FORMAT)
+                        .build());
     }
 }

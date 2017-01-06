@@ -1,12 +1,11 @@
 package org.togglz.slack.sender;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
-import org.togglz.slack.message.Message;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
+import org.togglz.slack.message.Message;
 
 /**
  * For documentation see https://api.slack.com/incoming-webhooks
@@ -26,7 +25,7 @@ public class Messenger implements MessageSender {
 
     @Override
     public void send(Message message) {
-        String json = toJson(message);
+        byte[] json = toJsonAsBytes(message);
         if (json != null) {
             String response = httpPostRequest.send(json);
             if (!Strings.isNullOrEmpty(response)) {
@@ -35,9 +34,9 @@ public class Messenger implements MessageSender {
         }
     }
 
-    private String toJson(Message message) {
+    private byte[] toJsonAsBytes(Message message) {
         try {
-            return mapper.writeValueAsString(message);
+            return mapper.writeValueAsBytes(message);
         } catch (JsonProcessingException e) {
             log.error(e.toString(), e);
             return null;

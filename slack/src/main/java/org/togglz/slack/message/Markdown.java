@@ -1,5 +1,7 @@
 package org.togglz.slack.message;
 
+import com.google.common.base.Joiner;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 enum Markdown {
@@ -20,7 +22,7 @@ enum Markdown {
      * https://api.slack.com/docs/message-formatting#message_formatting
      */
     String format(String text) {
-        return isNullOrEmpty(text) ? "" : String.join("", tag, text, tag);
+        return isNullOrEmpty(text) ? "" : Joiner.on("").join("", tag, text, tag);
     }
 
     /**
@@ -30,7 +32,7 @@ enum Markdown {
         String urlText = !isNullOrEmpty(url) ? url.trim() : "";
         if (!urlText.isEmpty()) {
             String nameText = !isNullOrEmpty(name) ? name : urlText;
-            return String.join("", "<", urlText, "|", nameText, ">");
+            return Joiner.on("").join("<", urlText, "|", nameText, ">");
         } else {
             return name;
         }
