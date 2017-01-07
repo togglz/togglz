@@ -1,4 +1,4 @@
-package org.togglz.slack.message;
+package org.togglz.slack.notification;
 
 import com.google.common.base.Joiner;
 

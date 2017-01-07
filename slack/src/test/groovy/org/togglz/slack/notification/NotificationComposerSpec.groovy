@@ -1,4 +1,4 @@
-package org.togglz.slack.message
+package org.togglz.slack.notification
 
 import org.togglz.core.user.SingleUserProvider
 import org.togglz.core.user.UserProvider
@@ -9,54 +9,55 @@ import spock.lang.Unroll
 
 import static org.togglz.FeatureFixture.DISABLE_F1
 import static org.togglz.FeatureFixture.ENABLE_F1
-import static org.togglz.slack.NotificationConfigurationFixture.ADMIN_URL
+import static NotificationConfigurationFixture.ADMIN_URL
 
 @Unroll
-class MessageComposerSpec extends Specification {
+class NotificationComposerSpec extends Specification {
 
     static final NotificationConfiguration MINIMUM = NotificationConfigurationFixture.configureMinimum()
     static final NotificationConfiguration CUSTOM = NotificationConfigurationFixture.configureEverything()
-    static final UserProvider JOHN = new SingleUserProvider("John")
+    static final UserProvider USER_PROVIDER = new SingleUserProvider("John")
     static final String ADMIN_LINK = "<$ADMIN_URL|$ADMIN_URL>"
 
-    def "should compose message DTO according to #appIcon and #channel"() {
+    def "should compose notification according to #appIcon and #channel"() {
         given:
-            MessagesComposer messageComposer = new MessagesComposer(configuration, JOHN)
+            NotificationComposer composer = new NotificationComposer(configuration, USER_PROVIDER)
         when:
-            List<Message> messages = messageComposer.compose(ENABLE_F1, configuration.channels)
+            Notification notification = composer.compose(ENABLE_F1, configuration.channels).first()
         then:
-            messages.size() == 1
-            messages.first().username == "$configuration.appName feature toggles" as String
-            messages.first().icon == expectedIcon
+            notification.username == "$configuration.appName feature toggles" as String
+            notification.icon == expectedIcon
+            notification.channel == expectedChannel
+            notification.username == expectedUsername
         where:
-            configuration | expectedIcon | expectedChannel
-            MINIMUM       | ":joystick:" | "toggles"
-            CUSTOM        | ":flag-pl:"  | "developes"
+            configuration | expectedIcon | expectedChannel | expectedUsername
+            MINIMUM       | ":joystick:" | "toggles"       | " feature toggles"
+            CUSTOM        | ":flag-pl:"  | "developers"    | "tests feature toggles"
     }
 
-    def "should compose message text according to the template for #scenario (minimum configuration)"() {
+    def "should compose message according to the template for #scenario (minimum configuration)"() {
         given:
             NotificationConfiguration configuration = MINIMUM
-            MessagesComposer composer = new MessagesComposer(configuration, JOHN)
+            NotificationComposer composer = new NotificationComposer(configuration, USER_PROVIDER)
         when:
-            List<Message> messages = composer.compose(state, configuration.channels)
+            Notification notification = composer.compose(state, configuration.channels).first()
         then:
-            messages.first().text == expectedMessage as String
+            notification.text == expectedMessage as String
         where:
             scenario   | state      | expectedMessage
             "enabled"  | ENABLE_F1  | ":large_blue_circle: F1 was enabled by John "
             "disabled" | DISABLE_F1 | ":white_circle: F1 was disabled by John "
     }
 
-    def "should compose message text according to the template for #scenario (custom configuration)"() {
+    def "should compose message according to the template for #scenario (custom configuration)"() {
         given:
             NotificationConfiguration configuration = CUSTOM
             UserProvider userProvider = new SingleUserProvider(user as String)
-            MessagesComposer composer = new MessagesComposer(configuration, userProvider)
+            NotificationComposer composer = new NotificationComposer(configuration, userProvider)
         when:
-            List<Message> messages = composer.compose(state, configuration.channels)
+            Notification notification = composer.compose(state, configuration.channels).first()
         then:
-            messages.first().text == expectedMessage as String
+            notification.text == expectedMessage as String
         where:
             scenario      | user     | state      | expectedMessage
             "enabled"     | "John"   | ENABLE_F1  | ":green_apple: F1 was enabled by John $ADMIN_LINK"

@@ -2,7 +2,7 @@ Slack notifications
 -------------------
 
 [Slack](https://slack.com) is real-time messaging, archiving and search for teams.
- This togglz-slack module allows to notify your team about toggles changes.
+ This togglz-slack module allows to notify your team about feature toggles changes.
  
 1. Set up an [incoming webhook integration](https://my.slack.com/services/new/incoming-webhook/) in your Slack team.
 2. Copy your own webhook URL from Slack website.
@@ -24,7 +24,7 @@ public class TogglzSlackConfig {
     public NotificationConfiguration notificationConfiguration(@Value("${togglz.slack.hookUrl}" hookUrl){
         return NotificationConfiguration.builder()
             .withSlackHookUrl(hookUrl)
-            // more (optional) notification configuration here
+            // more (optional) configuration here
             .build();
     }
 

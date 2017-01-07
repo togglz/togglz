@@ -7,11 +7,11 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.user.UserProvider;
 import org.togglz.slack.config.NotificationConfiguration;
-import org.togglz.slack.message.Message;
-import org.togglz.slack.message.MessagesComposer;
-import org.togglz.slack.sender.AsyncMessenger;
-import org.togglz.slack.sender.MessageSender;
-import org.togglz.slack.sender.Messenger;
+import org.togglz.slack.notification.Notification;
+import org.togglz.slack.notification.NotificationComposer;
+import org.togglz.slack.sender.AsyncNotifier;
+import org.togglz.slack.sender.NotificationSender;
+import org.togglz.slack.sender.Notifier;
 
 import java.util.List;
 
@@ -19,26 +19,26 @@ public class SlackStateRepository implements StateRepository {
 
     private static final Log log = LogFactory.getLog(SlackStateRepository.class);
 
-    private final MessagesComposer composer;
+    private final NotificationComposer composer;
 
-    private final MessageSender messageSender;
+    private final NotificationSender notificationSender;
 
     private final ChannelsProvider channelsProvider;
 
     public SlackStateRepository(NotificationConfiguration configuration, UserProvider userProvider) {
-        this(new MessagesComposer(configuration, userProvider),
-                createMessageSender(configuration),
+        this(new NotificationComposer(configuration, userProvider),
+                createNotificationSender(configuration),
                 new ChannelsProvider(configuration.getChannels()));
     }
 
-    private static MessageSender createMessageSender(NotificationConfiguration config) {
+    private static NotificationSender createNotificationSender(NotificationConfiguration config) {
         String url = config.getSlackHookUrl();
-        return config.isDisabledAsyncSender() ? new Messenger(url) : new AsyncMessenger(url);
+        return config.isDisabledAsyncSender() ? new Notifier(url) : new AsyncNotifier(url);
     }
 
-    public SlackStateRepository(MessagesComposer composer, MessageSender messageSender, ChannelsProvider channelsProvider) {
+    public SlackStateRepository(NotificationComposer composer, NotificationSender notificationSender, ChannelsProvider channelsProvider) {
         this.composer = composer;
-        this.messageSender = messageSender;
+        this.notificationSender = notificationSender;
         this.channelsProvider = channelsProvider;
     }
 
@@ -48,15 +48,15 @@ public class SlackStateRepository implements StateRepository {
     }
 
     @Override
-    public void setFeatureState(FeatureState featureState) {
-        List<Message> messages = composeMessages(featureState);
-        log.info("send " + messages);
-        for (Message message : messages) {
-            messageSender.send(message);
+    public void setFeatureState(FeatureState state) {
+        List<Notification> notifications = composeNotifications(state);
+        log.info("send " + notifications);
+        for (Notification notification : notifications) {
+            notificationSender.send(notification);
         }
     }
 
-    private List<Message> composeMessages(FeatureState featureState) {
-        return composer.compose(featureState, channelsProvider.getRecipients());
+    private List<Notification> composeNotifications(FeatureState state) {
+        return composer.compose(state, channelsProvider.getRecipients());
     }
 }

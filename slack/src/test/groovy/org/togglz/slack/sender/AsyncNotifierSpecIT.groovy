@@ -5,34 +5,34 @@ import org.mockserver.client.server.MockServerClient
 import org.mockserver.junit.MockServerRule
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
-import org.togglz.slack.message.MessageFixture
+import org.togglz.slack.notification.NotificationFixture
 import spock.lang.Specification
 
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.awaitility.Awaitility.await
-import static org.togglz.slack.message.MessageFixture.exampleMessage
+import static NotificationFixture.exampleNotification
 
-class AsyncMessageSenderSpecIT extends Specification {
+class AsyncNotifierSpecIT extends Specification {
 
     @Rule
     MockServerRule serverRule = new MockServerRule(this)
     MockServerClient server
 
-    def "should send message to Slack"() {
+    def "should send notification to Slack"() {
         given:
             server.when(HttpRequest.request("/slack")
                     .withMethod("POST")
                     .withHeader("Content-Type", "application/json")
             ).respond(HttpResponse.response().withStatusCode(200))
         and:
-            AsyncMessenger messenger = new AsyncMessenger("http://localhost:$serverRule.port/slack")
+            AsyncNotifier messenger = new AsyncNotifier("http://localhost:$serverRule.port/slack")
         when:
-            messenger.send(exampleMessage())
+            messenger.send(exampleNotification())
             await().atMost(3, SECONDS).until { -> isAnyRequestRetrieved() }
 
         then:
             server.verify(HttpRequest.request("/slack")
-                    .withBody(MessageFixture.exampleMessageAsJson()))
+                    .withBody(NotificationFixture.exampleNotificationAsJson()))
     }
 
     boolean isAnyRequestRetrieved() {

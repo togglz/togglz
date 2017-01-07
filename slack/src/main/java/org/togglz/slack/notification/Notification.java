@@ -1,9 +1,9 @@
-package org.togglz.slack.message;
+package org.togglz.slack.notification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 
-public class Message {
+public class Notification {
 
     @JsonProperty("channel")
     private String channel;

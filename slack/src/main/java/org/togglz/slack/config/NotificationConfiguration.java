@@ -3,7 +3,7 @@ package org.togglz.slack.config;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.slack.message.MessagesComposer;
+import org.togglz.slack.notification.NotificationComposer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ public class NotificationConfiguration {
 
     private static final List<String> DEFAULT_CHANNELS = ImmutableList.of("toggles");
     private static final ArrayList<String> DEFAULT_STATE_ICONS = Lists.newArrayList("large_blue_circle", "white_circle");
+    private static final String DEFAULT_APP_ICON = "joystick";
 
     private final String slackHookUrl;
     private final List<String> channels;
@@ -44,8 +45,8 @@ public class NotificationConfiguration {
         this.channels = firstNonNull(channels, DEFAULT_CHANNELS);
         this.togglzAdminConsoleUrl = firstNonNull(togglzAdminConsoleUrl, "");
         this.appName = firstNonNull(appName, "");
-        this.messageFormat = firstNonNull(messageFormat, MessagesComposer.DEFAULT_MESSAGE_FORMAT);
-        this.appIcon = firstNonNull(appIcon, "joystick");
+        this.messageFormat = firstNonNull(messageFormat, NotificationComposer.DEFAULT_MESSAGE_FORMAT);
+        this.appIcon = firstNonNull(appIcon, DEFAULT_APP_ICON);
         this.stateIcons = firstNonNull(stateIcons, DEFAULT_STATE_ICONS);
         this.disabledAsyncSender = disabledAsyncSender;
     }

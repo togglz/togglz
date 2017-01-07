@@ -1,4 +1,4 @@
-package org.togglz.slack.message;
+package org.togglz.slack.notification;
 
 public class EmojiIcon {
 

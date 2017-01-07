@@ -1,4 +1,4 @@
-package org.togglz.slack.message;
+package org.togglz.slack.notification;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public class MessagesComposer {
+public class NotificationComposer {
 
     public static final String DEFAULT_MESSAGE_FORMAT = "$stateIcon $feature was $changed by $user $link";
 
@@ -24,34 +24,34 @@ public class MessagesComposer {
 
     private final UserProvider userProvider;
 
-    public MessagesComposer(NotificationConfiguration configuration, UserProvider userProvider) {
+    public NotificationComposer(NotificationConfiguration configuration, UserProvider userProvider) {
         checkArgument(configuration != null, "configuration is null");
         checkArgument(userProvider != null, "userProvider is null");
         this.configuration = configuration;
         this.userProvider = userProvider;
     }
 
-    public List<Message> compose(FeatureState state, List<String> channels) {
-        final String text = getText(state);
+    public List<Notification> compose(FeatureState state, List<String> channels) {
+        final String message = getMessage(state);
         final String appIcon = formatIcon(configuration.getAppIcon());
         final String sender = getSender();
         return FluentIterable.from(channels)
                 .filter(Predicates.notNull())
-                .transform(new Function<String, Message>() {
+                .transform(new Function<String, Notification>() {
                     @Override
-                    public Message apply(String channel) {
-                        Message message = new Message();
-                        message.setChannel(channel);
-                        message.setUsername(sender);
-                        message.setText(text);
-                        message.setIcon(appIcon);
-                        message.setMarkdown(true);
-                        return message;
+                    public Notification apply(String channel) {
+                        Notification notification = new Notification();
+                        notification.setChannel(channel);
+                        notification.setUsername(sender);
+                        notification.setText(message);
+                        notification.setIcon(appIcon);
+                        notification.setMarkdown(true);
+                        return notification;
                     }
                 }).toList();
     }
 
-    private String getText(FeatureState state) {
+    private String getMessage(FeatureState state) {
         ImmutableMap<String, String> values = ImmutableMap.<String, String>builder()
                 .put("stateIcon", formatIcon(configuration.getStateIcon(state)))
                 .put("feature", state.getFeature().name())

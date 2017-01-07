@@ -10,7 +10,7 @@ import org.togglz.slack.config.NotificationConfiguration
 import spock.lang.Specification
 
 import static org.togglz.FeatureFixture.ENABLE_F1
-import static org.togglz.slack.NotificationConfigurationFixture.configureNonAsync
+import static NotificationConfigurationFixture.configureNonAsync
 
 class SlackStateRepositorySpecIT extends Specification {
 

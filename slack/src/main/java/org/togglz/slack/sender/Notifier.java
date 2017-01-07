@@ -5,27 +5,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
-import org.togglz.slack.message.Message;
+import org.togglz.slack.notification.Notification;
 
 /**
  * For documentation see https://api.slack.com/incoming-webhooks
  */
-public class Messenger implements MessageSender {
+public class Notifier implements NotificationSender {
 
-    private static final Log log = LogFactory.getLog(Messenger.class);
+    private static final Log log = LogFactory.getLog(Notifier.class);
 
     private final HttpPostRequest httpPostRequest;
 
     private final ObjectMapper mapper;
 
-    public Messenger(String slackHookUrl) {
+    public Notifier(String slackHookUrl) {
         this.httpPostRequest = new HttpPostRequest(slackHookUrl);
         this.mapper = new ObjectMapper();
     }
 
     @Override
-    public void send(Message message) {
-        byte[] json = toJsonAsBytes(message);
+    public void send(Notification notification) {
+        byte[] json = toJsonAsBytes(notification);
         if (json != null) {
             String response = httpPostRequest.send(json);
             if (!Strings.isNullOrEmpty(response)) {
@@ -34,9 +34,9 @@ public class Messenger implements MessageSender {
         }
     }
 
-    private byte[] toJsonAsBytes(Message message) {
+    private byte[] toJsonAsBytes(Notification notification) {
         try {
-            return mapper.writeValueAsBytes(message);
+            return mapper.writeValueAsBytes(notification);
         } catch (JsonProcessingException e) {
             log.error(e.toString(), e);
             return null;
