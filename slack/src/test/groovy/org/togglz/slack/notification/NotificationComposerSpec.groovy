@@ -7,9 +7,9 @@ import org.togglz.slack.config.NotificationConfiguration
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static NotificationConfigurationFixture.ADMIN_URL
 import static org.togglz.FeatureFixture.DISABLE_F1
 import static org.togglz.FeatureFixture.ENABLE_F1
-import static NotificationConfigurationFixture.ADMIN_URL
 
 @Unroll
 class NotificationComposerSpec extends Specification {
@@ -60,11 +60,11 @@ class NotificationComposerSpec extends Specification {
             notification.text == expectedMessage as String
         where:
             scenario      | user     | state      | expectedMessage
-            "enabled"     | "John"   | ENABLE_F1  | ":green_apple: F1 was enabled by John $ADMIN_LINK"
-            "disabled"    | "John"   | DISABLE_F1 | ":apple: F1 was disabled by John $ADMIN_LINK"
-            "full name"   | "John.D" | ENABLE_F1  | ":green_apple: F1 was enabled by <@John.D> $ADMIN_LINK"
-            "system user" | "system" | ENABLE_F1  | ":green_apple: F1 was enabled by system $ADMIN_LINK"
-            "null user"   | null     | ENABLE_F1  | ":green_apple: F1 was enabled by null $ADMIN_LINK"
-            "empty user"  | ""       | ENABLE_F1  | ":green_apple: F1 was enabled by  $ADMIN_LINK"
+            "enabled"     | "John"   | ENABLE_F1  | ":green_apple: F1 activated (John) $ADMIN_LINK"
+            "disabled"    | "John"   | DISABLE_F1 | ":apple: F1 deactivated (John) $ADMIN_LINK"
+            "full name"   | "John.D" | ENABLE_F1  | ":green_apple: F1 activated (<@John.D>) $ADMIN_LINK"
+            "system user" | "system" | ENABLE_F1  | ":green_apple: F1 activated (system) $ADMIN_LINK"
+            "null user"   | null     | ENABLE_F1  | ":green_apple: F1 activated (null) $ADMIN_LINK"
+            "empty user"  | ""       | ENABLE_F1  | ":green_apple: F1 activated () $ADMIN_LINK"
     }
 }

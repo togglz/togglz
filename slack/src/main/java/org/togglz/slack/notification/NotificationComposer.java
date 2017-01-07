@@ -55,7 +55,7 @@ public class NotificationComposer {
         ImmutableMap<String, String> values = ImmutableMap.<String, String>builder()
                 .put("stateIcon", formatIcon(configuration.getStateIcon(state)))
                 .put("feature", state.getFeature().name())
-                .put("changed", state.isEnabled() ? "enabled" : "disabled")
+                .put("changed", configuration.getChangeVerb(state))
                 .put("user", getUsername())
                 .put("link", getLink())
                 .build();

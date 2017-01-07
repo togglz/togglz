@@ -9,7 +9,7 @@ class NotificationConfigurationFixture {
     static final String ADMIN_URL = "http://localhost/togglz"
 
     static NotificationConfiguration configureMinimum() {
-        return new NotificationConfigurationBuilder()
+        return NotificationConfiguration.builder()
                 .withSlackHookUrl(HOOK_URL)
                 .build()
     }
@@ -25,13 +25,15 @@ class NotificationConfigurationFixture {
                 .build()
     }
 
-    private static NotificationConfigurationBuilder exampleConfiguration(String hookUrl) {
-        return new NotificationConfigurationBuilder()
+    static NotificationConfigurationBuilder exampleConfiguration(String hookUrl) {
+        return NotificationConfiguration.builder()
                 .withSlackHookUrl(hookUrl)
                 .withChannels("developers")
+                .withMessageFormat('$stateIcon $feature $changed ($user) $link')
                 .withTogglzAdminConsoleUrl(ADMIN_URL)
                 .withAppName("tests")
                 .withAppIcon("flag-pl")
                 .withStatesIcons("green_apple", "apple")
+                .withChangeVerbs("activated", "deactivated")
     }
 }

@@ -20,6 +20,8 @@ public final class NotificationConfigurationBuilder {
 
     private List<String> statesIcons;
 
+    private List<String> changeVerbs;
+
     private boolean disabledAsyncSender;
 
     public NotificationConfigurationBuilder withSlackHookUrl(String slackHookUrl) {
@@ -42,6 +44,9 @@ public final class NotificationConfigurationBuilder {
         return this;
     }
 
+    /**
+     * @param messageFormat custom replacement for default org.togglz.slack.notification.NotificationComposer.DEFAULT_MESSAGE_FORMAT
+     */
     public NotificationConfigurationBuilder withMessageFormat(String messageFormat) {
         this.messageFormat = messageFormat;
         return this;
@@ -64,6 +69,15 @@ public final class NotificationConfigurationBuilder {
         return this;
     }
 
+    /**
+     * @param enabled  verb eg. activated
+     * @param disabled verb eg. deactivated
+     */
+    public NotificationConfigurationBuilder withChangeVerbs(String enabled, String disabled) {
+        this.changeVerbs = ImmutableList.of(enabled, disabled);
+        return this;
+    }
+
     public NotificationConfigurationBuilder disableAsyncSender() {
         this.disabledAsyncSender = true;
         return this;
@@ -78,6 +92,7 @@ public final class NotificationConfigurationBuilder {
                 messageFormat,
                 appIcon,
                 statesIcons,
+                changeVerbs,
                 disabledAsyncSender
         );
     }

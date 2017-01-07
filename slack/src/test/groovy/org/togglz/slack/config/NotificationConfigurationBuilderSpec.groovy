@@ -37,6 +37,7 @@ class NotificationConfigurationBuilderSpec extends Specification {
                     .withAppName("app")
                     .withAppIcon("icon")
                     .withStatesIcons("+1", "-1")
+                    .withChangeVerbs("ON", "OFF")
                     .withMessageFormat("format")
                     .disableAsyncSender()
                     .build()
@@ -48,6 +49,8 @@ class NotificationConfigurationBuilderSpec extends Specification {
             config.appIcon == "icon"
             config.getStateIcon(ENABLE_F1) == "+1"
             config.getStateIcon(DISABLE_F1) == "-1"
+            config.getChangeVerb(ENABLE_F1) == "ON"
+            config.getChangeVerb(DISABLE_F1) == "OFF"
             config.messageFormat == "format"
             config.disabledAsyncSender
     }
