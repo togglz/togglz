@@ -12,7 +12,7 @@ Slack notifications
 
 SlackStateRepository must be secondary StateRepository, cannot be the only StateRepository.
 This is because Slack repository is for notifications so it is write-only.
-To simplify configuration you can use SlackWrapperStateRepository as composite repository to wrap your previous StateRepository. 
+To simplify configuration you can use SlackWrapperStateRepository as composite repository to wrap your existing StateRepository. 
 
 ## Example Spring configuration
  

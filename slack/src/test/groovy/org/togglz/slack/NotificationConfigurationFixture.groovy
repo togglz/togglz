@@ -5,8 +5,8 @@ import org.togglz.slack.config.NotificationConfigurationBuilder
 
 class NotificationConfigurationFixture {
 
-    static final String HOOK_URL = "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
-    static final String ADMIN_URL = "http://localhost/togglz"
+    public static final String HOOK_URL = "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+    public static final String ADMIN_URL = "http://localhost/togglz"
 
     static NotificationConfiguration configureMinimum() {
         return NotificationConfiguration.builder()
