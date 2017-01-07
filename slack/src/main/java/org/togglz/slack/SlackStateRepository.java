@@ -15,6 +15,10 @@ import org.togglz.slack.sender.Notifier;
 
 import java.util.List;
 
+/**
+ * @author Tomasz Skowroński
+ * @since 2.4.0
+ */
 public class SlackStateRepository implements StateRepository {
 
     private static final Log log = LogFactory.getLog(SlackStateRepository.class);

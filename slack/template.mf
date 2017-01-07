@@ -8,5 +8,5 @@ Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
  org.togglz.core.*;version="${osgi.bundles.version:default}",
- com.google.common.*;version="19.0",
+ com.google.common.*;version="17.0",
  com.fasterxml.jackson.*;version="2.7.4"

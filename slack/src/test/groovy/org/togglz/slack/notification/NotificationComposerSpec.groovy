@@ -45,8 +45,8 @@ class NotificationComposerSpec extends Specification {
             notification.text == expectedMessage as String
         where:
             scenario   | state      | expectedMessage
-            "enabled"  | ENABLE_F1  | ":large_blue_circle: F1 was enabled by John "
-            "disabled" | DISABLE_F1 | ":white_circle: F1 was disabled by John "
+            "enabled"  | ENABLE_F1  | ":large_blue_circle: *F1* was enabled by John "
+            "disabled" | DISABLE_F1 | ":white_circle: *F1* was disabled by John "
     }
 
     def "should compose message according to the template for #scenario (custom configuration)"() {
@@ -60,11 +60,11 @@ class NotificationComposerSpec extends Specification {
             notification.text == expectedMessage as String
         where:
             scenario      | user     | state      | expectedMessage
-            "enabled"     | "John"   | ENABLE_F1  | ":green_apple: F1 activated (John) $ADMIN_LINK"
-            "disabled"    | "John"   | DISABLE_F1 | ":apple: F1 deactivated (John) $ADMIN_LINK"
-            "full name"   | "John.D" | ENABLE_F1  | ":green_apple: F1 activated (<@John.D>) $ADMIN_LINK"
-            "system user" | "system" | ENABLE_F1  | ":green_apple: F1 activated (system) $ADMIN_LINK"
-            "null user"   | null     | ENABLE_F1  | ":green_apple: F1 activated (null) $ADMIN_LINK"
-            "empty user"  | ""       | ENABLE_F1  | ":green_apple: F1 activated () $ADMIN_LINK"
+            "enabled"     | "John"   | ENABLE_F1  | ":green_apple: *F1* activated (John) $ADMIN_LINK"
+            "disabled"    | "John"   | DISABLE_F1 | ":apple: *F1* deactivated (John) $ADMIN_LINK"
+            "full name"   | "John.D" | ENABLE_F1  | ":green_apple: *F1* activated (<@John.D>) $ADMIN_LINK"
+            "system user" | "system" | ENABLE_F1  | ":green_apple: *F1* activated (system) $ADMIN_LINK"
+            "null user"   | null     | ENABLE_F1  | ":green_apple: *F1* activated (null) $ADMIN_LINK"
+            "empty user"  | ""       | ENABLE_F1  | ":green_apple: *F1* activated () $ADMIN_LINK"
     }
 }

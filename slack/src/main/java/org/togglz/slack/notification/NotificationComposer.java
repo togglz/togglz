@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class NotificationComposer {
 
-    public static final String DEFAULT_MESSAGE_FORMAT = "$stateIcon $feature was $changed by $user $link";
+    public static final String DEFAULT_MESSAGE_FORMAT = "$stateIcon *$feature* was $changed by $user $link";
 
     private static final String SENDER_SUFFIX = "feature toggles";
 

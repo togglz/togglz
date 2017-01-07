@@ -1,22 +1,21 @@
 package org.togglz.slack.config;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.slack.notification.NotificationComposer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Objects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableList.copyOf;
 import static org.togglz.core.util.Strings.isNotBlank;
 
 public class NotificationConfiguration {
 
     private static final List<String> DEFAULT_CHANNELS = ImmutableList.of("toggles");
-    private static final ArrayList<String> DEFAULT_STATE_ICONS = Lists.newArrayList("large_blue_circle", "white_circle");
-    private static final ArrayList<String> DEFAULT_CHANGE_VERBS = Lists.newArrayList("enabled", "disabled");
+    private static final List<String> DEFAULT_STATE_ICONS = ImmutableList.of("large_blue_circle", "white_circle");
+    private static final List<String> DEFAULT_CHANGE_VERBS = ImmutableList.of("enabled", "disabled");
     private static final String DEFAULT_APP_ICON = "joystick";
 
     private final String slackHookUrl;
@@ -45,13 +44,13 @@ public class NotificationConfiguration {
         checkArgument(isNotBlank(slackHookUrl), "slackHookUrl is required");
         checkArgument(slackHookUrl.startsWith("http"), "slackHookUrl isn't valid url: %s", slackHookUrl);
         this.slackHookUrl = slackHookUrl;
-        this.channels = firstNonNull(channels, DEFAULT_CHANNELS);
+        this.channels = channels != null ? copyOf(channels) : DEFAULT_CHANNELS;
         this.togglzAdminConsoleUrl = firstNonNull(togglzAdminConsoleUrl, "");
         this.appName = firstNonNull(appName, "");
         this.messageFormat = firstNonNull(messageFormat, NotificationComposer.DEFAULT_MESSAGE_FORMAT);
         this.appIcon = firstNonNull(appIcon, DEFAULT_APP_ICON);
-        this.stateIcons = firstNonNull(stateIcons, DEFAULT_STATE_ICONS);
-        this.changeVerbs = firstNonNull(changeVerbs, DEFAULT_CHANGE_VERBS);
+        this.stateIcons = stateIcons != null ? copyOf(stateIcons) : DEFAULT_STATE_ICONS;
+        this.changeVerbs = changeVerbs != null ? copyOf(changeVerbs) : DEFAULT_CHANGE_VERBS;
         this.disabledAsyncSender = disabledAsyncSender;
     }
 

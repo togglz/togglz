@@ -14,8 +14,8 @@ class NotificationConfigurationBuilderSpec extends Specification {
             NotificationConfiguration.builder()
                     .build()
         then:
-            Exception e = thrown(IllegalArgumentException)
-            e.message.startsWith("slackHookUrl is required")
+            IllegalArgumentException e = thrown()
+            e.message == "slackHookUrl is required"
     }
 
     def "should only withSlackHookUrl property be required"() {
@@ -42,17 +42,19 @@ class NotificationConfigurationBuilderSpec extends Specification {
                     .disableAsyncSender()
                     .build()
         then:
-            config.slackHookUrl == HOOK_URL
-            config.channels == ["channel"]
-            config.togglzAdminConsoleUrl == "console"
-            config.appName == "app"
-            config.appIcon == "icon"
-            config.getStateIcon(ENABLE_F1) == "+1"
-            config.getStateIcon(DISABLE_F1) == "-1"
-            config.getChangeVerb(ENABLE_F1) == "ON"
-            config.getChangeVerb(DISABLE_F1) == "OFF"
-            config.messageFormat == "format"
-            config.disabledAsyncSender
+            with(config) {
+                slackHookUrl == HOOK_URL
+                channels == ["channel"]
+                togglzAdminConsoleUrl == "console"
+                appName == "app"
+                appIcon == "icon"
+                getStateIcon(ENABLE_F1) == "+1"
+                getStateIcon(DISABLE_F1) == "-1"
+                getChangeVerb(ENABLE_F1) == "ON"
+                getChangeVerb(DISABLE_F1) == "OFF"
+                messageFormat == "format"
+                disabledAsyncSender
+            }
     }
 
 }

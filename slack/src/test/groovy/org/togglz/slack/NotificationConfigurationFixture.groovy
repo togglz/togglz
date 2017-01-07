@@ -29,7 +29,7 @@ class NotificationConfigurationFixture {
         return NotificationConfiguration.builder()
                 .withSlackHookUrl(hookUrl)
                 .withChannels("developers")
-                .withMessageFormat('$stateIcon $feature $changed ($user) $link')
+                .withMessageFormat('$stateIcon *$feature* $changed ($user) $link')
                 .withTogglzAdminConsoleUrl(ADMIN_URL)
                 .withAppName("tests")
                 .withAppIcon("flag-pl")

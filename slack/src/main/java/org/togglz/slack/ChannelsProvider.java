@@ -1,6 +1,7 @@
 package org.togglz.slack;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 
@@ -14,8 +15,8 @@ class ChannelsProvider {
 
     ChannelsProvider(List<String> channels) {
         Preconditions.checkArgument(channels != null, "channels can be empty but not null");
-        this.channels = channels;
-        log.info("Slack toggles channels: " + this.channels);
+        this.channels = ImmutableList.copyOf(channels);
+        log.info("Slack toggles channels: " + channels);
     }
 
     List<String> getRecipients() {
