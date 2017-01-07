@@ -12,20 +12,16 @@ public class EmojiIcon {
         this.name = name.replaceAll(":", "");
     }
 
-    public static EmojiIcon valueOf(String name) {
-        return new EmojiIcon(name);
+    public static String format(String name) {
+        return new EmojiIcon(name).toString();
     }
 
-    public static EmojiIcon flagOf(String countryCode) {
-        return valueOf(FLAG_PREFIX + countryCode.toLowerCase());
-    }
-
-    public String format() {
-        return String.format(ICON_FORMAT, name);
+    public static String flagOf(String countryCode) {
+        return format(FLAG_PREFIX + countryCode.toLowerCase());
     }
 
     @Override
     public String toString() {
-        return format();
+        return String.format(ICON_FORMAT, name);
     }
 }

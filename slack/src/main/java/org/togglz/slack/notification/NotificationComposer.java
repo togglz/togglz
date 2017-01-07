@@ -33,7 +33,7 @@ public class NotificationComposer {
 
     public List<Notification> compose(FeatureState state, List<String> channels) {
         final String message = getMessage(state);
-        final String appIcon = formatIcon(configuration.getAppIcon());
+        final String appIcon = EmojiIcon.format(configuration.getAppIcon());
         final String sender = getSender();
         return FluentIterable.from(channels)
                 .filter(Predicates.notNull())
@@ -53,7 +53,7 @@ public class NotificationComposer {
 
     private String getMessage(FeatureState state) {
         ImmutableMap<String, String> values = ImmutableMap.<String, String>builder()
-                .put("stateIcon", formatIcon(configuration.getStateIcon(state)))
+                .put("stateIcon", EmojiIcon.format(configuration.getStateIcon(state)))
                 .put("feature", state.getFeature().name())
                 .put("changed", configuration.getChangeVerb(state))
                 .put("user", getUsername())
@@ -61,10 +61,6 @@ public class NotificationComposer {
                 .build();
         Replacement replacement = new Replacement(values, "$");
         return replacement.replace(configuration.getMessageFormat());
-    }
-
-    private String formatIcon(String name) {
-        return EmojiIcon.valueOf(name).format();
     }
 
     private String getUsername() {
