@@ -25,9 +25,9 @@ class AsyncNotifierSpecIT extends Specification {
                     .withHeader("Content-Type", "application/json")
             ).respond(HttpResponse.response().withStatusCode(200))
         and:
-            AsyncNotifier messenger = new AsyncNotifier("http://localhost:$serverRule.port/slack")
+            NotificationSender notifier = new AsyncNotifier("http://localhost:$serverRule.port/slack")
         when:
-            messenger.send(exampleNotification())
+            notifier.send(exampleNotification())
             await().atMost(3, SECONDS).until { -> isAnyRequestRetrieved() }
 
         then:
