@@ -12,10 +12,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 class HttpPostRequest {
 
     private static final Log log = LogFactory.getLog(HttpPostRequest.class);
+
+    private static final Long TIMEOUT = TimeUnit.SECONDS.toMillis(5);
 
     private final String requestUrl;
 
@@ -27,12 +30,7 @@ class HttpPostRequest {
         HttpURLConnection connection = null;
         try {
             URL url = new URL(this.requestUrl);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
-            connection.setRequestProperty("Content-Length", Integer.toString(body.length));
+            connection = prepareConnection(url, body);
             writeRequest(body, connection);
             return readResponse(connection);
         } catch (Exception e) {
@@ -43,6 +41,18 @@ class HttpPostRequest {
                 connection.disconnect();
             }
         }
+    }
+
+    private HttpURLConnection prepareConnection(URL url, byte[] body) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Content-Length", Integer.toString(body.length));
+        connection.setConnectTimeout(TIMEOUT.intValue());
+        connection.setReadTimeout(TIMEOUT.intValue());
+        return connection;
     }
 
     private void writeRequest(byte[] body, final HttpURLConnection connection) throws IOException {

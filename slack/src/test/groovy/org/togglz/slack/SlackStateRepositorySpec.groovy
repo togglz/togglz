@@ -13,7 +13,7 @@ import static NotificationConfigurationFixture.configureEverything
 import static org.togglz.FeatureFixture.ENABLE_F1
 import static org.togglz.FeatureFixture.F1
 
-class SlackWrapperStateRepositorySpec extends Specification {
+class SlackStateRepositorySpec extends Specification {
 
     static final Notification NOTIFICATION = new Notification(text: "text")
     static final List<String> CHANNELS = ["channel"]
@@ -24,22 +24,23 @@ class SlackWrapperStateRepositorySpec extends Specification {
     }
     Notifier notifier = Mock()
     ChannelsProvider channelsProvider = new ChannelsProvider(CHANNELS)
-    SlackStateRepository notifications = new SlackStateRepository(composer, notifier, channelsProvider)
+    SlackNotifications notifications = new SlackNotifications(composer, notifier, channelsProvider)
     StateRepository wrapped = Mock()
     @Subject
-    SlackWrapperStateRepository mainRepository = new SlackWrapperStateRepository(wrapped, notifications);
+    SlackStateRepository slackStateRepository = new SlackStateRepository(wrapped, notifications);
 
 
     def "should read state from wrapped"() {
         when:
-            mainRepository.getFeatureState(F1)
+            slackStateRepository.getFeatureState(F1)
         then:
             1 * wrapped.getFeatureState(F1)
+            0 * notifier.send(_ as Notification)
     }
 
     def "should write state to wrapped and send notification"() {
         when:
-            mainRepository.setFeatureState(ENABLE_F1)
+            slackStateRepository.setFeatureState(ENABLE_F1)
         then:
             1 * wrapped.setFeatureState(ENABLE_F1)
             1 * notifier.send(NOTIFICATION)

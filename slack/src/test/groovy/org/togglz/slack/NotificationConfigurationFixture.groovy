@@ -25,6 +25,13 @@ class NotificationConfigurationFixture {
                 .build()
     }
 
+    static NotificationConfiguration configureChannels(List<String> channels) {
+        return exampleConfiguration(HOOK_URL)
+                .disableAsyncSender()
+                .withChannels(channels as String[])
+                .build()
+    }
+
     static NotificationConfigurationBuilder exampleConfiguration(String hookUrl) {
         return NotificationConfiguration.builder()
                 .withSlackHookUrl(hookUrl)

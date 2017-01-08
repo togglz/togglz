@@ -12,7 +12,7 @@ import spock.lang.Specification
 import static org.togglz.FeatureFixture.ENABLE_F1
 import static NotificationConfigurationFixture.configureNonAsync
 
-class SlackStateRepositorySpecIT extends Specification {
+class SlackNotificationsSpecIT extends Specification {
 
     @Rule
     MockServerRule serverRule = new MockServerRule(this)
@@ -24,9 +24,9 @@ class SlackStateRepositorySpecIT extends Specification {
                     .respond(HttpResponse.response().withStatusCode(200))
         and:
             NotificationConfiguration config = configureNonAsync("http://localhost:$serverRule.port/slack")
-            SlackStateRepository slackStateRepository = new SlackStateRepository(config, Stub(UserProvider))
+            SlackNotifications slackStateRepository = new SlackNotifications(config, Stub(UserProvider))
         when:
-            slackStateRepository.setFeatureState(ENABLE_F1)
+            slackStateRepository.notify(ENABLE_F1)
         then:
             server.verify(HttpRequest.request("/slack"))
     }
