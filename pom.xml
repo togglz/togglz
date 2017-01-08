@@ -178,6 +178,7 @@
     <module>jsf</module>
     <module>jsp</module>
     <module>appengine</module>
+    <module>cloud-datastore</module>
     <module>archaius</module>
     <module>mongodb</module>
     <module>testing</module>
@@ -197,6 +198,12 @@
       <email>christian@kaltepoth.de</email>
       <name>Christian Kaltepoth</name>
       <timezone>CET</timezone>
+    </developer>
+    <developer>
+      <id>fabito</id>
+      <email>fabio.uechi@gmail.com</email>
+      <name>Fábio Franco Uechi</name>
+      <timezone>GMT-3</timezone>
     </developer>
   </developers>
 
