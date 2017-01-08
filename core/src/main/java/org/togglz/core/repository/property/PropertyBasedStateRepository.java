@@ -73,7 +73,7 @@ public class PropertyBasedStateRepository implements StateRepository {
                 // join the users to one list and update the property
                 List<String> currentUsers = toList(state.getParameter(UsernameActivationStrategy.PARAM_USERS));
                 currentUsers.addAll(additionalUsers);
-                state.setParameter(UsernameActivationStrategy.PARAM_USERS, Strings.join(currentUsers, ","));
+                state.setParameter(UsernameActivationStrategy.PARAM_USERS, Strings.join(",", currentUsers));
 
                 // we should set strategy id if it is not yet set
                 if (state.getStrategyId() == null) {

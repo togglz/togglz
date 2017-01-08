@@ -18,14 +18,11 @@ class MarkdownSpec extends Specification {
             Markdown.PRE    | "```text```"
     }
 
-    def "should format with empty text"() {
+    def "cannot format empty text"() {
         expect:
-            Markdown.BOLD.format(input) == output
+            Markdown.BOLD.format(input) == ""
         where:
-            input | output
-            null  | ""
-            ""    | ""
-            " "   | "* *"
+            input << [null, "", " "]
     }
 
     def "should format link from '#url' and '#name'"() {
@@ -35,13 +32,21 @@ class MarkdownSpec extends Specification {
             url    | name  | result
             null   | null  | null
             "http" | "abc" | "<http|abc>"
-            // no name cases
-            "http" | " "   | "<http| >"
-            "http" | ""    | "<http|http>"
-            "http" | null  | "<http|http>"
-            // no url cases
-            " "    | "abc" | "abc"
-            ""     | "abc" | "abc"
-            null   | "abc" | "abc"
+    }
+
+    def "should format link from '#url' and empty '#name'"() {
+        expect:
+            Markdown.link("http", name) == "<http|http>"
+        where:
+            name << [null, "", " "]
+
+    }
+
+    def "cannot format link from empty '#url' and '#name'"() {
+        expect:
+            Markdown.link(url, "abc") == "abc"
+        where:
+            url << [null, "", " "]
+
     }
 }

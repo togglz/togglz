@@ -2,9 +2,9 @@ package org.togglz.slack.sender;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.util.Strings;
 import org.togglz.slack.notification.Notification;
 
 /**
@@ -28,7 +28,7 @@ public class Notifier implements NotificationSender {
         byte[] json = toJsonAsBytes(notification);
         if (json != null) {
             String response = httpPostRequest.send(json);
-            if (!Strings.isNullOrEmpty(response)) {
+            if (Strings.isNotBlank(response)) {
                 log.debug(response);
             }
         }

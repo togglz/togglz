@@ -1,12 +1,17 @@
 package org.togglz.core.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 public class Strings {
 
-    public static String join(Iterable<?> col, String separator) {
+    public static String join(String separator, String... col) {
+        return join(String.valueOf(separator), Arrays.asList(col));
+    }
+
+    public static String join(String separator, Iterable<?> col) {
         StringBuilder result = new StringBuilder();
         Iterator<?> it = col.iterator();
         while (it.hasNext()) {

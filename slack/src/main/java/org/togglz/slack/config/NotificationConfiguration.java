@@ -1,21 +1,22 @@
 package org.togglz.slack.config;
 
-import com.google.common.collect.ImmutableList;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.slack.notification.NotificationComposer;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
-import static com.google.common.base.Objects.firstNonNull;
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.collect.ImmutableList.copyOf;
+import static org.togglz.core.util.MoreObjects.firstNonNull;
+import static org.togglz.core.util.Preconditions.checkArgument;
 import static org.togglz.core.util.Strings.isNotBlank;
 
 public class NotificationConfiguration {
 
-    private static final List<String> DEFAULT_CHANNELS = ImmutableList.of("toggles");
-    private static final List<String> DEFAULT_STATE_ICONS = ImmutableList.of("large_blue_circle", "white_circle");
-    private static final List<String> DEFAULT_CHANGE_VERBS = ImmutableList.of("enabled", "disabled");
+    private static final List<String> DEFAULT_CHANNELS = Collections.singletonList("toggles");
+    private static final List<String> DEFAULT_STATE_ICONS = Arrays.asList("large_blue_circle", "white_circle");
+    private static final List<String> DEFAULT_CHANGE_VERBS = Arrays.asList("enabled", "disabled");
     private static final String DEFAULT_APP_ICON = "joystick";
 
     private final String slackHookUrl;
@@ -44,13 +45,13 @@ public class NotificationConfiguration {
         checkArgument(isNotBlank(slackHookUrl), "slackHookUrl is required");
         checkArgument(slackHookUrl.startsWith("http"), "slackHookUrl isn't valid url: %s", slackHookUrl);
         this.slackHookUrl = slackHookUrl;
-        this.channels = channels != null ? copyOf(channels) : DEFAULT_CHANNELS;
+        this.channels = channels != null ? new LinkedList<>(channels) : DEFAULT_CHANNELS;
         this.togglzAdminConsoleUrl = firstNonNull(togglzAdminConsoleUrl, "");
         this.appName = firstNonNull(appName, "");
         this.messageFormat = firstNonNull(messageFormat, NotificationComposer.DEFAULT_MESSAGE_FORMAT);
         this.appIcon = firstNonNull(appIcon, DEFAULT_APP_ICON);
-        this.stateIcons = stateIcons != null ? copyOf(stateIcons) : DEFAULT_STATE_ICONS;
-        this.changeVerbs = changeVerbs != null ? copyOf(changeVerbs) : DEFAULT_CHANGE_VERBS;
+        this.stateIcons = stateIcons != null ? new LinkedList<>(stateIcons) : DEFAULT_STATE_ICONS;
+        this.changeVerbs = changeVerbs != null ? new LinkedList<>(changeVerbs) : DEFAULT_CHANGE_VERBS;
         this.disabledAsyncSender = disabledAsyncSender;
     }
 

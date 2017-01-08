@@ -1,7 +1,7 @@
 package org.togglz.slack.notification;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Objects;
+import org.togglz.core.util.MoreObjects;
 
 public class Notification {
 
@@ -62,7 +62,7 @@ public class Notification {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
+        return MoreObjects.toStringHelper(this)
                 .add("channel", channel)
                 .add("username", username)
                 .add("text", text)

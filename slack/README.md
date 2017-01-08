@@ -5,7 +5,7 @@
  
 1. Set up an [incoming webhook integration](https://my.slack.com/services/new/incoming-webhook/) in your Slack team.
 2. Copy your own webhook URL from Slack website.
-3. Add `togglz-slack` to your project dependencies and configure it.
+3. Add `togglz-slack` artifact to your project dependencies and configure it.
  
 ## SlackStateRepository 
 

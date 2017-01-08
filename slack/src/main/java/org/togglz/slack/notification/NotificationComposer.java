@@ -1,18 +1,16 @@
 package org.togglz.slack.notification;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicates;
-import com.google.common.base.Strings;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableMap;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.UserProvider;
+import org.togglz.core.util.Preconditions;
+import org.togglz.core.util.Strings;
 import org.togglz.slack.config.NotificationConfiguration;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static org.togglz.core.util.Preconditions.checkArgument;
 
 public class NotificationComposer {
 
@@ -32,33 +30,37 @@ public class NotificationComposer {
     }
 
     public List<Notification> compose(FeatureState state, List<String> channels) {
-        final String message = getMessage(state);
-        final String appIcon = EmojiIcon.format(configuration.getAppIcon());
-        final String sender = getSender();
-        return FluentIterable.from(channels)
-                .filter(Predicates.notNull())
-                .transform(new Function<String, Notification>() {
-                    @Override
-                    public Notification apply(String channel) {
-                        Notification notification = new Notification();
-                        notification.setChannel(channel);
-                        notification.setUsername(sender);
-                        notification.setText(message);
-                        notification.setIcon(appIcon);
-                        notification.setMarkdown(true);
-                        return notification;
-                    }
-                }).toList();
+        String message = getMessage(state);
+        String appIcon = EmojiIcon.format(configuration.getAppIcon());
+        String sender = getSender();
+        List<Notification> notifications = new LinkedList<>();
+        for (String channel : channels) {
+            if (Strings.isNotBlank(channel)) {
+                Notification notification = createNotification(message, appIcon, sender, channel);
+                notifications.add(notification);
+            }
+        }
+        return notifications;
     }
 
-    private String getMessage(FeatureState state) {
-        ImmutableMap<String, String> values = ImmutableMap.<String, String>builder()
-                .put("stateIcon", EmojiIcon.format(configuration.getStateIcon(state)))
-                .put("feature", state.getFeature().name())
-                .put("changed", configuration.getChangeVerb(state))
-                .put("user", getUsername())
-                .put("link", getLink())
-                .build();
+    private Notification createNotification(String message, String appIcon, String sender, String channel) {
+        Notification notification = new Notification();
+        notification.setChannel(channel);
+        notification.setUsername(sender);
+        notification.setText(message);
+        notification.setIcon(appIcon);
+        notification.setMarkdown(true);
+        return notification;
+    }
+
+    private String getMessage(final FeatureState state) {
+        HashMap<String, String> values = new HashMap<String, String>() {{
+            put("stateIcon", EmojiIcon.format(configuration.getStateIcon(state)));
+            put("feature", state.getFeature().name());
+            put("changed", configuration.getChangeVerb(state));
+            put("user", getUsername());
+            put("link", getLink());
+        }};
         Replacement replacement = new Replacement(values, "$");
         return replacement.replace(configuration.getMessageFormat());
     }
@@ -74,7 +76,7 @@ public class NotificationComposer {
     }
 
     private String getSender() {
-        return Joiner.on(" ").join(getAppName(), SENDER_SUFFIX);
+        return Strings.join(" ", getAppName(), SENDER_SUFFIX);
     }
 
     private String getAppName() {
@@ -83,7 +85,7 @@ public class NotificationComposer {
 
     private String getLink() {
         String adminConsoleUrl = configuration.getTogglzAdminConsoleUrl();
-        if (!Strings.isNullOrEmpty(adminConsoleUrl)) {
+        if (Strings.isNotBlank(adminConsoleUrl)) {
             return Markdown.link(adminConsoleUrl, adminConsoleUrl);
         } else {
             return "";

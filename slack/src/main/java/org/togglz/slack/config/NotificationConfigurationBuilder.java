@@ -1,7 +1,6 @@
 package org.togglz.slack.config;
 
-import com.google.common.collect.ImmutableList;
-
+import java.util.Arrays;
 import java.util.List;
 
 public final class NotificationConfigurationBuilder {
@@ -30,7 +29,7 @@ public final class NotificationConfigurationBuilder {
     }
 
     public NotificationConfigurationBuilder withChannels(String... channels) {
-        this.channels = ImmutableList.copyOf(channels);
+        this.channels = Arrays.asList(channels);
         return this;
     }
 
@@ -65,7 +64,7 @@ public final class NotificationConfigurationBuilder {
      * @param disabled icon name, eg. apple
      */
     public NotificationConfigurationBuilder withStatesIcons(String enabled, String disabled) {
-        this.statesIcons = ImmutableList.of(enabled, disabled);
+        this.statesIcons = Arrays.asList(enabled, disabled);
         return this;
     }
 
@@ -74,7 +73,7 @@ public final class NotificationConfigurationBuilder {
      * @param disabled verb eg. deactivated
      */
     public NotificationConfigurationBuilder withChangeVerbs(String enabled, String disabled) {
-        this.changeVerbs = ImmutableList.of(enabled, disabled);
+        this.changeVerbs = Arrays.asList(enabled, disabled);
         return this;
     }
 

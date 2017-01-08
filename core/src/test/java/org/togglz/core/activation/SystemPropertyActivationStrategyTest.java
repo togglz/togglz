@@ -26,11 +26,10 @@ public class SystemPropertyActivationStrategyTest {
     public void shouldBeFalseIfPropertyDoesNotExist() {
         //no property exists
         assertFalse(strategy.isActive(state,user));
-
     }
 
     @Test
-    public void shouldBeFalseIfPropertyExistsButisFalse() {
+    public void shouldBeFalseIfPropertyExistsButIsFalse() {
         System.setProperty("foo.bar", "false");
         assertFalse(strategy.isActive(state,user));
     }

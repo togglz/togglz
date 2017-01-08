@@ -1,10 +1,8 @@
 package org.togglz.slack.sender;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.CharStreams;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
+import org.togglz.core.util.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 class HttpPostRequest {
@@ -57,11 +56,11 @@ class HttpPostRequest {
 
     private void writeRequest(byte[] body, final HttpURLConnection connection) throws IOException {
         InputStream input = new ByteArrayInputStream(body);
-        ByteStreams.copy(input, connection.getOutputStream());
+        IOUtils.copy(input, connection.getOutputStream());
     }
 
     private String readResponse(final HttpURLConnection connection) throws IOException {
         InputStream inputStream = connection.getInputStream();
-        return CharStreams.toString(new InputStreamReader(inputStream, Charsets.UTF_8));
+        return IOUtils.toString(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
     }
 }

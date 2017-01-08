@@ -159,7 +159,7 @@ public class FeatureState implements Serializable {
         Set<String> set = new LinkedHashSet<String>();
         set.addAll(this.getUsers());
         set.addAll(users);
-        String setAsString = Strings.trimToNull(Strings.join(set, ","));
+        String setAsString = Strings.trimToNull(Strings.join(",", set));
         setParameter(UsernameActivationStrategy.PARAM_USERS, setAsString);
         return this;
     }

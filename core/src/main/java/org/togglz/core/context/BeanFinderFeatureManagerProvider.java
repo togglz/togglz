@@ -44,7 +44,7 @@ public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider 
         // more than once manager cannot be handled
         if (managers.size() > 1) {
             throw new IllegalStateException("Found more than one FeatureManager using the BeanFinder SPI: "
-                + Strings.join(managers, ", "));
+                + Strings.join(", ", managers));
         }
 
         // return the manager or null
