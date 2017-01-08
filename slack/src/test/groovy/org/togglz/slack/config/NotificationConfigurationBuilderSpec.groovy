@@ -25,7 +25,8 @@ class NotificationConfigurationBuilderSpec extends Specification {
                     .build()
         then:
             config.slackHookUrl == HOOK_URL
-            !config.disabledAsyncSender
+            !config.asyncSenderDisabled
+            !config.labelingEnabled
     }
 
     def "should build complex configuration"() {
@@ -40,6 +41,7 @@ class NotificationConfigurationBuilderSpec extends Specification {
                     .withChangeVerbs("ON", "OFF")
                     .withMessageFormat("format")
                     .disableAsyncSender()
+                    .enableLabeling()
                     .build()
         then:
             with(config) {
@@ -53,7 +55,8 @@ class NotificationConfigurationBuilderSpec extends Specification {
                 getChangeVerb(ENABLE_F1) == "ON"
                 getChangeVerb(DISABLE_F1) == "OFF"
                 messageFormat == "format"
-                disabledAsyncSender
+                asyncSenderDisabled
+                config.labelingEnabled
             }
     }
 

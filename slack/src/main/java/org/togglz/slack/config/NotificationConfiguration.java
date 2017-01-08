@@ -27,7 +27,8 @@ public class NotificationConfiguration {
     private final String appIcon;
     private final List<String> stateIcons;
     private final List<String> changeVerbs;
-    private final boolean disabledAsyncSender;
+    private final boolean asyncSenderDisabled;
+    private final boolean labelingEnabled;
 
     public static NotificationConfigurationBuilder builder() {
         return new NotificationConfigurationBuilder();
@@ -41,7 +42,8 @@ public class NotificationConfiguration {
                               String appIcon,
                               List<String> stateIcons,
                               List<String> changeVerbs,
-                              boolean disabledAsyncSender) {
+                              boolean asyncSenderDisabled,
+                              boolean labelingEnabled) {
         checkArgument(isNotBlank(slackHookUrl), "slackHookUrl is required");
         checkArgument(slackHookUrl.startsWith("http"), "slackHookUrl isn't valid url: %s", slackHookUrl);
         this.slackHookUrl = slackHookUrl;
@@ -52,7 +54,8 @@ public class NotificationConfiguration {
         this.appIcon = firstNonNull(appIcon, DEFAULT_APP_ICON);
         this.stateIcons = stateIcons != null ? new LinkedList<>(stateIcons) : DEFAULT_STATE_ICONS;
         this.changeVerbs = changeVerbs != null ? new LinkedList<>(changeVerbs) : DEFAULT_CHANGE_VERBS;
-        this.disabledAsyncSender = disabledAsyncSender;
+        this.asyncSenderDisabled = asyncSenderDisabled;
+        this.labelingEnabled = labelingEnabled;
     }
 
     public String getSlackHookUrl() {
@@ -87,7 +90,11 @@ public class NotificationConfiguration {
         return changeVerbs.get(state.isEnabled() ? 0 : 1);
     }
 
-    public boolean isDisabledAsyncSender() {
-        return disabledAsyncSender;
+    public boolean isAsyncSenderDisabled() {
+        return asyncSenderDisabled;
+    }
+
+    public boolean isLabelingEnabled() {
+        return labelingEnabled;
     }
 }

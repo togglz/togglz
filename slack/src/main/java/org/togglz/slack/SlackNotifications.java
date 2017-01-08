@@ -35,7 +35,7 @@ class SlackNotifications {
 
     private static NotificationSender createNotificationSender(NotificationConfiguration config) {
         String url = config.getSlackHookUrl();
-        return config.isDisabledAsyncSender() ? new Notifier(url) : new AsyncNotifier(url);
+        return config.isAsyncSenderDisabled() ? new Notifier(url) : new AsyncNotifier(url);
     }
 
     SlackNotifications(NotificationComposer composer, NotificationSender notificationSender, ChannelsProvider channelsProvider) {

@@ -42,5 +42,6 @@ class NotificationConfigurationFixture {
                 .withAppIcon("flag-pl")
                 .withStatesIcons("green_apple", "apple")
                 .withChangeVerbs("activated", "deactivated")
+                .enableLabeling()
     }
 }

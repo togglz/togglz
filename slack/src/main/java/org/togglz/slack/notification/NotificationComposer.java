@@ -2,7 +2,7 @@ package org.togglz.slack.notification;
 
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.UserProvider;
-import org.togglz.core.util.Preconditions;
+import org.togglz.core.util.FeatureAnnotations;
 import org.togglz.core.util.Strings;
 import org.togglz.slack.config.NotificationConfiguration;
 
@@ -61,8 +61,12 @@ public class NotificationComposer {
             put("user", getUsername());
             put("link", getLink());
         }};
+        String format = configuration.getMessageFormat();
+        if (configuration.isLabelingEnabled()) {
+            format = appendLine(format, formatLabel(state));
+        }
         Replacement replacement = new Replacement(values, "$");
-        return replacement.replace(configuration.getMessageFormat());
+        return replacement.replace(format);
     }
 
     private String getUsername() {
@@ -90,5 +94,14 @@ public class NotificationComposer {
         } else {
             return "";
         }
+    }
+
+    private String formatLabel(FeatureState state) {
+        String label = FeatureAnnotations.getLabel(state.getFeature());
+        return Markdown.PRE.format(label);
+    }
+
+    private String appendLine(String text, String line) {
+        return Strings.join("\n", text, line);
     }
 }

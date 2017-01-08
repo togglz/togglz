@@ -21,7 +21,9 @@ public final class NotificationConfigurationBuilder {
 
     private List<String> changeVerbs;
 
-    private boolean disabledAsyncSender;
+    private boolean asyncSenderDisabled;
+
+    private boolean labelingEnabled;
 
     public NotificationConfigurationBuilder withSlackHookUrl(String slackHookUrl) {
         this.slackHookUrl = slackHookUrl;
@@ -78,7 +80,12 @@ public final class NotificationConfigurationBuilder {
     }
 
     public NotificationConfigurationBuilder disableAsyncSender() {
-        this.disabledAsyncSender = true;
+        this.asyncSenderDisabled = true;
+        return this;
+    }
+
+    public NotificationConfigurationBuilder enableLabeling() {
+        this.labelingEnabled = true;
         return this;
     }
 
@@ -92,7 +99,8 @@ public final class NotificationConfigurationBuilder {
                 appIcon,
                 statesIcons,
                 changeVerbs,
-                disabledAsyncSender
+                asyncSenderDisabled,
+                labelingEnabled
         );
     }
 }

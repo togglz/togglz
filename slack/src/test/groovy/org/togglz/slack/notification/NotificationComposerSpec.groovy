@@ -10,6 +10,7 @@ import spock.lang.Unroll
 import static NotificationConfigurationFixture.ADMIN_URL
 import static org.togglz.FeatureFixture.DISABLE_F1
 import static org.togglz.FeatureFixture.ENABLE_F1
+import static org.togglz.FeatureFixture.ENABLE_F2
 
 @Unroll
 class NotificationComposerSpec extends Specification {
@@ -60,11 +61,12 @@ class NotificationComposerSpec extends Specification {
             notification.text == expectedMessage as String
         where:
             scenario      | user     | state      | expectedMessage
-            "enabled"     | "John"   | ENABLE_F1  | ":green_apple: *F1* activated (John) $ADMIN_LINK"
-            "disabled"    | "John"   | DISABLE_F1 | ":apple: *F1* deactivated (John) $ADMIN_LINK"
-            "full name"   | "John.D" | ENABLE_F1  | ":green_apple: *F1* activated (<@John.D>) $ADMIN_LINK"
-            "system user" | "system" | ENABLE_F1  | ":green_apple: *F1* activated (system) $ADMIN_LINK"
-            "null user"   | null     | ENABLE_F1  | ":green_apple: *F1* activated (null) $ADMIN_LINK"
-            "empty user"  | ""       | ENABLE_F1  | ":green_apple: *F1* activated () $ADMIN_LINK"
+            "enabled"     | "John"   | ENABLE_F1  | ":green_apple: *F1* activated (John) $ADMIN_LINK\n```F1```"
+            "disabled"    | "John"   | DISABLE_F1 | ":apple: *F1* deactivated (John) $ADMIN_LINK\n```F1```"
+            "full name"   | "John.D" | ENABLE_F1  | ":green_apple: *F1* activated (<@John.D>) $ADMIN_LINK\n```F1```"
+            "system user" | "system" | ENABLE_F1  | ":green_apple: *F1* activated (system) $ADMIN_LINK\n```F1```"
+            "null user"   | null     | ENABLE_F1  | ":green_apple: *F1* activated (null) $ADMIN_LINK\n```F1```"
+            "empty user"  | ""       | ENABLE_F1  | ":green_apple: *F1* activated () $ADMIN_LINK\n```F1```"
+            "labeling"    | "John"   | ENABLE_F2  | ":green_apple: *F2* activated (John) $ADMIN_LINK\n```label2```"
     }
 }
