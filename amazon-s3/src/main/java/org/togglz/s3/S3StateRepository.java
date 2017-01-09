@@ -1,13 +1,17 @@
 package org.togglz.s3;
 
+import java.io.IOException;
+
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.FeatureStateStorageWrapper;
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -51,8 +55,8 @@ public class S3StateRepository implements StateRepository {
                 return null;
             }
             throw ae;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to get the feature state", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to set the feature state", e);
         }
 
         return null;
@@ -64,7 +68,7 @@ public class S3StateRepository implements StateRepository {
         	FeatureStateStorageWrapper storageWrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
             String json = objectMapper.writeValueAsString(storageWrapper);
             client.putObject(bucketName, keyPrefix + featureState.getFeature().name(), json);
-        } catch (Exception e) {
+        } catch (AmazonClientException | JsonProcessingException e) {
             throw new RuntimeException("Failed to set the feature state", e);
         }
     }
