@@ -12,13 +12,13 @@ import org.togglz.core.spi.FeatureManagerProvider;
 import org.togglz.core.util.Strings;
 
 /**
- *
+ * 
  * {@link FeatureManagerProvider} that uses the {@link BeanFinder} SPI to lookup the {@link FeatureManager}. This implementation
  * is especially useful if the FeatureManager should be created and managed by Spring or CDI instead of by the Togglz
  * bootstrapping process.
- *
+ * 
  * @author Christian Kaltepoth
- *
+ * 
  */
 public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider {
 
