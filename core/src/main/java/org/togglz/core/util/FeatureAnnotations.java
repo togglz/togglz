@@ -64,7 +64,9 @@ public class FeatureAnnotations {
             annotations.addAll(Arrays.asList(classAnnotations));
 
             return annotations;
-        } catch (SecurityException | NoSuchFieldException e) {
+        } catch (SecurityException e) {
+            // ignore
+        } catch (NoSuchFieldException e) {
             // ignore
         }
         return annotations;
@@ -77,7 +79,9 @@ public class FeatureAnnotations {
             A classAnnotation = featureClass.getAnnotation(annotationType);
 
             return fieldAnnotation != null ? fieldAnnotation : classAnnotation;
-        } catch (SecurityException | NoSuchFieldException e) {
+        } catch (SecurityException e) {
+            // ignore
+        } catch (NoSuchFieldException e) {
             // ignore
         }
         return null;
@@ -108,7 +112,15 @@ public class FeatureAnnotations {
 
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        } catch (SecurityException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
 
