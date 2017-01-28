@@ -2,6 +2,8 @@ package org.togglz.slack.notification;
 
 import org.togglz.core.util.Strings;
 
+import java.util.Arrays;
+
 public enum Markdown {
 
     BOLD("*"),
@@ -20,7 +22,7 @@ public enum Markdown {
      * https://api.slack.com/docs/message-formatting#message_formatting
      */
     public String format(String text) {
-        return Strings.isBlank(text) ? "" : Strings.join("", tag, text, tag);
+        return Strings.isBlank(text) ? "" : concat(tag, text, tag);
     }
 
     /**
@@ -30,7 +32,7 @@ public enum Markdown {
         String urlText = Strings.isNotBlank(url) ? url.trim() : "";
         if (!urlText.isEmpty()) {
             String nameText = Strings.isNotBlank(name) ? name : urlText;
-            return Strings.join("", "<", urlText, "|", nameText, ">");
+            return concat("<", urlText, "|", nameText, ">");
         } else {
             return name;
         }
@@ -43,5 +45,9 @@ public enum Markdown {
      */
     public static String linkName(String name) {
         return ("<@" + name + ">");
+    }
+
+    private static String concat(String... strings) {
+        return Strings.join(Arrays.asList(strings), "");
     }
 }

@@ -9,6 +9,7 @@ import org.togglz.slack.config.NotificationConfiguration;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.togglz.core.util.Preconditions.checkArgument;
 
@@ -54,7 +55,7 @@ public class NotificationComposer {
     }
 
     private String getMessage(final FeatureState state) {
-        HashMap<String, String> values = new HashMap<String, String>() {{
+        Map<String, String> values = new HashMap<String, String>() {{
             put("stateIcon", EmojiIcon.format(configuration.getStateIcon(state)));
             put("feature", state.getFeature().name());
             put("changed", configuration.getChangeVerb(state));
@@ -80,7 +81,7 @@ public class NotificationComposer {
     }
 
     private String getSender() {
-        return Strings.join(" ", getAppName(), SENDER_SUFFIX);
+        return getAppName() + " " + SENDER_SUFFIX;
     }
 
     private String getAppName() {
@@ -102,6 +103,6 @@ public class NotificationComposer {
     }
 
     private String appendLine(String text, String line) {
-        return Strings.join("\n", text, line);
+        return text + "\n" + line;
     }
 }
