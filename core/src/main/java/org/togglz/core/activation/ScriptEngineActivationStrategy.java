@@ -103,7 +103,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
         @Override
         public String getDescription() {
             return "The script language to use. Your system seems to support the following languages: " +
-                    Strings.join(languages, ", ");
+                Strings.join(languages, ", ");
         }
 
         @Override
