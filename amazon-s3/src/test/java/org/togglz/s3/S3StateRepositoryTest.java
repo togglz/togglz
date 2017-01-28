@@ -1,18 +1,5 @@
 package org.togglz.s3;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
-
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureState;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -20,23 +7,36 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import org.junit.Before;
+import org.junit.Test;
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 public class S3StateRepositoryTest {
-	private AmazonS3Client client;
-	private S3StateRepository repository;
-	
-	@Before
-	public void setup() {
+    
+    private AmazonS3Client client;
+    private S3StateRepository repository;
+
+    @Before
+    public void setup() {
         client = new AmazonS3ClientMOCK(new AnonymousAWSCredentials());
         client.withEndpoint(String.format("http://localhost:8001"));
         client.createBucket("testbucket");
 
         repository = S3StateRepository.newBuilder(client, "testbucket").build();
-	}
+    }
 	
-	@SuppressWarnings("serial")
-	@Test
-	public void testGetSetFeatureState() {
+    @SuppressWarnings("serial")
+    @Test
+    public void testGetSetFeatureState() {
         assertNull(repository.getFeatureState(TestFeature.FEATURE_1));
 
         FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
@@ -57,8 +57,8 @@ public class S3StateRepositoryTest {
                 add("key1");
             }
         });
-	}
-	
+    }
+
     @SuppressWarnings("serial")
     @Test
     public void testUpdateFeatureState() {
