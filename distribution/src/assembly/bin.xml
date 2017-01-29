@@ -48,6 +48,7 @@
         <include>org.togglz:togglz-cassandra:jar:*</include>
         <include>org.togglz:togglz-hazelcast:jar:*</include>
         <include>org.togglz:togglz-zookeeper:jar:*</include>
+        <include>org.togglz:togglz-slack:jar:*</include>
       </includes>
     </dependencySet>
 

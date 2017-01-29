@@ -191,6 +191,7 @@
     <module>amazon-s3</module>
     <module>benchmarks</module>
     <module>spring-mobile</module>
+    <module>slack</module>
   </modules>
 
   <developers>
