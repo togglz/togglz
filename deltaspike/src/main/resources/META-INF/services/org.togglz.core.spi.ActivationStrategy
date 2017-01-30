@@ -1,0 +1,2 @@
+org.togglz.deltaspike.activation.DeltaSpikeProjectStageActivationStrategy
+org.togglz.deltaspike.activation.DeltaSpikePropertyActivationStrategy

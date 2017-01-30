@@ -17,6 +17,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.AbstractTokenizedActivationStrategy.TokenTransformer;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
@@ -35,39 +36,39 @@ public class SpringProfileActivationStrategyTest {
     @DataPoint
     public static final IsActiveTestCase TC_1 = new IsActiveTestCase("profile is not active", false, "p1", "p2");
     @DataPoint
-    public static final IsActiveTestCase TC_2 = new IsActiveTestCase("profile is not active but param is negated", true, "!p1",
-        "p2");
+    public static final IsActiveTestCase TC_2 = new IsActiveTestCase("profile is not active but param is negated", true,
+        "!p1", "p2");
     @DataPoint
     public static final IsActiveTestCase TC_3 = new IsActiveTestCase("profile is active", true, "p1", "p1");
     @DataPoint
-    public static final IsActiveTestCase TC_4 = new IsActiveTestCase("profile is active and param case is different", true,
-        "p1", "P1");
+    public static final IsActiveTestCase TC_4 = new IsActiveTestCase("profile is active and param case is different",
+        true, "p1", "P1");
     @DataPoint
-    public static final IsActiveTestCase TC_5 = new IsActiveTestCase("profile is active and param case is different (inverted)",
-        true,
-        "P1", "p1");
+    public static final IsActiveTestCase TC_5 = new IsActiveTestCase(
+        "profile is active and param case is different (inverted)", true, "P1", "p1");
     @DataPoint
-    public static final IsActiveTestCase TC_6 = new IsActiveTestCase("profile is active but param is negated", false, "!p1",
-        "p1");
+    public static final IsActiveTestCase TC_6 = new IsActiveTestCase("profile is active but param is negated", false,
+        "!p1", "p1");
     @DataPoint
-    public static final IsActiveTestCase TC_7 = new IsActiveTestCase("none of profiles are active", false, "p1,p2,p3", "p4");
+    public static final IsActiveTestCase TC_7 = new IsActiveTestCase("none of profiles are active", false, "p1,p2,p3",
+        "p4");
     @DataPoint
     public static final IsActiveTestCase TC_8 = new IsActiveTestCase(
         "none of profiles are active but at least one param is negated", true, "p1,p2,!p3", "p4");
     @DataPoint
-    public static final IsActiveTestCase TC_9 = new IsActiveTestCase("at least one profile is active", true, "p1,p2,p3", "p3",
-        "p4");
-    @DataPoint
-    public static final IsActiveTestCase TC_10 = new IsActiveTestCase("all profiles are active", true, "p1,p2,p3", "p1", "p2",
+    public static final IsActiveTestCase TC_9 = new IsActiveTestCase("at least one profile is active", true, "p1,p2,p3",
         "p3", "p4");
     @DataPoint
-    public static final IsActiveTestCase TC_11 = new IsActiveTestCase("none of profiles are active but all params are negated",
-        true, "!p1,!p2,!p3", "p4");
+    public static final IsActiveTestCase TC_10 = new IsActiveTestCase("all profiles are active", true, "p1,p2,p3", "p1",
+        "p2", "p3", "p4");
+    @DataPoint
+    public static final IsActiveTestCase TC_11 = new IsActiveTestCase(
+        "none of profiles are active but all params are negated", true, "!p1,!p2,!p3", "p4");
     @DataPoint
     public static final IsActiveTestCase TC_12 = new IsActiveTestCase("no profiles are active", false, "p1");
     @DataPoint
-    public static final IsActiveTestCase TC_13 = new IsActiveTestCase("no profiles are active but param is negated", true,
-        "!p1");
+    public static final IsActiveTestCase TC_13 = new IsActiveTestCase("no profiles are active but param is negated",
+        true, "!p1");
 
     private String[] activeProfiles;
     @Mock
@@ -138,6 +139,19 @@ public class SpringProfileActivationStrategyTest {
         assertEquals(SpringProfileActivationStrategy.PARAM_PROFILES, parameter.getName());
         assertTrue(Strings.isNotBlank(parameter.getLabel()));
         assertTrue(Strings.isNotBlank(parameter.getDescription()));
+    }
+
+    @Test
+    public void testGetTokenParameterName() {
+        assertEquals(SpringProfileActivationStrategy.PARAM_PROFILES, strategy.getTokenParameterName());
+    }
+
+    @Test
+    public void testGetTokenParameterTransformer() {
+        TokenTransformer transformer = strategy.getTokenParameterTransformer();
+
+        assertNotNull(transformer);
+        assertEquals("foo", transformer.transform("FOO"));
     }
 
     public enum TestFeatures implements Feature {
