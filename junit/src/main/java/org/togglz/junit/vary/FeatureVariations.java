@@ -1,17 +1,17 @@
 package org.togglz.junit.vary;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import org.junit.runner.Runner;
-import org.junit.runners.Suite;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 import org.togglz.core.Feature;
+import org.togglz.core.context.FeatureContext;
+import org.togglz.testing.TestFeatureManager;
+import org.togglz.testing.TestFeatureManagerProvider;
 
 /**
  * <p>
@@ -54,48 +54,84 @@ import org.togglz.core.Feature;
  * 
  * @author Christian Kaltepoth
  */
-public class FeatureVariations extends Suite {
+public class FeatureVariations extends BlockJUnit4ClassRunner {
 
-    protected List<Runner> runners = new ArrayList<Runner>();
-
-    public FeatureVariations(Class<?> clazz) throws InitializationError {
-        super(clazz, Collections.<Runner> emptyList());
-
-        TestClass testClass = new TestClass(clazz);
-
-        VariationSetBuilder<? extends Feature> permutation = getPermutationFromMethod(testClass);
-        if (permutation == null) {
-            throw new IllegalStateException("You have to place a @" + Variations.class.getSimpleName()
-                    + " annotation one the class: " + clazz.getName());
-        }
-
-        for (Set<? extends Feature> activeFeatures : permutation.getVariants()) {
-            runners.add(new VariationRunner(clazz, permutation.getFeatureClass(), activeFeatures));
-        }
-
-    }
-
-    private VariationSetBuilder<? extends Feature> getPermutationFromMethod(TestClass testClass) {
-
-        List<FrameworkMethod> methods = testClass.getAnnotatedMethods(Variations.class);
-        for (FrameworkMethod method : methods) {
-            int modifiers = method.getMethod().getModifiers();
-            if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers)) {
-                try {
-                    return (VariationSetBuilder) method.invokeExplosively(null);
-                } catch (Throwable e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        }
-        throw new IllegalStateException("Could not find public static method annotated with @"
-                + Variations.class.getSimpleName() + " on class: " + testClass.getName());
-
+    public FeatureVariations(Class<?> klass) throws InitializationError {
+        super(klass);
     }
 
     @Override
-    protected List<Runner> getChildren() {
-        return runners;
+    protected void collectInitializationErrors(List<Throwable> errors) {
+        super.collectInitializationErrors(errors);
+
+        validateVariationsFields(errors);
     }
 
+    private void validateVariationsFields(List<Throwable> errors) {
+        List<FrameworkMethod> methods = getTestClass().getAnnotatedMethods(Variations.class);
+
+        for (FrameworkMethod method : methods) {
+            int modifiers = method.getMethod().getModifiers();
+
+            if (!Modifier.isPublic(modifiers)) {
+                errors.add(new Error("Variations method " + method.getName() + " must be public"));
+            }
+            if (!Modifier.isStatic(modifiers)) {
+                errors.add(new Error("Variations method " + method.getName() + " must be static"));
+            }
+        }
+
+        if (methods.size() != 1) {
+            errors.add(new Error("@" + Variations.class.getSimpleName() + " annotation must be present on a single"
+                + "method in the class: " + getTestClass().getName()));
+        }
+    }
+
+    @Override
+    protected Statement methodBlock(FrameworkMethod method) {
+        return new VariationAnchor(method);
+    }
+
+    public class VariationAnchor extends Statement {
+
+        private final FrameworkMethod method;
+
+        public VariationAnchor(FrameworkMethod method) {
+            this.method = method;
+        }
+
+        @Override
+        public void evaluate() throws Throwable {
+            TestClass testClass = getTestClass();
+            FrameworkMethod permutationMethod = testClass.getAnnotatedMethods(Variations.class).get(0);
+            VariationSetBuilder<? extends Feature> permutation;
+
+            try {
+                permutation = (VariationSetBuilder) permutationMethod.invokeExplosively(null);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+
+            for (Set<? extends Feature> activeFeatures : permutation.getVariants()) {
+                evaluateInternal(permutation.getFeatureClass(), activeFeatures);
+            }
+        }
+
+        private void evaluateInternal(Class<? extends Feature> featureClass, Set<? extends Feature> activeFeatures)
+            throws Throwable {
+            try {
+                TestFeatureManager featureManager = new TestFeatureManager(featureClass);
+                for (Feature feature : activeFeatures) {
+                    featureManager.enable(feature);
+                }
+
+                TestFeatureManagerProvider.setFeatureManager(featureManager);
+                FeatureContext.clearCache();
+
+                FeatureVariations.super.methodBlock(method).evaluate();
+            } finally {
+                TestFeatureManagerProvider.setFeatureManager(null);
+            }
+        }
+    }
 }
