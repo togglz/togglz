@@ -132,6 +132,26 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
+      <artifactId>togglz-dynamodb</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-mobile</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-cloud-datastore</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-amazon-s3</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
       <artifactId>togglz-slack</artifactId>
       <version>${project.version}</version>
     </dependency>
