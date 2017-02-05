@@ -34,6 +34,6 @@ public class DeltaSpikePropertyActivationStrategy extends AbstractPropertyDriven
 
     @Override
     protected String getPropertyValue(FeatureState featureState, FeatureUser user, String name) {
-        return ConfigResolver.getPropertyValue(name);
+        return ConfigResolver.getProjectStageAwarePropertyValue(name);
     }
 }

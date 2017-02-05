@@ -17,6 +17,11 @@ public class TestConfigSourceProvider implements ConfigSourceProvider {
         }
 
         @Override
+        public Map<String, String> getProperties() {
+            return properties;
+        }
+
+        @Override
         public String getPropertyValue(String key) {
             return getProperty(key);
         }
@@ -24,6 +29,11 @@ public class TestConfigSourceProvider implements ConfigSourceProvider {
         @Override
         public String getConfigName() {
             return "test";
+        }
+
+        @Override
+        public boolean isScannable() {
+            return true;
         }
     };
     private static final Map<String, String> properties = new HashMap<>();
