@@ -17,24 +17,9 @@
   </properties>
 
   <dependencies>
-
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-cdi</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.enterprise</groupId>
-      <artifactId>cdi-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.deltaspike.modules</groupId>
-      <artifactId>deltaspike-security-module-api</artifactId>
-      <version>${deltaspike.version}</version>
-      <scope>provided</scope>
+      <artifactId>togglz-core</artifactId>
     </dependency>
 
     <dependency>
