@@ -11,12 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.util.FeatureStateStorageWrapper;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static org.togglz.core.util.FeatureStateStorageWrapper.featureStateForWrapper;
 
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
     private static final Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
@@ -74,7 +76,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     @Override
     public void setFeatureState(FeatureState featureState) {
-        FeatureStateStorageWrapper wrapper = wrapperForFeatureState(featureState);
+        FeatureStateStorageWrapper wrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
         try {
             String json = objectMapper.writeValueAsString(wrapper);
             String path = featuresZnode + "/" + featureState.getFeature().name();
@@ -140,25 +142,6 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     }
 
 
-    private FeatureStateStorageWrapper wrapperForFeatureState(FeatureState featureState) {
-        FeatureStateStorageWrapper wrapper = new FeatureStateStorageWrapper();
-        wrapper.setEnabled(featureState.isEnabled());
-        wrapper.setStrategyId(featureState.getStrategyId());
-        wrapper.getParameters().putAll(featureState.getParameterMap());
-
-        return wrapper;
-    }
-
-    private FeatureState featureStateForWrapper(Feature feature, FeatureStateStorageWrapper wrapper) {
-        FeatureState featureState = new FeatureState(feature);
-        featureState.setEnabled(wrapper.isEnabled());
-        featureState.setStrategyId(wrapper.getStrategyId());
-        for (Map.Entry<String, String> e : wrapper.getParameters().entrySet()) {
-            featureState.setParameter(e.getKey(), e.getValue());
-        }
-
-        return featureState;
-    }
 
     public static Builder newBuilder(CuratorFramework curatorFramework, String featuresZnode) {
         return new Builder(curatorFramework, featuresZnode);

@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.util.FeatureStateStorageWrapper;
 
 import java.io.IOException;
 import java.util.Collections;

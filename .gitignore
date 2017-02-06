@@ -8,4 +8,6 @@ generated-sources/
 .idea/
 *.iml
 *.ipr
+*.versionsBackup
+*.orig
 test-output

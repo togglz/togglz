@@ -22,8 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.Endpoint;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +36,12 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.togglz.console.TogglzConsoleServlet;
+import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
+import org.togglz.core.logging.Log;
+import org.togglz.core.logging.LogFactory;
+import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -52,6 +56,7 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
+import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 import org.togglz.spring.web.FeatureInterceptor;
 
@@ -67,24 +72,10 @@ import java.util.Properties;
  */
 @Configuration
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
-@Conditional({TogglzAutoConfiguration.OnFeatureProviderBeanOrFeatureEnumsProperty.class})
 @EnableConfigurationProperties(TogglzProperties.class)
 public class TogglzAutoConfiguration {
 
-    static class OnFeatureProviderBeanOrFeatureEnumsProperty extends AnyNestedCondition {
-
-        public OnFeatureProviderBeanOrFeatureEnumsProperty() {
-            super(ConfigurationPhase.REGISTER_BEAN);
-        }
-
-        @ConditionalOnBean(FeatureProvider.class)
-        static class OnFeatureProviderBean {
-        }
-
-        @ConditionalOnProperty(prefix = "togglz", name = "feature-enums")
-        static class OnFeatureEnumsProperty {
-        }
-    }
+    private static final Log log = LogFactory.getLog(TogglzAutoConfiguration.class);
 
     @Bean
     public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener() {
@@ -93,7 +84,6 @@ public class TogglzAutoConfiguration {
 
     @Configuration
     @ConditionalOnMissingBean(FeatureProvider.class)
-    @ConditionalOnProperty(prefix = "togglz", name = "feature-enums")
     protected static class FeatureProviderConfiguration {
 
         @Autowired
@@ -101,7 +91,13 @@ public class TogglzAutoConfiguration {
 
         @Bean
         public FeatureProvider featureProvider() {
-            return new EnumBasedFeatureProvider(properties.getFeatureEnums());
+            Class<? extends Feature>[] featureEnums = properties.getFeatureEnums();
+            if (featureEnums != null && featureEnums.length > 0) {
+                return new EnumBasedFeatureProvider(featureEnums);
+            } else {
+                log.warn("Creating a dummy feature provider as neither a FeatureProvider bean was provided nor the 'togglz.feature-enums' property was set!");
+                return new EmptyFeatureProvider();
+            }
         }
     }
 
@@ -209,7 +205,7 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({EnableWebSecurity.class, AuthenticationEntryPoint.class})
+    @ConditionalOnClass({EnableWebSecurity.class, AuthenticationEntryPoint.class, SpringSecurityUserProvider.class})
     @ConditionalOnMissingBean(UserProvider.class)
     protected static class SpringSecurityUserProviderConfiguration {
 
@@ -225,7 +221,7 @@ public class TogglzAutoConfiguration {
     @Configuration
     @ConditionalOnWebApplication
     @ConditionalOnClass(TogglzConsoleServlet.class)
-    @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+    @Conditional(OnConsoleAndNotUseManagementPort.class)
     protected static class TogglzConsoleConfiguration {
 
         @Autowired
@@ -239,6 +235,22 @@ public class TogglzAutoConfiguration {
             servlet.setSecured(properties.getConsole().isSecured());
             return new ServletRegistrationBean(servlet, urlMapping);
         }
+    }
+
+    static class OnConsoleAndNotUseManagementPort extends AllNestedConditions {
+
+        OnConsoleAndNotUseManagementPort() {
+            super(ConfigurationPhase.REGISTER_BEAN);
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+        static class OnConsole {
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "false")
+        static class OnNotUseManagementPort {
+        }
+
     }
 
     @Configuration

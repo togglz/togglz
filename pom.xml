@@ -10,7 +10,7 @@
 
   <groupId>org.togglz</groupId>
   <artifactId>togglz-project</artifactId>
-  <version>2.3.0-SNAPSHOT</version>
+  <version>2.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Togglz</name>
@@ -46,7 +46,7 @@
     <wildfly.version>8.2.1.Final</wildfly.version>
 
     <!-- Set version of OSGi bundles without 'SNAPSHOT', etc. -->
-    <osgi.bundles.version>2.3.0</osgi.bundles.version>
+    <osgi.bundles.version>2.4.0</osgi.bundles.version>
 
     <spring.version>3.2.17.RELEASE</spring.version>
   </properties>
@@ -179,6 +179,7 @@
     <module>jsf</module>
     <module>jsp</module>
     <module>appengine</module>
+    <module>cloud-datastore</module>
     <module>archaius</module>
     <module>mongodb</module>
     <module>testing</module>
@@ -187,7 +188,11 @@
     <module>cassandra</module>
     <module>hazelcast</module>
     <module>zookeeper</module>
+    <module>dynamodb</module>
+    <module>amazon-s3</module>
     <module>benchmarks</module>
+    <module>spring-mobile</module>
+    <module>slack</module>
   </modules>
 
   <developers>
@@ -196,6 +201,12 @@
       <email>christian@kaltepoth.de</email>
       <name>Christian Kaltepoth</name>
       <timezone>CET</timezone>
+    </developer>
+    <developer>
+      <id>fabito</id>
+      <email>fabio.uechi@gmail.com</email>
+      <name>Fábio Franco Uechi</name>
+      <timezone>GMT-3</timezone>
     </developer>
   </developers>
 

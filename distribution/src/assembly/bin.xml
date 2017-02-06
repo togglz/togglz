@@ -48,6 +48,11 @@
         <include>org.togglz:togglz-cassandra:jar:*</include>
         <include>org.togglz:togglz-hazelcast:jar:*</include>
         <include>org.togglz:togglz-zookeeper:jar:*</include>
+        <include>org.togglz:togglz-dynamodb:jar:*</include>
+        <include>org.togglz:togglz-spring-mobile:jar:*</include>
+        <include>org.togglz:togglz-cloud-datastore:jar:*</include>
+        <include>org.togglz:togglz-amazon-s3:jar:*</include>
+        <include>org.togglz:togglz-slack:jar:*</include>
       </includes>
     </dependencySet>
 
