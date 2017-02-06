@@ -13,12 +13,22 @@
   <description>Togglz - Spring Boot Starter</description>
 
   <properties>
-    <hibernate-validator.version>5.2.2.Final</hibernate-validator.version>
     <spring-boot.version>1.5.1.RELEASE</spring-boot.version>
-    <spring-security.version>4.2.1.RELEASE</spring-security.version>
-	<spring.version>4.3.6.RELEASE</spring.version>
     <thymeleaf-togglz.version>1.0.1.RELEASE</thymeleaf-togglz.version>
   </properties>
+
+  <dependencyManagement>
+     <dependencies>
+        <dependency>
+            <!-- Import dependency management from Spring Boot -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <developers>
     <developer>
@@ -61,35 +71,30 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator</artifactId>
-      <version>${spring-boot.version}</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-configuration-processor</artifactId>
-        <version>${spring-boot.version}</version>
         <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-config</artifactId>
-      <version>${spring-security.version}</version>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>
-      <version>${spring-security.version}</version>
       <optional>true</optional>
     </dependency>
 
    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
-      <version>${spring.version}</version>
       <optional>true</optional>
     </dependency>
 
@@ -103,7 +108,6 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>${hibernate-validator.version}</version>
       <optional>true</optional>
     </dependency>
 
@@ -128,7 +132,6 @@
     <dependency>
         <artifactId>spring-boot-starter-test</artifactId>
         <groupId>org.springframework.boot</groupId>
-        <version>${spring-boot.version}</version>
         <scope>test</scope>
     </dependency>
 
@@ -141,7 +144,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test</artifactId>
-      <version>${spring-boot.version}</version>
     </dependency>
 
   </dependencies>
