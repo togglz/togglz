@@ -17,13 +17,13 @@
 package org.togglz.spring.boot.autoconfigure;
 
 import com.github.heneke.thymeleaf.togglz.TogglzDialect;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.Endpoint;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +32,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.togglz.console.TogglzConsoleServlet;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
@@ -55,6 +58,7 @@ import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.security.SpringSecurityUserProvider;
+import org.togglz.spring.web.FeatureInterceptor;
 
 import java.io.IOException;
 import java.util.List;
@@ -194,10 +198,6 @@ public class TogglzAutoConfiguration {
     @ConditionalOnMissingClass("org.springframework.security.config.annotation.web.configuration.EnableWebSecurity")
     @ConditionalOnMissingBean(UserProvider.class)
     protected static class UserProviderConfiguration {
-
-        @Autowired
-        private TogglzProperties properties;
-
         @Bean
         public UserProvider userProvider() {
             return new NoOpUserProvider();
@@ -254,14 +254,21 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
+    @ConditionalOnWebApplication
+    @ConditionalOnClass(HandlerInterceptorAdapter.class)
+    @ConditionalOnProperty(prefix = "togglz.web", name = "registerFeatureInterceptor", havingValue = "true")
+    protected static class TogglzFeatureInterceptorConfiguration extends WebMvcConfigurerAdapter {
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+            registry.addInterceptor(new FeatureInterceptor());
+        }
+    }
+
+    @Configuration
     @ConditionalOnClass(Endpoint.class)
     @ConditionalOnMissingBean(TogglzEndpoint.class)
     @ConditionalOnProperty(prefix = "togglz.endpoint", name = "enabled", matchIfMissing = true)
     protected static class TogglzEndpointConfiguration {
-
-        @Autowired
-        private TogglzProperties properties;
-
         @Bean
         public TogglzEndpoint togglzEndpoint(FeatureManager featureManager) {
             return new TogglzEndpoint(featureManager);
