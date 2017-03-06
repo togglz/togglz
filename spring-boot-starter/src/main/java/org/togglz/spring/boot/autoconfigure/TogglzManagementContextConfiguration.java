@@ -22,11 +22,14 @@ import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Configuration;
 import org.togglz.console.TogglzConsoleServlet;
 
 /**
@@ -40,20 +43,26 @@ import org.togglz.console.TogglzConsoleServlet;
 @EnableConfigurationProperties({TogglzProperties.class})
 public class TogglzManagementContextConfiguration {
 
-    @Autowired
-    private TogglzProperties properties;
-
-    @Autowired
-    private ManagementServerProperties managementServerProperties;
-
-    @Bean
+    @Configuration
+    @ConditionalOnWebApplication
+    @ConditionalOnClass(TogglzConsoleServlet.class)
     @Conditional(OnConsoleAndUseManagementPort.class)
-    public ServletRegistrationBean togglzConsole() {
-        String path = managementServerProperties.getContextPath() + properties.getConsole().getPath();
-        String urlMapping = (path.endsWith("/") ? path + "*" : path + "/*");
-        TogglzConsoleServlet servlet = new TogglzConsoleServlet();
-        servlet.setSecured(properties.getConsole().isSecured());
-        return new ServletRegistrationBean(servlet, urlMapping);
+    protected static class TogglzConsoleConfiguration {
+
+        @Autowired
+        private TogglzProperties properties;
+
+        @Autowired
+        private ManagementServerProperties managementServerProperties;
+
+        @Bean
+        public ServletRegistrationBean togglzConsole() {
+            String path = managementServerProperties.getContextPath() + properties.getConsole().getPath();
+            String urlMapping = (path.endsWith("/") ? path + "*" : path + "/*");
+            TogglzConsoleServlet servlet = new TogglzConsoleServlet();
+            servlet.setSecured(properties.getConsole().isSecured());
+            return new ServletRegistrationBean(servlet, urlMapping);
+        }
     }
 
     static class OnConsoleAndUseManagementPort extends AllNestedConditions {
