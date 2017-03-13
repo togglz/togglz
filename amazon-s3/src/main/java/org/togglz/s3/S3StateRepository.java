@@ -1,7 +1,7 @@
 package org.togglz.s3;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +30,7 @@ public class S3StateRepository implements StateRepository {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final AmazonS3Client client;
+    private final AmazonS3 client;
     private final String bucketName;
     private final String keyPrefix;
 
@@ -78,7 +78,7 @@ public class S3StateRepository implements StateRepository {
      * @param bucketName The name of the bucket to use
      * @return a Builder
      */
-    public static Builder newBuilder(AmazonS3Client client, String bucketName) {
+    public static Builder newBuilder(AmazonS3 client, String bucketName) {
         return new Builder(client, bucketName);
     }
 
@@ -87,7 +87,7 @@ public class S3StateRepository implements StateRepository {
      */
     public static class Builder {
 
-        private final AmazonS3Client client;
+        private final AmazonS3 client;
         private final String bucketName;
         private String keyPrefix = "togglz/";
 
@@ -97,7 +97,7 @@ public class S3StateRepository implements StateRepository {
          * @param client     the client instance to use for connecting to amazon s3
          * @param bucketName The name of the bucket to use
          */
-        public Builder(AmazonS3Client client, String bucketName) {
+        public Builder(AmazonS3 client, String bucketName) {
             this.client = client;
             this.bucketName = bucketName;
         }
