@@ -37,7 +37,7 @@
       Activation Strategy
     </label>
     <div class="col-sm-10">
-      <select id="strategy" name="strategy" size="1" class="form-control">
+      <select id="strategy" name="strategy" class="form-control">
         <option value="">- none -</option>
         ${foreach model.strategies strategy}
           <option value="${strategy.id}"
@@ -64,7 +64,7 @@
       </label>
       <div class="col-sm-10">
         ${if param.largeText}
-          <textarea id="${param.inputId}" name="${param.inputId}" class="form-control" rows="8">${param.value}</textarea>
+          <textarea id="${param.inputId}" name="${param.inputId}" class="form-control" rows="6">${param.value}</textarea>
         ${else}
           <input id="${param.inputId}" name="${param.inputId}" type="text" class="form-control" value="${param.value}"/>
         ${end}

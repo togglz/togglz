@@ -32,7 +32,7 @@
               <td class="feature-label">
                 <span title="${feature.name}">${feature.label}</span>
                 ${if feature.hasInfoLink}
-                  <a href="${feature.infoLink}">
+                  <a href="${feature.infoLink}" title="Info-Link">
                     <span class="glyphicon glyphicon-info-sign text-primary"></span>
                   </a>
                 ${end}
@@ -46,7 +46,7 @@
               </td>
               <td class="feature-status">
                 <span class="glyphicon glyphicon-lg glyphicon-${if feature.enabled}ok-sign feature-enabled${else}remove-sign feature-disabled${end}"
-                      title="The current state of ${feature.label}"></span>
+                      title="Current state of ${feature.label}: ${if feature.enabled}enabled${else}disabled${end}"></span>
               </td>
               <td class="feature-strategy">
                 ${feature.strategy.label}

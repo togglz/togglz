@@ -10,12 +10,12 @@ table.feature-overview td.feature-status, table.feature-overview th.feature-stat
 
 table.feature-overview td.feature-strategy, table.feature-overview th.feature-strategy {
     text-align: left;
-    width: 20%;
+    width: 30%;
 }
 
 table.feature-overview td.feature-actions, table.feature-overview th.feature-actions {
     text-align: center;
-    width: 20%;
+    width: 10%;
 }
 
 table.feature-overview td.feature-strategy ul.params,
@@ -23,6 +23,7 @@ table.feature-overview td.feature-label ul.attributes {
     list-style: none;
     font-size: small;
     color: gray;
+    margin-left: -25px;
 }
 
 .glyphicon-lg {
