@@ -18,24 +18,26 @@
   <input type="hidden" name="f" value="${model.name}" />
   
 
-  <div class="control-group">
-    <label class="control-label" for="enabled">
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="enabled">
       Enabled
     </label>
-    <div class="controls">
-      <label>
-        <input id="enabled" type="checkbox" name="enabled" value="enabled"
-            ${if model.enabled} checked="checked"${end}>
-      </label>
+    <div class="col-sm-10">
+      <div class="checkbox">
+        <label>
+          <input id="enabled" type="checkbox" name="enabled" value="enabled"
+                 ${if model.enabled} checked="checked"${end}>
+        </label>
+      </div>
     </div>
   </div>
 
-  <div class="control-group">
-    <label class="control-label" for="strategy">
+  <div class="form-group">
+    <label class="col-sm-2 control-label" for="strategy">
       Activation Strategy
     </label>
-    <div class="controls">
-      <select id="strategy" name="strategy" size="1">
+    <div class="col-sm-10">
+      <select id="strategy" name="strategy" size="1" class="form-control">
         <option value="">- none -</option>
         ${foreach model.strategies strategy}
           <option value="${strategy.id}"
@@ -55,28 +57,29 @@
   </script>
   
   ${foreach model.parameters param}
-    <div class="control-group param strategy${param.strategyIndex}"
+    <div class="form-group param strategy${param.strategyIndex}"
         ${if !param.visible} style="display: none;" ${end}>
-      <label class="control-label" for="${param.inputId}">
+      <label class="col-sm-2 control-label" for="${param.inputId}">
         ${param.label}
       </label>
-      <div class="controls">
+      <div class="col-sm-10">
         ${if param.largeText}
-          <textarea id="${param.inputId}" name="${param.inputId}" class="input-xxlarge" rows="8">${param.value}</textarea>
+          <textarea id="${param.inputId}" name="${param.inputId}" class="form-control" rows="8">${param.value}</textarea>
         ${else}
-          <input id="${param.inputId}" name="${param.inputId}" type="text" class="input-xxlarge" value="${param.value}"/>
+          <input id="${param.inputId}" name="${param.inputId}" type="text" class="form-control" value="${param.value}"/>
         ${end}
         ${if param.hasDescription}
           <span class="help-block">${param.description}</span>
         ${end}
-
       </div>
     </div>
   ${end}
   
-  <div class="form-actions">
-    <input type="submit" class="btn btn-primary" value="Save">
-    <a href="index" class="btn">Cancel</a>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <input type="submit" class="btn btn-primary" value="Save">
+      <a href="index" class="btn btn-default">Cancel</a>
+    </div>
   </div>
 
 </form>

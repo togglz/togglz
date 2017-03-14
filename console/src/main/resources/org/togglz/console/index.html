@@ -1,7 +1,7 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" role="tablist">
   ${foreach tabView.tabs tab}
-    <li class="${if tab.allTab}active${end}">
-      <a href="#tab${tab.index}" data-toggle="tab">
+    <li role="presentation" class="${if tab.allTab}active${end}">
+      <a href="#tab${tab.index}" role="tab" data-toggle="tab">
         ${if tab.allTab}
           All Features
         ${else}
@@ -15,7 +15,7 @@
 <div class="tab-content">
 
   ${foreach tabView.tabs tab}
-    <div class="tab-pane fade ${if tab.allTab}active in${end}" id="tab${tab.index}">
+    <div class="tab-pane fade ${if tab.allTab}active in${end}" id="tab${tab.index}" role="tabpanel">
       <table class="table table-striped feature-overview">
         <thead>
           <tr>

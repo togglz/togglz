@@ -9,26 +9,28 @@
     <script src="bootstrap.js"></script>
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="page-header">
+    <div class="container">
+      <div class="page-header text-center">
         <h1>Togglz</h1>
         ${if displayName}
         <h2>${displayName}</h2>
         ${end}
       </div>
-      <div class="row-fluid">
-        <div class="span12">
+      <div class="row">
+        <div class="col-sm-12">
           ${content}
         </div>
       </div>
     </div>
     <footer>
-      <div style="width: 100%; text-align: center;">
-        ${togglzTitle}
-        <br/>
-        <a href="http://www.togglz.org/">http://www.togglz.org/</a>
-        <br/>
-        ${serverInfo}
+      <div class="container">
+        <div class="text-center">
+          ${togglzTitle}
+          <br/>
+          <a href="http://www.togglz.org/">http://www.togglz.org/</a>
+          <br/>
+          ${serverInfo}
+        </div>
       </div>
     </footer>
   </body>

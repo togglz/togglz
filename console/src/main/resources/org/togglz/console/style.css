@@ -1,41 +1,26 @@
-.page-header {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.page-header h2 {
-  margin-bottom: 6px;
-}
-
 table.feature-overview td.feature-label, table.feature-overview th.feature-label {
-	text-align: left;
-}
-
-table.feature-overview td.feature-label ul.attributes {
-  list-style: none;
-  margin: 0 0 0 15px;
-  font-size: 9pt;
-  color: gray;
+    text-align: left;
+    width: 40%;
 }
 
 table.feature-overview td.feature-status, table.feature-overview th.feature-status {
-	text-align: center;
-  width: 15%;
+    text-align: center;
+    width: 20%;
 }
 
 table.feature-overview td.feature-strategy, table.feature-overview th.feature-strategy {
-	text-align: left;
-  width: 20%;
+    text-align: left;
+    width: 20%;
 }
 
 table.feature-overview td.feature-actions, table.feature-overview th.feature-actions {
-	text-align: center;
-	width: 20%;
+    text-align: center;
+    width: 20%;
 }
 
-table.feature-overview td.feature-strategy ul.params {
-  list-style: none;
-  margin: 0 0 0 15px;
-  font-size: 9pt;
-  color: gray;
+table.feature-overview td.feature-strategy ul.params,
+table.feature-overview td.feature-label ul.attributes {
+    list-style: none;
+    font-size: small;
+    color: gray;
 }
