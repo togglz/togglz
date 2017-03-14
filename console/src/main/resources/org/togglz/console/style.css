@@ -24,3 +24,15 @@ table.feature-overview td.feature-label ul.attributes {
     font-size: small;
     color: gray;
 }
+
+.glyphicon-lg {
+    font-size: x-large;
+}
+
+.feature-enabled {
+    color: #5cb85c;
+}
+
+.feature-disabled {
+    color: #d9534f
+}

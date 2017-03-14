@@ -12,7 +12,7 @@ import org.togglz.console.RequestHandlerBase;
 
 public class ResourceHandler extends RequestHandlerBase {
 
-    private final Pattern PATTERN = Pattern.compile(".*/(\\w+)\\.(css|js|png)$");
+    private final Pattern PATTERN = Pattern.compile(".*/(\\w+)\\.(css|js|png|eot|svg|ttf|woff|woff2)$");
 
     @Override
     public boolean handles(String path) {
@@ -47,6 +47,8 @@ public class ResourceHandler extends RequestHandlerBase {
                 response.setContentType("text/javascript");
             } else if ("png".equals(type)) {
                 response.setContentType("image/png");
+            } else {
+                response.setContentType("image/" + type);
             }
 
             copy(stream, response.getOutputStream());

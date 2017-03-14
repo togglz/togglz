@@ -33,7 +33,7 @@
                 <span title="${feature.name}">${feature.label}</span>
                 ${if feature.hasInfoLink}
                   <a href="${feature.infoLink}">
-                    <img src="info.png" alt="infolink"/>
+                    <span class="glyphicon glyphicon-info-sign text-primary"></span>
                   </a>
                 ${end}
                 ${if feature.hasAttributes}
@@ -45,8 +45,8 @@
                 ${end}
               </td>
               <td class="feature-status">
-                <img src="${if feature.enabled}ledgreen.png${else}ledred.png${end}" alt="toggle" 
-                    title="The current state of ${feature.label}" />
+                <span class="glyphicon glyphicon-lg glyphicon-${if feature.enabled}ok-sign feature-enabled${else}remove-sign feature-disabled${end}"
+                      title="The current state of ${feature.label}"></span>
               </td>
               <td class="feature-strategy">
                 ${feature.strategy.label}
@@ -62,7 +62,7 @@
               </td>
               <td class="feature-actions">
                 <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
-                  <img src="edit.png" alt="edit" />
+                  <span class="glyphicon glyphicon-lg glyphicon-cog text-muted"></span>
                 </a>
               </td>
             </tr>
