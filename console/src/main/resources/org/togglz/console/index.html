@@ -1,7 +1,7 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" role="tablist">
   ${foreach tabView.tabs tab}
-    <li class="${if tab.allTab}active${end}">
-      <a href="#tab${tab.index}" data-toggle="tab">
+    <li role="presentation" class="${if tab.allTab}active${end}">
+      <a href="#tab${tab.index}" role="tab" data-toggle="tab">
         ${if tab.allTab}
           All Features
         ${else}
@@ -15,7 +15,7 @@
 <div class="tab-content">
 
   ${foreach tabView.tabs tab}
-    <div class="tab-pane fade ${if tab.allTab}active in${end}" id="tab${tab.index}">
+    <div class="tab-pane fade ${if tab.allTab}active in${end}" id="tab${tab.index}" role="tabpanel">
       <table class="table table-striped feature-overview">
         <thead>
           <tr>
@@ -32,8 +32,8 @@
               <td class="feature-label">
                 <span title="${feature.name}">${feature.label}</span>
                 ${if feature.hasInfoLink}
-                  <a href="${feature.infoLink}">
-                    <img src="info.png" alt="infolink"/>
+                  <a href="${feature.infoLink}" title="Info-Link">
+                    <span class="glyphicon glyphicon-info-sign text-primary"></span>
                   </a>
                 ${end}
                 ${if feature.hasAttributes}
@@ -45,8 +45,8 @@
                 ${end}
               </td>
               <td class="feature-status">
-                <img src="${if feature.enabled}ledgreen.png${else}ledred.png${end}" alt="toggle" 
-                    title="The current state of ${feature.label}" />
+                <span class="glyphicon glyphicon-lg glyphicon-${if feature.enabled}ok-sign feature-enabled${else}remove-sign feature-disabled${end}"
+                      title="Current state of ${feature.label}: ${if feature.enabled}enabled${else}disabled${end}"></span>
               </td>
               <td class="feature-strategy">
                 ${feature.strategy.label}
@@ -62,7 +62,7 @@
               </td>
               <td class="feature-actions">
                 <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
-                  <img src="edit.png" alt="edit" />
+                  <span class="glyphicon glyphicon-lg glyphicon-cog text-muted"></span>
                 </a>
               </td>
             </tr>

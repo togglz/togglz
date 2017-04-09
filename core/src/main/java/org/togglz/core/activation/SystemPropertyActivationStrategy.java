@@ -49,12 +49,10 @@ public class SystemPropertyActivationStrategy implements ActivationStrategy{
                 {
                         ParameterBuilder.create(PARAM_PROPERTY_NAME)
                                 .label("System Property Name")
-                                .description("A system property name that can be set for which a feature should be active")
-                                .largeText(),
+                                .description("A system property name that can be set for which a feature should be active"),
                         ParameterBuilder.create(PARAM_PROPERTY_VALUE)
                                 .label("System Property Value")
                                 .description("Enable the feature when this value matches the system property value")
-                                .largeText()
                 };
     }
 }
