@@ -30,7 +30,7 @@ import org.togglz.core.user.FeatureUser;
  */
 public class DeltaSpikeProjectStageActivationStrategy extends AbstractTokenizedActivationStrategy {
 
-    public static final String ID = "delta-spike-project-stage";
+    public static final String ID = "deltaspike-project-stage";
     public static final String PARAM_STAGES = "stages";
 
     @Override

@@ -20,7 +20,7 @@ import org.togglz.core.user.FeatureUser;
  */
 public class DeltaSpikePropertyActivationStrategy extends AbstractPropertyDrivenActivationStrategy {
 
-    public static final String ID = "delta-spike-property";
+    public static final String ID = "deltaspike-property";
 
     @Override
     public String getId() {
