@@ -1,7 +1,6 @@
-package org.togglz.spring.activation;
+package org.togglz.deltaspike.activation;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,53 +9,40 @@ import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
-import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
+import org.togglz.deltaspike.TestConfigSourceProvider;
 
 /**
  * <p>
- * Tests for the {@link SpringEnvironmentPropertyActivationStrategy} class.
+ * Tests for the {@link DeltaSpikePropertyActivationStrategy} class.
  * </p>
  *
  * @author Alasdair Mercer
  */
 @RunWith(Theories.class)
-public class SpringEnvironmentPropertyActivationStrategyTest {
+public class DeltaSpikePropertyActivationStrategyTest {
 
     @DataPoints
     public static final boolean[] DATA_POINTS = { true, false };
 
-    @Mock
-    private ApplicationContext mockApplicationContext;
-    @Mock
-    private Environment mockEnvironment;
-
-    private SpringEnvironmentPropertyActivationStrategy strategy;
+    private DeltaSpikePropertyActivationStrategy strategy;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
-        when(mockApplicationContext.getEnvironment()).thenReturn(mockEnvironment);
-
-        strategy = new SpringEnvironmentPropertyActivationStrategy();
+        strategy = new DeltaSpikePropertyActivationStrategy();
     }
 
     @After
     public void tearDown() {
-        ContextClassLoaderApplicationContextHolder.release();
+        TestConfigSourceProvider.clearProperties();
     }
 
     @Test
     public void testGetId() {
-        assertEquals(SpringEnvironmentPropertyActivationStrategy.ID, strategy.getId());
+        assertEquals(DeltaSpikePropertyActivationStrategy.ID, strategy.getId());
     }
 
     @Test
@@ -68,9 +54,7 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
     public void testIsActiveWithNoParam(boolean enabled) {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
 
-        ContextClassLoaderApplicationContextHolder.bind(mockApplicationContext);
-
-        when(mockEnvironment.getProperty("togglz.FEATURE_ONE")).thenReturn(String.valueOf(enabled));
+        TestConfigSourceProvider.putProperty("togglz.FEATURE_ONE", String.valueOf(enabled));
 
         assertEquals(enabled, strategy.isActive(featureState, null));
     }
@@ -79,20 +63,11 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
     public void testIsActiveWithParam(boolean enabled) {
         String paramValue = "foo";
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
-        featureState.setParameter(SpringEnvironmentPropertyActivationStrategy.PARAM_NAME, paramValue);
+        featureState.setParameter(DeltaSpikePropertyActivationStrategy.PARAM_NAME, paramValue);
 
-        ContextClassLoaderApplicationContextHolder.bind(mockApplicationContext);
-
-        when(mockEnvironment.getProperty(paramValue)).thenReturn(String.valueOf(enabled));
+        TestConfigSourceProvider.putProperty(paramValue, String.valueOf(enabled));
 
         assertEquals(enabled, strategy.isActive(featureState, null));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testIsActiveThrowsWhenNoApplicationContext() {
-        FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, true);
-
-        strategy.isActive(featureState, null);
     }
 
     @Test
@@ -104,7 +79,7 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
         Parameter parameter = parameters[0];
 
         assertNotNull(parameter);
-        assertEquals(SpringEnvironmentPropertyActivationStrategy.PARAM_NAME, parameter.getName());
+        assertEquals(DeltaSpikePropertyActivationStrategy.PARAM_NAME, parameter.getName());
         assertTrue(parameter.isOptional());
         assertTrue(Strings.isNotBlank(parameter.getLabel()));
         assertTrue(Strings.isNotBlank(parameter.getDescription()));

@@ -13,27 +13,13 @@
   <description>Togglz - DeltaSpike integration</description>
 
   <properties>
-    <deltaspike.version>0.2-incubating</deltaspike.version>
+    <deltaspike.version>1.7.2</deltaspike.version>
   </properties>
 
   <dependencies>
-
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-cdi</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.enterprise</groupId>
-      <artifactId>cdi-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.deltaspike.modules</groupId>
-      <artifactId>deltaspike-security-module-api</artifactId>
-      <version>${deltaspike.version}</version>
-      <scope>provided</scope>
+      <artifactId>togglz-core</artifactId>
     </dependency>
 
     <dependency>
@@ -43,6 +29,11 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
