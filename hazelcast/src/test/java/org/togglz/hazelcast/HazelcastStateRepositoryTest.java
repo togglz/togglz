@@ -16,20 +16,19 @@ public class HazelcastStateRepositoryTest {
 
 	@Test
 	public void testSetFeatureStateNotExisitingInMap() {
-		Feature feature = new NamedFeature("SAMPLE_FEATURE");
-		FeatureState featureState = new FeatureState(feature, true);
+		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
+		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
 		
-		FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
+		final FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
 		
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
-		
 	}
 
 	@Test
 	public void testSetFeatureStateExistingInMap() {
-		Feature feature = new NamedFeature("SAMPLE_FEATURE");
-		FeatureState featureState = new FeatureState(feature, true);
+		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
+		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
 		
 		FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
@@ -42,6 +41,5 @@ public class HazelcastStateRepositoryTest {
 		assertFalse(storedFeatureState.isEnabled());
 		
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
-		
 	}
 }
