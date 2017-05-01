@@ -31,8 +31,7 @@ public class HazelcastStateRepository implements StateRepository {
 	protected final Config hazelcastConfig;
 	protected final String mapName;
 
-	public HazelcastStateRepository(Config hazelcastConfig, String mapName)
-	{
+	public HazelcastStateRepository(Config hazelcastConfig, String mapName) {
 		this.mapName = mapName;
 		this.hazelcastConfig = hazelcastConfig;
 		hazelcastInstance=createHazelcastInstance();
@@ -46,30 +45,20 @@ public class HazelcastStateRepository implements StateRepository {
 	}
 
 	private HazelcastInstance createHazelcastInstance() {
-		if (hazelcastConfig != null) {
-			return Hazelcast.newHazelcastInstance(hazelcastConfig);
-
-		} else {
-			return Hazelcast.newHazelcastInstance();
-		}
+		return hazelcastConfig != null ?
+				Hazelcast.newHazelcastInstance(hazelcastConfig) :
+				Hazelcast.newHazelcastInstance();
 	}
 
 	@Override
-	public FeatureState getFeatureState(Feature feature) {
-
-		IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
-
-		FeatureState featureState = map.get(feature);
-
-		return featureState;
-
+	public FeatureState getFeatureState(final Feature feature) {
+		final IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
+		return map.get(feature);
 	}
 
 	@Override
-	public void setFeatureState(FeatureState featureState) {
-
-		IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
-
+	public void setFeatureState(final FeatureState featureState) {
+		final IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
 		map.set(featureState.getFeature(), featureState);
 	}
 
