@@ -273,6 +273,10 @@ public class TogglzAutoConfiguration {
         public TogglzEndpoint togglzEndpoint(FeatureManager featureManager) {
             return new TogglzEndpoint(featureManager);
         }
+        @Bean
+        public TogglzMvcEndpoint togglzMvcEndpoint(TogglzEndpoint togglzEndpoint) {
+            return new TogglzMvcEndpoint(togglzEndpoint);
+        }
     }
 
     @Configuration

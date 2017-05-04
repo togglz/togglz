@@ -2,23 +2,18 @@ package org.togglz.spring.boot.autoconfigure;
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter;
 import org.springframework.boot.actuate.endpoint.mvc.HypermediaDisabled;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Component
 public class TogglzMvcEnpoint extends EndpointMvcAdapter {
 
     private final TogglzEndpoint delegate;
 
-    @Inject
     public TogglzMvcEnpoint(TogglzEndpoint delegate) {
         super(delegate);
         this.delegate = delegate;
