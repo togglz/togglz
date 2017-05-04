@@ -87,7 +87,7 @@ public class KeyspaceBuilder {
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-            public synchronized void start() {
+            public synchronized void run() {
                 context.shutdown();
             }
         });
