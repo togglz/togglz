@@ -54,14 +54,31 @@ public class TogglzEndpoint extends AbstractEndpoint<List<TogglzEndpoint.TogglzF
         return features;
     }
 
-    public Optional<Feature> get(String name) {
-        return featureManager.getFeatures().stream().filter(f -> name.equals(f.name())).findFirst();
+    private Feature getFeature(String name) {
+        if (name == null) {
+            return null;
+        }
+        for (Feature feature : featureManager.getFeatures()) {
+            if (name.equals(feature.name())) {
+                return feature;
+            }
+        }
+        return null;
+    }
+
+    public TogglzFeature get(String name) {
+        Feature feature = getFeature(name);
+        if (feature == null) {
+            return null;
+        } else {
+            return new TogglzFeature(feature, featureManager.getFeatureState(feature));
+        }
     }
 
     public void enable(String name, boolean enabled) {
-        Optional<Feature> feature = get(name);
-        if (feature.isPresent()) {
-            featureManager.setFeatureState(new FeatureState(feature.get(), enabled));
+        Feature feature = getFeature(name);
+        if (feature != null) {
+            featureManager.setFeatureState(new FeatureState(feature, enabled));
         }
     }
 

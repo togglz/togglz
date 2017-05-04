@@ -7,20 +7,34 @@ import javax.inject.Inject;
 import org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter;
 import org.springframework.boot.actuate.endpoint.mvc.HypermediaDisabled;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Component
-public class TogglesMvcEnpoint extends EndpointMvcAdapter {
+public class TogglzMvcEnpoint extends EndpointMvcAdapter {
 
-    private final TogglesEndpoint delegate;
+    private final TogglzEndpoint delegate;
 
     @Inject
-    public TogglesMvcEnpoint(TogglesEndpoint delegate) {
+    public TogglzMvcEnpoint(TogglzEndpoint delegate) {
         super(delegate);
         this.delegate = delegate;
+    }
+
+    @ActuatorGetMapping("/{name:.*}")
+    @ResponseBody
+    @HypermediaDisabled
+    public Object get(@PathVariable String name) {
+        if (!this.delegate.isEnabled()) {
+            // Shouldn't happen - MVC endpoint shouldn't be registered when delegate's
+            // disabled
+            return getDisabledResponse();
+        }
+        TogglzEndpoint.TogglzFeature feature = this.delegate.get(name);
+        return feature == null ? ResponseEntity.notFound().build() : feature;
     }
 
     @ActuatorPostMapping("/{name:.*}")
