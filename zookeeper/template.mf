@@ -8,6 +8,6 @@ Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
  org.togglz.core.*;version="${osgi.bundles.version:default}",
- com.fasterxml.jackson.databind;version="2.7.4",
- org.apache.curator.framework.*;version="3.1.0",
- org.slf4j;version="1.7.21"
+ com.fasterxml.jackson.databind;version="2.7.9.1",
+ org.apache.curator.framework.*;version="3.3.0",
+ org.slf4j;version="1.7.25"
