@@ -73,7 +73,6 @@ public class CassandraStateRepository implements StateRepository {
 
     private final Keyspace keyspace;
     private final ColumnFamily<String, String> columnFamily;
-    private final boolean autoCreateColumnFamily;
     private final MapSerializer mapSerializer;
 
     public CassandraStateRepository(Keyspace keyspace) {
@@ -83,10 +82,9 @@ public class CassandraStateRepository implements StateRepository {
     private CassandraStateRepository(Builder builder) {
         this.keyspace = builder.keyspace;
         this.columnFamily = builder.columnFamily;
-        this.autoCreateColumnFamily = builder.autoCreateColumnFamily;
         this.mapSerializer = builder.mapSerializer;
 
-        if (autoCreateColumnFamily) {
+        if (builder.autoCreateColumnFamily) {
             initColumnFamily();
         }
     }
@@ -159,7 +157,7 @@ public class CassandraStateRepository implements StateRepository {
         Column<String> strategyValues = state.getColumnByName(STRATEGY_PARAMS_COLUMN);
 
         FeatureState featureState = new FeatureState(feature);
-        featureState.setEnabled(enabled != null ? enabled.getBooleanValue() : false);
+        featureState.setEnabled(enabled != null && enabled.getBooleanValue());
         featureState.setStrategyId(strategyId != null ? strategyId.getStringValue() : null);
 
         if (strategyValues != null) {
