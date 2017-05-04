@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-public class TogglzMvcEnpoint extends EndpointMvcAdapter {
+public class TogglzMvcEndpoint extends EndpointMvcAdapter {
 
     private final TogglzEndpoint delegate;
 
-    public TogglzMvcEnpoint(TogglzEndpoint delegate) {
+    public TogglzMvcEndpoint(TogglzEndpoint delegate) {
         super(delegate);
         this.delegate = delegate;
     }
