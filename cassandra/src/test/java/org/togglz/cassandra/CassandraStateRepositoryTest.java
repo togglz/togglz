@@ -112,7 +112,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 		assertThat(reflectionEquals(featureStateWithoutStrategy, loadedFeatureState), is(true));
 	}
 
-    private static enum TestFeature implements Feature {
+    private enum TestFeature implements Feature {
         FEATURE,
     }
 }
