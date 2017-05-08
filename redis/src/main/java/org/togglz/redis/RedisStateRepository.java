@@ -1,6 +1,5 @@
 package org.togglz.redis;
 
-import com.hazelcast.config.Config;
 import com.hazelcast.core.IMap;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -87,7 +86,7 @@ public class RedisStateRepository implements StateRepository {
     }
 
     /**
-     * Builder for a {@link HazelcastStateRepository}.
+     * Builder for a {@link RedisStateRepository}.
      */
     public static class Builder {
 
@@ -131,7 +130,7 @@ public class RedisStateRepository implements StateRepository {
         /**
          * Sets the Hazelcast configuration.
          *
-         * @param hazelcastConfig the Hazelcast configuration {@link Config}
+         * @param jedisPoolConfig the Jedis Pool configuration {@link JedisPoolConfig}
          */
         public Builder config(JedisPoolConfig jedisPoolConfig) {
             this.jedisPoolConfig = jedisPoolConfig;
