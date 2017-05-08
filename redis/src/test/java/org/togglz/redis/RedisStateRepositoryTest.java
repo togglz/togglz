@@ -12,7 +12,7 @@ import org.togglz.core.util.NamedFeature;
 
 public class RedisStateRepositoryTest {
 
-	private StateRepository stateRepository = RedisStateRepository.newBuilder().mapName("togglzMap").build();
+	private StateRepository stateRepository = RedisStateRepository.newBuilder().hostname("togglzMap").build();
 
 	@Test
 	public void testSetFeatureStateNotExisting() {
