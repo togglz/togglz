@@ -49,7 +49,10 @@ public class ClientIpActivationStrategy implements ActivationStrategy
          List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
 
          try {
-            String remoteAddr = request.getRemoteAddr();
+             String remoteAddr = request.getHeader("X-FORWARDED-FOR");
+             if(Strings.isBlank(remoteAddr)) {
+                 remoteAddr = request.getRemoteAddr();
+             }                                                   
             InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
             for (String part : parts) {
                if (part.equals(remoteAddr)) { // shortcut
@@ -107,25 +110,29 @@ public class ClientIpActivationStrategy implements ActivationStrategy
       }
 
       @Override
-      public boolean isValid(String address) {
-         if (Strings.isBlank(address)) {
+      public boolean isValid(String addresses) {
+         if (Strings.isBlank(addresses)) {
             return false;
          }
 
-         if (address.contains("/")) {
-            try {
-               new CIDRUtils(address);
-            } catch (UnknownHostException | IllegalArgumentException e) {
-               return false;
-            }
-         } else {
-            try {
-               InetAddress.getByName(address);
-            } catch (UnknownHostException e) {
-               return false;
-            }
-         }
+         List<String> addressList = Strings.splitAndTrim(addresses, ",");
          
+         for(String address : addressList) {
+             if (address.contains("/")) {
+                 try {
+                    new CIDRUtils(address);
+                 } catch (UnknownHostException | IllegalArgumentException e) {
+                    return false;
+                 }
+              } else {
+                 try {
+                    InetAddress.getByName(address);
+                 } catch (UnknownHostException e) {
+                    return false;
+                 }
+              }
+         }
+                                    
          return true;
       }
       
