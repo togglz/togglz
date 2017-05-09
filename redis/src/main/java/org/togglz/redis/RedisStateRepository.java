@@ -1,9 +1,13 @@
 package org.togglz.redis;
 
-import com.hazelcast.core.IMap;
+import java.util.Map;
+
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.repository.util.DefaultMapSerializer;
+import org.togglz.core.repository.util.MapSerializer;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
@@ -22,10 +26,10 @@ import redis.clients.jedis.Protocol;
  */
 public class RedisStateRepository implements StateRepository {
 
+    public static final String PREFIX = "togglz-";
     protected final JedisPool jedisPool;
     protected final JedisPoolConfig jedisPoolConfig;
     protected final String hostname;
-
 
     public RedisStateRepository(JedisPoolConfig jedisPoolConfig, String hostname) {
         this.jedisPoolConfig = jedisPoolConfig;
@@ -59,14 +63,30 @@ public class RedisStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(final Feature feature) {
-        final IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
-        return map.get(feature);
+        try (Jedis jedis = jedisPool.getResource()) {
+            final Map<String, String> map = jedis.hgetAll(PREFIX + feature.name());
+            if (map == null || map.size() == 0) {
+                return null;
+            }
+            final FeatureState featureState = new FeatureState(feature);
+            //TODO fill-in fields of featureState with values from map
+            return featureState;
+        }
     }
 
     @Override
     public void setFeatureState(final FeatureState featureState) {
-        final IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
-        map.set(featureState.getFeature(), featureState);
+        try (Jedis jedis = jedisPool.getResource()) {
+            //TODO extract const for prefix
+            final String featureKey = PREFIX +featureState.getFeature().name();
+            //TODO extract constants for keys
+            //TODO optimize boolean/string code
+            jedis.hset(featureKey, "enabled", featureState.isEnabled() ? "true": "false");
+            jedis.hset(featureKey, "strategy", featureState.getStrategyId());
+            //TODO extract mapSerializer as field
+            final MapSerializer mapSerializer = DefaultMapSerializer.multiline();
+            jedis.hset(featureKey, "parameters", mapSerializer.serialize(featureState.getParameterMap()));
+        }
     }
 
     /**
@@ -138,7 +158,7 @@ public class RedisStateRepository implements StateRepository {
         }
 
         /**
-         * Creates a new {@link HazelcastStateRepository} using the current
+         * Creates a new {@link RedisStateRepository} using the current
          * settings.
          */
         public RedisStateRepository build() {
