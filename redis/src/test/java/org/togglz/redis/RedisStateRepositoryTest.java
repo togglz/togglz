@@ -12,14 +12,14 @@ import org.togglz.core.util.NamedFeature;
 
 public class RedisStateRepositoryTest {
 
-	private StateRepository stateRepository = RedisStateRepository.newBuilder().hostname("togglzMap").build();
+	private StateRepository stateRepository = new RedisStateRepository();
 
 	@Test
 	public void testSetFeatureStateNotExisting() {
-		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
+		final Feature feature = new NamedFeature("A_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
+
 		stateRepository.setFeatureState(featureState);
-		
 		final FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
 		
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
@@ -27,10 +27,10 @@ public class RedisStateRepositoryTest {
 
 	@Test
 	public void testSetFeatureStateExisting() {
-		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
+		final Feature feature = new NamedFeature("A_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
+
 		stateRepository.setFeatureState(featureState);
-		
 		FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
 
 		assertTrue(storedFeatureState.isEnabled());
