@@ -57,11 +57,9 @@ public class RedisStateRepository implements StateRepository {
     public FeatureState getFeatureState(final Feature feature) {
         try (Jedis jedis = jedisPool.getResource()) {
             final Map<String, String> map = jedis.hgetAll(PREFIX + feature.name());
-            //TODO check if this if is necessary
-            if (map == null) {
+            if (map == null || map.size() == 0) {
                 return null;
             }
-
             final FeatureState featureState = new FeatureState(feature);
             featureState.setEnabled(Boolean.valueOf(map.get(ENABLED_FIELD)));
             featureState.setStrategyId(map.get(STRATEGY_FIELD));
@@ -73,7 +71,6 @@ public class RedisStateRepository implements StateRepository {
             }
             return featureState;
         }
-        //TODO return null
     }
 
     @Override
@@ -115,6 +112,7 @@ public class RedisStateRepository implements StateRepository {
          * Creates a new builder for a {@link RedisStateRepository}.
          */
         public Builder() {
+            // intentionally empty
         }
 
         /**
@@ -122,7 +120,7 @@ public class RedisStateRepository implements StateRepository {
          *
          * @param hostname the Redis hostname to use for storing feature states
          */
-        public Builder hostname(String hostname) {
+        public Builder hostname(final String hostname) {
             this.hostname = hostname;
             return this;
         }
@@ -132,7 +130,7 @@ public class RedisStateRepository implements StateRepository {
          *
          * @param jedisPoolConfig the Jedis Pool configuration {@link JedisPoolConfig}
          */
-        public Builder config(JedisPoolConfig jedisPoolConfig) {
+        public Builder config(final JedisPoolConfig jedisPoolConfig) {
             this.jedisPoolConfig = jedisPoolConfig;
             return this;
         }
@@ -142,7 +140,7 @@ public class RedisStateRepository implements StateRepository {
          *
          * @param mapSerializer the map serializer {@link MapSerializer}
          */
-        public Builder mapSerializer(MapSerializer mapSerializer) {
+        public Builder mapSerializer(final MapSerializer mapSerializer) {
             this.mapSerializer = mapSerializer;
             return this;
         }
