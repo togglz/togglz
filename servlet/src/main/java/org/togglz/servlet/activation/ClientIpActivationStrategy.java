@@ -40,38 +40,41 @@ public class ClientIpActivationStrategy implements ActivationStrategy
       return "IP address (client)";
    }
 
-   @Override
-   public boolean isActive(FeatureState featureState, FeatureUser user)
-   {
-      HttpServletRequest request = HttpServletRequestHolder.get();
-      if (request != null) {
+    @Override
+    public boolean isActive(FeatureState featureState, FeatureUser user) 
+    {
+        HttpServletRequest request = HttpServletRequestHolder.get();
+        if (request != null) {
 
-         List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
+            List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
 
-         try {
-            String remoteAddr = request.getRemoteAddr();
-            InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
-            for (String part : parts) {
-               if (part.equals(remoteAddr)) { // shortcut
-                  return true;
-               }
+            try {
+                String remoteAddr = request.getHeader("X-Forwarded-For");
+                if (Strings.isBlank(remoteAddr)) {
+                    remoteAddr = request.getRemoteAddr();
+                }
+                InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
+                for (String part : parts) {
+                    if (part.equals(remoteAddr)) { // shortcut
+                        return true;
+                    }
 
-               if (part.contains("/")) {
-                  CIDRUtils cidrUtil = new CIDRUtils(part);
-                  if (cidrUtil.isInRange(remoteInetAddress)) {
-                     return true;
-                  }
-               } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
-                  return true;
-               }
+                    if (part.contains("/")) {
+                        CIDRUtils cidrUtil = new CIDRUtils(part);
+                        if (cidrUtil.isInRange(remoteInetAddress)) {
+                            return true;
+                        }
+                    } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
+                        return true;
+                    }
+                }
+            } catch (UnknownHostException | IllegalArgumentException e) {
+                log.warn("Ignoring illegal IP address or CIDR range ");
             }
-         } catch (UnknownHostException | IllegalArgumentException e) {
-            log.warn("Ignoring illegal IP address or CIDR range ");
-         }
-      }
+        }
 
-      return false;
-   }
+        return false;
+    }
 
    @Override
    public Parameter[] getParameters()
@@ -107,25 +110,29 @@ public class ClientIpActivationStrategy implements ActivationStrategy
       }
 
       @Override
-      public boolean isValid(String address) {
-         if (Strings.isBlank(address)) {
+      public boolean isValid(String addresses) {
+         if (Strings.isBlank(addresses)) {
             return false;
          }
 
-         if (address.contains("/")) {
-            try {
-               new CIDRUtils(address);
-            } catch (UnknownHostException | IllegalArgumentException e) {
-               return false;
-            }
-         } else {
-            try {
-               InetAddress.getByName(address);
-            } catch (UnknownHostException e) {
-               return false;
-            }
-         }
+         List<String> addressList = Strings.splitAndTrim(addresses, ",");
          
+         for(String address : addressList) {
+             if (address.contains("/")) {
+                 try {
+                    new CIDRUtils(address);
+                 } catch (UnknownHostException | IllegalArgumentException e) {
+                    return false;
+                 }
+              } else {
+                 try {
+                    InetAddress.getByName(address);
+                 } catch (UnknownHostException e) {
+                    return false;
+                 }
+              }
+         }
+                                    
          return true;
       }
       
