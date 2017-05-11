@@ -1,7 +1,5 @@
 package org.togglz.redis;
 
-import java.util.Map;
-
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -11,6 +9,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.Protocol;
+
+import java.util.Map;
 
 /**
  * A state repository which stores the feature state in Redis.

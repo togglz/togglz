@@ -1,11 +1,5 @@
 package org.togglz.redis;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.IOException;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.After;
 import org.junit.Before;
@@ -17,6 +11,10 @@ import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.NamedFeature;
 import redis.clients.jedis.Protocol;
 import redis.embedded.RedisServer;
+
+import java.io.IOException;
+
+import static org.junit.Assert.*;
 
 public class RedisStateRepositoryTest {
 
