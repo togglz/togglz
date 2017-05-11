@@ -53,6 +53,7 @@
         <include>org.togglz:togglz-cloud-datastore:jar:*</include>
         <include>org.togglz:togglz-amazon-s3:jar:*</include>
         <include>org.togglz:togglz-slack:jar:*</include>
+        <include>org.togglz:togglz-redis:jar:*</include>
       </includes>
     </dependencySet>
 

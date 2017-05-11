@@ -417,6 +417,12 @@
 
       <dependency>
         <groupId>org.togglz</groupId>
+        <artifactId>togglz-redis</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
         <artifactId>togglz-zookeeper</artifactId>
         <version>${project.version}</version>
       </dependency>
