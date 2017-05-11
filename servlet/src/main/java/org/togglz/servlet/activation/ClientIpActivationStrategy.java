@@ -40,41 +40,41 @@ public class ClientIpActivationStrategy implements ActivationStrategy
       return "IP address (client)";
    }
 
-   @Override
-   public boolean isActive(FeatureState featureState, FeatureUser user)
-   {
-      HttpServletRequest request = HttpServletRequestHolder.get();
-      if (request != null) {
+    @Override
+    public boolean isActive(FeatureState featureState, FeatureUser user) 
+    {
+        HttpServletRequest request = HttpServletRequestHolder.get();
+        if (request != null) {
 
-         List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
+            List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
 
-         try {
-             String remoteAddr = request.getHeader("X-FORWARDED-FOR");
-             if(Strings.isBlank(remoteAddr)) {
-                 remoteAddr = request.getRemoteAddr();
-             }                                                   
-            InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
-            for (String part : parts) {
-               if (part.equals(remoteAddr)) { // shortcut
-                  return true;
-               }
+            try {
+                String remoteAddr = request.getHeader("X-Forwarded-For");
+                if (Strings.isBlank(remoteAddr)) {
+                    remoteAddr = request.getRemoteAddr();
+                }
+                InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
+                for (String part : parts) {
+                    if (part.equals(remoteAddr)) { // shortcut
+                        return true;
+                    }
 
-               if (part.contains("/")) {
-                  CIDRUtils cidrUtil = new CIDRUtils(part);
-                  if (cidrUtil.isInRange(remoteInetAddress)) {
-                     return true;
-                  }
-               } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
-                  return true;
-               }
+                    if (part.contains("/")) {
+                        CIDRUtils cidrUtil = new CIDRUtils(part);
+                        if (cidrUtil.isInRange(remoteInetAddress)) {
+                            return true;
+                        }
+                    } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
+                        return true;
+                    }
+                }
+            } catch (UnknownHostException | IllegalArgumentException e) {
+                log.warn("Ignoring illegal IP address or CIDR range ");
             }
-         } catch (UnknownHostException | IllegalArgumentException e) {
-            log.warn("Ignoring illegal IP address or CIDR range ");
-         }
-      }
+        }
 
-      return false;
-   }
+        return false;
+    }
 
    @Override
    public Parameter[] getParameters()
