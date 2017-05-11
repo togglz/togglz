@@ -8,7 +8,8 @@ Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
  org.togglz.core.*;version="${osgi.bundles.version:default}",
- com.netflix.astyanax.*;version="2.0.2",
- org.apache.commons.lang.*;version="2.4"
+ com.netflix.astyanax.*;version="3.9.0",
+ org.apache.cassandra.thrift.*;version="3.10",
+ org.apache.commons.lang3.*;version="3.5"
 
 

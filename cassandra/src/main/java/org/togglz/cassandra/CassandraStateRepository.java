@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -73,30 +73,28 @@ public class CassandraStateRepository implements StateRepository {
 
     private final Keyspace keyspace;
     private final ColumnFamily<String, String> columnFamily;
-    private final boolean autoCreateColumnFamily;
     private final MapSerializer mapSerializer;
 
-    public CassandraStateRepository(Keyspace keyspace) {
+    public CassandraStateRepository(final Keyspace keyspace) {
         this(new Builder(keyspace));
     }
 
-    private CassandraStateRepository(Builder builder) {
+    private CassandraStateRepository(final Builder builder) {
         this.keyspace = builder.keyspace;
         this.columnFamily = builder.columnFamily;
-        this.autoCreateColumnFamily = builder.autoCreateColumnFamily;
         this.mapSerializer = builder.mapSerializer;
 
-        if (autoCreateColumnFamily) {
+        if (builder.autoCreateColumnFamily) {
             initColumnFamily();
         }
     }
 
     private void initColumnFamily() {
         try {
-            KeyspaceDefinition keyspaceDefinition = keyspace.describeKeyspace();
+            final KeyspaceDefinition keyspaceDefinition = keyspace.describeKeyspace();
             if (keyspaceDefinition.getColumnFamily(columnFamily.getName()) == null) {
 
-                Map<String, Object> parameters = new HashMap<String, Object>();
+                final Map<String, Object> parameters = new HashMap<String, Object>();
                 parameters.put("default_validation_class", "UTF8Type");
                 parameters.put("key_validation_class", "UTF8Type");
                 parameters.put("comparator_type", "UTF8Type");
@@ -104,7 +102,7 @@ public class CassandraStateRepository implements StateRepository {
                 keyspace.createColumnFamily(columnFamily, parameters);
             }
         }
-        catch (ConnectionException e) {
+        catch (final ConnectionException e) {
             throw new RuntimeException(e);
         }
     }
@@ -112,7 +110,7 @@ public class CassandraStateRepository implements StateRepository {
     @Override
     public FeatureState getFeatureState(Feature feature) {
         try {
-            ColumnList<String> state = keyspace
+            final ColumnList<String> state = keyspace
                     .prepareQuery(columnFamily)
                     .getRow(feature.name())
                     .execute()
@@ -126,10 +124,10 @@ public class CassandraStateRepository implements StateRepository {
     }
 
     @Override
-    public void setFeatureState(FeatureState featureState) {
-        MutationBatch mutationBatch = keyspace.prepareMutationBatch().setConsistencyLevel(ConsistencyLevel.CL_QUORUM);
+    public void setFeatureState(final FeatureState featureState) {
+        final MutationBatch mutationBatch = keyspace.prepareMutationBatch().setConsistencyLevel(ConsistencyLevel.CL_QUORUM);
 
-        ColumnListMutation<String> mutation = mutationBatch
+        final ColumnListMutation<String> mutation = mutationBatch
             .withRow(columnFamily, featureState.getFeature().name())
             .putColumn(ENABLED_COLUMN, featureState.isEnabled());
 
@@ -139,32 +137,31 @@ public class CassandraStateRepository implements StateRepository {
         try {
             mutationBatch.execute();
         }
-        catch (ConnectionException e) {
+        catch (final ConnectionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void putOrDelete(ColumnListMutation<String> mutation, String column, String value) {
+    private void putOrDelete(final ColumnListMutation<String> mutation, final String column, final String value) {
         if (StringUtils.isBlank(value)) {
             mutation.deleteColumn(column);
-        }
-        else {
+        } else {
             mutation.putColumn(column, value);
         }
     }
 
     private FeatureState toFeatureState(Feature feature, ColumnList<String> state) {
-        Column<String> enabled = state.getColumnByName(ENABLED_COLUMN);
-        Column<String> strategyId = state.getColumnByName(STRATEGY_ID_COLUMN);
-        Column<String> strategyValues = state.getColumnByName(STRATEGY_PARAMS_COLUMN);
+        final Column<String> enabled = state.getColumnByName(ENABLED_COLUMN);
+        final Column<String> strategyId = state.getColumnByName(STRATEGY_ID_COLUMN);
+        final Column<String> strategyValues = state.getColumnByName(STRATEGY_PARAMS_COLUMN);
 
-        FeatureState featureState = new FeatureState(feature);
-        featureState.setEnabled(enabled != null ? enabled.getBooleanValue() : false);
+        final FeatureState featureState = new FeatureState(feature);
+        featureState.setEnabled(enabled != null && enabled.getBooleanValue());
         featureState.setStrategyId(strategyId != null ? strategyId.getStringValue() : null);
 
         if (strategyValues != null) {
-            Map<String, String> params = mapSerializer.deserialize(strategyValues.getStringValue());
-            for (Entry<String, String> entry : params.entrySet()) {
+            final Map<String, String> params = mapSerializer.deserialize(strategyValues.getStringValue());
+            for (final Entry<String, String> entry : params.entrySet()) {
                 featureState.setParameter(entry.getKey(), entry.getValue());
             }
         }
@@ -178,7 +175,7 @@ public class CassandraStateRepository implements StateRepository {
      * @param keyspace the {@link Keyspace} Togglz should use to query cassandra.
      * Can be created using the {@link KeyspaceBuilder}.
      */
-    public static Builder newBuilder(Keyspace keyspace) {
+    public static Builder newBuilder(final Keyspace keyspace) {
         return new Builder(keyspace);
     }
 
@@ -193,7 +190,7 @@ public class CassandraStateRepository implements StateRepository {
         private ColumnFamily<String, String> columnFamily = new ColumnFamily<String, String>(DEFAULT_COLUMN_FAMILY_NAME,
                 StringSerializer.get(), StringSerializer.get());
 
-        private Builder(Keyspace keyspace) {
+        private Builder(final Keyspace keyspace) {
             this.keyspace = keyspace;
         }
 
@@ -203,7 +200,7 @@ public class CassandraStateRepository implements StateRepository {
          *
          * @param autoCreate <code>true</code> if the table should be created automatically
          */
-        public Builder autoCreateColumnFamily(boolean autoCreate) {
+        public Builder autoCreateColumnFamily(final boolean autoCreate) {
             this.autoCreateColumnFamily = autoCreate;
             return this;
         }
@@ -214,7 +211,7 @@ public class CassandraStateRepository implements StateRepository {
          *
          * @param serializer The serializer to use
          */
-        public Builder mapSerializer(MapSerializer serializer) {
+        public Builder mapSerializer(final MapSerializer serializer) {
             this.mapSerializer = serializer;
             return this;
         }
@@ -224,7 +221,7 @@ public class CassandraStateRepository implements StateRepository {
          *
          * @param columnFamilyName column family name to use
          */
-        public Builder columnFamily(String columnFamilyName) {
+        public Builder columnFamily(final String columnFamilyName) {
             this.columnFamily =
                     new ColumnFamily<String, String>(columnFamilyName, StringSerializer.get(), StringSerializer.get());
             return this;

@@ -37,7 +37,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
     public void setupTest() throws Exception {
         EmbeddedCassandraServerHelper.startEmbeddedCassandra();
 
-        Keyspace keyspace = new KeyspaceBuilder("Test Cluster", "TogglzTest").setThriftPort(9171).build();
+        final Keyspace keyspace = new KeyspaceBuilder("Test Cluster", "TogglzTest").setThriftPort(9171).build();
         stateRepository = CassandraStateRepository.newBuilder(keyspace).build();
     }
 
@@ -56,19 +56,19 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 
     @Test
     public void testActivationStrategySavingAndLoading() {
-        FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
+        final FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
         savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
         savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
         stateRepository.setFeatureState(savedFeatureState);
 
-        FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
+        final FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
 
         assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
     }
 
     @Test
     public void testEnabledStateSavingAndLoading() {
-        FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE).enable();
+        final FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE).enable();
         stateRepository.setFeatureState(savedFeatureState);
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
@@ -81,9 +81,9 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 
     @Test
     public void testAutomaticCreationOfColumnFamily() throws ConnectionException {
-        String columnFamilyName = "I_dont_exist";
+        final String columnFamilyName = "I_dont_exist";
 
-        Keyspace keyspace = new KeyspaceBuilder("Test Cluster", "TogglzTest").setThriftPort(9171).build();
+        final Keyspace keyspace = new KeyspaceBuilder("Test Cluster", "TogglzTest").setThriftPort(9171).build();
         assertNull(keyspace.describeKeyspace().getColumnFamily(columnFamilyName));
 
         CassandraStateRepository.newBuilder(keyspace)
@@ -96,7 +96,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 
 	@Test
 	public void testRemovingOfActivationStrategy() throws ConnectionException {
-		FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
+		final FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
 		savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
 		savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
 		stateRepository.setFeatureState(savedFeatureState);
@@ -105,14 +105,14 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 		assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
 
 		// save same feature, but without activation strategy. should remove an existing one
-		FeatureState featureStateWithoutStrategy = new FeatureState(TestFeature.FEATURE);
+		final FeatureState featureStateWithoutStrategy = new FeatureState(TestFeature.FEATURE);
 		stateRepository.setFeatureState(featureStateWithoutStrategy);
 		loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
 
 		assertThat(reflectionEquals(featureStateWithoutStrategy, loadedFeatureState), is(true));
 	}
 
-    private static enum TestFeature implements Feature {
+    private enum TestFeature implements Feature {
         FEATURE,
     }
 }

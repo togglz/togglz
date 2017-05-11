@@ -41,7 +41,7 @@ public class KeyspaceBuilder {
      * @param clusterName Cassandra cluster name to use
      * @param keyspaceName Cassandra keyspace name to use
      */
-    public KeyspaceBuilder(String clusterName, String keyspaceName) {
+    public KeyspaceBuilder(final String clusterName, final String keyspaceName) {
         this.clusterName = clusterName;
         this.keyspaceName = keyspaceName;
     }
@@ -51,7 +51,7 @@ public class KeyspaceBuilder {
      *
      * @param seedHosts comma separated Cassandra cluster hosts list
      */
-    public KeyspaceBuilder setHosts(String seedHosts) {
+    public KeyspaceBuilder setHosts(final String seedHosts) {
         this.hosts = seedHosts;
         return this;
     }
@@ -61,7 +61,7 @@ public class KeyspaceBuilder {
      *
      * @param port thrift port
      */
-    public KeyspaceBuilder setThriftPort(int port) {
+    public KeyspaceBuilder setThriftPort(final int port) {
         this.thriftPort = port;
         return this;
     }
@@ -87,7 +87,7 @@ public class KeyspaceBuilder {
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-            public synchronized void start() {
+            public synchronized void run() {
                 context.shutdown();
             }
         });

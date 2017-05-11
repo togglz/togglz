@@ -13,7 +13,7 @@
     <description>Togglz - Apache Zookeeper Integration</description>
 
     <properties>
-        <curator.version>3.1.0</curator.version>
+        <curator.version>3.3.0</curator.version>
     </properties>
 
     <dependencies>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.4</version>
+            <version>2.7.9.1</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -49,13 +49,13 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.4</version>
+            <version>2.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
+            <version>1.7.25</version>
             <scope>test</scope>
         </dependency>
         <dependency>
