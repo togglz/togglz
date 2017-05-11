@@ -38,7 +38,7 @@ public class RedisStateRepositoryTest {
         final StateRepository stateRepository = new RedisStateRepository.Builder().
                 hostname(Protocol.DEFAULT_HOST).
                 config(null).
-                keyPrefix(RedisStateRepository.KEY_PREFIX).
+                keyPrefix("feature-toggles").
                 mapSerializer(DefaultMapSerializer.singleline()).
                 build();
         final Feature feature = new NamedFeature("A_FEATURE");
