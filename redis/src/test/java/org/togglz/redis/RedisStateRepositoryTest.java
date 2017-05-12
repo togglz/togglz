@@ -81,7 +81,6 @@ public class RedisStateRepositoryTest {
                 hostname(Protocol.DEFAULT_HOST).
                 config(null).
                 keyPrefix("feature-toggles-").
-                mapSerializer(DefaultMapSerializer.singleline()).
                 build();
     }
 }

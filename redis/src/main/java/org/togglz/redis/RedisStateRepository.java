@@ -3,8 +3,6 @@ package org.togglz.redis;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
-import org.togglz.core.repository.util.DefaultMapSerializer;
-import org.togglz.core.repository.util.MapSerializer;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -26,19 +24,18 @@ public class RedisStateRepository implements StateRepository {
     public static final String KEY_PREFIX = "togglz-";
     public static final String ENABLED_FIELD = "enabled";
     public static final String STRATEGY_FIELD = "strategy";
-    public static final String PARAMETERS_FIELD = "parameters";
+    public static final String PARAMETER_PREFIX = "parameter-";
+    public static final int PARAMETER_PREFIX_LENGTH = PARAMETER_PREFIX.length();
 
     protected final JedisPool jedisPool;
     protected final JedisPoolConfig jedisPoolConfig;
     protected final String hostname;
     protected final String keyPrefix;
-    protected final MapSerializer mapSerializer;
 
     private RedisStateRepository(final Builder builder) {
         jedisPoolConfig = builder.jedisPoolConfig;
         hostname = builder.hostname;
         keyPrefix = builder.keyPrefix;
-        mapSerializer = builder.mapSerializer;
         jedisPool = createJedisPool();
     }
 
@@ -50,18 +47,18 @@ public class RedisStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(final Feature feature) {
-        try (Jedis jedis = jedisPool.getResource()) {
-            final Map<String, String> map = jedis.hgetAll(keyPrefix + feature.name());
-            if (map == null || map.size() == 0) {
+        try (final Jedis jedis = jedisPool.getResource()) {
+            final Map<String, String> redisMap = jedis.hgetAll(keyPrefix + feature.name());
+            if (redisMap == null || redisMap.size() == 0) {
                 return null;
             }
             final FeatureState featureState = new FeatureState(feature);
-            featureState.setEnabled(Boolean.valueOf(map.get(ENABLED_FIELD)));
-            featureState.setStrategyId(map.get(STRATEGY_FIELD));
-            final String strategyParameters = map.get(PARAMETERS_FIELD);
-            if (strategyParameters != null) {
-                for (final Map.Entry<String, String> entry : mapSerializer.deserialize(strategyParameters).entrySet()) {
-                    featureState.setParameter(entry.getKey(), entry.getValue());
+            featureState.setEnabled(Boolean.valueOf(redisMap.get(ENABLED_FIELD)));
+            featureState.setStrategyId(redisMap.get(STRATEGY_FIELD));
+            for (final Map.Entry<String, String> entry : redisMap.entrySet()) {
+                final String key = entry.getKey();
+                if (key.startsWith(PARAMETER_PREFIX)) {
+                    featureState.setParameter(key.substring(PARAMETER_PREFIX_LENGTH), entry.getValue());
                 }
             }
             return featureState;
@@ -70,7 +67,7 @@ public class RedisStateRepository implements StateRepository {
 
     @Override
     public void setFeatureState(final FeatureState featureState) {
-        try (Jedis jedis = jedisPool.getResource()) {
+        try (final Jedis jedis = jedisPool.getResource()) {
             final String featureKey = keyPrefix + featureState.getFeature().name();
             jedis.hset(featureKey, ENABLED_FIELD, Boolean.toString(featureState.isEnabled()));
             final String strategyId = featureState.getStrategyId();
@@ -79,7 +76,9 @@ public class RedisStateRepository implements StateRepository {
             }
             final Map<String, String> parameterMap = featureState.getParameterMap();
             if (parameterMap != null) {
-                jedis.hset(featureKey, PARAMETERS_FIELD, mapSerializer.serialize(parameterMap));
+                for (final Map.Entry<String, String> entry : parameterMap.entrySet()) {
+                    jedis.hset(featureKey, PARAMETER_PREFIX + entry.getKey(), entry.getValue());
+                }
             }
         }
     }
@@ -102,7 +101,6 @@ public class RedisStateRepository implements StateRepository {
         private String hostname = Protocol.DEFAULT_HOST;
         private JedisPoolConfig jedisPoolConfig = null;
         private String keyPrefix = KEY_PREFIX;
-        private MapSerializer mapSerializer = DefaultMapSerializer.multiline();
 
         /**
          * Creates a new builder for a {@link RedisStateRepository}.
@@ -138,16 +136,6 @@ public class RedisStateRepository implements StateRepository {
          */
         public Builder keyPrefix(final String keyPrefix) {
             this.keyPrefix = keyPrefix;
-            return this;
-        }
-
-        /**
-         * Sets the map serializer to be used when encoding/decoding parameters of the feature strategy.
-         *
-         * @param mapSerializer the map serializer {@link MapSerializer}
-         */
-        public Builder mapSerializer(final MapSerializer mapSerializer) {
-            this.mapSerializer = mapSerializer;
             return this;
         }
 
