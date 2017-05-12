@@ -33,12 +33,7 @@ public class RedisStateRepositoryTest {
 
     @Test
     public void testGetFeatureStateNotExisting() {
-        final StateRepository stateRepository = new RedisStateRepository.Builder().
-                hostname(Protocol.DEFAULT_HOST).
-                config(null).
-                keyPrefix("feature-toggles").
-                mapSerializer(DefaultMapSerializer.singleline()).
-                build();
+        final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
 
         stateRepository.getFeatureState(feature);
@@ -49,7 +44,7 @@ public class RedisStateRepositoryTest {
 
     @Test
     public void testSetFeatureStateWithStrategyAndParameter() {
-        final StateRepository stateRepository = new RedisStateRepository();
+        final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
         final FeatureState featureState = new FeatureState(feature, true);
         featureState.setStrategyId("TIT_FOR_TAT");
@@ -63,7 +58,7 @@ public class RedisStateRepositoryTest {
 
     @Test
     public void testSetFeatureStateExisting() {
-        final StateRepository stateRepository = new RedisStateRepository();
+        final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
         final FeatureState featureState = new FeatureState(feature, true);
 
@@ -79,5 +74,14 @@ public class RedisStateRepositoryTest {
 
         assertFalse(storedFeatureState.isEnabled());
         assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
+    }
+
+    private RedisStateRepository aRedisStateRepository() {
+        return new RedisStateRepository.Builder().
+                hostname(Protocol.DEFAULT_HOST).
+                config(null).
+                keyPrefix("feature-toggles-").
+                mapSerializer(DefaultMapSerializer.singleline()).
+                build();
     }
 }

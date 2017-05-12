@@ -34,14 +34,6 @@ public class RedisStateRepository implements StateRepository {
     protected final String keyPrefix;
     protected final MapSerializer mapSerializer;
 
-    public RedisStateRepository() {
-        jedisPoolConfig = null;
-        hostname = Protocol.DEFAULT_HOST;
-        keyPrefix = KEY_PREFIX;
-        mapSerializer = DefaultMapSerializer.multiline();
-        jedisPool = createJedisPool();
-    }
-
     private RedisStateRepository(final Builder builder) {
         jedisPoolConfig = builder.jedisPoolConfig;
         hostname = builder.hostname;
