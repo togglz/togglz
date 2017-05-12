@@ -21,10 +21,10 @@ import java.util.Map;
  */
 public class RedisStateRepository implements StateRepository {
 
-    public static final String KEY_PREFIX = "togglz-";
+    public static final String KEY_PREFIX = "togglz:";
     public static final String ENABLED_FIELD = "enabled";
     public static final String STRATEGY_FIELD = "strategy";
-    public static final String PARAMETER_PREFIX = "parameter-";
+    public static final String PARAMETER_PREFIX = "parameter:";
     public static final int PARAMETER_PREFIX_LENGTH = PARAMETER_PREFIX.length();
 
     protected final JedisPool jedisPool;
