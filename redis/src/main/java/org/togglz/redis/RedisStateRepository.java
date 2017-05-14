@@ -1,14 +1,12 @@
 package org.togglz.redis;
 
+import java.util.Map;
+
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.Protocol;
-
-import java.util.Map;
 
 /**
  * A state repository which stores the feature state in Redis.
@@ -27,21 +25,11 @@ public class RedisStateRepository implements StateRepository {
     public static final int PARAMETER_PREFIX_LENGTH = PARAMETER_PREFIX.length();
 
     protected final JedisPool jedisPool;
-    protected final String hostname;
     protected final String keyPrefix;
 
     private RedisStateRepository(final Builder builder) {
-        hostname = builder.hostname;
         keyPrefix = builder.keyPrefix;
-        jedisPool = builder.jedisPool != null ?
-                builder.jedisPool :
-                jedisPoolFromConfig(builder.jedisPoolConfig);
-    }
-
-    private JedisPool jedisPoolFromConfig(final JedisPoolConfig jedisPoolConfig) {
-        return jedisPoolConfig != null ?
-                new JedisPool(jedisPoolConfig, hostname) :
-                new JedisPool();
+        jedisPool = builder.jedisPool != null ? builder.jedisPool : new JedisPool();
     }
 
     @Override
@@ -90,14 +78,13 @@ public class RedisStateRepository implements StateRepository {
      * <pre>
      *      StateRepository stateRepository =
      *         new RedisStateRepository.Builder().
-     *         hostname("host").
+     *         jedisPool(new JedisPool("hostname")).
+     *         keyPrefix("toggles:").
      *         build();
      * </pre>
      */
     public static class Builder {
 
-        private String hostname = Protocol.DEFAULT_HOST;
-        private JedisPoolConfig jedisPoolConfig = null;
         private JedisPool jedisPool = null;
         private String keyPrefix = "togglz:";
 
@@ -109,38 +96,17 @@ public class RedisStateRepository implements StateRepository {
         }
 
         /**
-         * Sets the Redis hostname to use.
-         *
-         * @param hostname the Redis hostname to use for storing feature states
-         */
-        public Builder hostname(final String hostname) {
-            this.hostname = hostname;
-            return this;
-        }
-
-        /**
-         * Sets the Jedis Pool configuration.
-         *
-         * @param jedisPoolConfig the Jedis Pool configuration {@link JedisPoolConfig}
-         */
-        public Builder poolConfig(final JedisPoolConfig jedisPoolConfig) {
-            this.jedisPoolConfig = jedisPoolConfig;
-            return this;
-        }
-
-        /**
-         * Sets the Jedis Pool explicitly.
-         * This overrides any Jedis Pool configuration {@link JedisPoolConfig} given using {@link RedisStateRepository.Builder#poolConfig(JedisPoolConfig)}.
+         * Sets the Jedis Pool.
          *
          * @param jedisPool the Jedis Pool {@link JedisPool}
          */
-        public Builder pool(final JedisPool jedisPool) {
+        public Builder jedisPool(final JedisPool jedisPool) {
             this.jedisPool = jedisPool;
             return this;
         }
 
         /**
-         * Sets the Redis key prefix to be used when getting or setting the feature state.
+         * Sets the Redis key prefix to be used when getting or setting the state of the features.
          *
          * @param keyPrefix the key prefix to be used in Redis
          */
