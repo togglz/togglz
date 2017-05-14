@@ -193,6 +193,7 @@
     <module>benchmarks</module>
     <module>spring-mobile</module>
     <module>slack</module>
+    <module>redis</module>
   </modules>
 
   <developers>
