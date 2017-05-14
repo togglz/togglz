@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
-import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.NamedFeature;
 import redis.clients.jedis.Protocol;
 import redis.embedded.RedisServer;
@@ -79,7 +78,7 @@ public class RedisStateRepositoryTest {
     private RedisStateRepository aRedisStateRepository() {
         return new RedisStateRepository.Builder().
                 hostname(Protocol.DEFAULT_HOST).
-                config(null).
+                poolConfig(null).
                 keyPrefix("feature-toggles-").
                 build();
     }

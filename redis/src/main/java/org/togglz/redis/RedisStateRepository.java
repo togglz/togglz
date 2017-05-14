@@ -27,18 +27,18 @@ public class RedisStateRepository implements StateRepository {
     public static final int PARAMETER_PREFIX_LENGTH = PARAMETER_PREFIX.length();
 
     protected final JedisPool jedisPool;
-    protected final JedisPoolConfig jedisPoolConfig;
     protected final String hostname;
     protected final String keyPrefix;
 
     private RedisStateRepository(final Builder builder) {
-        jedisPoolConfig = builder.jedisPoolConfig;
         hostname = builder.hostname;
         keyPrefix = builder.keyPrefix;
-        jedisPool = createJedisPool();
+        jedisPool = builder.jedisPool != null ?
+                builder.jedisPool :
+                jedisPoolFromConfig(builder.jedisPoolConfig);
     }
 
-    private JedisPool createJedisPool() {
+    private JedisPool jedisPoolFromConfig(final JedisPoolConfig jedisPoolConfig) {
         return jedisPoolConfig != null ?
                 new JedisPool(jedisPoolConfig, hostname) :
                 new JedisPool();
@@ -98,6 +98,7 @@ public class RedisStateRepository implements StateRepository {
 
         private String hostname = Protocol.DEFAULT_HOST;
         private JedisPoolConfig jedisPoolConfig = null;
+        private JedisPool jedisPool = null;
         private String keyPrefix = "togglz:";
 
         /**
@@ -122,8 +123,19 @@ public class RedisStateRepository implements StateRepository {
          *
          * @param jedisPoolConfig the Jedis Pool configuration {@link JedisPoolConfig}
          */
-        public Builder config(final JedisPoolConfig jedisPoolConfig) {
+        public Builder poolConfig(final JedisPoolConfig jedisPoolConfig) {
             this.jedisPoolConfig = jedisPoolConfig;
+            return this;
+        }
+
+        /**
+         * Sets the Jedis Pool explicitly.
+         * This overrides any Jedis Pool configuration {@link JedisPoolConfig} given using {@link RedisStateRepository.Builder#poolConfig(JedisPoolConfig)}.
+         *
+         * @param jedisPool the Jedis Pool {@link JedisPool}
+         */
+        public Builder pool(final JedisPool jedisPool) {
+            this.jedisPool = jedisPool;
             return this;
         }
 
