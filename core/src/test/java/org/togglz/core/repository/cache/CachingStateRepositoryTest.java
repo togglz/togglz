@@ -134,6 +134,26 @@ public class CachingStateRepositoryTest {
 
     }
 
+	@Test
+	public void testFailureInDelegateAfterExpirationShouldAnswerTheCachedValue() throws InterruptedException {
+		StateRepository repository = new CachingStateRepository(delegate, 500);
+
+		Mockito.when(delegate.getFeatureState(DummyFeature.TEST)).thenReturn(new FeatureState(DummyFeature.TEST, true), null);
+
+		// do a lookup
+		assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled());
+
+		// wait for the cache to expire
+		Thread.sleep(1000);
+
+		// do a lookup where the repository will return null
+		assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled());
+
+		// Check for the correct number of invocations
+		Mockito.verify(delegate, Mockito.times(2)).getFeatureState(DummyFeature.TEST);
+		Mockito.verifyNoMoreInteractions(delegate);
+	}
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldFailForNegativeTtl() {
         new CachingStateRepository(delegate, -1);

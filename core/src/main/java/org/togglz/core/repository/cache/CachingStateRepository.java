@@ -75,6 +75,10 @@ public class CachingStateRepository implements StateRepository {
 
         // no cache hit
         FeatureState featureState = delegate.getFeatureState(feature);
+		if (featureState == null && entry != null) {
+			// Return the cache entry if exist even if expired
+			return entry.getState() != null ? entry.getState().copy() : null;
+		}
 
         // cache the result (may be null)
         cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
