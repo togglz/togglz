@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class RedisStateRepository implements StateRepository {
 
-    public static final String KEY_PREFIX = "togglz:";
     public static final String ENABLED_FIELD = "enabled";
     public static final String STRATEGY_FIELD = "strategy";
     public static final String PARAMETER_PREFIX = "parameter:";
@@ -99,7 +98,7 @@ public class RedisStateRepository implements StateRepository {
 
         private String hostname = Protocol.DEFAULT_HOST;
         private JedisPoolConfig jedisPoolConfig = null;
-        private String keyPrefix = KEY_PREFIX;
+        private String keyPrefix = "togglz:";
 
         /**
          * Creates a new builder for a {@link RedisStateRepository}.
