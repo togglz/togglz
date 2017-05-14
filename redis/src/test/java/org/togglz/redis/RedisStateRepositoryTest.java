@@ -78,8 +78,7 @@ public class RedisStateRepositoryTest {
     private RedisStateRepository aRedisStateRepository() {
         return new RedisStateRepository.Builder().
                 hostname(Protocol.DEFAULT_HOST).
-                poolConfig(null).
-                keyPrefix("feature-toggles-").
+                keyPrefix("feature-toggles:").
                 build();
     }
 }
