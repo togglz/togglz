@@ -92,7 +92,6 @@ public class RedisStateRepository implements StateRepository {
      *      StateRepository stateRepository =
      *         new RedisStateRepository.Builder().
      *         hostname("host").
-     *         mapSerializer(DefaultMapSerializer.singleline()).
      *         build();
      * </pre>
      */
