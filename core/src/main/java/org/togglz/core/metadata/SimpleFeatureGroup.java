@@ -7,6 +7,8 @@ import org.togglz.core.Feature;
  */
 public class SimpleFeatureGroup implements FeatureGroup {
 
+    private static final long serialVersionUID = 1L;
+
     private final String label;
 
     public SimpleFeatureGroup(String label) {
