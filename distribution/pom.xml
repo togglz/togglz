@@ -141,6 +141,11 @@
       <artifactId>togglz-slack</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-redis</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <!-- Authentication Integration -->
     <dependency>

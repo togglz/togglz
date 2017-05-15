@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.togglz.redis
+Bundle-Vendor: http://www.togglz.org/
+Bundle-Version: ${osgi.bundles.version}
+Bundle-Name: ${project.name}
+Version-Patterns: default;pattern="[=.=.=, =.+1.0)"
+Import-Template:
+ org.togglz.core.*;version="${osgi.bundles.version:default}",
+ redis.clients.*;version="[2.9.0, 3.0)",
+ org.apache.commons.pool2.*;version="[2.4.2, 3.0)"
+

@@ -193,6 +193,7 @@
     <module>benchmarks</module>
     <module>spring-mobile</module>
     <module>slack</module>
+    <module>redis</module>
   </modules>
 
   <developers>
@@ -411,6 +412,12 @@
       <dependency>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-hazelcast</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-redis</artifactId>
         <version>${project.version}</version>
       </dependency>
 
