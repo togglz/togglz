@@ -17,125 +17,121 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Activation strategy that will use the IP address of the client to decide if a feature is active or not.
- * 
+ *
  * @author Christian Kaltepoth
  */
-public class ClientIpActivationStrategy implements ActivationStrategy
-{
-   private final Log log = LogFactory.getLog(ClientIpActivationStrategy.class);
+public class ClientIpActivationStrategy implements ActivationStrategy {
+    private final Log log = LogFactory.getLog(ClientIpActivationStrategy.class);
 
-   public static final String ID = "client-ip";
+    public static final String ID = "client-ip";
 
-   public static final String PARAM_IPS = "ips";
-
-   @Override
-   public String getId()
-   {
-      return ID;
-   }
-
-   @Override
-   public String getName()
-   {
-      return "IP address (client)";
-   }
+    public static final String PARAM_IPS = "ips";
 
     @Override
-    public boolean isActive(FeatureState featureState, FeatureUser user) 
-    {
-        HttpServletRequest request = HttpServletRequestHolder.get();
-        if (request != null) {
+    public String getId() {
+        return ID;
+    }
 
-            List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
+    @Override
+    public String getName() {
+        return "IP address (client)";
+    }
 
-            try {
-                String remoteAddr = request.getHeader("X-Forwarded-For");
-                if (Strings.isBlank(remoteAddr)) {
-                    remoteAddr = request.getRemoteAddr();
-                }
-                InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
-                for (String part : parts) {
-                    if (part.equals(remoteAddr)) { // shortcut
-                        return true;
-                    }
+    @Override
+    public boolean isActive(final FeatureState featureState, final FeatureUser user) {
+        final HttpServletRequest request = HttpServletRequestHolder.get();
+        if (request == null) {
+            return false;
+        }
 
-                    if (part.contains("/")) {
-                        CIDRUtils cidrUtil = new CIDRUtils(part);
-                        if (cidrUtil.isInRange(remoteInetAddress)) {
-                            return true;
-                        }
-                    } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
-                        return true;
-                    }
-                }
-            } catch (UnknownHostException | IllegalArgumentException e) {
-                log.warn("Ignoring illegal IP address or CIDR range ");
+        final List<String> parts = Strings.splitAndTrim(featureState.getParameter(PARAM_IPS), "[\\s,]+");
+
+        try {
+            String remoteAddr = request.getHeader("X-Forwarded-For");
+            if (Strings.isBlank(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
             }
+            final InetAddress remoteInetAddress = InetAddress.getByName(remoteAddr);
+            for (final String part : parts) {
+                if (part.equals(remoteAddr)) { // shortcut
+                    return true;
+                }
+
+                if (part.contains("/")) {
+                    final CIDRUtils cidrUtil = new CIDRUtils(part);
+                    if (cidrUtil.isInRange(remoteInetAddress)) {
+                        return true;
+                    }
+                } else if (remoteInetAddress.equals(InetAddress.getByName(part))) {
+                    return true;
+                }
+            }
+        } catch (UnknownHostException | IllegalArgumentException e) {
+            log.warn("Ignoring illegal IP address or CIDR range");
         }
 
         return false;
     }
 
-   @Override
-   public Parameter[] getParameters()
-   {
-      return new Parameter[] { new AddressParameter() };
-   }
+    @Override
+    public Parameter[] getParameters() {
+        return new Parameter[]{new AddressParameter()};
+    }
 
-   protected static class AddressParameter implements Parameter {
+    protected static class AddressParameter implements Parameter {
 
-      @Override
-      public String getName() {
-         return PARAM_IPS;
-      }
+        @Override
+        public String getName() {
+            return PARAM_IPS;
+        }
 
-      @Override
-      public String getLabel() {
-         return "Client IPs";
-      }
+        @Override
+        public String getLabel() {
+            return "Client IPs";
+        }
 
-      @Override
-      public String getDescription() {
-         return "A comma-separated list of client IPs or address ranges in CIDR notation (e.g. 10.1.2.0/24) for which the feature should be active.";
-      }
+        @Override
+        public String getDescription() {
+            return "A comma-separated list of client IPs or address ranges in CIDR notation (e.g. 10.1.2.0/24) for which the feature should be active.";
+        }
 
-      @Override
-      public boolean isOptional() {
-         return false;
-      }
-
-      @Override
-      public boolean isLargeText() {
-         return false;
-      }
-
-      @Override
-      public boolean isValid(String addresses) {
-         if (Strings.isBlank(addresses)) {
+        @Override
+        public boolean isOptional() {
             return false;
-         }
+        }
 
-         List<String> addressList = Strings.splitAndTrim(addresses, ",");
-         
-         for(String address : addressList) {
-             if (address.contains("/")) {
-                 try {
-                    new CIDRUtils(address);
-                 } catch (UnknownHostException | IllegalArgumentException e) {
-                    return false;
-                 }
-              } else {
-                 try {
-                    InetAddress.getByName(address);
-                 } catch (UnknownHostException e) {
-                    return false;
-                 }
-              }
-         }
-                                    
-         return true;
-      }
-      
-   }
+        @Override
+        public boolean isLargeText() {
+            return false;
+        }
+
+        @Override
+        public boolean isValid(final String addresses) {
+            if (Strings.isBlank(addresses)) {
+                return false;
+            }
+
+            final List<String> addressList = Strings.splitAndTrim(addresses, ",");
+
+            for (final String address : addressList) {
+                if (address.contains("/")) {
+                    try {
+                        new CIDRUtils(address);
+                    } catch (UnknownHostException | IllegalArgumentException e) {
+                        return false;
+                    }
+                } else {
+                    try {
+                        InetAddress.getByName(address);
+                    } catch (UnknownHostException e) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+    }
 
 }
