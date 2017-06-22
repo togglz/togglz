@@ -1,7 +1,7 @@
 <form action="edit" method="POST" class="form-horizontal">
 
   ${if !model.valid}
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
       <button type="button" class="close" data-dismiss="alert">×</button>
       ${foreach model.validationErrors error}
         <div>${error}</div>
