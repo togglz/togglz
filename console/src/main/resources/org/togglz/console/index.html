@@ -46,9 +46,12 @@
               </td>
               <td class="feature-status">
               	<form method="POST" action="edit">
-              		<input type="hidden" name="f" value="${feature.name}">
-              		<input type="hidden" name="enabled" value="${if feature.enabled}${else}enabled${end}">
-              		<input type="submit" class="btn btn-${if feature.enabled}success${else}danger${end}" value="${if feature.enabled}Enabled${else}Disabled${end}">
+                    ${foreach tokens token}
+                    <input type="hidden" name="${token.name}" value="${token.value}"/>
+                    ${end}
+                    <input type="hidden" name="f" value="${feature.name}">
+                    <input type="hidden" name="enabled" value="${if feature.enabled}${else}enabled${end}">
+                    <input type="submit" class="btn btn-sm btn-${if feature.enabled}success${else}danger${end}" value="${if feature.enabled}Enabled${else}Disabled${end}">
               	</form>
               </td>
               <td class="feature-strategy">
