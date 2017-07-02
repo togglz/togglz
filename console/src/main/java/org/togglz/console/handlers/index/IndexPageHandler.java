@@ -1,6 +1,7 @@
 package org.togglz.console.handlers.index;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,9 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.util.Services;
+import org.togglz.servlet.spi.CSRFToken;
+import org.togglz.servlet.spi.CSRFTokenProvider;
 
 import com.floreysoft.jmte.Engine;
 
@@ -42,7 +46,16 @@ public class IndexPageHandler extends RequestHandlerBase {
             tabView.add(feature, metadata, featureState);
         }
 
+        List<CSRFToken> tokens = new ArrayList<CSRFToken>();
+        for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
+            CSRFToken token = provider.getToken(event.getRequest());
+            if (token != null) {
+                tokens.add(token);
+            }
+        }
+
         Map<String, Object> model = new HashMap<String, Object>();
+        model.put("tokens", tokens);
         model.put("tabView", tabView);
 
         String template = getResourceAsString("index.html");

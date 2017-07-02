@@ -45,8 +45,14 @@
                 ${end}
               </td>
               <td class="feature-status">
-                <span class="glyphicon glyphicon-lg glyphicon-${if feature.enabled}ok-sign feature-enabled${else}remove-sign feature-disabled${end}"
-                      title="Current state of ${feature.label}: ${if feature.enabled}enabled${else}disabled${end}"></span>
+              	<form method="POST" action="edit">
+                    ${foreach tokens token}
+                    <input type="hidden" name="${token.name}" value="${token.value}"/>
+                    ${end}
+                    <input type="hidden" name="f" value="${feature.name}">
+                    <input type="hidden" name="enabled" value="${if feature.enabled}${else}enabled${end}">
+                    <input type="submit" class="btn btn-sm btn-${if feature.enabled}success${else}danger${end}" value="${if feature.enabled}Enabled${else}Disabled${end}">
+              	</form>
               </td>
               <td class="feature-strategy">
                 ${feature.strategy.label}
@@ -61,8 +67,8 @@
                 ${end}
               </td>
               <td class="feature-actions">
-                <a href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
-                  <span class="glyphicon glyphicon-lg glyphicon-cog text-muted"></span>
+                <a class="btn btn-sm btn-default" href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
+                  <span class="glyphicon glyphicon-cog text-muted"></span>
                 </a>
               </td>
             </tr>
