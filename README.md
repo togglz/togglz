@@ -12,7 +12,7 @@
 ## Contributors
 
 This project exists thanks to all the people who contribute. 
-<a href="graphs/contributors"><img src="https://opencollective.com/togglz/contributors.svg?width=890" /></a>
+<a href="../../graphs/contributors"><img src="https://opencollective.com/togglz/contributors.svg?width=890" /></a>
 
 
 ## Backers
