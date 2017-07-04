@@ -19,6 +19,7 @@ public class SystemPropertyActivationStrategyTest {
 
     @Before
     public void setup() {
+        System.clearProperty("foo.bar");
         setState("foo.bar", "true");
     }
 
