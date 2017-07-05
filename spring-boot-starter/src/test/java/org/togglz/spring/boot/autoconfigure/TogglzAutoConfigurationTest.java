@@ -16,6 +16,18 @@
 
 package org.togglz.spring.boot.autoconfigure;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
@@ -28,27 +40,19 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.togglz.core.Feature;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.manager.EmptyFeatureProvider;
 import org.togglz.core.manager.EnumBasedFeatureProvider;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.manager.PropertyFeatureProvider;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.file.FileBasedStateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
-import org.togglz.core.repository.property.PropertyBasedStateRepository;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for {@link TogglzAutoConfiguration}.
@@ -119,7 +123,7 @@ public class TogglzAutoConfigurationTest {
     @Test
     public void noFeatureProviderBeanAndFeatureEnumsProperty() {
         loadWithDefaults();
-        assertTrue(this.context.getBean(FeatureProvider.class) instanceof EmptyFeatureProvider);
+        assertTrue(this.context.getBean(FeatureProvider.class) instanceof PropertyFeatureProvider);
     }
 
     @Test
@@ -148,12 +152,12 @@ public class TogglzAutoConfigurationTest {
     @Test
     public void features() {
         loadWithDefaults(new Class[]{FeatureProviderConfig.class},
-                "togglz.features.FEATURE_ONE: true",
-                "togglz.features.FEATURE_TWO: false");
+                "togglz.features.FEATURE_ONE.enabled: true",
+                "togglz.features.FEATURE_TWO.enabled: false");
         FeatureManager featureManager = this.context.getBean(FeatureManager.class);
         assertTrue(featureManager.isActive(MyFeatures.FEATURE_ONE));
         assertFalse(featureManager.isActive(MyFeatures.FEATURE_TWO));
-        assertTrue(this.context.getBean(StateRepository.class) instanceof PropertyBasedStateRepository);
+        assertTrue(this.context.getBean(StateRepository.class) instanceof InMemoryStateRepository);
     }
 
     @Test
@@ -309,7 +313,8 @@ public class TogglzAutoConfigurationTest {
     @Configuration
     protected static class FeatureProviderConfig {
 
-        @Bean
+        @SuppressWarnings("unchecked")
+		@Bean
         public FeatureProvider featureProvider() {
             return new EnumBasedFeatureProvider(MyFeatures.class);
         }

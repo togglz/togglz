@@ -16,6 +16,11 @@
 
 package org.togglz.spring.boot.autoconfigure;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
 import org.springframework.boot.actuate.endpoint.Endpoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,10 +28,6 @@ import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * {@link Endpoint} to expose Togglz info.
@@ -51,10 +52,11 @@ public class TogglzEndpoint extends AbstractEndpoint<List<TogglzEndpoint.TogglzF
             FeatureState featureState = this.featureManager.getFeatureState(feature);
             features.add(new TogglzFeature(feature, featureState));
         }
+        Collections.sort(features);
         return features;
     }
 
-    public static class TogglzFeature {
+    public static class TogglzFeature implements Comparable<TogglzFeature> {
 
         private String name;
         private boolean enabled;
@@ -83,5 +85,10 @@ public class TogglzEndpoint extends AbstractEndpoint<List<TogglzEndpoint.TogglzF
         public Map<String, String> getParams() {
             return params;
         }
+
+		@Override
+		public int compareTo(TogglzFeature o) {
+			return name.compareTo(o.getName());
+		}
     }
 }
