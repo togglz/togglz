@@ -16,20 +16,18 @@
 
 package org.togglz.spring.boot.autoconfigure;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.util.EnvironmentTestUtils;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.togglz.core.Feature;
-import org.togglz.core.manager.EnumBasedFeatureProvider;
-import org.togglz.core.spi.FeatureProvider;
-
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests for {@link TogglzEndpoint}.
@@ -49,9 +47,9 @@ public class TogglzEndpointTest {
 
     @Test
     public void invoke() throws Exception {
-        load(new Class[]{FeatureProviderConfig.class, JacksonAutoConfiguration.class, TogglzAutoConfiguration.class},
-                "togglz.features.FEATURE_ONE: true",
-                "togglz.features.FEATURE_TWO: false",
+        load(new Class[]{JacksonAutoConfiguration.class, TogglzAutoConfiguration.class},
+                "togglz.features.FEATURE_ONE.enabled: true",
+                "togglz.features.FEATURE_TWO.enabled: false",
                 "togglz.features.FEATURE_TWO.strategy: release-date",
                 "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
                 "togglz.features.FEATURE_TWO.param.time: 08:30:00");
@@ -84,17 +82,4 @@ public class TogglzEndpointTest {
         this.context.refresh();
     }
 
-    protected enum MyFeatures implements Feature {
-        FEATURE_ONE,
-        FEATURE_TWO;
-    }
-
-    @Configuration
-    protected static class FeatureProviderConfig {
-
-        @Bean
-        public FeatureProvider featureProvider() {
-            return new EnumBasedFeatureProvider(MyFeatures.class);
-        }
-    }
 }

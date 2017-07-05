@@ -4,3 +4,7 @@ org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration
 
 org.springframework.boot.actuate.autoconfigure.ManagementContextConfiguration=\
 org.togglz.spring.boot.autoconfigure.TogglzManagementContextConfiguration
+
+# Test Execution Listeners
+org.springframework.test.context.TestExecutionListener=\
+org.togglz.spring.boot.test.TogglzTestExecutionListener
