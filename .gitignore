@@ -1,6 +1,7 @@
 *.classpath
 *.project
 *.settings
+*.factorypath
 *.DS_Store
 target/
 bin/
