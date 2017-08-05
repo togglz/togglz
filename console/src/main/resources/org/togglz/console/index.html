@@ -60,7 +60,7 @@
                   <ul class="params">
                   ${foreach feature.strategy.parameters param}
                     ${if param.hasValue}
-                      <li>${param.label}: ${param.value}</li>
+                      <li>${param.label}: ${param.valueEscaped}</li>
                     ${end}
                   ${end}
                   </ul>
