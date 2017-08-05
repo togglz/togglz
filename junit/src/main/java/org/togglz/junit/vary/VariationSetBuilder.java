@@ -133,7 +133,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     }
 
     private Set<Set<F>> deepCopy(Set<Set<F>> src) {
-        Set<Set<F>> copy = new HashSet<Set<F>>();
+        Set<Set<F>> copy = new LinkedHashSet<Set<F>>();
         for (Set<F> variant : src) {
             copy.add(new HashSet<F>(variant));
         }
