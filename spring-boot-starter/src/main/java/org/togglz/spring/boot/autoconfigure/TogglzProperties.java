@@ -29,6 +29,7 @@ import javax.validation.constraints.Pattern;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
@@ -39,6 +40,7 @@ import org.togglz.core.util.NamedFeature;
  * @author Marcel Overdijk
  */
 @ConfigurationProperties(prefix = "togglz", ignoreUnknownFields = true)
+@Validated
 public class TogglzProperties {
 
 	/**
