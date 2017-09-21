@@ -149,7 +149,7 @@ public class ZookeeperStateRepositoryTest {
             }
         }).start();
         latch.await(2, TimeUnit.SECONDS);
-        Thread.sleep(25);
+        Thread.sleep(500);
 
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
         assertThat(reflectionEquals(externallySetState, loadedFeatureState), is(true));
