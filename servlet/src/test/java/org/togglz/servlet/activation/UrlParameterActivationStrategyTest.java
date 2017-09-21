@@ -27,7 +27,7 @@ public class UrlParameterActivationStrategyTest {
 	private final UrlParameterActivationStrategy strategy = new UrlParameterActivationStrategy();
 
 	@Before
-	public void setup() {
+	public void setUp() {
 		user = new SimpleFeatureUser("ea", false);
 		state = new FeatureState(MyFeature.FEATURE).enable();
 		state.setParameter(UrlParameterActivationStrategy.PARAM_URL_PARAMS, "toggleFeatureX=true,toggleAll=yes,parameterWithoutValue");
