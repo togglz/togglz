@@ -20,7 +20,7 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
 import javax.servlet.http.HttpServletRequest;
 
 public class UrlParameterActivationStrategy implements ActivationStrategy {
-	static final String PARAM_URL_PARAMS = "params";
+	public static final String PARAM_URL_PARAMS = "params";
 	private static final Pattern SPLIT_ON_COMMA = Pattern.compile("\\s*,\\s*");
 	private static final Pattern SPLIT_ON_EQUALS = Pattern.compile("\\s*=\\s*");
 
@@ -53,19 +53,8 @@ public class UrlParameterActivationStrategy implements ActivationStrategy {
 		String referer = request.getHeader("referer");
 		if (referer != null) {
 			try {
-				List<NameValuePair> refererParameters = new URIBuilder(referer).getQueryParams();
-				Map<String, List<String>> combinedRefererParameters = new HashMap<>();
-				for (NameValuePair pair : refererParameters) {
-					if (!requestParams.containsKey(pair.getName())) {
-						if (combinedRefererParameters.containsKey(pair.getName())) {
-							List<String> values = combinedRefererParameters.get(pair.getName());
-							values.add(pair.getValue());
-							combinedRefererParameters.put(pair.getName(), values);
-						} else {
-							combinedRefererParameters.put(pair.getName(), new ArrayList<>(Arrays.asList(pair.getValue())));
-						}
-					}
-				}
+				Map<String, List<String>> combinedRefererParameters = getRefererParameters(requestParams, referer);
+				
 				for (Map.Entry<String, List<String>> entry : combinedRefererParameters.entrySet()) {
 					List<String> val  = entry.getValue();
 					String[] values = new String[val.size()];
@@ -76,6 +65,28 @@ public class UrlParameterActivationStrategy implements ActivationStrategy {
 			}
 
 		}
+
+		return hasActivationUrlParameter(allowedParams, requestParams);
+	}
+
+	private Map<String, List<String>> getRefererParameters(Map<String, String[]> requestParams, String referer) throws URISyntaxException {
+		List<NameValuePair> refererParameters = new URIBuilder(referer).getQueryParams();
+		Map<String, List<String>> combinedRefererParameters = new HashMap<>();
+		for (NameValuePair pair : refererParameters) {
+			if (!requestParams.containsKey(pair.getName())) {
+				if (combinedRefererParameters.containsKey(pair.getName())) {
+					List<String> values = combinedRefererParameters.get(pair.getName());
+					values.add(pair.getValue());
+					combinedRefererParameters.put(pair.getName(), values);
+				} else {
+					combinedRefererParameters.put(pair.getName(), new ArrayList<>(Arrays.asList(pair.getValue())));
+				}
+			}
+		}
+		return combinedRefererParameters;
+	}
+
+	private boolean hasActivationUrlParameter(String[] allowedParams, Map<String, String[]> requestParams) {
 		for (String allowedParam : allowedParams) {
 			String[] paramData = SPLIT_ON_EQUALS.split(allowedParam, 2);
 			if (requestParams.containsKey(paramData[0])) {
