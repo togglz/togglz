@@ -54,7 +54,7 @@ public class UrlParameterActivationStrategy implements ActivationStrategy {
 		if (referer != null) {
 			try {
 				Map<String, List<String>> combinedRefererParameters = getRefererParameters(requestParams, referer);
-				
+
 				for (Map.Entry<String, List<String>> entry : combinedRefererParameters.entrySet()) {
 					List<String> val  = entry.getValue();
 					String[] values = new String[val.size()];
