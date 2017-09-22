@@ -9,4 +9,4 @@ Version-Patterns:
 Import-Template:
  javax.servlet.*;version="0",
  org.togglz.core.*;version="${osgi.bundles.version:default}",
- org.apache.httpcomponents.*;version="4.5.2"
+ org.apache.*;version="4.5.2"
