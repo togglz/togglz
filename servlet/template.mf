@@ -8,5 +8,4 @@ Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
  javax.servlet.*;version="0",
- org.togglz.core.*;version="${osgi.bundles.version:default}",
- org.apache.*;version="4.5.2"
+ org.togglz.core.*;version="${osgi.bundles.version:default}"
