@@ -20,17 +20,17 @@ import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
-public class UrlParameterActivationStrategyTest {
+public class QueryParameterActivationStrategyTest {
     private FeatureUser user;
     private FeatureState state;
     private HttpServletRequest request;
-    private final UrlParameterActivationStrategy strategy = new UrlParameterActivationStrategy();
+    private final QueryParameterActivationStrategy strategy = new QueryParameterActivationStrategy();
 
     @Before
     public void setUp() {
         user = new SimpleFeatureUser("ea", false);
         state = new FeatureState(MyFeature.FEATURE).enable();
-        state.setParameter(UrlParameterActivationStrategy.PARAM_URL_PARAMS,
+        state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS,
             "toggleFeatureX=true,toggleAll=yes,parameterWithoutValue");
         request = Mockito.mock(HttpServletRequest.class);
         HttpServletRequestHolder.bind(request);
@@ -139,7 +139,7 @@ public class UrlParameterActivationStrategyTest {
         parameters.put("anotherParam", null);
         when(request.getParameterMap()).thenReturn(parameters);
 
-        state.setParameter(UrlParameterActivationStrategy.PARAM_URL_PARAMS,
+        state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS,
             " toggleFeatureX  = true, toggleAll= yes, parameterWithoutValue ");
         boolean isActive = strategy.isActive(state, user);
         Assert.assertTrue(isActive);
@@ -153,7 +153,7 @@ public class UrlParameterActivationStrategyTest {
         when(request.getParameterMap()).thenReturn(parameters);
 
         parameters.put("test", (String[]) Arrays.asList("matches", "nomatch", "notanything").toArray());
-        state.setParameter(UrlParameterActivationStrategy.PARAM_URL_PARAMS, "test=matches");
+        state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS, "test=matches");
 
         boolean isActive = strategy.isActive(state, user);
 
@@ -208,7 +208,7 @@ public class UrlParameterActivationStrategyTest {
     public void refererWithEncodedParamsCanMatch() {
         Map<String, String[]> parameters = new HashMap<>();
         when(request.getParameterMap()).thenReturn(parameters);
-        state.setParameter(UrlParameterActivationStrategy.PARAM_URL_PARAMS,
+        state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS,
             "toggleFeatureX=handles space,toggleAll=yes,parameterWithoutValue");
 
         when(request.getHeader("referer"))
