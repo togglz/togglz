@@ -17,8 +17,9 @@ public abstract class AbstractSpringBeanFinder implements BeanFinder {
 
         ApplicationContext applicationContext = getApplicationContext(context);
 
-        if (applicationContext != null) {
+        while (applicationContext != null) {
             result.addAll(applicationContext.getBeansOfType(clazz).values());
+            applicationContext = applicationContext.getParent();
         }
 
         return result;
