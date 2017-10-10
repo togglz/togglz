@@ -297,6 +297,16 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>java8-features</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <modules>
+        <module>microprofile-config</module>
+      </modules>
+    </profile>
+
   </profiles>
 
   <dependencyManagement>
