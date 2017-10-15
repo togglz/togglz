@@ -54,6 +54,7 @@
         <include>org.togglz:togglz-amazon-s3:jar:*</include>
         <include>org.togglz:togglz-slack:jar:*</include>
         <include>org.togglz:togglz-redis:jar:*</include>
+        <include>org.togglz:togglz-microprofile-config:jar:*</include>
       </includes>
     </dependencySet>
 
