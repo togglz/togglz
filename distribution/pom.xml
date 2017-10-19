@@ -181,6 +181,9 @@
   <profiles>
     <profile>
       <id>java8-features</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>org.togglz</groupId>
