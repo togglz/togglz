@@ -39,8 +39,10 @@ import org.togglz.core.util.Strings;
  */
 public abstract class AbstractPropertyDrivenActivationStrategy implements ActivationStrategy {
 
-    public static final String DEFAULT_PROPERTY_PREFIX = "togglz.";
+    private static final String DEFAULT_PROPERTY_PREFIX = "togglz.";
+    private static final String DEFAULT_STATE_VALUE = "true";
     public static final String PARAM_NAME = "name";
+    public static final String PARAM_PROPERTY_VALUE = "value";
 
     /**
      * <p>
@@ -84,10 +86,14 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
 
     @Override
     public final boolean isActive(FeatureState featureState, FeatureUser user) {
-        String propertyName = getPropertyName(featureState, PARAM_NAME);
+        String propertyName = getPropertyName(featureState, getPropertyNameParam());
         String propertyValue = getPropertyValue(featureState, user, propertyName);
 
         return isActive(featureState, user, propertyName, propertyValue);
+    }
+
+    protected String getPropertyNameParam() {
+        return PARAM_NAME;
     }
 
     /**
@@ -121,7 +127,11 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
      *     representations.
      */
     protected boolean isActive(FeatureState featureState, FeatureUser user, String propertyName, String propertyValue) {
-        return Boolean.TRUE.equals(Strings.toBoolean(propertyValue));
+        String expectedValue = featureState.getParameter(PARAM_PROPERTY_VALUE);
+        if(expectedValue == null) {
+            expectedValue = DEFAULT_STATE_VALUE;
+        }
+        return Strings.isNotBlank(propertyValue) && expectedValue.equalsIgnoreCase(propertyValue);
     }
 
     @Override
@@ -130,7 +140,11 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
             ParameterBuilder.create(PARAM_NAME)
                 .optional()
                 .label("Property Name")
-                .description("The name of the property to be used to determine whether the feature is enabled.")
+                .description("The name of the property to be used to determine whether the feature is enabled."),
+            ParameterBuilder.create(PARAM_PROPERTY_VALUE)
+                .optional()
+                .label("Property Value")
+                .description("Enable the feature when this value matches the property value")
         };
     }
 }

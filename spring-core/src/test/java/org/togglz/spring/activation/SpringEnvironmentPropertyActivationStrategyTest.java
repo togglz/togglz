@@ -1,8 +1,5 @@
 package org.togglz.spring.activation;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +12,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.AbstractPropertyDrivenActivationStrategy;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 /**
  * <p>
@@ -99,12 +102,20 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
     public void testGetParameters() {
         Parameter[] parameters = strategy.getParameters();
 
-        assertEquals(1, parameters.length);
+        assertEquals(2, parameters.length);
 
         Parameter parameter = parameters[0];
 
         assertNotNull(parameter);
-        assertEquals(SpringEnvironmentPropertyActivationStrategy.PARAM_NAME, parameter.getName());
+        assertEquals(AbstractPropertyDrivenActivationStrategy.PARAM_NAME, parameter.getName());
+        assertTrue(parameter.isOptional());
+        assertTrue(Strings.isNotBlank(parameter.getLabel()));
+        assertTrue(Strings.isNotBlank(parameter.getDescription()));
+
+        parameter = parameters[1];
+
+        assertNotNull(parameter);
+        assertEquals(AbstractPropertyDrivenActivationStrategy.PARAM_PROPERTY_VALUE, parameter.getName());
         assertTrue(parameter.isOptional());
         assertTrue(Strings.isNotBlank(parameter.getLabel()));
         assertTrue(Strings.isNotBlank(parameter.getDescription()));
