@@ -178,5 +178,16 @@
     </dependency>
 
   </dependencies>
-
+  <profiles>
+    <profile>
+      <id>java8-features</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.togglz</groupId>
+          <artifactId>togglz-microprofile-config</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
