@@ -2,11 +2,13 @@ package org.togglz.core.activation;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by ddcchrisk on 5/26/16.
@@ -55,6 +57,7 @@ public class SystemPropertyActivationStrategyTest {
         System.setProperty("foo.bar", "false");
         assertTrue(strategy.isActive(state,user));
     }
+
     @Test
     public void shouldBeTrueIfPropertyExistsAndIsTrue() {
         System.setProperty("foo.bar", "true");

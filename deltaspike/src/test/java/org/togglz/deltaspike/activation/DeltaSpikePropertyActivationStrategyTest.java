@@ -1,7 +1,5 @@
 package org.togglz.deltaspike.activation;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +8,15 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.AbstractPropertyDrivenActivationStrategy;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.deltaspike.TestConfigSourceProvider;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * <p>
@@ -74,12 +77,20 @@ public class DeltaSpikePropertyActivationStrategyTest {
     public void testGetParameters() {
         Parameter[] parameters = strategy.getParameters();
 
-        assertEquals(1, parameters.length);
+        assertEquals(2, parameters.length);
 
         Parameter parameter = parameters[0];
 
         assertNotNull(parameter);
-        assertEquals(DeltaSpikePropertyActivationStrategy.PARAM_NAME, parameter.getName());
+        assertEquals(AbstractPropertyDrivenActivationStrategy.PARAM_NAME, parameter.getName());
+        assertTrue(parameter.isOptional());
+        assertTrue(Strings.isNotBlank(parameter.getLabel()));
+        assertTrue(Strings.isNotBlank(parameter.getDescription()));
+
+        parameter = parameters[1];
+
+        assertNotNull(parameter);
+        assertEquals(AbstractPropertyDrivenActivationStrategy.PARAM_PROPERTY_VALUE, parameter.getName());
         assertTrue(parameter.isOptional());
         assertTrue(Strings.isNotBlank(parameter.getLabel()));
         assertTrue(Strings.isNotBlank(parameter.getDescription()));
