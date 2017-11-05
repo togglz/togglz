@@ -4,25 +4,23 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 
 /**
- * 
  * This implementation of {@link FeatureManagerProvider} allows to store the {@link FeatureManager} in a {@link ThreadLocal} for
  * the current thread.
- * 
+ * <p>
  * Please note that it is very important to cleanup the {@link ThreadLocal} by calling {@link #release()} before the thread is
  * put back into a thread pool.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class ThreadLocalFeatureManagerProvider implements FeatureManagerProvider {
 
-    private static ThreadLocal<FeatureManager> threadLocal = new ThreadLocal<FeatureManager>();
+    private static ThreadLocal<FeatureManager> threadLocal = new ThreadLocal<>();
 
     /**
      * Store the supplied {@link FeatureManager} in the thread context. After calling this method all calls of
      * {@link #getFeatureManager()} from the active thread will return this feature manager. Please don't forget to call
      * {@link #release()} before the thread is put back to a thread pool to prevent memory leaks.
-     * 
+     *
      * @param featureManager The {@link FeatureManager} to store
      */
     public static void bind(FeatureManager featureManager) {

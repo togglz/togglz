@@ -19,33 +19,32 @@ import org.togglz.core.util.NamedFeature;
  * Implementation of {@link FeatureProvider} that reads all the feature specification from a {@link Properties} instance. This
  * provider is especially useful in distributed environments.
  * </p>
- * 
+ * <p>
  * <p>
  * The feature specification has the following format:
  * </p>
- * 
+ * <p>
  * <pre>
  * &lt;feature&gt;=&lt;label&gt;;&lt;enabledByDefault&gt;[;&lt;group1&gt;,&lt;group2&gt;,...]
  * </pre>
- * 
+ * <p>
  * <p>
  * The following example shows how a concrete specification could look like
  * </p>
- * 
+ * <p>
  * <pre>
  * FEATURE_ONE=A useful feature;true;Group 1,Group 3
  * FEATURE_TWO=Some other feature;false;Group 2
  * </pre>
- * 
+ *
  * @author Mauro Talevi
  * @author Christian Kaltepoth
- * 
  */
 public class PropertyFeatureProvider implements FeatureProvider {
 
-    private final Set<Feature> features = new LinkedHashSet<Feature>();
+    private final Set<Feature> features = new LinkedHashSet<>();
 
-    private final Map<String, FeatureMetaData> metadata = new HashMap<String, FeatureMetaData>();
+    private final Map<String, FeatureMetaData> metadata = new HashMap<>();
 
     public PropertyFeatureProvider(Properties properties) {
 

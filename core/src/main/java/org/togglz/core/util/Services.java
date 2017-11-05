@@ -10,11 +10,9 @@ import java.util.ServiceLoader;
 import org.togglz.core.util.Weighted.WeightedComparator;
 
 /**
- * 
  * Helper class to lookup SPI implementations using the {@link ServiceLoader}.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class Services {
 
@@ -28,7 +26,7 @@ public class Services {
 
         Iterator<? extends E> implementations = ServiceLoader.load(service).iterator();
 
-        Collection<E> result = new ArrayList<E>();
+        Collection<E> result = new ArrayList<>();
         while (implementations.hasNext()) {
             result.add(implementations.next());
         }
@@ -41,7 +39,7 @@ public class Services {
      * able to return a sorted list of implementations.
      */
     public static <E extends Weighted> List<E> getSorted(Class<? extends E> service) {
-        List<E> result = new ArrayList<E>(get(service));
+        List<E> result = new ArrayList<>(get(service));
         Collections.sort(result, WEIGHTED_COMPARATOR);
         return result;
     }

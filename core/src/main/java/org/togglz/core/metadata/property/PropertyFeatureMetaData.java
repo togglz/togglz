@@ -20,7 +20,7 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
 
     private String label;
     private final FeatureState defaultFeatureState;
-    private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+    private final Set<FeatureGroup> groups = new HashSet<>();
 
     public PropertyFeatureMetaData(Feature feature, String specification) {
         boolean enabledByDefault = false;
@@ -51,7 +51,7 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
     }
 
     private Set<FeatureGroup> parseFeatureGroups(String value) {
-        Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+        Set<FeatureGroup> groups = new HashSet<>();
         for (String label : value.split(",")) {
             if (Strings.isNotBlank(label)) {
                 groups.add(new SimpleFeatureGroup(label.trim()));

@@ -54,10 +54,8 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
      * ("{@value #DEFAULT_PROPERTY_PREFIX}") and the name of the feature.
      * </p>
      *
-     * @param featureState
-     *     the {@link FeatureState} which represents the current configuration of the feature
-     * @param parameterName
-     *     the name of the parameter that potentially contains the property name
+     * @param featureState  the {@link FeatureState} which represents the current configuration of the feature
+     * @param parameterName the name of the parameter that potentially contains the property name
      * @return The name of the property.
      */
     protected String getPropertyName(FeatureState featureState, String parameterName) {
@@ -74,12 +72,9 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
      * Returns the value of the property with the specified {@code name} on which to base the activation of the feature.
      * </p>
      *
-     * @param featureState
-     *     the {@link FeatureState} which represents the current configuration of the feature
-     * @param user
-     *     the {@link FeatureUser user} for which to decide whether the feature is active (may be {@literal null})
-     * @param name
-     *     the name of the property whose value is to be returned
+     * @param featureState the {@link FeatureState} which represents the current configuration of the feature
+     * @param user         the {@link FeatureUser user} for which to decide whether the feature is active (may be {@literal null})
+     * @param name         the name of the property whose value is to be returned
      * @return The (raw) value of the property with the given {@code name} or {@literal null} if none could be found.
      */
     protected abstract String getPropertyValue(FeatureState featureState, FeatureUser user, String name);
@@ -112,23 +107,18 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
      * This method should never return {@literal true} if {@code propertyValue} is {@literal null}.
      * </p>
      *
-     * @param featureState
-     *     the {@link FeatureState} which represents the current configuration of the feature
-     * @param user
-     *     the {@link FeatureUser user} for which to decide whether the feature is active (may be {@literal null})
-     * @param propertyName
-     *     the name of the property on which to base the activation of the feature
-     * @param propertyValue
-     *     the (raw) value of the property on which to base the activation of the feature (may be {@literal null} if
-     *     none was found)
+     * @param featureState  the {@link FeatureState} which represents the current configuration of the feature
+     * @param user          the {@link FeatureUser user} for which to decide whether the feature is active (may be {@literal null})
+     * @param propertyName  the name of the property on which to base the activation of the feature
+     * @param propertyValue the (raw) value of the property on which to base the activation of the feature (may be {@literal null} if
+     *                      none was found)
      * @return {@literal true} if the feature should be active; otherwise {@literal false}.
-     * @throws IllegalArgumentException
-     *     If {@code propertyValue} is non-{@literal null} <b>and</b> does not match any of the predefined boolean
-     *     representations.
+     * @throws IllegalArgumentException If {@code propertyValue} is non-{@literal null} <b>and</b> does not match any of the predefined boolean
+     *                                  representations.
      */
     protected boolean isActive(FeatureState featureState, FeatureUser user, String propertyName, String propertyValue) {
         String expectedValue = featureState.getParameter(PARAM_PROPERTY_VALUE);
-        if(expectedValue == null) {
+        if (expectedValue == null) {
             expectedValue = DEFAULT_STATE_VALUE;
         }
         return Strings.isNotBlank(propertyValue) && expectedValue.equalsIgnoreCase(propertyValue);
@@ -136,15 +126,15 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
 
     @Override
     public Parameter[] getParameters() {
-        return new Parameter[] {
-            ParameterBuilder.create(PARAM_NAME)
-                .optional()
-                .label("Property Name")
-                .description("The name of the property to be used to determine whether the feature is enabled."),
-            ParameterBuilder.create(PARAM_PROPERTY_VALUE)
-                .optional()
-                .label("Property Value")
-                .description("Enable the feature when this value matches the property value")
+        return new Parameter[]{
+                ParameterBuilder.create(PARAM_NAME)
+                        .optional()
+                        .label("Property Name")
+                        .description("The name of the property to be used to determine whether the feature is enabled."),
+                ParameterBuilder.create(PARAM_PROPERTY_VALUE)
+                        .optional()
+                        .label("Property Value")
+                        .description("Enable the feature when this value matches the property value")
         };
     }
 }
