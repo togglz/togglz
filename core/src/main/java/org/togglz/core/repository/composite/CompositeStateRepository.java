@@ -17,7 +17,7 @@ import org.togglz.core.repository.mem.InMemoryStateRepository;
  * in the order specified during construction. The
  * {@link #setFeatureState(FeatureState)} method calls the corresponding method
  * on the last underlying repository.
- * 
+ * <p>
  * If you don't want {@link #setFeatureState(FeatureState)} to update a
  * persistent repository, consider using an {@link InMemoryStateRepository} as
  * the last argument. *
@@ -31,7 +31,7 @@ public class CompositeStateRepository implements StateRepository {
     /**
      * Creates a composite state repository using the specified underlying state
      * repositories.
-     * 
+     *
      * @param repositories state repositories
      */
     public CompositeStateRepository(StateRepository... repositories) {
@@ -42,30 +42,30 @@ public class CompositeStateRepository implements StateRepository {
     /**
      * Sets the order this composite calls to get feature states.  If not set the default iteration order
      * is first-in-first-out.
-     * 
+     *
      * @param iterationOrder the iteration order
      * @see IterationOrder
      */
     public void setIterationOrder(RepositorySelector iterationOrder) {
-        
+
         this.iterationOrder = iterationOrder;
     }
 
     /**
      * Sets the selector for which state repositories to call to set a feature state.  If not set the default
      * is the last repository in this composite.
-     * 
+     *
      * @param setterSelection the selector
      * @see SetterSelection
      */
     public void setSetterSelection(RepositorySelector setterSelection) {
-        
+
         this.setterSelection = setterSelection;
     }
 
     /**
      * Returns the first non-null feature state as determined by the current iteration order.
-     * 
+     *
      * @see #setIterationOrder(RepositorySelector)
      */
     @Override
@@ -77,13 +77,13 @@ public class CompositeStateRepository implements StateRepository {
                 return repository.getFeatureState(feature);
             }
         }
-        
+
         return null;
     }
 
     /**
      * Sets the feature state on the repositories returned by the current setter selection.
-     * 
+     *
      * @see #setSetterSelection(RepositorySelector)
      */
     @Override
@@ -93,24 +93,24 @@ public class CompositeStateRepository implements StateRepository {
             repository.setFeatureState(featureState);
         }
     }
-    
+
     /**
      * Provides a means to select from a collection of state repositories.
      */
     public interface RepositorySelector {
-        
+
         /**
          * Returns a subset of state repositories from the specified collection.  The order in the returned collection
          * may be different than the initial order.
-         * 
+         *
          * @param from the collection to select from
          * @return the selected state repositories
          */
         List<StateRepository> getSelected(List<StateRepository> from);
     }
-    
-    public static enum IterationOrder implements RepositorySelector {
-        
+
+    public enum IterationOrder implements RepositorySelector {
+
         /**
          * The iteration order is the same as what was specified when constructing this composite.
          */
@@ -119,7 +119,7 @@ public class CompositeStateRepository implements StateRepository {
                 return new ArrayList<StateRepository>(from);
             }
         },
-        
+
         /**
          * The iteration order is the revers of what was specified when constructing this composite.
          */
@@ -129,13 +129,11 @@ public class CompositeStateRepository implements StateRepository {
                 Collections.reverse(result);
                 return result;
             }
-        },
-        
-        ;
+        },;
     }
-    
-    public static enum SetterSelection implements RepositorySelector {
-        
+
+    public enum SetterSelection implements RepositorySelector {
+
         /**
          * Use the first repository in this composite to set the state.
          */
@@ -144,7 +142,7 @@ public class CompositeStateRepository implements StateRepository {
                 return get(from, 0);
             }
         },
-        
+
         /**
          * Use the last repository in this composite to set the state.
          */
@@ -153,7 +151,7 @@ public class CompositeStateRepository implements StateRepository {
                 return get(from, from.size() - 1);
             }
         },
-        
+
         /**
          * Use all repositories in this composite to set the state.
          */
@@ -162,7 +160,7 @@ public class CompositeStateRepository implements StateRepository {
                 return from;
             }
         };
-        
+
         private static List<StateRepository> get(List<StateRepository> from, int index) {
             List<StateRepository> result = new ArrayList<StateRepository>(1);
             result.add(from.get(index));

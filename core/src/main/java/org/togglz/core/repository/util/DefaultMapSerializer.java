@@ -14,7 +14,7 @@ import java.util.Properties;
 
 /**
  * This converter is able to convert string maps to simple strings and vice versa.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class DefaultMapSerializer implements MapSerializer {
@@ -76,7 +76,7 @@ public class DefaultMapSerializer implements MapSerializer {
             props.store(writer, null);
 
             // we need a list of strings so we can further process the format
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             for (String line : writer.toString().split("\r?\n")) {
                 // comments and empty lines are skipped
                 if (!line.trim().isEmpty() && !line.trim().startsWith("#")) {
@@ -96,8 +96,7 @@ public class DefaultMapSerializer implements MapSerializer {
                         builder.append(lineSeparator);
                     }
                     builder.append(line);
-                }
-                else {
+                } else {
                     if (builder.length() > 0) {
                         builder.append("&");
                     }
@@ -130,7 +129,7 @@ public class DefaultMapSerializer implements MapSerializer {
                 props.load(new StringReader(input));
             }
 
-            LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> result = new LinkedHashMap<>();
             for (Entry<Object, Object> entry : props.entrySet()) {
                 result.put(entry.getKey().toString(), entry.getValue().toString());
             }

@@ -58,7 +58,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
             Object result = engine.eval(script);
             if (result instanceof Boolean) {
-                return ((Boolean) result).booleanValue();
+                return (Boolean) result;
             }
 
         } catch (ScriptException e) {
@@ -70,10 +70,10 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     @Override
     public Parameter[] getParameters() {
-        return new Parameter[] {
+        return new Parameter[]{
                 new ScriptLanguageParameter(engineManager),
                 ParameterBuilder.create(PARAM_SCRIPT).label("Script").largeText()
-                    .description("The script to check if the feature is active. " +
+                        .description("The script to check if the feature is active. " +
                         "The script context provides access to some default objects. " +
                         "The variable 'user' refers to the current acting FeatureUser " +
                         "and 'date' to the current time represented as a java.util.Date.")
@@ -82,7 +82,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     private static class ScriptLanguageParameter implements Parameter {
 
-        private List<String> languages = new ArrayList<String>();
+        private List<String> languages = new ArrayList<>();
 
         public ScriptLanguageParameter(ScriptEngineManager engineManager) {
             for (ScriptEngineFactory factory : engineManager.getEngineFactories()) {
@@ -103,7 +103,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
         @Override
         public String getDescription() {
             return "The script language to use. Your system seems to support the following languages: " +
-                Strings.join(languages, ", ");
+                    Strings.join(languages, ", ");
         }
 
         @Override

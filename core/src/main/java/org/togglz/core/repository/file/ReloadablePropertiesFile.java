@@ -86,7 +86,7 @@ class ReloadablePropertiesFile implements PropertySource {
 
     public Set<String> getKeysStartingWith(String prefix) {
 
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
 
         Enumeration<?> keys = values.propertyNames();
         while (keys.hasMoreElements()) {
@@ -133,8 +133,7 @@ class ReloadablePropertiesFile implements PropertySource {
         public void setValue(String key, String value) {
             if (value != null) {
                 newValues.setProperty(key, value);
-            }
-            else {
+            } else {
                 newValues.remove(key);
             }
         }

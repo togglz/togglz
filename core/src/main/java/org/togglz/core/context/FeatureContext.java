@@ -17,12 +17,10 @@ import static org.togglz.core.util.ConcurrentReferenceHashMap.ReferenceType.STRO
 import static org.togglz.core.util.ConcurrentReferenceHashMap.ReferenceType.WEAK;
 
 /**
- * 
  * This class is typically used to obtain the {@link FeatureManager} from application code. It uses the
  * {@link FeatureManagerProvider} to find the correct FeatureManager and caches it for each context class loader.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class FeatureContext {
 
@@ -32,14 +30,13 @@ public class FeatureContext {
      * Cache for the {@link FeatureManager} instances looked up using the SPI
      */
     private static final ConcurrentReferenceHashMap<ClassLoader, FeatureManager> cache
-            = new ConcurrentReferenceHashMap<ClassLoader, FeatureManager>(WEAK, STRONG);
+            = new ConcurrentReferenceHashMap<>(WEAK, STRONG);
 
     /**
-     * 
      * Returns the {@link FeatureManager} for the current application (context class loader). The method uses the
      * {@link FeatureManagerProvider} SPI to find the correct {@link FeatureManager} instance. It will throw a runtime exception
      * if no {@link FeatureManager} can be found.
-     * 
+     *
      * @return The {@link FeatureManager} for the application, never <code>null</code>
      */
     public static FeatureManager getFeatureManager() {
@@ -51,18 +48,17 @@ public class FeatureContext {
         }
 
         throw new IllegalStateException("Could not find the FeatureManager. " +
-            "For web applications please verify that the TogglzFilter starts up correctly. " +
-            "In other deployment scenarios you will typically have to implement a FeatureManagerProvider " +
-            "as described in the 'Advanced Configuration' chapter of the documentation.");
+                "For web applications please verify that the TogglzFilter starts up correctly. " +
+                "In other deployment scenarios you will typically have to implement a FeatureManagerProvider " +
+                "as described in the 'Advanced Configuration' chapter of the documentation.");
 
     }
 
     /**
-     * 
      * Returns the {@link FeatureManager} for the current application (context class loader). The method uses the
      * {@link FeatureManagerProvider} SPI to find the correct {@link FeatureManager} instance. If not manager could be found,
      * <code>null</code> is returned.
-     * 
+     *
      * @return The {@link FeatureManager} for the application or <code>null</code>
      */
     public static FeatureManager getFeatureManagerOrNull() {
@@ -89,7 +85,7 @@ public class FeatureContext {
 
         // build a sorted list of all SPI implementations
         Iterator<FeatureManagerProvider> providerIterator = ServiceLoader.load(FeatureManagerProvider.class).iterator();
-        List<FeatureManagerProvider> providerList = new ArrayList<FeatureManagerProvider>();
+        List<FeatureManagerProvider> providerList = new ArrayList<>();
         while (providerIterator.hasNext()) {
             providerList.add(providerIterator.next());
         }
@@ -110,7 +106,7 @@ public class FeatureContext {
             if (log.isDebugEnabled()) {
                 if (featureManager != null) {
                     log.debug("Provider " + provider.getClass().getName() + " returned FeatureManager: "
-                        + featureManager.getName());
+                            + featureManager.getName());
                 } else {
                     log.debug("No FeatureManager provided by " + provider.getClass().getName());
                 }

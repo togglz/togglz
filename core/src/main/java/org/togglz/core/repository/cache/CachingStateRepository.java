@@ -9,18 +9,16 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 /**
- * 
  * Simple implementation of {@link StateRepository} which adds caching capabilities to an existing repository. You should
  * consider using this class if lookups in your {@link StateRepository} are expensive (like database queries).
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class CachingStateRepository implements StateRepository {
 
     private final StateRepository delegate;
 
-    private final Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
+    private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
     private long ttl;
 
@@ -28,7 +26,7 @@ public class CachingStateRepository implements StateRepository {
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
      * {@link #setFeatureState(FeatureState)} is invoked. You should therefore never use this constructor if the feature state
      * is modified directly (for example by modifying the database table or the properties file).
-     * 
+     *
      * @param delegate The repository to delegate invocations to
      */
     public CachingStateRepository(StateRepository delegate) {
@@ -38,9 +36,9 @@ public class CachingStateRepository implements StateRepository {
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
      * supplied TTL or if {@link #setFeatureState(FeatureState)} is invoked.
-     * 
+     *
      * @param delegate The repository to delegate invocations to
-     * @param ttl The time in milliseconds after which a cache entry will expire
+     * @param ttl      The time in milliseconds after which a cache entry will expire
      * @throws IllegalArgumentException if the specified ttl is negative
      */
     public CachingStateRepository(StateRepository delegate, long ttl) {
@@ -56,8 +54,8 @@ public class CachingStateRepository implements StateRepository {
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
      * supplied TTL rounded down to milliseconds or if {@link #setFeatureState(FeatureState)} is invoked.
      *
-     * @param delegate The repository to delegate invocations to
-     * @param ttl The time in a given {@code ttlTimeUnit} after which a cache entry will expire
+     * @param delegate    The repository to delegate invocations to
+     * @param ttl         The time in a given {@code ttlTimeUnit} after which a cache entry will expire
      * @param ttlTimeUnit The unit that {@code ttl} is expressed in
      */
     public CachingStateRepository(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit) {
@@ -96,7 +94,7 @@ public class CachingStateRepository implements StateRepository {
     public void clear() {
         cache.clear();
     }
-    
+
     /**
      * Checks whether this supplied {@link CacheEntry} should be ignored.
      */

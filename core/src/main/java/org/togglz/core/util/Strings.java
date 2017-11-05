@@ -48,8 +48,7 @@ public class Strings {
      * Returns whether the specified string is empty while remaining null-safe.
      * </p>
      *
-     * @param s
-     *     the string to be checked (may be {@literal null})
+     * @param s the string to be checked (may be {@literal null})
      * @return {@literal true} if {@code s} is either {@literal null} or contains no characters.
      */
     public static boolean isEmpty(String s) {
@@ -61,8 +60,7 @@ public class Strings {
      * Returns whether the specified string is <b>not</b> empty while remaining null-safe.
      * </p>
      *
-     * @param s
-     *     the string to be checked (may be {@literal null})
+     * @param s the string to be checked (may be {@literal null})
      * @return {@literal true} if {@code s} is not {@literal null} and contains at least one character.
      */
     public static boolean isNotEmpty(String s) {
@@ -74,7 +72,7 @@ public class Strings {
     }
 
     public static List<String> splitAndTrim(String value, String regex) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (isNotBlank(value)) {
             String[] segements = value.split(regex);
             for (String segment : segements) {
@@ -91,8 +89,7 @@ public class Strings {
      * Trims the specified string while remaining null-safe.
      * </p>
      *
-     * @param s
-     *     the string to be trimmed (may be {@literal null})
+     * @param s the string to be trimmed (may be {@literal null})
      * @return The trimmed {@code s} or {@literal null} if {@code s} is {@literal null}.
      */
     public static String trim(String s) {
@@ -104,8 +101,7 @@ public class Strings {
      * Trims the specified string and, if the resulting string is empty, will return {@literal null} instead.
      * </p>
      *
-     * @param s
-     *     the string to be trimmed (may be {@literal null})
+     * @param s the string to be trimmed (may be {@literal null})
      * @return The trimmed {@code s} or {@literal null} if {@code s} is {@literal null} before or after being trimmed.
      */
     public static String trimToNull(String s) {
@@ -136,11 +132,9 @@ public class Strings {
      * will result in an {@code IllegalArgumentException} being thrown.
      * </p>
      *
-     * @param s
-     *     the string to be converted into a {@code Boolean}
+     * @param s the string to be converted into a {@code Boolean}
      * @return The {@code Boolean} representation of {@code s} or {@literal null} if {@code s} is {@literal null}.
-     * @throws IllegalArgumentException
-     *     If {@code s} is non-{@literal null} <b>and</b> does not match any of the predefined values.
+     * @throws IllegalArgumentException If {@code s} is non-{@literal null} <b>and</b> does not match any of the predefined values.
      */
     public static Boolean toBoolean(String s) {
         String value = trimToNull(s);

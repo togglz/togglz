@@ -17,7 +17,7 @@ import org.togglz.core.util.Strings;
 
 /**
  * This class represents the state of a feature that is persisted by {@link StateRepository} implementations.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class FeatureState implements Serializable {
@@ -27,12 +27,12 @@ public class FeatureState implements Serializable {
     private final Feature feature;
     private boolean enabled;
     private String strategyId;
-    private final Map<String, String> parameters = new HashMap<String, String>();
+    private final Map<String, String> parameters = new HashMap<>();
 
     /**
      * This constructor creates a new feature state for the given feature. The feature is initially disabled if this constructor
      * is used.
-     * 
+     *
      * @param feature The feature that is represented by this state.
      */
     public FeatureState(Feature feature) {
@@ -41,7 +41,7 @@ public class FeatureState implements Serializable {
 
     /**
      * This constructor creates a new feature state for the given feature.
-     * 
+     *
      * @param feature The feature that is represented by this state.
      * @param enabled boolean indicating whether this feature should be enabled or not.
      */
@@ -53,13 +53,12 @@ public class FeatureState implements Serializable {
     /**
      * This constructor creates a new feature state for the given feature. Please not that using this constructor will
      * automatically set strategyId to match the {@link UsernameActivationStrategy}.
-     * 
+     *
      * @param feature The feature that is represented by this state.
      * @param enabled boolean indicating whether this feature should be enabled or not.
-     * @param users A list of users
-     * 
+     * @param users   A list of users
      * @deprecated This constructor will be removed soon. You should use {@link #FeatureState(Feature, boolean)} and
-     *             {@link #setParameter(String, String)} instead.
+     * {@link #setParameter(String, String)} instead.
      */
     @Deprecated
     public FeatureState(Feature feature, boolean enabled, List<String> users) {
@@ -84,7 +83,7 @@ public class FeatureState implements Serializable {
 
     /**
      * Returns the feature represented by this feature state.
-     * 
+     *
      * @return The feature, never <code>null</code>
      */
     public Feature getFeature() {
@@ -122,11 +121,10 @@ public class FeatureState implements Serializable {
 
     /**
      * The list of users associated with the feature state.
-     * 
+     *
      * @return The user list, never <code>null</code>
-     * 
      * @deprecated This method will be removed soon. Use {@link #getParameter(String)} instead to read the corresponding
-     *             strategy parameter.
+     * strategy parameter.
      */
     @Deprecated
     public List<String> getUsers() {
@@ -139,24 +137,24 @@ public class FeatureState implements Serializable {
 
     /**
      * Adds a single user to the list of users
-     * 
+     *
      * @deprecated This method will be removed soon. Use {@link #setParameter(String, String)} instead to modify the
-     *             corresponding strategy parameter.
+     * corresponding strategy parameter.
      */
     @Deprecated
     public FeatureState addUser(String user) {
-        return this.addUsers(Arrays.asList(user));
+        return this.addUsers(Collections.singletonList(user));
     }
 
     /**
      * Adds a single user to the list of users
-     * 
+     *
      * @deprecated This method will be removed soon. Use {@link #setParameter(String, String)} instead to modify the
-     *             corresponding strategy parameter.
+     * corresponding strategy parameter.
      */
     @Deprecated
     public FeatureState addUsers(Collection<String> users) {
-        Set<String> set = new LinkedHashSet<String>();
+        Set<String> set = new LinkedHashSet<>();
         set.addAll(this.getUsers());
         set.addAll(users);
         String setAsString = Strings.trimToNull(Strings.join(set, ","));
@@ -192,8 +190,7 @@ public class FeatureState implements Serializable {
     public FeatureState setParameter(String name, String value) {
         if (value != null) {
             this.parameters.put(name, value);
-        }
-        else {
+        } else {
             this.parameters.remove(name);
         }
         return this;

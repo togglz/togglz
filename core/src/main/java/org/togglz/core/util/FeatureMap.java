@@ -14,11 +14,11 @@ import org.togglz.core.manager.LazyResolvingFeatureManager;
  * This map can be used to check whether features are active. You can use either a {@link Feature} or a feature name as the key
  * for a map lookup. The resulting boolean will indicate if the feature is active or not.
  * </p>
- * 
+ * <p>
  * <p>
  * The map allows constructor-based injection of the {@link FeatureManager} for use in DI containers.
  * </p>
- * 
+ *
  * @author Mauro Talevi
  * @author Christian Kaltepoth
  */
@@ -45,7 +45,7 @@ public class FeatureMap implements Map<Object, Boolean> {
 
         Validate.notNull(key, "The feature must not be null");
 
-        Feature feature = null;
+        Feature feature;
         if (key instanceof Feature) {
             feature = (Feature) key;
         } else {
@@ -91,7 +91,7 @@ public class FeatureMap implements Map<Object, Boolean> {
     }
 
     @Override
-    public void putAll(Map<? extends Object, ? extends Boolean> m) {
+    public void putAll(Map<?, ? extends Boolean> m) {
         throw new UnsupportedOperationException();
     }
 

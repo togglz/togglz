@@ -20,8 +20,8 @@ import org.togglz.core.spi.FeatureProvider;
  */
 public class EnumBasedFeatureProvider implements FeatureProvider {
 
-    private final Map<String, FeatureMetaData> metaDataCache = new HashMap<String, FeatureMetaData>();
-    private final Set<Feature> features = new LinkedHashSet<Feature>();
+    private final Map<String, FeatureMetaData> metaDataCache = new HashMap<>();
+    private final Set<Feature> features = new LinkedHashSet<>();
 
     public EnumBasedFeatureProvider() {
         // nothing to do
@@ -48,7 +48,7 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
         for (Feature newFeature : newFeatures) {
             if (metaDataCache.put(newFeature.name(), new EnumFeatureMetaData(newFeature)) != null) {
                 throw new IllegalStateException("The feature " + newFeature + " has already been added");
-            };
+            }
             features.add(newFeature);
         }
     }

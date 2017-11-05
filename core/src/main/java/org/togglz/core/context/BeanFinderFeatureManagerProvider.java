@@ -12,13 +12,11 @@ import org.togglz.core.spi.FeatureManagerProvider;
 import org.togglz.core.util.Strings;
 
 /**
- * 
  * {@link FeatureManagerProvider} that uses the {@link BeanFinder} SPI to lookup the {@link FeatureManager}. This implementation
  * is especially useful if the FeatureManager should be created and managed by Spring or CDI instead of by the Togglz
  * bootstrapping process.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider {
 
@@ -31,7 +29,7 @@ public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider 
     public FeatureManager getFeatureManager() {
 
         // we _may_ find multiple managers, which will lead to an error
-        Set<FeatureManager> managers = new HashSet<FeatureManager>();
+        Set<FeatureManager> managers = new HashSet<>();
 
         // ask all providers for managed FeatureManager
         for (BeanFinder beanFinder : ServiceLoader.load(BeanFinder.class)) {
@@ -44,7 +42,7 @@ public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider 
         // more than once manager cannot be handled
         if (managers.size() > 1) {
             throw new IllegalStateException("Found more than one FeatureManager using the BeanFinder SPI: "
-                + Strings.join(managers, ", "));
+                    + Strings.join(managers, ", "));
         }
 
         // return the manager or null

@@ -23,29 +23,29 @@ import org.togglz.core.util.Strings;
  * <p>
  * This repository implementation can be used to store the feature state in SQL database using the standard JDBC API.
  * </p>
- * 
+ * <p>
  * <p>
  * {@link JDBCStateRepository} stores the feature state in a single database table. You can choose the name of this table using
  * a constructor argument. If the repository doesn't find the required table in the database, it will automatically create it.
  * </p>
- * 
+ * <p>
  * <p>
  * The database table has the following format:
  * </p>
- * 
+ * <p>
  * <pre>
  * CREATE TABLE &lt;table&gt; (
- *   FEATURE_NAME VARCHAR(100) PRIMARY KEY, 
- *   FEATURE_ENABLED INTEGER, 
- *   STRATEGY_ID VARCHAR(200), 
+ *   FEATURE_NAME VARCHAR(100) PRIMARY KEY,
+ *   FEATURE_ENABLED INTEGER,
+ *   STRATEGY_ID VARCHAR(200),
  *   STRATEGY_PARAMS VARCHAR(2000)
  * )
  * </pre>
- * 
+ * <p>
  * <p>
  * The class provides a builder which can be used to configure the repository:
  * </p>
- * 
+ * <p>
  * <pre>
  * StateRepository repository = JDBCStateRepository.newBuilder(dataSource)
  *     .tableName(&quot;features&quot;)
@@ -54,14 +54,13 @@ import org.togglz.core.util.Strings;
  *     .noCommit(true)
  *     .build();
  * </pre>
- * 
+ * <p>
  * <p>
  * Please note that the structure of the database table changed with version 2.0.0 because of the new extensible activation
  * strategy mechanism. The table structure will be automatically migrated to the new format.
  * </p>
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class JDBCStateRepository implements StateRepository {
 
@@ -78,7 +77,7 @@ public class JDBCStateRepository implements StateRepository {
     /**
      * Constructor of {@link JDBCStateRepository}. A database table called <code>TOGGLZ</code> will be created automatically for
      * you.
-     * 
+     *
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
      * @see #JDBCStateRepository(DataSource, String)
      */
@@ -88,9 +87,9 @@ public class JDBCStateRepository implements StateRepository {
 
     /**
      * Constructor of {@link JDBCStateRepository}. The database table will be created automatically for you.
-     * 
+     *
      * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
+     * @param tableName  The name of the database table to use
      */
     public JDBCStateRepository(DataSource dataSource, String tableName) {
         this(new Builder(dataSource).tableName(tableName));
@@ -98,12 +97,12 @@ public class JDBCStateRepository implements StateRepository {
 
     /**
      * Constructor of {@link JDBCStateRepository}.
-     * 
-     * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
+     *
+     * @param dataSource  The JDBC {@link DataSource} to obtain connections from
+     * @param tableName   The name of the database table to use
      * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
      * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
-     *             aspects of the repository in a fluent way
+     * aspects of the repository in a fluent way
      */
     @Deprecated
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable) {
@@ -112,13 +111,13 @@ public class JDBCStateRepository implements StateRepository {
 
     /**
      * Constructor of {@link JDBCStateRepository}.
-     * 
-     * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
+     *
+     * @param dataSource  The JDBC {@link DataSource} to obtain connections from
+     * @param tableName   The name of the database table to use
      * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
-     * @param serializer The {@link MapSerializer} for storing parameters
+     * @param serializer  The {@link MapSerializer} for storing parameters
      * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
-     *             aspects of the repository in a fluent way
+     * aspects of the repository in a fluent way
      */
     @Deprecated
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer) {
@@ -127,16 +126,16 @@ public class JDBCStateRepository implements StateRepository {
 
     /**
      * Constructor of {@link JDBCStateRepository}.
-     * 
-     * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
+     *
+     * @param dataSource  The JDBC {@link DataSource} to obtain connections from
+     * @param tableName   The name of the database table to use
      * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
-     * @param serializer The {@link MapSerializer} for storing parameters
+     * @param serializer  The {@link MapSerializer} for storing parameters
      * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
-     *             aspects of the repository in a fluent way
+     * aspects of the repository in a fluent way
      */
     public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer,
-        boolean noCommit) {
+                               boolean noCommit) {
         this(new Builder(dataSource).tableName(tableName).createTable(createTable).serializer(serializer).noCommit(noCommit));
     }
 
@@ -268,7 +267,7 @@ public class JDBCStateRepository implements StateRepository {
             Connection connection = dataSource.getConnection();
             try {
 
-                int updatedRows = 0;
+                int updatedRows;
 
                 /*
                  * First try to update an existing row
@@ -334,7 +333,7 @@ public class JDBCStateRepository implements StateRepository {
 
     /**
      * Creates a new builder for creating a {@link JDBCStateRepository}.
-     * 
+     *
      * @param dataSource the {@link DataSource} Togglz should use to obtain JDBC connections
      */
     public static Builder newBuilder(DataSource dataSource) {
@@ -354,7 +353,7 @@ public class JDBCStateRepository implements StateRepository {
 
         /**
          * Creates a new builder for creating a {@link JDBCStateRepository}.
-         * 
+         *
          * @param dataSource the {@link DataSource} Togglz should use to obtain JDBC connections
          */
         public Builder(DataSource dataSource) {
@@ -363,7 +362,7 @@ public class JDBCStateRepository implements StateRepository {
 
         /**
          * Sets the table name to use for the Togglz feature state table. The default name is <code>TOGGLZ</code>.
-         * 
+         *
          * @param tableName The database table name
          */
         public Builder tableName(String tableName) {
@@ -374,7 +373,7 @@ public class JDBCStateRepository implements StateRepository {
         /**
          * The {@link MapSerializer} for storing parameters. By default the repository will use
          * {@link DefaultMapSerializer#multiline()}.
-         * 
+         *
          * @param serializer The serializer to use
          */
         public Builder serializer(MapSerializer serializer) {
@@ -385,7 +384,7 @@ public class JDBCStateRepository implements StateRepository {
         /**
          * Can be used to suppress to commit after modifying data in the repository. Can be useful if Togglz uses managed
          * connections provided by a JEE container. The default is <code>false</code>.
-         * 
+         *
          * @param noCommit <code>true</code> to suppress commits
          */
         public Builder noCommit(boolean noCommit) {
@@ -396,7 +395,7 @@ public class JDBCStateRepository implements StateRepository {
         /**
          * If set to <code>true</code>, the table will be automatically created if it is missing. The default is
          * <code>true</code>.
-         * 
+         *
          * @param createTable <code>true</code> if the table should be created automatically
          */
         public Builder createTable(boolean createTable) {

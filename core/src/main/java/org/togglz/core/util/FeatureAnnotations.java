@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.FeatureAttribute;
@@ -54,7 +55,7 @@ public class FeatureAnnotations {
     }
 
     public static Set<Annotation> getAnnotations(Feature feature) {
-        Set<Annotation> annotations = new HashSet<Annotation>();
+        Set<Annotation> annotations = new HashSet<>();
         try {
             Class<? extends Feature> featureClass = feature.getClass();
             Annotation[] fieldAnnotations = featureClass.getField(feature.name()).getAnnotations();

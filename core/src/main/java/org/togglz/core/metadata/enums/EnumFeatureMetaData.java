@@ -18,12 +18,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.FeatureAnnotations;
 
 /**
- *
  * Implementation of {@link FeatureMetaData} that looks for annotations like {@link Label}, {@link EnabledByDefault} and
  * {@link DefaultActivationStrategy} on feature enums.
  *
  * @author Christian Kaltepoth
- *
  */
 public class EnumFeatureMetaData implements FeatureMetaData {
 
@@ -31,9 +29,9 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
     private final FeatureState defaultFeatureState;
 
-    private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+    private final Set<FeatureGroup> groups = new HashSet<>();
 
-    private final Map<String, String> attributes = new LinkedHashMap<String, String>();
+    private final Map<String, String> attributes = new LinkedHashMap<>();
 
     public EnumFeatureMetaData(Feature feature) {
 
@@ -46,8 +44,8 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
         // lookup default activation strategy @DefaultActivationStrategy
         DefaultActivationStrategy defaultActivationStrategy = FeatureAnnotations
-            .getAnnotation(feature, DefaultActivationStrategy.class);
-        if (defaultActivationStrategy != null){
+                .getAnnotation(feature, DefaultActivationStrategy.class);
+        if (defaultActivationStrategy != null) {
             this.defaultFeatureState.setStrategyId(defaultActivationStrategy.id());
 
             for (ActivationParameter parameter : defaultActivationStrategy.parameters()) {

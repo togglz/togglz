@@ -14,7 +14,7 @@ import org.togglz.core.util.Strings;
 
 /**
  * Class that creates and migrates the database table required by {@link JDBCStateRepository}.
- * 
+ *
  * @author Christian Kaltepoth
  */
 class SchemaUpdater {
@@ -61,7 +61,7 @@ class SchemaUpdater {
             try {
 
                 resultSet = updateDataStmt.executeQuery(substitute(
-                    "SELECT FEATURE_NAME, FEATURE_USERS, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE%"));
+                        "SELECT FEATURE_NAME, FEATURE_USERS, STRATEGY_ID, STRATEGY_PARAMS FROM %TABLE%"));
 
                 while (resultSet.next()) {
 
@@ -70,7 +70,7 @@ class SchemaUpdater {
                     if (Strings.isNotBlank(users)) {
 
                         // convert the user list to the new parameters format
-                        Map<String, String> params = new HashMap<String, String>();
+                        Map<String, String> params = new HashMap<>();
                         params.put(UsernameActivationStrategy.PARAM_USERS, users);
                         String paramData = serializer.serialize(params);
                         resultSet.updateString(Columns.STRATEGY_PARAMS, paramData);
@@ -104,7 +104,7 @@ class SchemaUpdater {
 
     /**
      * Returns <code>true</code> if the given column exists in the features table.
-     * 
+     *
      * @throws SQLException
      */
     private boolean columnExists(String column) throws SQLException {
