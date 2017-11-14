@@ -29,7 +29,7 @@ public class ServerIpActivationStrategy implements ActivationStrategy {
 
     public static final String PARAM_IPS = "ips";
 
-    private final Set<String> ipAddresses = new HashSet<String>();
+    private final Set<String> ipAddresses = new HashSet<>();
 
     public ServerIpActivationStrategy()
     {

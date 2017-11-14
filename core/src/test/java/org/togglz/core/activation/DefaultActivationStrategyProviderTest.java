@@ -52,7 +52,7 @@ public class DefaultActivationStrategyProviderTest {
     @Test
     public void shouldContainCustomStrategyIfAddedMultipleBefore() {
 
-        List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
+        List<ActivationStrategy> strategies = new ArrayList<>();
         strategies.add(new CustomActivationStrategy());
         strategies.add(new AnotherCustomActivationStrategy());
 

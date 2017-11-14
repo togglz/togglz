@@ -15,7 +15,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.multiline("\n");
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "value1");
         input.put("param2", "value2");
 
@@ -38,7 +38,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.singleline();
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "value1");
         input.put("param2", "value2");
 
@@ -61,7 +61,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.singleline();
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "foo&bar");
 
         String data = serializer.serialize(input);
@@ -82,7 +82,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.singleline();
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "foo\r\nbar");
 
         String data = serializer.serialize(input);
@@ -103,7 +103,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.multiline("\n");
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "foo\r\nbar");
 
         String data = serializer.serialize(input);
@@ -124,7 +124,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.multiline();
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "value1");
         input.put("param2", "value2");
 
@@ -141,7 +141,7 @@ public class DefaultMapSerializerTest {
 
         DefaultMapSerializer serializer = DefaultMapSerializer.multiline("%");
 
-        Map<String, String> input = new HashMap<String, String>();
+        Map<String, String> input = new HashMap<>();
         input.put("param1", "value1");
         input.put("param2", "value2");
 

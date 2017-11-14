@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.metadata.FeatureMetaData;

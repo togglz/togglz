@@ -28,7 +28,7 @@ public class WeightedTest {
             }
         };
 
-        List<Weighted> list = new ArrayList<Weighted>();
+        List<Weighted> list = new ArrayList<>();
         list.add(prio20);
         list.add(prio10);
         Collections.sort(list, new WeightedComparator());
@@ -54,7 +54,7 @@ public class WeightedTest {
             }
         };
 
-        List<Weighted> list = new ArrayList<Weighted>();
+        List<Weighted> list = new ArrayList<>();
         list.add(prio50);
         list.add(prioMinInt);
         Collections.sort(list, new WeightedComparator());
@@ -80,7 +80,7 @@ public class WeightedTest {
             }
         };
 
-        List<Weighted> list = new ArrayList<Weighted>();
+        List<Weighted> list = new ArrayList<>();
         list.add(prioMaxInt);
         list.add(prio50);
         Collections.sort(list, new WeightedComparator());

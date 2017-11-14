@@ -40,7 +40,7 @@ public class UserRoleActivationStrategyTest {
 
     @Before
     public void setUp() throws Exception {
-        userRoles = new HashSet<String>();
+        userRoles = new HashSet<>();
     }
 
     @Test
@@ -126,7 +126,7 @@ public class UserRoleActivationStrategyTest {
     @Test
     public void doesntFailForOtherCollectionTypes() {
 
-        Collection<String> userRoles = new ArrayList<String>();
+        Collection<String> userRoles = new ArrayList<>();
         userRoles.add("SOME_ROLE");
 
         Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
