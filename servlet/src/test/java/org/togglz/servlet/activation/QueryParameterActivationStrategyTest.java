@@ -216,4 +216,19 @@ public class QueryParameterActivationStrategyTest {
         boolean isActive = strategy.isActive(state, user);
         Assert.assertTrue(isActive);
     }
+
+    @Test
+    public void refererWithoutQueryParam() {
+        Map<String, String[]> parameters = new HashMap<>();
+        parameters.put("parameterWithoutValue", new String[0]);
+        when(request.getParameterMap()).thenReturn(parameters);
+        state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS,
+            "toggleFeatureX=handles space,toggleAll=yes,parameterWithoutValue");
+
+        when(request.getHeader("referer"))
+            .thenReturn("http://mysite.com/");
+        boolean isActive = strategy.isActive(state, user);
+        Assert.assertTrue(isActive);
+    }
+
 }
