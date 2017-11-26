@@ -18,6 +18,8 @@ public class LoggingStateRepository implements StateRepository {
 
     private final StateRepository delegate;
 
+    private String customLogMessage;
+
     /**
      * Creates a logging facade for the supplied {@link StateRepository}.
      * 
@@ -27,9 +29,28 @@ public class LoggingStateRepository implements StateRepository {
         this(delegate, LogFactory.getLog(LoggingStateRepository.class));
     }
 
+    /**
+     * Creates a logging facade for the supplied {@link StateRepository} using a custom log message. In your custom log message,
+     * mark the position of the feature name as {1} and the position for the new feature state which will be replaced by
+     * "enabled" or "disabled" as {2}.
+     * 
+     * @param delegate The repository to delegate invocations to
+     * @param customLogMessage Your custom log message. It may contain a placeholder {1} for the feature name and a placeholder
+     *        {2} for the new feature state which will be replaced by "enabled" or "disabled"
+     */
+    public LoggingStateRepository(StateRepository delegate, String customLogMessage) {
+        this(delegate, customLogMessage, LogFactory.getLog(LoggingStateRepository.class));
+    }
+
     protected LoggingStateRepository(StateRepository delegate, Log log) {
         this.delegate = delegate;
         this.log = log;
+    }
+
+    protected LoggingStateRepository(StateRepository delegate, String customLogMessage, Log log) {
+        this.delegate = delegate;
+        this.log = log;
+        this.customLogMessage = customLogMessage;
     }
 
     @Override
@@ -39,10 +60,24 @@ public class LoggingStateRepository implements StateRepository {
 
     @Override
     public void setFeatureState(FeatureState featureState) {
-        log.info("Setting Feature \"" + featureState.getFeature().name()
-            + "\" to \"" + getReadableFeatureState(featureState) + "\"");
+        if (customLogMessage != null) {
+            log.info(createCustomLogMessage(featureState));
+        } else {
+            log.info(createDefaultLogMessage(featureState));
+        }
         delegate.setFeatureState(featureState);
+    }
 
+    private String createDefaultLogMessage(FeatureState featureState) {
+        return "Setting Feature \"" + featureState.getFeature().name()
+            + "\" to \"" + getReadableFeatureState(featureState) + "\"";
+    }
+
+    private String createCustomLogMessage(FeatureState featureState) {
+        String logMsg = customLogMessage;
+        logMsg = logMsg.replace("{1}", featureState.getFeature().name());
+        logMsg = logMsg.replace("{2}", getReadableFeatureState(featureState));
+        return logMsg;
     }
 
     private String getReadableFeatureState(FeatureState featureState) {

@@ -36,7 +36,7 @@ public class LoggingStateRepositoryTest {
     }
 
     @Test
-    public void shouldDelegateSetFeatureStateAndLog() throws Exception {
+    public void shouldDelegateSetFeatureStateAndLog() {
         // GIVEN
         LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate, log);
 
@@ -45,6 +45,31 @@ public class LoggingStateRepositoryTest {
 
         // THEN
         verify(log).info("Setting Feature \"TEST\" to \"disabled\"");
+    }
+
+    @Test
+    public void shouldDelegateSetFeatureStateAndLogCustomLogMessage() {
+        // GIVEN
+        LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate, "Feature \"{1}\": \"{2}\"", log);
+
+        // WHEN
+        loggingStateRepository.setFeatureState(new FeatureState(DummyFeature.TEST, false));
+
+        // THEN
+        verify(log).info("Feature \"TEST\": \"disabled\"");
+    }
+
+    @Test
+    public void shouldDelegateSetFeatureStateAndLogCustomLogMessageWithoutPlaceholders() {
+        // GIVEN
+        LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate, "Feature toggled", log);
+        new LoggingStateRepository(delegate, "Feature toggled");
+
+        // WHEN
+        loggingStateRepository.setFeatureState(new FeatureState(DummyFeature.TEST, false));
+
+        // THEN
+        verify(log).info("Feature toggled");
     }
 
     private enum DummyFeature implements Feature {
