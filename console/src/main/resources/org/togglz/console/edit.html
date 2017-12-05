@@ -57,8 +57,7 @@
   </script>
   
   ${foreach model.parameters param}
-    <div class="form-group param strategy${param.strategyIndex}"
-        ${if !param.visible} style="display: none;" ${end}>
+    <div class="form-group param strategy${param.strategyIndex} ${if !param.visible}collapse${end}">
       <label class="col-sm-2 control-label" for="${param.inputId}">
         ${param.label}
       </label>
