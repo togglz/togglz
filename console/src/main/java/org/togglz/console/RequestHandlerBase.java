@@ -12,12 +12,15 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.togglz.core.Togglz;
+import org.webjars.WebJarAssetLocator;
 
 import com.floreysoft.jmte.Engine;
 
 public abstract class RequestHandlerBase implements RequestHandler {
 
     private final Charset UTF8 = Charset.forName("UTF8");
+
+    private WebJarAssetLocator locator = new WebJarAssetLocator();
 
     protected void writeResponse(RequestEvent event, String body) throws IOException {
 
@@ -30,6 +33,10 @@ public abstract class RequestHandlerBase implements RequestHandler {
         if (event.getContext().getServletContextName() != null) {
             model.put("displayName", event.getContext().getServletContextName());
         }
+
+        model.put("pathBootstrapCss", getWebjarPath("bootstrap", "css/bootstrap.min.css"));
+        model.put("pathBootstrapJs", getWebjarPath("bootstrap", "js/bootstrap.min.js"));
+        model.put("pathJQuery", getWebjarPath("jquery", "jquery.min.js"));
 
         String template = getResourceAsString("template.html");
         String result = new Engine().transform(template, model);
@@ -62,6 +69,12 @@ public abstract class RequestHandlerBase implements RequestHandler {
         }
     }
 
-
+    private String getWebjarPath(String webjar, String partialPath) {
+        String fullPath = locator.getFullPathExact(webjar, partialPath);
+        if (fullPath.contains("META-INF/resources")) {
+            fullPath = fullPath.replace("META-INF/resources", "");
+        }
+        return fullPath;
+    }
 
 }

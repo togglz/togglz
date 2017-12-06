@@ -9,4 +9,5 @@ Version-Patterns:
 Import-Template:
  javax.servlet.*;version="0",
  org.togglz.*;version="${osgi.bundles.version:default}",
- com.floreysoft.jmte.*;version="0"
+ com.floreysoft.jmte.*;version="0",
+ org.webjars.*;version="0"
