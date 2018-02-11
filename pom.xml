@@ -266,6 +266,12 @@
           <artifactId>wildfly-arquillian-container-managed</artifactId>
           <version>${wildfly.version}</version>
           <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>sun.jdk</groupId>
+              <artifactId>jconsole</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
       </dependencies>
     </profile>
@@ -283,6 +289,12 @@
           <artifactId>wildfly-arquillian-container-remote</artifactId>
           <version>${wildfly.version}</version>
           <scope>test</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>sun.jdk</groupId>
+              <artifactId>jconsole</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
       </dependencies>
     </profile>
