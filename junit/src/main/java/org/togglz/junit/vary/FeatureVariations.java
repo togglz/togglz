@@ -59,7 +59,7 @@ public class FeatureVariations extends Suite {
     protected List<Runner> runners = new ArrayList<Runner>();
 
     public FeatureVariations(Class<?> clazz) throws InitializationError {
-        super(clazz, Collections.<Runner> emptyList());
+        super(null, Collections.<Runner> emptyList());
 
         TestClass testClass = new TestClass(clazz);
 
