@@ -8,7 +8,6 @@ after_success:
 jdk:
   - openjdk7
   - openjdk8
-  - oraclejdk9
 notifications:
   webhooks:
     urls:
