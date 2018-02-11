@@ -1,8 +1,4 @@
 language: java
-sudo: false
-cache:
-  directories:
-      - '$HOME/.m2/repository'
 install:
   - "mvn -P ${CONTAINER} -DJBOSS_REPO=true -DskipTests=true -B install"
 script:
@@ -11,7 +7,8 @@ after_success:
   - "bash .travis-sonatype-deploy.sh"
 jdk:
   - openjdk7
-  - oraclejdk8
+  - openjdk8
+  - openjdk9
 notifications:
   webhooks:
     urls:
