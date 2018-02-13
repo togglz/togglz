@@ -12,6 +12,7 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
 import org.togglz.core.Feature;
+import org.togglz.testing.vary.VariationSet;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ public class FeatureVariations extends Suite {
 
         TestClass testClass = new TestClass(clazz);
 
-        VariationSetBuilder<? extends Feature> permutation = getPermutationFromMethod(testClass);
+        VariationSet<? extends Feature> permutation = getPermutationFromMethod(testClass);
         if (permutation == null) {
             throw new IllegalStateException("You have to place a @" + Variations.class.getSimpleName()
                     + " annotation one the class: " + clazz.getName());
@@ -75,14 +76,14 @@ public class FeatureVariations extends Suite {
 
     }
 
-    private VariationSetBuilder<? extends Feature> getPermutationFromMethod(TestClass testClass) {
+    private VariationSet<? extends Feature> getPermutationFromMethod(TestClass testClass) {
 
         List<FrameworkMethod> methods = testClass.getAnnotatedMethods(Variations.class);
         for (FrameworkMethod method : methods) {
             int modifiers = method.getMethod().getModifiers();
             if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers)) {
                 try {
-                    return (VariationSetBuilder) method.invokeExplosively(null);
+                    return (VariationSet) method.invokeExplosively(null);
                 } catch (Throwable e) {
                     throw new IllegalStateException(e);
                 }

@@ -11,9 +11,9 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
-import org.togglz.junit.vary.VariationSetBuilder;
 import org.togglz.testing.TestFeatureManager;
 import org.togglz.testing.TestFeatureManagerProvider;
+import org.togglz.testing.vary.VariationSetBuilder;
 
 /**
  * <p>
