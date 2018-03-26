@@ -81,7 +81,7 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
     @Override
     public FeatureState getDefaultFeatureState() {
-        return defaultFeatureState;
+        return defaultFeatureState.copy();
     }
 
     @Override

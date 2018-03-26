@@ -164,7 +164,21 @@ public class PropertyFeatureProviderTest {
 
     }
 
-    private Condition<FeatureGroup> groupNamed(final String name) {
+    @Test
+    public void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
+        Properties properties = new Properties();
+        properties.setProperty("F1", "");
+
+        PropertyFeatureProvider provider = new PropertyFeatureProvider(properties);
+
+        FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
+        assertThat(metadata.getDefaultFeatureState().isEnabled()).isFalse();
+        metadata.getDefaultFeatureState().setEnabled(true);
+
+        assertThat(provider.getMetaData(new NamedFeature("F1")).getDefaultFeatureState().isEnabled()).isFalse();
+    }
+
+        private Condition<FeatureGroup> groupNamed(final String name) {
         return new Condition<FeatureGroup>() {
             @Override
             public boolean matches(FeatureGroup value) {
