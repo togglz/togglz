@@ -1,7 +1,5 @@
 package org.togglz.core.manager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.InfoLink;
@@ -9,6 +7,8 @@ import org.togglz.core.annotation.Label;
 import org.togglz.core.annotation.Owner;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class EnumBasedFeatureProviderTest {
 
@@ -147,6 +147,17 @@ public class EnumBasedFeatureProviderTest {
             assertThat(provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel())
                 .isEqualTo("Additional Feature");
 
+        }
+
+        @Test
+        public void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
+            FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
+
+            FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
+            assertThat(metaData.getDefaultFeatureState().isEnabled()).isEqualTo(false);
+            metaData.getDefaultFeatureState().setEnabled(true);
+
+            assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getDefaultFeatureState().isEnabled()).isEqualTo(false);
         }
 
     private static class NotAnEnum implements Feature {
