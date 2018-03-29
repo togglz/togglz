@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.togglz</groupId>
+    <artifactId>togglz-spring-boot</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>togglz-spring-boot-starter</artifactId>
+  <name>Togglz - Spring Boot Starter</name>
+  <description>Togglz - Spring Boot Starter</description>
+
+  <developers>
+    <developer>
+      <id>marceloverdijk</id>
+      <email>maceloverdijk@gmail.com</email>
+      <name>Marcel Overdijk</name>
+      <timezone>CET</timezone>
+    </developer>
+    <developer>
+      <id>rui.figueira</id>
+      <email>rui.figueira@gmail.com</email>
+      <name>Rui Figueira</name>
+      <timezone>WET</timezone>
+    </developer>
+  </developers>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-boot2-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-boot1-autoconfigure</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!--
+      we need to ensure target/classes folder exist, otherwise 
+      virgo plugin will fail
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>create-classes-folder</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <mkdir dir="target/classes" />
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
