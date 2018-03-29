@@ -49,6 +49,8 @@
     <osgi.bundles.version>2.5.0</osgi.bundles.version>
 
     <spring.version>3.2.17.RELEASE</spring.version>
+    
+    <project.root.basedir>${project.parent.basedir}</project.root.basedir>
   </properties>
 
   <build>
@@ -102,7 +104,7 @@
             </goals>
             <configuration>
               <failOnWarnings>true</failOnWarnings>
-              <osgiProfilePath>${project.parent.basedir}/java6-server.profile</osgiProfilePath>
+              <osgiProfilePath>${project.root.basedir}/java6-server.profile</osgiProfilePath>
             </configuration>
           </execution>
         </executions>
@@ -157,6 +159,12 @@
           <version>1.1.2.RELEASE</version>
         </plugin>
 
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -173,7 +181,7 @@
     <module>spring-core</module>
     <module>spring-web</module>
     <module>spring-security</module>
-    <module>spring-boot-starter</module>
+    <module>spring-boot</module>
     <module>deltaspike</module>
     <module>shiro</module>
     <module>jsf</module>
@@ -350,7 +358,31 @@
 
       <dependency>
         <groupId>org.togglz</groupId>
+        <artifactId>togglz-spring-boot-common-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-spring-boot1-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-spring-boot2-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
         <artifactId>togglz-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-spring-actuator-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
 

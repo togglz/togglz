@@ -6,7 +6,6 @@ script:
 after_success:
   - "bash .travis-sonatype-deploy.sh"
 jdk:
-  - openjdk7
   - openjdk8
 notifications:
   webhooks:
