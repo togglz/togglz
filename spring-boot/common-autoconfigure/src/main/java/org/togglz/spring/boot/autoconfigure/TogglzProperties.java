@@ -380,6 +380,11 @@ public class TogglzProperties {
 		}
 	}
 
+	/**
+	 * @deprecated Use Spring Boot 2 generic endpoint configuration instead
+	 *
+	 * @see <a href="https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html">Spring Boot 2 chapter on Endpoints</a>
+	 */
 	@Deprecated
 	public static class Endpoint {
 
