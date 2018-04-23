@@ -74,7 +74,7 @@ public class CompositeStateRepository implements StateRepository {
         for (StateRepository repository : iterationOrder.getSelected(repositories)) {
             FeatureState featureState = repository.getFeatureState(feature);
             if (featureState != null) {
-                return repository.getFeatureState(feature);
+                return featureState;
             }
         }
         
