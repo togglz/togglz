@@ -14,7 +14,7 @@
   <description>Togglz - Spring Boot 1.5 Autoconfigure</description>
 
   <properties>
-    <spring-boot.version>1.5.4.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
   </properties>
 
   <dependencyManagement>

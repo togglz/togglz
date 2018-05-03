@@ -13,7 +13,7 @@
   <description>Togglz - Spring Boot Autoconfiguration Common</description>
 
   <properties>
-    <spring-boot.version>1.5.4.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
     <thymeleaf-togglz.version>1.0.1.RELEASE</thymeleaf-togglz.version>
   </properties>
 
