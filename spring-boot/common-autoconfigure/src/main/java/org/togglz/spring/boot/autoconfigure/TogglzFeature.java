@@ -57,8 +57,8 @@ public class TogglzFeature implements Comparable<TogglzFeature> {
         return params;
     }
 
-	@Override
-	public int compareTo(TogglzFeature o) {
-		return name.compareTo(o.getName());
-	}
+    @Override
+    public int compareTo(TogglzFeature o) {
+        return name.compareTo(o.getName());
+    }
 }
