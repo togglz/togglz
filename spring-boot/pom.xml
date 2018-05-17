@@ -20,8 +20,7 @@
 
   <modules>
     <module>common-autoconfigure</module>
-    <module>boot1-autoconfigure</module>
-    <module>boot2-autoconfigure</module>
+    <module>legacy-starter</module>
     <module>starter</module>
   </modules>
   

@@ -1,6 +1,0 @@
-# Auto Configure
-org.springframework.boot2.autoconfigure.EnableAutoConfiguration=\
-org.togglz.spring.boot2.autoconfigure.actuator.TogglzEndpointAutoConfiguration
-
-org.springframework.boot2.actuate.autoconfigure.web.ManagementContextConfiguration=\
-org.togglz.spring.boot2.autoconfigure.management.TogglzManagementContextConfiguration
