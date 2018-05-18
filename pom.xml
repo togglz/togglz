@@ -358,19 +358,7 @@
 
       <dependency>
         <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-boot-common-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-boot1-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-boot2-autoconfigure</artifactId>
+        <artifactId>togglz-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
 

@@ -49,7 +49,7 @@
 
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-spring-boot-common-autoconfigure</artifactId>
+      <artifactId>togglz-spring-boot-autoconfigure</artifactId>
     </dependency>
 
     <dependency>

@@ -19,7 +19,7 @@
   </properties>
 
   <modules>
-    <module>common-autoconfigure</module>
+    <module>autoconfigure</module>
     <module>legacy-starter</module>
     <module>starter</module>
   </modules>
