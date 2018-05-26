@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.test;
+package org.togglz.spring.test;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
