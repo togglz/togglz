@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.togglz.legacy.spring.boot.autoconfigure.management;
+package org.togglz.spring.boot.actuate.autoconfigure;
 
-import org.springframework.boot.actuate.autoconfigure.ManagementContextConfiguration;
-import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
-import org.springframework.boot.actuate.autoconfigure.ManagementServerPropertiesAutoConfiguration;
-import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
+import org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration;
+import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
+import org.springframework.boot.actuate.autoconfigure.web.server.ManagementServerProperties;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -38,10 +38,10 @@ import org.togglz.spring.boot.autoconfigure.TogglzProperties;
  * @author Marcel Overdijk
  */
 @ManagementContextConfiguration
-@ConditionalOnClass(AbstractEndpoint.class)
+@ConditionalOnClass(Endpoint.class)
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties({TogglzProperties.class})
-@AutoConfigureAfter({ TogglzAutoConfiguration.class, ManagementServerPropertiesAutoConfiguration.class })
+@AutoConfigureAfter({ TogglzAutoConfiguration.class, ManagementContextAutoConfiguration.class })
 public class TogglzManagementContextConfiguration {
 
     @Configuration
@@ -51,14 +51,15 @@ public class TogglzManagementContextConfiguration {
 
         private final ManagementServerProperties managementServerProperties;
 
-        public TogglzConsoleConfiguration(TogglzProperties properties, ManagementServerProperties managementServerProperties) {
+        protected TogglzConsoleConfiguration(TogglzProperties properties, ManagementServerProperties managementServerProperties) {
             super(properties);
             this.managementServerProperties = managementServerProperties;
         }
 
         @Override
         protected String getContextPath() {
-            return managementServerProperties.getContextPath();
+            return managementServerProperties.getServlet().getContextPath();
         }
     }
+
 }
