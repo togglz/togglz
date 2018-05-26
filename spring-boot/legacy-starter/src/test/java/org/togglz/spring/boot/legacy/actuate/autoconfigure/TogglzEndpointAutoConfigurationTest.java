@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package org.togglz.legacy.spring.boot.autoconfigure.actuator;
+package org.togglz.spring.boot.legacy.actuate.autoconfigure;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.togglz.legacy.spring.boot.autoconfigure.BaseTest;
-import org.togglz.legacy.spring.boot.autoconfigure.actuator.TogglzEndpoint;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
+import org.togglz.spring.boot.legacy.actuate.BaseTest;
+import org.togglz.spring.boot.legacy.actuate.TogglzEndpoint;
 
 /**
  * Tests for {@link TogglzAutoConfiguration}.

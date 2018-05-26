@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.legacy.spring.boot.autoconfigure.actuator;
+package org.togglz.spring.boot.legacy.actuate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,11 +24,10 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Test;
-import org.togglz.legacy.spring.boot.autoconfigure.BaseTest;
-import org.togglz.legacy.spring.boot.autoconfigure.actuator.TogglzEndpoint;
-import org.togglz.legacy.spring.boot.autoconfigure.actuator.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzFeature;
+import org.togglz.spring.boot.legacy.actuate.TogglzEndpoint;
+import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 
 /**
  * Tests for {@link TogglzEndpoint}.

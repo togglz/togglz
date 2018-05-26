@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure.management;
+package org.togglz.spring.boot.actuate.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.togglz.spring.boot.autoconfigure.BaseTest;
+import org.togglz.spring.boot.actuate.BaseTest;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 
 /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure.actuator;
+package org.togglz.spring.boot.actuate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,11 +22,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.togglz.spring.boot.autoconfigure.BaseTest;
+import org.togglz.spring.boot.actuate.TogglzEndpoint;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzFeature;
-import org.togglz.spring.boot.autoconfigure.actuator.TogglzEndpoint;
-import org.togglz.spring.boot.autoconfigure.actuator.TogglzEndpointAutoConfiguration;
 
 /**
  * Tests for Spring Boot 2 compatible {@link TogglzEndpoint}.

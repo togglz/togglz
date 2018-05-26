@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.legacy.spring.boot.autoconfigure.actuator;
+package org.togglz.spring.boot.legacy.actuate;
 
 import java.util.ArrayList;
 import java.util.Collections;
