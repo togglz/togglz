@@ -222,7 +222,7 @@ public class TogglzAutoConfiguration {
     @Conditional(TogglzConsoleBaseConfiguration.OnConsoleAndNotUseManagementPort.class)
     protected static class TogglzConsoleConfiguration extends TogglzConsoleBaseConfiguration {
 
-        public TogglzConsoleConfiguration(@Autowired TogglzProperties properties) {
+        public TogglzConsoleConfiguration(TogglzProperties properties) {
             super(properties);
         }
     }
