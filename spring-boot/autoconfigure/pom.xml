@@ -13,7 +13,7 @@
   <description>Togglz - Spring Boot Autoconfiguration </description>
 
   <properties>
-    <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
     <thymeleaf-togglz.version>1.0.1.RELEASE</thymeleaf-togglz.version>
   </properties>
 
@@ -32,12 +32,6 @@
 
   <developers>
       <developer>
-      <id>marceloverdijk</id>
-      <email>maceloverdijk@gmail.com</email>
-      <name>Marcel Overdijk</name>
-      <timezone>CET</timezone>
-    </developer>
-    <developer>
       <id>marceloverdijk</id>
       <email>maceloverdijk@gmail.com</email>
       <name>Marcel Overdijk</name>
