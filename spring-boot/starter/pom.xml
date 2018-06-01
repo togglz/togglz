@@ -10,16 +10,14 @@
   </parent>
 
   <artifactId>togglz-spring-boot-starter</artifactId>
-  <name>Togglz - Spring Boot 2 Starter</name>
-  <description>Togglz - Spring Boot 2 Starter</description>
+  <name>Togglz - Spring Boot Starter</name>
+  <description>Togglz - Spring Boot Starter</description>
 
   <properties>
-    <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
+    <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
 
-    <!-- Spring Boot 2 only supports Java 8 and Spring 5 -->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <spring.version>5.0.5.RELEASE</spring.version>
     <assertj.version>3.9.1</assertj.version>
   </properties>
 

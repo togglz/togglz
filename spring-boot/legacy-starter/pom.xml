@@ -10,11 +10,11 @@
   </parent>
 
   <artifactId>togglz-legacy-spring-boot-starter</artifactId>
-  <name>Togglz - Spring Boot 1.5 Autoconfigure</name>
-  <description>Togglz - Spring Boot 1.5 Autoconfigure</description>
+  <name>Togglz - Spring Boot 1.5 Starter</name>
+  <description>Togglz - Spring Boot 1.5 Starter</description>
 
   <properties>
-    <spring-boot.version>1.5.12.RELEASE</spring-boot.version>
+    <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
   </properties>
 
   <dependencyManagement>
