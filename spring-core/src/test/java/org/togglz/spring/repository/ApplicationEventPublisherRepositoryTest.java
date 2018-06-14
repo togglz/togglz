@@ -35,7 +35,7 @@ public class ApplicationEventPublisherRepositoryTest {
         MockitoAnnotations.initMocks(this);
 
         doNothing().when(mockApplicationEventPublisher).publishEvent(mockEvent);
-        
+
         delegate = Mockito.mock(StateRepository.class);
         // the mock supports the ENUM
         Mockito.when(delegate.getFeatureState(DummyFeature.TEST))
