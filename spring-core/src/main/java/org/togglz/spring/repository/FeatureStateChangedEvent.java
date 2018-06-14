@@ -1,0 +1,24 @@
+
+package org.togglz.spring.repository;
+
+import org.springframework.context.ApplicationEvent;
+import org.togglz.core.repository.FeatureState;
+
+/**
+ * An {@link ApplicationEvent} that is published whenever a {@link FeatureState} is changed
+ * @author Igor Khudoshin
+ */
+public class FeatureStateChangedEvent extends ApplicationEvent {
+	private static final long serialVersionUID = 9114298135037191136L;
+
+	private FeatureState previousFeatureState;
+
+	public FeatureState getPreviousFeatureState() {
+		return previousFeatureState;
+	}
+
+	public FeatureStateChangedEvent(FeatureState previousFeatureState, FeatureState featureState) {
+		super(featureState);
+		this.previousFeatureState = previousFeatureState;
+	}
+}
