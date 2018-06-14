@@ -17,6 +17,10 @@ public class FeatureStateChangedEvent extends ApplicationEvent {
 		return previousFeatureState;
 	}
 
+	public FeatureState getFeatureState() {
+		return (FeatureState) getSource();
+	}
+
 	public FeatureStateChangedEvent(FeatureState previousFeatureState, FeatureState featureState) {
 		super(featureState);
 		this.previousFeatureState = previousFeatureState;
