@@ -6,7 +6,7 @@ import org.togglz.core.repository.FeatureState;
 
 /**
  * An {@link ApplicationEvent} that is published whenever a {@link FeatureState} is changed
- * 
+ *
  * @author Igor Khudoshin
  */
 public class FeatureStateChangedEvent extends ApplicationEvent {
@@ -23,7 +23,7 @@ public class FeatureStateChangedEvent extends ApplicationEvent {
     }
 
     public FeatureStateChangedEvent(FeatureState previousFeatureState, FeatureState featureState) {
-        super(featureState);
-        this.previousFeatureState = previousFeatureState;
+        super(FeatureState.copyOf(featureState));
+        this.previousFeatureState = FeatureState.copyOf(previousFeatureState);
     }
 }
