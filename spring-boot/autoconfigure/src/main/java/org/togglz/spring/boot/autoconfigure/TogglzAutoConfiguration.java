@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -58,6 +59,7 @@ import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
 import org.togglz.spring.boot.autoconfigure.TogglzProperties.FeatureSpec;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
+import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 import org.togglz.spring.web.FeatureInterceptor;
 
@@ -74,8 +76,9 @@ import com.github.heneke.thymeleaf.togglz.TogglzDialect;
 public class TogglzAutoConfiguration {
 
     @Bean
-    public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener() {
-        return new TogglzApplicationContextBinderApplicationListener();
+    public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener(
+        ObjectProvider<ContextRefreshedEventFilter> contextRefreshedEventFilter) {
+        return new TogglzApplicationContextBinderApplicationListener(contextRefreshedEventFilter.getIfAvailable());
     }
 
     @Configuration

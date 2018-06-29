@@ -35,9 +35,25 @@ public class TogglzApplicationContextBinderApplicationListener implements Applic
 
     private static final Log log = LogFactory.getLog(TogglzApplicationContextBinderApplicationListener.class);
 
+    private static final ContextRefreshedEventFilter ACCEPT_ALL = new ContextRefreshedEventFilter() {
+        @Override public boolean test(ContextRefreshedEvent t) {
+            return true;
+        }
+    };
+
+    private final ContextRefreshedEventFilter filter;
+
+    public TogglzApplicationContextBinderApplicationListener() {
+        this(null);
+    }
+
+    public TogglzApplicationContextBinderApplicationListener(ContextRefreshedEventFilter filter) {
+        this.filter = (filter == null ? ACCEPT_ALL : filter);
+    }
+
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof ContextRefreshedEvent) {
+        if (event instanceof ContextRefreshedEvent && filter.test((ContextRefreshedEvent) event)) {
             if (ContextClassLoaderApplicationContextHolder.get() != null) {
                 log.warn("ApplicationContext already bound to current context class loader, releasing it first");
                 ContextClassLoaderApplicationContextHolder.release();
@@ -47,5 +63,15 @@ public class TogglzApplicationContextBinderApplicationListener implements Applic
         } else if (event instanceof ContextClosedEvent) {
             ContextClassLoaderApplicationContextHolder.release();
         }
+    }
+
+    /**
+     * A filter that can be used to exclude {@link ContextRefreshedEvent} events used to populate {@link ContextClassLoaderApplicationContextHolder}.
+     *
+     * @see <a href="https://github.com/togglz/togglz/issues/279">Issue 279</a>
+     */
+    public interface ContextRefreshedEventFilter {
+
+        boolean test(ContextRefreshedEvent t);
     }
 }
