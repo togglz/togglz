@@ -16,8 +16,6 @@
 
 package org.togglz.core.util;
 
-import java.util.Arrays;
-
 import static org.togglz.core.util.Preconditions.checkNotNull;
 
 /**

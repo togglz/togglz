@@ -25,7 +25,7 @@ public class FeatureMapTest {
     @Test
     public void canBootstrapViaConstructor() {
         FeatureManager featureManager = mock(FeatureManager.class);
-        Set<Feature> features = new HashSet<Feature>();
+        Set<Feature> features = new HashSet<>();
         String name1 = "Feature 1";
         String name2 = "Feature 2";
         Feature feature1 = mock(Feature.class, name1);
@@ -54,7 +54,7 @@ public class FeatureMapTest {
             );
 
         FeatureManager featureManager = mock(FeatureManager.class);
-        when(featureManager.getFeatures()).thenReturn(new HashSet<Feature>(features));
+        when(featureManager.getFeatures()).thenReturn(new HashSet<>(features));
 
         FeatureMap map = new FeatureMap(featureManager);
 

@@ -116,7 +116,7 @@ public class CompositeStateRepository implements StateRepository {
          */
         FIFO {
             public List<StateRepository> getSelected(List<StateRepository> from) {
-                return new ArrayList<StateRepository>(from);
+                return new ArrayList<>(from);
             }
         },
         
@@ -125,7 +125,7 @@ public class CompositeStateRepository implements StateRepository {
          */
         LIFO {
             public List<StateRepository> getSelected(List<StateRepository> from) {
-                List<StateRepository> result = new ArrayList<StateRepository>(from);
+                List<StateRepository> result = new ArrayList<>(from);
                 Collections.reverse(result);
                 return result;
             }
@@ -164,7 +164,7 @@ public class CompositeStateRepository implements StateRepository {
         };
         
         private static List<StateRepository> get(List<StateRepository> from, int index) {
-            List<StateRepository> result = new ArrayList<StateRepository>(1);
+            List<StateRepository> result = new ArrayList<>(1);
             result.add(from.get(index));
             return result;
         }

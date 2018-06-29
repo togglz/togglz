@@ -151,9 +151,9 @@ public class SchemaUpdaterTest {
             ResultSet resultSet = null;
             try {
                 resultSet = statement.executeQuery(sql);
-                List<Object[]> result = new ArrayList<Object[]>();
+                List<Object[]> result = new ArrayList<>();
                 while (resultSet.next()) {
-                    List<Object> row = new ArrayList<Object>();
+                    List<Object> row = new ArrayList<>();
                     for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {
                         row.add(resultSet.getObject(i + 1));
                     }
