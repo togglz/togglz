@@ -15,8 +15,6 @@
 
     <properties>
         <microprofile.config.version>1.1</microprofile.config.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
