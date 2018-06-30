@@ -46,7 +46,7 @@
     <wildfly.version>8.2.1.Final</wildfly.version>
 
     <!-- Set version of OSGi bundles without 'SNAPSHOT', etc. -->
-    <osgi.bundles.version>2.5.0</osgi.bundles.version>
+    <osgi.bundles.version>2.6.0</osgi.bundles.version>
 
     <spring.version>3.2.17.RELEASE</spring.version>
     
