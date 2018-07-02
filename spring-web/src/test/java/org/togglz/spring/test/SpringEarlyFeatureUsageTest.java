@@ -9,6 +9,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.core.SpringVersion;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.togglz.test.Deployments;
@@ -22,7 +23,7 @@ public class SpringEarlyFeatureUsageTest {
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
-                .artifact("org.springframework:spring-web:3.0.7.RELEASE")
+                .artifact("org.springframework:spring-web:" + SpringVersion.getVersion())
                 .asFiles())
             .addAsWebInfResource("applicationContext.xml")
             .setWebXML("spring-web.xml")
