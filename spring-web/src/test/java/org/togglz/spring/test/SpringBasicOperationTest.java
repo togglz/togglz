@@ -11,7 +11,6 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.core.SpringVersion;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
 
@@ -26,7 +25,8 @@ public class SpringBasicOperationTest {
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
-                .artifact("org.springframework:spring-web:" + SpringVersion.getVersion())
+                .filesystemRelativePomPath()
+                .artifact("org.springframework:spring-web")
                 .asFiles())
             .addAsWebInfResource("applicationContext.xml")
             .setWebXML("spring-web.xml")

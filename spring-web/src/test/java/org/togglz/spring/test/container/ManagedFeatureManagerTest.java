@@ -7,7 +7,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.core.SpringVersion;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.spring.test.BasicFeatures;
 import org.togglz.test.Deployments;
@@ -21,7 +20,8 @@ public class ManagedFeatureManagerTest {
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
-                    .artifact("org.springframework:spring-web:" + SpringVersion.getVersion())
+                    .filesystemRelativePomPath()
+                    .artifact("org.springframework:spring-web")
                     .asFiles())
             .addClass(BasicFeatures.class)
             .addAsWebInfResource("applicationContext-container.xml")
