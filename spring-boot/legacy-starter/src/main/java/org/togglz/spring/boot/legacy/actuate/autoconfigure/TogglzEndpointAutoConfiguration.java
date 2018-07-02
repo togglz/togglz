@@ -26,7 +26,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
@@ -49,20 +48,18 @@ public class TogglzEndpointAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(TogglzApplicationContextBinderApplicationListener.class)
     ContextRefreshedEventFilter contextRefreshedEventFilter() {
-        return new ContextRefreshedEventFilter() {
-            @Override public boolean test(ContextRefreshedEvent contextRefreshedEvent) {
-                ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
-                if (applicationContext instanceof ConfigurableWebApplicationContext) {
-                    try {
-                        return ((ConfigurableWebApplicationContext) applicationContext).getNamespace() == null;
-                    } catch (UnsupportedOperationException ignored) {
-                        // Some ConfigurableWebApplicationContext implementation may throw UnsupportedOperationException
-                        // if they do not support namespaces, but Spring Boot's EmbeddedWebApplicationContext will not.
-                        // Still, we catch this exception and will ignore the application context in such cases.
-                    }
+        return contextRefreshedEvent -> {
+            ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
+            if (applicationContext instanceof ConfigurableWebApplicationContext) {
+                try {
+                    return ((ConfigurableWebApplicationContext) applicationContext).getNamespace() == null;
+                } catch (UnsupportedOperationException ignored) {
+                    // Some ConfigurableWebApplicationContext implementation may throw UnsupportedOperationException
+                    // if they do not support namespaces, but Spring Boot's EmbeddedWebApplicationContext will not.
+                    // Still, we catch this exception and will ignore the application context in such cases.
                 }
-                return false;
             }
+            return false;
         };
     }
 

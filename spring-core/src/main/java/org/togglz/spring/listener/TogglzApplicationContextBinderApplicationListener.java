@@ -25,6 +25,8 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
+import java.util.function.Predicate;
+
 /**
  * {@link ApplicationListener} that binds the {@link ApplicationContext}
  * to the Togglz {@link ContextClassLoaderApplicationContextHolder}.
@@ -35,11 +37,7 @@ public class TogglzApplicationContextBinderApplicationListener implements Applic
 
     private static final Log log = LogFactory.getLog(TogglzApplicationContextBinderApplicationListener.class);
 
-    private static final ContextRefreshedEventFilter ACCEPT_ALL = new ContextRefreshedEventFilter() {
-        @Override public boolean test(ContextRefreshedEvent t) {
-            return true;
-        }
-    };
+    private static final ContextRefreshedEventFilter ACCEPT_ALL = t -> true;
 
     private final ContextRefreshedEventFilter filter;
 
@@ -70,7 +68,8 @@ public class TogglzApplicationContextBinderApplicationListener implements Applic
      *
      * @see <a href="https://github.com/togglz/togglz/issues/279">Issue 279</a>
      */
-    public interface ContextRefreshedEventFilter {
+    @FunctionalInterface
+    public interface ContextRefreshedEventFilter extends Predicate<ContextRefreshedEvent> {
 
         boolean test(ContextRefreshedEvent t);
     }

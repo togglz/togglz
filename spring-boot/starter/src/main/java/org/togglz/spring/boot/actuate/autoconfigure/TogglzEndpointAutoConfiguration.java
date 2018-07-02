@@ -27,7 +27,6 @@ import org.springframework.boot.web.context.ConfigurableWebServerApplicationCont
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.spring.boot.actuate.TogglzEndpoint;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
@@ -48,14 +47,12 @@ public class TogglzEndpointAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(TogglzApplicationContextBinderApplicationListener.class)
     ContextRefreshedEventFilter contextRefreshedEventFilter() {
-        return new ContextRefreshedEventFilter() {
-            @Override public boolean test(ContextRefreshedEvent contextRefreshedEvent) {
-                ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
-                if (applicationContext instanceof ConfigurableWebServerApplicationContext) {
-                    return ((ConfigurableWebServerApplicationContext) applicationContext).getServerNamespace() == null;
-                }
-                return false;
+        return contextRefreshedEvent -> {
+            ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
+            if (applicationContext instanceof ConfigurableWebServerApplicationContext) {
+                return ((ConfigurableWebServerApplicationContext) applicationContext).getServerNamespace() == null;
             }
+            return false;
         };
     }
 
