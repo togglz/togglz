@@ -20,7 +20,6 @@ public class ManagedFeatureManagerTest {
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
-                    .filesystemRelativePomPath()
                     .artifact("org.springframework:spring-web")
                     .asFiles())
             .addClass(BasicFeatures.class)
