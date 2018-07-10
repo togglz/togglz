@@ -26,8 +26,7 @@ public class ShiroUsersTest {
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
             .addAsLibraries(Packaging.mavenDependencies()
-                .artifact("org.apache.shiro:shiro-web:1.2.0")
-                .artifact("commons-logging:commons-logging:1.1.1")
+                .artifact("org.apache.shiro:shiro-web")
                 .asFiles())
             .addAsLibraries(Deployments.getTogglzShiroArchive())
             .addClass(ShiroUsersConfiguration.class)

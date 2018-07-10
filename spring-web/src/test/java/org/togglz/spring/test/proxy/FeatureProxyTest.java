@@ -10,7 +10,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.core.SpringVersion;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.togglz.core.context.FeatureContext;
@@ -26,7 +25,7 @@ public class FeatureProxyTest {
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
-                .artifact("org.springframework:spring-web:" + SpringVersion.getVersion())
+                .artifact("org.springframework:spring-web")
                 .asFiles())
             .addAsWebInfResource("applicationContext.xml")
             .addAsWebInfResource("applicationContext-proxy.xml")
