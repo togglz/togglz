@@ -23,11 +23,15 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.web.context.ConfigurableWebServerApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.spring.boot.actuate.TogglzEndpoint;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
+import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
+import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz Endpoint (Spring Boot 2.x).
@@ -38,6 +42,19 @@ import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 @ConditionalOnClass(Endpoint.class)
 @AutoConfigureAfter(TogglzAutoConfiguration.class)
 public class TogglzEndpointAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(TogglzApplicationContextBinderApplicationListener.class)
+    ContextRefreshedEventFilter contextRefreshedEventFilter() {
+        return contextRefreshedEvent -> {
+            ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
+            if (applicationContext instanceof ConfigurableWebServerApplicationContext) {
+                return ((ConfigurableWebServerApplicationContext) applicationContext).getServerNamespace() == null;
+            }
+            return false;
+        };
+    }
 
     @Bean
     @ConditionalOnBean(FeatureManager.class)

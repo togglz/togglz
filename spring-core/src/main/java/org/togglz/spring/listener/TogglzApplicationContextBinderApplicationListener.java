@@ -25,6 +25,8 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
+import java.util.function.Predicate;
+
 /**
  * {@link ApplicationListener} that binds the {@link ApplicationContext}
  * to the Togglz {@link ContextClassLoaderApplicationContextHolder}.
@@ -35,9 +37,21 @@ public class TogglzApplicationContextBinderApplicationListener implements Applic
 
     private static final Log log = LogFactory.getLog(TogglzApplicationContextBinderApplicationListener.class);
 
+    private static final ContextRefreshedEventFilter ACCEPT_ALL = t -> true;
+
+    private final ContextRefreshedEventFilter filter;
+
+    public TogglzApplicationContextBinderApplicationListener() {
+        this(null);
+    }
+
+    public TogglzApplicationContextBinderApplicationListener(ContextRefreshedEventFilter filter) {
+        this.filter = (filter == null ? ACCEPT_ALL : filter);
+    }
+
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof ContextRefreshedEvent) {
+        if (event instanceof ContextRefreshedEvent && filter.test((ContextRefreshedEvent) event)) {
             if (ContextClassLoaderApplicationContextHolder.get() != null) {
                 log.warn("ApplicationContext already bound to current context class loader, releasing it first");
                 ContextClassLoaderApplicationContextHolder.release();
@@ -47,5 +61,16 @@ public class TogglzApplicationContextBinderApplicationListener implements Applic
         } else if (event instanceof ContextClosedEvent) {
             ContextClassLoaderApplicationContextHolder.release();
         }
+    }
+
+    /**
+     * A filter that can be used to exclude {@link ContextRefreshedEvent} events used to populate {@link ContextClassLoaderApplicationContextHolder}.
+     *
+     * @see <a href="https://github.com/togglz/togglz/issues/279">Issue 279</a>
+     */
+    @FunctionalInterface
+    public interface ContextRefreshedEventFilter extends Predicate<ContextRefreshedEvent> {
+
+        boolean test(ContextRefreshedEvent t);
     }
 }

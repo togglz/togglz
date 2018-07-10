@@ -37,11 +37,13 @@ import static org.mockito.Mockito.when;
 public class TogglzApplicationContextBinderApplicationListenerTest {
 
     private TogglzApplicationContextBinderApplicationListener applicationListener;
+    private TogglzApplicationContextBinderApplicationListener ignoringApplicationListener;
     private ApplicationContext applicationContext;
 
     @Before
     public void setUp() {
         applicationListener = new TogglzApplicationContextBinderApplicationListener();
+        ignoringApplicationListener = new TogglzApplicationContextBinderApplicationListener(t -> false);
         applicationContext = mock(ApplicationContext.class);
     }
 
@@ -71,6 +73,19 @@ public class TogglzApplicationContextBinderApplicationListenerTest {
         applicationListener.onApplicationEvent(contextRefreshedEvent);
         // Assert application context bound
         assertSame(applicationContext, ContextClassLoaderApplicationContextHolder.get());
+    }
+
+    @Test
+    public void contextRefreshedIgnored() {
+        // Release any application context before context refreshed event invoked
+        ContextClassLoaderApplicationContextHolder.release();
+        applicationContext = mock(ApplicationContext.class);
+        ContextRefreshedEvent contextRefreshedEvent = mock(ContextRefreshedEvent.class);
+        when(contextRefreshedEvent.getApplicationContext()).thenReturn(applicationContext);
+        // Invoke context refreshed application event
+        ignoringApplicationListener.onApplicationEvent(contextRefreshedEvent);
+        // Assert that no application context was bound
+        assertSame(null, ContextClassLoaderApplicationContextHolder.get());
     }
 
     @Test
