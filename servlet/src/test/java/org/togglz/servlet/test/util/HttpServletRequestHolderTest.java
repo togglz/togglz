@@ -11,6 +11,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.servlet.TogglzFilter;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
 
@@ -24,9 +25,12 @@ public class HttpServletRequestHolderTest {
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
             .addClass(HttpServletRequestHolderServlet.class)
+            .addClass(TogglzFilterServlet.class)
             // we don't need to bootstrap Togglz here as we only test the request holder
             .setWebXML(Packaging.webAppDescriptor()
                 .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
+                .filter(TogglzFilter.class, "/*")
+                .filter(TogglzFilter.class, "/*")
                 .exportAsAsset());
 
     }
@@ -44,6 +48,19 @@ public class HttpServletRequestHolderTest {
         // verify the servlet sends back the query string
         assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
         assertThat(page.getContent()).contains("number=42");
+
+    }
+
+    @Test
+    public void testFilterExecutedOnlyOnce() throws IOException {
+
+        // send a request to the servlet with a query string part
+        String url = baseUrl + TogglzFilterServlet.URL_PATTERN;
+        TextPage page = new WebClient().getPage(url);
+
+        // verify the servlet sends back the query string
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getContent()).isEqualTo("executed=true");
 
     }
 
