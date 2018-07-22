@@ -21,7 +21,7 @@ public class CompositeStateRepositoryTest {
 
     @Before
     public void setup() {
-        
+
         repo1 = new InMemoryStateRepository();
         repo2 = new InMemoryStateRepository();
         crepo = new CompositeStateRepository(repo1, repo2);
@@ -29,23 +29,23 @@ public class CompositeStateRepositoryTest {
 
     @Test
     public void testFeatureNotFound() {
-        
+
         assertNull(crepo.getFeatureState(TestFeature.F1));
     }
 
     @Test
     public void testGetFeatureInFirstBackingRepo() {
-        
+
         repo1.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(crepo.getFeatureState(TestFeature.F1).isEnabled());
     }
 
     @Test
     public void testGetFeatureInSecondBackingRepo() {
-        
+
         repo2.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(crepo.getFeatureState(TestFeature.F1).isEnabled());
     }
 
@@ -70,7 +70,7 @@ public class CompositeStateRepositoryTest {
 
     @Test
     public void testSetFeatureLAST() {
-        
+
         crepo.setFeatureState(new FeatureState(TestFeature.F1, true));
 
         assertNull(repo1.getFeatureState(TestFeature.F1));
@@ -79,7 +79,7 @@ public class CompositeStateRepositoryTest {
 
     @Test
     public void testSetFeatureFIRST() {
-        
+
         crepo.setSetterSelection(SetterSelection.FIRST);
         crepo.setFeatureState(new FeatureState(TestFeature.F1, true));
 
@@ -88,8 +88,13 @@ public class CompositeStateRepositoryTest {
     }
 
     enum TestFeature implements Feature {
-        
+
         F1,
         ;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

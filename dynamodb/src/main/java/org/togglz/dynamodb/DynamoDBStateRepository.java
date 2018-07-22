@@ -49,7 +49,7 @@ public class DynamoDBStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        Item documentItem = table.getItem(new GetItemSpec().withPrimaryKey(primaryKeyAttribute, feature.name()).withAttributesToGet(FEATURE_STATE_ATTRIBUTE_NAME));
+        Item documentItem = table.getItem(new GetItemSpec().withPrimaryKey(primaryKeyAttribute, feature.id()).withAttributesToGet(FEATURE_STATE_ATTRIBUTE_NAME));
         if (documentItem != null) {
             try {
                 FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(documentItem.getJSON(FEATURE_STATE_ATTRIBUTE_NAME));
@@ -68,7 +68,7 @@ public class DynamoDBStateRepository implements StateRepository {
             String json = objectMapper.writeValueAsString(FeatureStateStorageWrapper.wrapperForFeatureState(featureState));
             Item featureStateEntry =
                     new Item()
-                            .withPrimaryKey(primaryKeyAttribute, featureState.getFeature().name())
+                            .withPrimaryKey(primaryKeyAttribute, featureState.getFeature().id())
                             .withJSON(FEATURE_STATE_ATTRIBUTE_NAME, json);
             table.putItem(featureStateEntry);
 

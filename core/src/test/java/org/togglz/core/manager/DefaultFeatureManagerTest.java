@@ -181,6 +181,11 @@ public class DefaultFeatureManagerTest {
         MISSING_STRATEGY,
         EMPTY_STRATEGY,
         NOT_STORED_FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

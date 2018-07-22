@@ -60,6 +60,11 @@ public class JDBCRepositoryAutoCommitTest {
 
     private static enum AutoCommitFeature implements Feature {
         F1;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private static class AutoCommitTestDataSource implements DataSource {

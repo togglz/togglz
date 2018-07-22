@@ -91,6 +91,11 @@ public class UsernameActivationStrategyTest {
 
     private enum MyFeature implements Feature {
         FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

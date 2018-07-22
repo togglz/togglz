@@ -47,7 +47,12 @@ public class FeatureManagerBuilderTest {
     }
 
     private enum Features implements Feature {
-        SOME_FEATURE
+        SOME_FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private static class CustomStrategyProvider implements ActivationStrategyProvider {

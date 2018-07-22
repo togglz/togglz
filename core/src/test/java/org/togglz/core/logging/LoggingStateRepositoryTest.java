@@ -32,7 +32,7 @@ public class LoggingStateRepositoryTest {
         FeatureState featureState = loggingStateRepository.getFeatureState(DummyFeature.TEST);
 
         // THEN
-        assertThat(featureState.getFeature().name(), equalTo(DummyFeature.TEST.name()));
+        assertThat(featureState.getFeature().id(), equalTo(DummyFeature.TEST.name()));
     }
 
     @Test
@@ -74,6 +74,11 @@ public class LoggingStateRepositoryTest {
 
     private enum DummyFeature implements Feature {
         TEST;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

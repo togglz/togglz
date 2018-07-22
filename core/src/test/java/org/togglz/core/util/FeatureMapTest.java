@@ -33,8 +33,8 @@ public class FeatureMapTest {
         features.add(feature1);
         features.add(feature2);
         when(featureManager.getFeatures()).thenReturn(features);
-        when(feature1.name()).thenReturn(name1);
-        when(feature2.name()).thenReturn(name2);
+        when(feature1.id()).thenReturn(name1);
+        when(feature2.id()).thenReturn(name2);
         when(featureManager.isActive(featureNamed(name1))).thenReturn(true);
         when(featureManager.isActive(featureNamed(name2))).thenReturn(false);
         Map<Object, Boolean> map = new FeatureMap(featureManager);
@@ -95,7 +95,7 @@ public class FeatureMapTest {
             @Override
             public boolean matches(Object obj) {
                 if (obj instanceof Feature) {
-                    return ((Feature) obj).name().equals(name);
+                    return ((Feature) obj).id().equals(name);
                 }
                 return false;
             }

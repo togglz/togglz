@@ -19,7 +19,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 /**
  * Unit Tests for MemcacheStateRepository
- * 
+ *
  * @author Fábio Franco Uechi
  */
 public class MemcacheStateRepositoryTest {
@@ -128,7 +128,12 @@ public class MemcacheStateRepositoryTest {
     }
 
     private enum TestFeature implements Feature {
-        F1, F2
+        F1, F2;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

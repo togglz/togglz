@@ -275,6 +275,11 @@ public class DatastoreStateRepositoryTest {
     }
 
     private static enum TestFeature implements Feature {
-        F1
+        F1;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

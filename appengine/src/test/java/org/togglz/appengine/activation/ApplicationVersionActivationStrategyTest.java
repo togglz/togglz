@@ -83,6 +83,11 @@ public class ApplicationVersionActivationStrategyTest {
 
     private enum ScriptFeature implements Feature {
         FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

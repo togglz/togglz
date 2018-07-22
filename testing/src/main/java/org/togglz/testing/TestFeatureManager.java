@@ -18,11 +18,11 @@ import org.togglz.core.util.Validate;
 import static java.util.Collections.emptyList;
 
 /**
- * 
+ *
  * A {@link FeatureManager} implementation that allows easy manipulation of features in testing environments.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class TestFeatureManager implements FeatureManager {
 
@@ -53,7 +53,7 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
-        return activeFeatures.contains(feature.name());
+        return activeFeatures.contains(feature.id());
     }
 
     @Override
@@ -69,9 +69,9 @@ public class TestFeatureManager implements FeatureManager {
     @Override
     public void setFeatureState(FeatureState state) {
         if (state.isEnabled()) {
-            activeFeatures.add(state.getFeature().name());
+            activeFeatures.add(state.getFeature().id());
         } else {
-            activeFeatures.remove(state.getFeature().name());
+            activeFeatures.remove(state.getFeature().id());
         }
     }
 
@@ -81,12 +81,12 @@ public class TestFeatureManager implements FeatureManager {
     }
 
     public TestFeatureManager enable(Feature feature) {
-        activeFeatures.add(feature.name());
+        activeFeatures.add(feature.id());
         return this;
     }
 
     public TestFeatureManager disable(Feature feature) {
-        activeFeatures.remove(feature.name());
+        activeFeatures.remove(feature.id());
         return this;
     }
 

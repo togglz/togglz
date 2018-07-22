@@ -57,7 +57,7 @@ public class NotificationComposer {
     private String getMessage(final FeatureState state) {
         Map<String, String> values = new HashMap<String, String>() {{
             put("stateIcon", EmojiIcon.format(configuration.getStateIcon(state)));
-            put("feature", state.getFeature().name());
+            put("feature", state.getFeature().id());
             put("changed", configuration.getChangeVerb(state));
             put("user", getUsername());
             put("link", getLink());

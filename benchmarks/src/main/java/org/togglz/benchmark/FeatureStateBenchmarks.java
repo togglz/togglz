@@ -55,6 +55,11 @@ public class FeatureStateBenchmarks {
         public boolean isActive() {
             return FeatureContext.getFeatureManager().isActive(this);
         }
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     // create an in-memory state repository for our feature

@@ -98,6 +98,11 @@ public class DeltaSpikePropertyActivationStrategyTest {
 
     public enum TestFeatures implements Feature {
 
-        FEATURE_ONE
+        FEATURE_ONE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

@@ -173,5 +173,11 @@ public class ZookeeperStateRepositoryTest {
 
     private static enum TestFeature implements Feature {
         FEATURE,
+        ;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

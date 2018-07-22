@@ -57,6 +57,11 @@ public class InMemoryStateRepositoryTest {
 
     private static enum MyFeature implements Feature {
         FEATURE1,
-        FEATURE2
+        FEATURE2;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

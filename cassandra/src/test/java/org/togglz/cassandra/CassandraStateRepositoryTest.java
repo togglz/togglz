@@ -114,5 +114,11 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 
     private enum TestFeature implements Feature {
         FEATURE,
+        ;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

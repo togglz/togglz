@@ -191,7 +191,7 @@ public class PropertyFeatureProviderTest {
         return new Condition<Feature>() {
             @Override
             public boolean matches(Feature value) {
-                return value != null && value.name().equals(name);
+                return value != null && value.id().equals(name);
             }
         };
     }

@@ -32,6 +32,11 @@ public class SystemPropertyActivationStrategyBenchmark {
     private enum SystemPropertyActivationStrategyFeatures implements Feature {
         SYSTEM_BASED_FEATURE,
         @EnabledByDefault ALWAYS_ON_FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     // create an in-memory state repository for our feature

@@ -43,7 +43,7 @@ public class EditPageHandler extends RequestHandlerBase {
         Feature feature = null;
         String featureAsString = request.getParameter("f");
         for (Feature f : featureManager.getFeatures()) {
-            if (f.name().equals(featureAsString)) {
+            if (f.id().equals(featureAsString)) {
                 feature = f;
             }
         }

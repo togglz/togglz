@@ -55,6 +55,11 @@ public class FeatureStateTest {
 
     private static enum Features implements Feature {
         FEATURE1;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

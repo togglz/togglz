@@ -130,6 +130,11 @@ public class GradualActivationStrategyTest {
 
     private enum GradualFeature implements Feature {
         FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private class TestingGradualActivationStrategy extends GradualActivationStrategy {

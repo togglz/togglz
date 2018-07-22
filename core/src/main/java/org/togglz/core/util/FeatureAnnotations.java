@@ -26,7 +26,7 @@ public class FeatureAnnotations {
         if (label != null) {
             return label.value();
         }
-        return feature.name();
+        return feature.id();
     }
 
     public static String getOwner(Feature feature) {
@@ -57,7 +57,7 @@ public class FeatureAnnotations {
         Set<Annotation> annotations = new HashSet<Annotation>();
         try {
             Class<? extends Feature> featureClass = feature.getClass();
-            Annotation[] fieldAnnotations = featureClass.getField(feature.name()).getAnnotations();
+            Annotation[] fieldAnnotations = featureClass.getField(feature.id()).getAnnotations();
             Annotation[] classAnnotations = featureClass.getAnnotations();
 
             annotations.addAll(Arrays.asList(fieldAnnotations));
@@ -75,7 +75,7 @@ public class FeatureAnnotations {
     public static <A extends Annotation> A getAnnotation(Feature feature, Class<A> annotationType) {
         try {
             Class<? extends Feature> featureClass = feature.getClass();
-            A fieldAnnotation = featureClass.getField(feature.name()).getAnnotation(annotationType);
+            A fieldAnnotation = featureClass.getField(feature.id()).getAnnotation(annotationType);
             A classAnnotation = featureClass.getAnnotation(annotationType);
 
             return fieldAnnotation != null ? fieldAnnotation : classAnnotation;

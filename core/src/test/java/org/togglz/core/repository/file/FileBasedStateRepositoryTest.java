@@ -321,6 +321,11 @@ public class FileBasedStateRepositoryTest {
         FEATURE2,
         FEATURE3,
         FEATURE4;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

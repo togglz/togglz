@@ -37,7 +37,12 @@ public class AnnotationFeatureGroupTest {
     private enum TestFeatures implements Feature {
 
         @FieldLevelGroup
-        FEATURE
+        FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     @Test

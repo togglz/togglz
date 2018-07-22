@@ -59,7 +59,7 @@ class FeatureVariationInvocationContext implements TestTemplateInvocationContext
 
         @Override
         public void beforeEach(ExtensionContext context) {
-            String names = enabledFeatures.stream().map(Feature::name).sorted().collect(joining(", ", "[", "]"));
+            String names = enabledFeatures.stream().map(Feature::id).sorted().collect(joining(", ", "[", "]"));
             context.publishReportEntry("enabledFeatures", names);
 
             super.beforeEach(context);

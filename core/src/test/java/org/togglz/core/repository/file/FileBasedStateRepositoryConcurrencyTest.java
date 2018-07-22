@@ -85,15 +85,15 @@ public class FileBasedStateRepositoryConcurrencyTest {
 
     private class TestFeature implements Feature {
 
-        private final String name;
+        private final String id;
 
-        private TestFeature(String name) {
-            this.name = name;
+        private TestFeature(String id) {
+            this.id = id;
         }
 
         @Override
-        public String name() {
-            return name;
+        public String id() {
+            return id;
         }
 
     }

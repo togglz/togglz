@@ -7,7 +7,7 @@ import org.togglz.core.context.FeatureContext;
 public enum JSFFeatures implements Feature {
 
     DISABLED,
-    
+
     @EnabledByDefault
     ENABLED;
 
@@ -15,4 +15,8 @@ public enum JSFFeatures implements Feature {
         return FeatureContext.getFeatureManager().isActive(this);
     }
 
+    @Override
+    public String id() {
+        return name();
+    }
 }

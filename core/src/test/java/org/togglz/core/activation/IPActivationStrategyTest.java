@@ -85,7 +85,12 @@ public class IPActivationStrategyTest {
     }
 
     private enum MyFeature implements Feature {
-        FEATURE
+        FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

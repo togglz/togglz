@@ -13,4 +13,8 @@ public enum UserDependentFeature implements Feature {
         return FeatureContext.getFeatureManager().isActive(this);
     }
 
+    @Override
+    public String id() {
+        return name();
+    }
 }

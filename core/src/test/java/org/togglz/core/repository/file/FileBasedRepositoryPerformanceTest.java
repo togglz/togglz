@@ -53,7 +53,7 @@ public class FileBasedRepositoryPerformanceTest {
             }
             long time = System.currentTimeMillis() - start;
 
-            System.out.println("Time for " + feature.name() + ": " + time);
+            System.out.println("Time for " + feature.id() + ": " + time);
         }
 
     }
@@ -61,6 +61,11 @@ public class FileBasedRepositoryPerformanceTest {
     private static enum PerformanceFeatures implements Feature {
         EXISTING,
         MISSING;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

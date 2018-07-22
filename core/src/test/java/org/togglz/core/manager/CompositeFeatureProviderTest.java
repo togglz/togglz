@@ -25,5 +25,10 @@ public class CompositeFeatureProviderTest {
 
 	enum TestFeatures implements Feature {
 		FOO, BAR;
-	}
+
+        @Override
+        public String id() {
+            return name();
+        }
+    }
 }

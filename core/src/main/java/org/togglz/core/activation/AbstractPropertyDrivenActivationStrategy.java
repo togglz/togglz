@@ -66,7 +66,7 @@ public abstract class AbstractPropertyDrivenActivationStrategy implements Activa
             return propertyName;
         }
 
-        return DEFAULT_PROPERTY_PREFIX + featureState.getFeature().name();
+        return DEFAULT_PROPERTY_PREFIX + featureState.getFeature().id();
     }
 
     /**

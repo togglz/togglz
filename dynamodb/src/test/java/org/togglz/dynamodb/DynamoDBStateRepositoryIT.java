@@ -84,7 +84,12 @@ public class DynamoDBStateRepositoryIT {
 
     private enum TestFeature implements Feature {
         FEATURE,
-        ANOTHER_FEATURE
+        ANOTHER_FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

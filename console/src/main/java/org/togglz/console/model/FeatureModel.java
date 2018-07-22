@@ -178,7 +178,7 @@ public class FeatureModel {
     }
 
     public String getName() {
-        return feature.name();
+        return feature.id();
     }
 
     public boolean isEnabled() {

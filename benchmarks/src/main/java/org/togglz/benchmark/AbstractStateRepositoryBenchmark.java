@@ -43,6 +43,11 @@ public abstract class AbstractStateRepositoryBenchmark {
         public boolean isActive() {
             return FeatureContext.getFeatureManager().isActive(this);
         }
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     FeatureManager manager;

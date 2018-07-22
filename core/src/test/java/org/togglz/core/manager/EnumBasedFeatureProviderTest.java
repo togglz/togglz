@@ -26,10 +26,10 @@ public class EnumBasedFeatureProviderTest {
     public void shouldFailForNonEnumType() {
         new EnumBasedFeatureProvider(NotAnEnum.class);
     }
-    
+
     @Test(expected = IllegalStateException.class)
     public void shouldFailForDuplicateFeatureName() {
-        
+
         EnumBasedFeatureProvider provider = new EnumBasedFeatureProvider();
         provider.addFeatureEnum(ValidFeatureEnum.class);
         provider.addFeatureEnum(DuplicateNameFeatureEnum.class); // should throw IllegalStateException
@@ -163,7 +163,7 @@ public class EnumBasedFeatureProviderTest {
     private static class NotAnEnum implements Feature {
 
         @Override
-        public String name() {
+        public String id() {
             return "something";
         }
 
@@ -182,6 +182,10 @@ public class EnumBasedFeatureProviderTest {
         @InfoLink("https://github.com/togglz/togglz/pull/33")
         WITH_LINK;
 
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     public static enum OtherFeatureEnum implements Feature {
@@ -189,6 +193,10 @@ public class EnumBasedFeatureProviderTest {
         @Label("Additional Feature")
         ADDITIONAL_FEATURE;
 
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     public static enum DuplicateNameFeatureEnum implements Feature {
@@ -196,19 +204,23 @@ public class EnumBasedFeatureProviderTest {
         @Label("Duplicate feature name")
         FEATURE1;
 
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private class OtherFeatureImpl implements Feature {
 
-        private final String name;
+        private final String id;
 
-        public OtherFeatureImpl(String name) {
-            this.name = name;
+        public OtherFeatureImpl(String id) {
+            this.id = id;
         }
 
         @Override
-        public String name() {
-            return name;
+        public String id() {
+            return id;
         }
 
     }

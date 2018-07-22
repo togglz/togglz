@@ -109,7 +109,12 @@ public class DeltaSpikeProjectStageActivationStrategyTest {
 
     public enum TestFeatures implements Feature {
 
-        FEATURE_ONE
+        FEATURE_ONE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private static class IsActiveTestCase {

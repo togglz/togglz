@@ -22,12 +22,12 @@ public class InMemoryStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        return FeatureState.copyOf(states.get(feature.name()));
+        return FeatureState.copyOf(states.get(feature.id()));
     }
 
     @Override
     public void setFeatureState(FeatureState featureState) {
-        states.put(featureState.getFeature().name(), FeatureState.copyOf(featureState));
+        states.put(featureState.getFeature().id(), FeatureState.copyOf(featureState));
     }
 
 }

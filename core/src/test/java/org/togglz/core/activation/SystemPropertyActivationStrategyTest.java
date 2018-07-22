@@ -89,6 +89,11 @@ public class SystemPropertyActivationStrategyTest {
 
     private enum ScriptFeature implements Feature {
         FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

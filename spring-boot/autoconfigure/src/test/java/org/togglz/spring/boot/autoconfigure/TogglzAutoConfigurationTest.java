@@ -229,6 +229,11 @@ public class TogglzAutoConfigurationTest {
     protected enum MyFeatures implements Feature {
         FEATURE_ONE,
         FEATURE_TWO;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     protected static class CustomActivationStrategy implements ActivationStrategy {

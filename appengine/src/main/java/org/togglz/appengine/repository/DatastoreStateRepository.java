@@ -20,11 +20,11 @@ import com.google.common.base.Strings;
  * <p>
  * This repository implementation can be used to store the feature state in Appengine's Datastore.
  * </p>
- * 
+ *
  * <p>
  * {@link DatastoreStateRepository} stores the feature state in the FeatureToggle kind.
  * </p>
- * 
+ *
  * @author Fábio Franco Uechi
  */
 public class DatastoreStateRepository implements StateRepository {
@@ -50,7 +50,7 @@ public class DatastoreStateRepository implements StateRepository {
     @Override
     public FeatureState getFeatureState(final Feature feature) {
         try {
-            final Key key = KeyFactory.createKey(kind(), feature.name());
+            final Key key = KeyFactory.createKey(kind(), feature.id());
             return createFeatureState(feature, getInsideTransaction(key));
         } catch (final EntityNotFoundException ignored) {
             return null;
@@ -85,7 +85,7 @@ public class DatastoreStateRepository implements StateRepository {
 
     @Override
     public void setFeatureState(final FeatureState featureState) {
-        final Entity featureEntity = new Entity(kind(), featureState.getFeature().name());
+        final Entity featureEntity = new Entity(kind(), featureState.getFeature().id());
         featureEntity.setUnindexedProperty(ENABLED, featureState.isEnabled());
         featureEntity.setUnindexedProperty(STRATEGY_ID, featureState.getStrategyId());
 

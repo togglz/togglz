@@ -5,12 +5,12 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 /**
- * 
+ *
  * Simple implementation of {@link StateRepository} which adds logging capabilities to an existing repository. You should
  * consider using this class if you want to log all feature toggled events.
- * 
+ *
  * @author Martin Günther
- * 
+ *
  */
 public class LoggingStateRepository implements StateRepository {
 
@@ -22,7 +22,7 @@ public class LoggingStateRepository implements StateRepository {
 
     /**
      * Creates a logging facade for the supplied {@link StateRepository}.
-     * 
+     *
      * @param delegate The repository to delegate invocations to
      */
     public LoggingStateRepository(StateRepository delegate) {
@@ -33,7 +33,7 @@ public class LoggingStateRepository implements StateRepository {
      * Creates a logging facade for the supplied {@link StateRepository} using a custom log message. In your custom log message,
      * mark the position of the feature name as {1} and the position for the new feature state which will be replaced by
      * "enabled" or "disabled" as {2}.
-     * 
+     *
      * @param delegate The repository to delegate invocations to
      * @param customLogMessage Your custom log message. It may contain a placeholder {1} for the feature name and a placeholder
      *        {2} for the new feature state which will be replaced by "enabled" or "disabled"
@@ -69,13 +69,13 @@ public class LoggingStateRepository implements StateRepository {
     }
 
     private String createDefaultLogMessage(FeatureState featureState) {
-        return "Setting Feature \"" + featureState.getFeature().name()
+        return "Setting Feature \"" + featureState.getFeature().id()
             + "\" to \"" + getReadableFeatureState(featureState) + "\"";
     }
 
     private String createCustomLogMessage(FeatureState featureState) {
         String logMsg = customLogMessage;
-        logMsg = logMsg.replace("{1}", featureState.getFeature().name());
+        logMsg = logMsg.replace("{1}", featureState.getFeature().id());
         logMsg = logMsg.replace("{2}", getReadableFeatureState(featureState));
         return logMsg;
     }

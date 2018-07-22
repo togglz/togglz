@@ -59,7 +59,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     }
 
     private Key createKey(Feature feature) {
-        return keyFactory.newKey(feature.name());
+        return keyFactory.newKey(feature.id());
     }
 
     private FeatureState createFeatureState(final Feature feature, final Entity featureEntity) {

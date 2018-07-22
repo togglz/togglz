@@ -43,7 +43,7 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
         }
 
         if (Strings.isBlank(label)) {
-            label = feature.name();
+            label = feature.id();
         }
 
         defaultFeatureState = new FeatureState(feature, enabledByDefault);

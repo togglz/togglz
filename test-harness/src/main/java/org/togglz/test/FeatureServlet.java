@@ -25,7 +25,7 @@ public class FeatureServlet extends HttpServlet {
         StringBuilder builder = new StringBuilder();
 
         for (Feature f : featureManager.getFeatures()) {
-            builder.append(f.name() + " = " + featureManager.isActive(f) + "\n");
+            builder.append(f.id() + " = " + featureManager.isActive(f) + "\n");
         }
 
         resp.getOutputStream().write(builder.toString().getBytes());

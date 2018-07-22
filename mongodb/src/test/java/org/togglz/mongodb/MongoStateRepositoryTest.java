@@ -73,8 +73,12 @@ public class MongoStateRepositoryTest {
 
     private enum TestFeature implements Feature {
 
-        FEATURE_1
+        FEATURE_1;
 
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 

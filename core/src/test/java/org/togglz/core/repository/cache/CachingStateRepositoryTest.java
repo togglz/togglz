@@ -11,11 +11,11 @@ import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
 
 /**
- * 
+ *
  * Unit test for {@link CachingStateRepository}.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class CachingStateRepositoryTest {
 
@@ -141,6 +141,11 @@ public class CachingStateRepositoryTest {
 
     private enum DummyFeature implements Feature {
         TEST;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

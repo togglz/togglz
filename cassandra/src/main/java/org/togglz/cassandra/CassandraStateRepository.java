@@ -25,29 +25,29 @@ import com.netflix.astyanax.serializers.StringSerializer;
  * <p>
  * This repository implementation can be used to store the feature state in Cassandra using Astyanax client.
  * </p>
- * 
+ *
  * <p>
  * {@link org.togglz.cassandra.CassandraStateRepository} stores the feature state in a column family called <code>Togglz</code> by default.
  * You can choose the name of this column family using a builder provided by this class.
- * 
+ *
  * If the repository doesn't find the column family, it will automatically create it.
  * </p>
- * 
+ *
  * <p>
  * The column family has the following format:
  * </p>
- * 
+ *
  * <pre>
  * create column family Togglz
  *    with comparator = 'UTF8Type'
  *    and default_validation_class = UTF8Type
  *    and key_validation_class = UTF8Type;
  * </pre>
- * 
+ *
  * <p>
  * The class provides a builder which can be used to configure the repository:
  * </p>
- * 
+ *
  * <pre>
  * StateRepository repository = CassandraStateRepository.newBuilder(keyspace)
  *     .columnFamily(&quot;Togglz&quot;)
@@ -55,12 +55,12 @@ import com.netflix.astyanax.serializers.StringSerializer;
  *     .mapSerializer(DefaultMapSerializer.singleline())
  *     .build();
  * </pre>
- * 
+ *
  * <p>
  * You need to provide a {@link Keyspace} to use {@link org.togglz.cassandra.CassandraStateRepository}.
- * It can be created using {@link KeyspaceBuilder} or any other way. 
+ * It can be created using {@link KeyspaceBuilder} or any other way.
  * </p>
- *  
+ *
  * @author artur@callfire.com
  */
 public class CassandraStateRepository implements StateRepository {
@@ -112,7 +112,7 @@ public class CassandraStateRepository implements StateRepository {
         try {
             final ColumnList<String> state = keyspace
                     .prepareQuery(columnFamily)
-                    .getRow(feature.name())
+                    .getRow(feature.id())
                     .execute()
                     .getResult();
 
@@ -128,7 +128,7 @@ public class CassandraStateRepository implements StateRepository {
         final MutationBatch mutationBatch = keyspace.prepareMutationBatch().setConsistencyLevel(ConsistencyLevel.CL_QUORUM);
 
         final ColumnListMutation<String> mutation = mutationBatch
-            .withRow(columnFamily, featureState.getFeature().name())
+            .withRow(columnFamily, featureState.getFeature().id())
             .putColumn(ENABLED_COLUMN, featureState.isEnabled());
 
         putOrDelete(mutation, STRATEGY_ID_COLUMN, featureState.getStrategyId());

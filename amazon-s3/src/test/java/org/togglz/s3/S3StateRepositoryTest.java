@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
 
 public class S3StateRepositoryTest {
-    
+
     private AmazonS3Client client;
     private S3StateRepository repository;
 
@@ -33,7 +33,7 @@ public class S3StateRepositoryTest {
 
         repository = S3StateRepository.newBuilder(client, "testbucket").build();
     }
-	
+
     @SuppressWarnings("serial")
     @Test
     public void testGetSetFeatureState() {
@@ -94,7 +94,12 @@ public class S3StateRepositoryTest {
     }
 
     private enum TestFeature implements Feature {
-        FEATURE_1
+        FEATURE_1;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private static class AmazonS3ClientMOCK extends AmazonS3Client {

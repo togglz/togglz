@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * {@link FeatureMetaData} implementation that doesn't provide any information.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class EmptyFeatureMetaData implements FeatureMetaData {
@@ -22,7 +22,7 @@ public class EmptyFeatureMetaData implements FeatureMetaData {
 
     @Override
     public String getLabel() {
-        return feature.name();
+        return feature.id();
     }
 
     @Override

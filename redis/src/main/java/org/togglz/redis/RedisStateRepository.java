@@ -35,7 +35,7 @@ public class RedisStateRepository implements StateRepository {
     @Override
     public FeatureState getFeatureState(final Feature feature) {
         try (final Jedis jedis = jedisPool.getResource()) {
-            final Map<String, String> redisMap = jedis.hgetAll(keyPrefix + feature.name());
+            final Map<String, String> redisMap = jedis.hgetAll(keyPrefix + feature.id());
             if (redisMap == null || redisMap.size() == 0) {
                 return null;
             }
@@ -55,7 +55,7 @@ public class RedisStateRepository implements StateRepository {
     @Override
     public void setFeatureState(final FeatureState featureState) {
         try (final Jedis jedis = jedisPool.getResource()) {
-            final String featureKey = keyPrefix + featureState.getFeature().name();
+            final String featureKey = keyPrefix + featureState.getFeature().id();
             jedis.hset(featureKey, ENABLED_FIELD, Boolean.toString(featureState.isEnabled()));
             final String strategyId = featureState.getStrategyId();
             if (strategyId != null) {

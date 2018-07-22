@@ -46,7 +46,7 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
 
     private void addFeatures(Collection<? extends Feature> newFeatures) {
         for (Feature newFeature : newFeatures) {
-            if (metaDataCache.put(newFeature.name(), new EnumFeatureMetaData(newFeature)) != null) {
+            if (metaDataCache.put(newFeature.id(), new EnumFeatureMetaData(newFeature)) != null) {
                 throw new IllegalStateException("The feature " + newFeature + " has already been added");
             };
             features.add(newFeature);
@@ -60,6 +60,6 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
 
     @Override
     public FeatureMetaData getMetaData(Feature feature) {
-        return metaDataCache.get(feature.name());
+        return metaDataCache.get(feature.id());
     }
 }

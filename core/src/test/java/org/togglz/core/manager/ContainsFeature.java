@@ -19,7 +19,7 @@ public class ContainsFeature extends BaseMatcher<Set<Feature>> {
 		@SuppressWarnings("unchecked")
 		Set<Feature> features = (Set<Feature>) item;
 		for (Feature f : features) {
-            if (f.name().equals(feature.name())) {
+            if (f.id().equals(feature.id())) {
 				return true;
 			}
 		}

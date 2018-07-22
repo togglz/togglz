@@ -62,7 +62,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
             }
 
         } catch (ScriptException e) {
-            log.error("Could not evaluate script for feature " + featureState.getFeature().name() + ": " + e.getMessage());
+            log.error("Could not evaluate script for feature " + featureState.getFeature().id() + ": " + e.getMessage());
         }
         return false;
 

@@ -16,11 +16,11 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 /**
- * 
+ *
  * Unit test for {@link ApplicationEventPublisherRepository}.
- * 
+ *
  * @author Igor Khudoshin
- * 
+ *
  */
 public class ApplicationEventPublisherRepositoryTest {
     @Mock
@@ -64,6 +64,11 @@ public class ApplicationEventPublisherRepositoryTest {
 
     private enum DummyFeature implements Feature {
         TEST;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

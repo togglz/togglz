@@ -7,7 +7,7 @@ import org.togglz.core.context.FeatureContext;
 public enum Features implements Feature {
 
     FEATURE1,
-    
+
     @EnabledByDefault
     FEATURE2;
 
@@ -15,4 +15,8 @@ public enum Features implements Feature {
         return FeatureContext.getFeatureManager().isActive(this);
     }
 
+    @Override
+    public String id() {
+        return name();
+    }
 }

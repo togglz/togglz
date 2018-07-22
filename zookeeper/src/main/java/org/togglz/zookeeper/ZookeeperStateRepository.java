@@ -67,7 +67,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        FeatureStateStorageWrapper wrapper = states.get(feature.name());
+        FeatureStateStorageWrapper wrapper = states.get(feature.id());
         if (wrapper != null) {
             return featureStateForWrapper(feature, wrapper);
         }
@@ -79,10 +79,10 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         FeatureStateStorageWrapper wrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
         try {
             String json = objectMapper.writeValueAsString(wrapper);
-            String path = featuresZnode + "/" + featureState.getFeature().name();
+            String path = featuresZnode + "/" + featureState.getFeature().id();
             curatorFramework.createContainers(path);
             curatorFramework.setData().forPath(path, json.getBytes("UTF-8"));
-            states.put(featureState.getFeature().name(), wrapper);
+            states.put(featureState.getFeature().id(), wrapper);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -42,7 +42,7 @@ public class S3StateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-        try (S3Object object = client.getObject(bucketName, keyPrefix + feature.name())) {
+        try (S3Object object = client.getObject(bucketName, keyPrefix + feature.id())) {
             if (object != null) {
                 FeatureStateStorageWrapper wrapper = objectMapper.reader()
                     .forType(FeatureStateStorageWrapper.class)
@@ -65,7 +65,7 @@ public class S3StateRepository implements StateRepository {
         try {
             FeatureStateStorageWrapper storageWrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
             String json = objectMapper.writeValueAsString(storageWrapper);
-            client.putObject(bucketName, keyPrefix + featureState.getFeature().name(), json);
+            client.putObject(bucketName, keyPrefix + featureState.getFeature().id(), json);
         } catch (AmazonClientException | JsonProcessingException e) {
             throw new RuntimeException("Failed to set the feature state", e);
         }

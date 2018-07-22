@@ -138,6 +138,11 @@ public class ScriptEngineActivationStrategyTest {
 
     private enum ScriptFeature implements Feature {
         FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

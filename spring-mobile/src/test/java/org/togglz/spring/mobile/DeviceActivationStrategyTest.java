@@ -42,7 +42,7 @@ public class DeviceActivationStrategyTest {
             when(request.getAttribute("currentDevice")).thenReturn(device);
             HttpServletRequestHolder.bind(request);
         }
-        
+
     }
 
     protected static class MockRequestAssert extends org.assertj.core.api.AbstractAssert<MockRequestAssert, MockRequest> {
@@ -83,7 +83,12 @@ public class DeviceActivationStrategyTest {
         }
 
         private enum TestFeature implements Feature {
-            TEST_FEATURE
+            TEST_FEATURE;
+
+            @Override
+            public String id() {
+                return name();
+            }
         }
     }
 

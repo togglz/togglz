@@ -86,7 +86,7 @@ public class MongoStateRepository implements StateRepository {
     public void setFeatureState(FeatureState featureState) {
 
         Document featureStateDocument = new Document()
-                .append(FIELD_FEATURE, featureState.getFeature().name())
+                .append(FIELD_FEATURE, featureState.getFeature().id())
                 .append(FIELD_ENABLED, featureState.isEnabled());
 
         if (featureState.getStrategyId() != null) {
@@ -109,7 +109,7 @@ public class MongoStateRepository implements StateRepository {
     }
 
     protected Document queryFor(Feature feature) {
-        return new Document(FIELD_FEATURE, feature.name());
+        return new Document(FIELD_FEATURE, feature.id());
     }
 
     protected MongoCollection togglzCollection() {

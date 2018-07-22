@@ -6,7 +6,7 @@ import org.togglz.core.Feature;
 
 /**
  * This class can be used if just the name of a feature is known but not the enum type. It is similar to {@link UntypedFeature}
- * but doesn't try to lazily resolve the type when calling {@link #name()}.
+ * but doesn't try to lazily resolve the type when calling {@link #id()}.
  *
  * @author Christian Kaltepoth
  */
@@ -21,7 +21,7 @@ public class NamedFeature implements Feature, Serializable {
     }
 
     @Override
-    public String name() {
+    public String id() {
         return name;
     }
 
@@ -32,6 +32,6 @@ public class NamedFeature implements Feature, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof NamedFeature) ? this.name.equals(((NamedFeature) o).name()) : false;
+        return (o instanceof NamedFeature) ? this.name.equals(((NamedFeature) o).id()) : false;
     }
 }

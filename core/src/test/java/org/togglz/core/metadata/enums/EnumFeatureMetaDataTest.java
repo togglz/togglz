@@ -54,6 +54,11 @@ public class EnumFeatureMetaDataTest {
             }
         )
         FEATURE_WITH_DEFAULT_STATE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     @Test

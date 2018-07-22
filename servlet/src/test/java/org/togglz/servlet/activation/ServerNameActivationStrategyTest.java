@@ -77,6 +77,11 @@ public class ServerNameActivationStrategyTest {
     }
 
     private enum TestFeature implements Feature {
-        TEST_FEATURE
+        TEST_FEATURE;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 }

@@ -87,7 +87,7 @@ public class ArchaiusStateRepositoryTest {
     public void withStrategyNoParameters() {
 
         addState(TestFeature.F1.name(), true, "S1");
-        
+
         FeatureState state = repository.getFeatureState(TestFeature.F1);
 
         assertNotNull(state);
@@ -109,17 +109,17 @@ public class ArchaiusStateRepositoryTest {
 
     @Test(expected=UnsupportedOperationException.class)
     public void setState() {
-        
+
         repository.setFeatureState(new FeatureState(TestFeature.F1, true));
     }
 
     private static void addState(String name, boolean enabled) {
-        
+
         mapConfiguration.setProperty(name, Boolean.toString(enabled));
     }
 
     private static void addState(String name, boolean enabled, String strategyName, Param... params) {
-        
+
         addState(name, enabled);
         mapConfiguration.setProperty(name + ".strategy", strategyName);
         for (Param param : params) {
@@ -128,9 +128,14 @@ public class ArchaiusStateRepositoryTest {
     }
 
     private static enum TestFeature implements Feature {
-        F1
+        F1;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
-    
+
     private static class Param {
         final String key;
         final String value;

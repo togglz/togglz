@@ -13,7 +13,7 @@ import java.io.Serializable;
 /**
  * Decorates a given StateRepository adding caching capabilities. Leverages GAE's MemcacheServices. Default expiration time is
  * 3600 seconds.
- * 
+ *
  * @author Fábio Franco Uechi
  */
 public class MemcacheStateRepository implements StateRepository {
@@ -35,7 +35,7 @@ public class MemcacheStateRepository implements StateRepository {
     @Override
     public FeatureState getFeatureState(Feature feature) {
         // first try to find it from the cache
-        CacheEntry entry = (CacheEntry) cache.get(key(feature.name()));
+        CacheEntry entry = (CacheEntry) cache.get(key(feature.id()));
         if (entry != null) {
             return entry.getState() != null ? entry.getState() : null;
         }
@@ -44,7 +44,7 @@ public class MemcacheStateRepository implements StateRepository {
         FeatureState featureState = delegate.getFeatureState(feature);
 
         // cache the result (may be null)
-        cache.put(key(feature.name()), new CacheEntry(featureState != null ? featureState : null), getExpiration());
+        cache.put(key(feature.id()), new CacheEntry(featureState != null ? featureState : null), getExpiration());
 
         // return the result
         return featureState;
@@ -61,7 +61,7 @@ public class MemcacheStateRepository implements StateRepository {
     @Override
     public void setFeatureState(FeatureState featureState) {
         delegate.setFeatureState(featureState);
-        cache.delete(key(featureState.getFeature().name()));
+        cache.delete(key(featureState.getFeature().id()));
     }
 
     /**

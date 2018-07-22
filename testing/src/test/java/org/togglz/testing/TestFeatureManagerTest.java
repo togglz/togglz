@@ -73,6 +73,11 @@ public class TestFeatureManagerTest {
     private enum MyFeatures implements Feature {
         ONE,
         TWO;
+
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
 }

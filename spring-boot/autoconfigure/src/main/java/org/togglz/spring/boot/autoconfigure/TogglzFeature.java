@@ -35,7 +35,7 @@ public class TogglzFeature implements Comparable<TogglzFeature> {
     private Map<String, String> params;
 
     public TogglzFeature(Feature feature, FeatureState featureState) {
-        this.name = feature.name();
+        this.name = feature.id();
         this.enabled = featureState.isEnabled();
         this.strategy = featureState.getStrategyId();
         this.params = featureState.getParameterMap();

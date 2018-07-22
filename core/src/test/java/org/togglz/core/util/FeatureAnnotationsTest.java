@@ -41,12 +41,20 @@ public class FeatureAnnotationsTest {
         @EnabledByDefault
         FEATURE_ENABLED_BY_DEFAULT;
 
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     private static enum MyFeature2 implements Feature {
 
-        FEATURE_WITH_NO_ANNOTATIONS
+        FEATURE_WITH_NO_ANNOTATIONS;
 
+        @Override
+        public String id() {
+            return name();
+        }
     }
 
     @Test
