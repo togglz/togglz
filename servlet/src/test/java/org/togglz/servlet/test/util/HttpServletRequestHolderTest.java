@@ -11,6 +11,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.servlet.TogglzFilter;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
 
@@ -27,6 +28,9 @@ public class HttpServletRequestHolderTest {
             // we don't need to bootstrap Togglz here as we only test the request holder
             .setWebXML(Packaging.webAppDescriptor()
                 .contextParam("org.togglz.FEATURE_MANAGER_PROVIDED", "true")
+                    // the Togglz filter is added twice to test if it fails when called multiple times for the same request
+                .filter(TogglzFilter.class, "/*")
+                .filter(TogglzFilter.class, "/*")
                 .exportAsAsset());
 
     }
@@ -43,7 +47,8 @@ public class HttpServletRequestHolderTest {
 
         // verify the servlet sends back the query string
         assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
-        assertThat(page.getContent()).contains("number=42");
+        assertThat(page.getContent()).contains("Query: number=42");
+        assertThat(page.getContent()).contains("Executed: true");
 
     }
 

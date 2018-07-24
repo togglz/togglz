@@ -32,6 +32,8 @@ import org.togglz.servlet.spi.RequestListener;
  */
 public class TogglzFilter implements Filter {
 
+    public static final String EXECUTED = TogglzFilter.class.getName() + ".done";
+
     private final Log log = LogFactory.getLog(TogglzFilter.class);
 
     private FeatureManager bootstrappedFeatureManager;
@@ -88,21 +90,31 @@ public class TogglzFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
         throws IOException, ServletException {
 
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) resp;
+        if (Boolean.TRUE.equals(req.getAttribute(EXECUTED))) {
 
-        try {
-
-            // notify listeners
-            requestListener.begin(request, response);
-
-            // continue processing the chain
             chain.doFilter(req, resp);
 
-        } finally {
+        } else {
 
-            // notify listeners
-            requestListener.end(request, response);
+            req.setAttribute(EXECUTED, Boolean.TRUE);
+
+            HttpServletRequest request = (HttpServletRequest) req;
+            HttpServletResponse response = (HttpServletResponse) resp;
+
+            try {
+
+                // notify listeners
+                requestListener.begin(request, response);
+
+                // continue processing the chain
+                chain.doFilter(req, resp);
+
+            } finally {
+
+                // notify listeners
+                requestListener.end(request, response);
+
+            }
 
         }
 

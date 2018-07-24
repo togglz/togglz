@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.togglz.servlet.TogglzFilter;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 @WebServlet(urlPatterns = HttpServletRequestHolderServlet.URL_PATTERN)
@@ -25,7 +26,8 @@ public class HttpServletRequestHolderServlet extends HttpServlet {
         if (request != null) {
 
             // send back the query string which the test will verify
-            resp.getOutputStream().print(request.getQueryString());
+            resp.getOutputStream().print("Query: " + request.getQueryString());
+            resp.getOutputStream().print("Executed: " + request.getAttribute(TogglzFilter.EXECUTED));
             return;
 
         }
