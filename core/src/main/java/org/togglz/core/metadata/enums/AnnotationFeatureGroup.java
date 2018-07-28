@@ -5,17 +5,16 @@ import java.lang.annotation.Annotation;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.Label;
 import org.togglz.core.metadata.FeatureGroup;
-import org.togglz.core.util.FeatureAnnotations;
+import org.togglz.core.util.annotations.FeatureAnnotationsProcessor;
 
 /**
- * 
+ *
  * An implementation of {@link FeatureGroup} that based on annotations.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class AnnotationFeatureGroup implements FeatureGroup {
-
     private final String label;
     private final Class<? extends Annotation> annotation;
 
@@ -43,7 +42,7 @@ public class AnnotationFeatureGroup implements FeatureGroup {
 
     @Override
     public boolean contains(Feature feature) {
-        return FeatureAnnotations.isAnnotationPresent(feature, annotation);
+        return FeatureAnnotationsProcessor.INSTANCE.isAnnotationPresent(feature, annotation);
     }
 
 }

@@ -10,7 +10,7 @@ import org.togglz.core.metadata.enums.EnumFeatureMetaData;
  * Implementations of this interface are responsible for providing feature base data. The default implementation
  * {@link EnumFeatureMetaData} for example is used if features a defined using a feature enum. Users can provide custom
  * implementations to support something like a dynamic list of features.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public interface FeatureProvider {
@@ -24,5 +24,9 @@ public interface FeatureProvider {
      * Returns the {@link FeatureMetaData} for the given feature. May return null if no metadata is available.
      */
     FeatureMetaData getMetaData(Feature feature);
+
+    default Feature featureFor(Enum<?> enumValue) {
+        return null;
+    }
 
 }

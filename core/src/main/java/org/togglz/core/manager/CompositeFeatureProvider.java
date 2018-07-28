@@ -11,14 +11,14 @@ import org.togglz.core.spi.FeatureProvider;
 
 /**
  * A feature provider that delegates to one or more other providers.
- * 
+ *
  * @author Dave Syer
  *
  */
 public class CompositeFeatureProvider implements FeatureProvider {
 
 	private final List<FeatureProvider> delegates;
-	
+
 	public CompositeFeatureProvider(List<FeatureProvider> delegates) {
 		this.delegates = delegates;
 	}
@@ -46,5 +46,14 @@ public class CompositeFeatureProvider implements FeatureProvider {
 		}
 		return null;
 	}
+
+	@Override
+    public Feature featureFor(Enum<?> enumValue) {
+	    for (FeatureProvider delegate : delegates) {
+            Feature feature = delegate.featureFor(enumValue);
+            if (feature != null) return feature;
+        }
+	    return null;
+    }
 
 }

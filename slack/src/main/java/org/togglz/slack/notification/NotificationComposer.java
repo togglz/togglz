@@ -1,17 +1,20 @@
 package org.togglz.slack.notification;
 
-import org.togglz.core.repository.FeatureState;
-import org.togglz.core.user.UserProvider;
-import org.togglz.core.util.FeatureAnnotations;
-import org.togglz.core.util.Strings;
-import org.togglz.slack.config.NotificationConfiguration;
+import static org.togglz.core.util.Preconditions.checkArgument;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.togglz.core.util.Preconditions.checkArgument;
+import org.togglz.core.Feature;
+import org.togglz.core.GenericEnumFeature;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.user.UserProvider;
+import org.togglz.core.util.Strings;
+import org.togglz.core.util.annotations.FeatureAnnotationsProcessor;
+import org.togglz.core.util.annotations.GenericEnumAnnotationsProcessor;
+import org.togglz.slack.config.NotificationConfiguration;
 
 public class NotificationComposer {
 
@@ -98,7 +101,13 @@ public class NotificationComposer {
     }
 
     private String formatLabel(FeatureState state) {
-        String label = FeatureAnnotations.getLabel(state.getFeature());
+        String label;
+        Feature feature = state.getFeature();
+        if (feature instanceof GenericEnumFeature) {
+            label = GenericEnumAnnotationsProcessor.INSTANCE.getLabel(((GenericEnumFeature) state.getFeature()).getEnumValue());
+        } else {
+            label = FeatureAnnotationsProcessor.INSTANCE.getLabel(state.getFeature());
+        }
         return Markdown.PRE.format(label);
     }
 

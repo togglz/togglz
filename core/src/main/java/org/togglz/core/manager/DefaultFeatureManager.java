@@ -18,9 +18,9 @@ import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link FeatureManager}
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class DefaultFeatureManager implements FeatureManager {
 
@@ -123,6 +123,11 @@ public class DefaultFeatureManager implements FeatureManager {
     @Override
     public String toString() {
         return "DefaultFeatureManager[" + getName() + "]";
+    }
+
+    @Override
+    public Feature featureFor(Enum<?> enumValue) {
+        return featureProvider.featureFor(enumValue);
     }
 
 }

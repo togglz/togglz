@@ -1,4 +1,4 @@
-package org.togglz.core.util;
+package org.togglz.core.util.annotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.togglz.core.Feature;
+
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.FeatureAttribute;
 import org.togglz.core.annotation.InfoLink;
@@ -14,22 +14,26 @@ import org.togglz.core.annotation.Label;
 import org.togglz.core.annotation.Owner;
 
 /**
- * Utility class to read annotation on feature enums.
+ * Abstract annotations processor class to read annotations on enums.
+ *
+ * @see FeatureAnnotationsProcessor
+ * @see GenericAnnotationsProcessor
  *
  * @author Christian Kaltepoth
  * @author Eli Abramovitch
+ * @author Rui Figueira
  */
-public class FeatureAnnotations {
+public abstract class AbstractAnnotationsProcessor<T> {
 
-    public static String getLabel(Feature feature) {
+    public String getLabel(T feature) {
         Label label = getAnnotation(feature, Label.class);
         if (label != null) {
             return label.value();
         }
-        return feature.name();
+        return getName(feature);
     }
 
-    public static String getOwner(Feature feature) {
+    public String getOwner(T feature) {
         Owner owner = getAnnotation(feature, Owner.class);
         if (owner != null) {
             return owner.value();
@@ -37,7 +41,7 @@ public class FeatureAnnotations {
         return null;
     }
 
-    public static String getInfoLink(Feature feature) {
+    public String getInfoLink(T feature) {
         InfoLink infoLink = getAnnotation(feature, InfoLink.class);
         if (infoLink != null) {
             return infoLink.value();
@@ -45,19 +49,19 @@ public class FeatureAnnotations {
         return null;
     }
 
-    public static boolean isEnabledByDefault(Feature feature) {
+    public boolean isEnabledByDefault(T feature) {
         return isAnnotationPresent(feature, EnabledByDefault.class);
     }
 
-    public static boolean isAnnotationPresent(Feature feature, Class<? extends Annotation> annotationType) {
+    public boolean isAnnotationPresent(T feature, Class<? extends Annotation> annotationType) {
         return getAnnotation(feature, annotationType) != null;
     }
 
-    public static Set<Annotation> getAnnotations(Feature feature) {
-        Set<Annotation> annotations = new HashSet<Annotation>();
+    public Set<Annotation> getAnnotations(T feature) {
+        Set<Annotation> annotations = new HashSet<>();
         try {
-            Class<? extends Feature> featureClass = feature.getClass();
-            Annotation[] fieldAnnotations = featureClass.getField(feature.name()).getAnnotations();
+            Class<?> featureClass = feature.getClass();
+            Annotation[] fieldAnnotations = featureClass.getField(getName(feature)).getAnnotations();
             Annotation[] classAnnotations = featureClass.getAnnotations();
 
             annotations.addAll(Arrays.asList(fieldAnnotations));
@@ -72,10 +76,10 @@ public class FeatureAnnotations {
         return annotations;
     }
 
-    public static <A extends Annotation> A getAnnotation(Feature feature, Class<A> annotationType) {
+    public <A extends Annotation> A getAnnotation(T feature, Class<A> annotationType) {
         try {
-            Class<? extends Feature> featureClass = feature.getClass();
-            A fieldAnnotation = featureClass.getField(feature.name()).getAnnotation(annotationType);
+            Class<?> featureClass = feature.getClass();
+            A fieldAnnotation = featureClass.getField(getName(feature)).getAnnotation(annotationType);
             A classAnnotation = featureClass.getAnnotation(annotationType);
 
             return fieldAnnotation != null ? fieldAnnotation : classAnnotation;
@@ -92,7 +96,7 @@ public class FeatureAnnotations {
      * name of the attribute at the first and the value at the second position. Returns <code>null</code> if no attribute was
      * found.
      */
-    public static String[] getFeatureAttribute(Annotation annotation) {
+    public String[] getFeatureAttribute(Annotation annotation) {
 
         try {
 
@@ -127,5 +131,8 @@ public class FeatureAnnotations {
         return null;
 
     }
+
+
+    protected abstract String getName(T feature);
 
 }

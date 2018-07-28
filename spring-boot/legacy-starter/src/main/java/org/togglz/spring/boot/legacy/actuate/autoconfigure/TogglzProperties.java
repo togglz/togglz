@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,9 +45,15 @@ public class TogglzProperties {
 
 	/**
 	 * Optional comma-separated list of fully-qualified feature enum class
-	 * names. Features can also be specified using the features property.
+	 * names. Features can also be specified using the features or genericEnums property.
 	 */
 	private Class<? extends Feature>[] featureEnums;
+
+   /**
+	 * Optional comma-separated list of fully-qualified generic enum class
+	 * names. Features can also be specified using the features or featureEnums property.
+	 */
+	private Class<? extends Enum<?>>[] genericEnums;
 
 	/**
 	 * The name of the feature manager.
@@ -95,6 +101,14 @@ public class TogglzProperties {
 
 	public void setFeatureEnums(Class<? extends Feature>[] featureEnums) {
 		this.featureEnums = featureEnums;
+	}
+
+	public Class<? extends Enum<?>>[] getGenericEnums() {
+		return genericEnums;
+	}
+
+	public void setGenericEnums(Class<? extends Enum<?>>[] genericEnums) {
+		this.genericEnums = genericEnums;
 	}
 
 	public void setEnabled(boolean enabled) {
