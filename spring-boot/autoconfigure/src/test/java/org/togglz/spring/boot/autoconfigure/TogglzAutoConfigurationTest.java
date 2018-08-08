@@ -175,6 +175,13 @@ public class TogglzAutoConfigurationTest {
                 "togglz.console.enabled: false");
         assertEquals(0, this.context.getBeansOfType(ServletRegistrationBean.class).size());
     }
+    
+    @Test
+    public void consoleDisabledWithoutUseManagementPort() {
+        loadWithDefaults(new Class[]{FeatureProviderConfig.class},
+                "togglz.console.enabled: false", "togglz.console.use-management-port: false");
+        assertEquals(0, this.context.getBeansOfType(ServletRegistrationBean.class).size());
+    }
 
     @Test
     public void consoleUseManagementPortIsFalseWithoutTogglzManagementContextConfiguration() {
