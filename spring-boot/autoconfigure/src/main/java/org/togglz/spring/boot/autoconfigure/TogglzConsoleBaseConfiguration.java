@@ -57,26 +57,31 @@ public abstract class TogglzConsoleBaseConfiguration {
         return "";
     }
 
-    static class OnConsoleEnabled extends AllNestedConditions {
+    public static class OnConsoleAndUseManagementPort extends AllNestedConditions {
 
-        OnConsoleEnabled() {
+        OnConsoleAndUseManagementPort() {
             super(ConfigurationPhase.PARSE_CONFIGURATION);
         }
 
         @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
         static class OnConsole {
         }
-    }
-
-    public static class OnConsoleAndUseManagementPort extends OnConsoleEnabled {
-
+        
         @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "true", matchIfMissing = true)
         static class OnUseManagementPort {
         }
 
     }
 
-    public static class OnConsoleAndNotUseManagementPort extends OnConsoleEnabled {
+    public static class OnConsoleAndNotUseManagementPort extends AllNestedConditions {
+
+        OnConsoleAndNotUseManagementPort() {
+            super(ConfigurationPhase.PARSE_CONFIGURATION);
+        }
+
+        @ConditionalOnProperty(prefix = "togglz.console", name = "enabled", matchIfMissing = true)
+        static class OnConsole {
+        }
 
         @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "false")
         static class OnNotUseManagementPort {
