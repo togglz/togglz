@@ -9,6 +9,8 @@ import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.ActivationStrategyContexts;
+import org.togglz.core.spi.ContextAwareActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 
@@ -52,6 +54,18 @@ public interface FeatureManager {
      * @return <code>true</code> if the feature is active, <code>false</code> otherwise
      */
     boolean isActive(Feature feature);
+
+    /**
+     * Checks for specific contexts whether the supplied feature is active or not. Please note that this method will internally
+     * use the {@link UserProvider} to obtain the currently acting user as it may be relevant if the feature is enabled only for
+     * specific set of users.
+     *
+     * @param feature The feature to check
+     * @param contexts The {@link ActivationStrategyContexts} which should be respected by
+     *                 specific {@link ContextAwareActivationStrategy ContextSensitiveActivationStrategies}.
+     * @return <code>true</code> if the feature is active, <code>false</code> otherwise
+     */
+    boolean isActive(Feature feature, ActivationStrategyContexts contexts);
 
     /**
      * Get the current feature user. This method will internally use the configured {@link UserProvider} to obtain the

@@ -10,6 +10,7 @@ import org.togglz.core.metadata.EmptyFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.ActivationStrategyContexts;
 import org.togglz.core.user.FeatureUser;
 
 /**
@@ -38,6 +39,11 @@ public class FallbackTestFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
+        return true;
+    }
+
+    @Override
+    public boolean isActive(Feature feature, ActivationStrategyContexts contexts) {
         return true;
     }
 

@@ -2,6 +2,7 @@ package org.togglz.core.manager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -11,16 +12,18 @@ import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.ActivationStrategyContexts;
+import org.togglz.core.spi.ContextAwareActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
+import org.togglz.core.util.Strings;
 import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link FeatureManager}
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class DefaultFeatureManager implements FeatureManager {
 
@@ -61,8 +64,14 @@ public class DefaultFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
+        return isActive(feature, ActivationStrategyContexts.EMPTY);
+    }
+
+    @Override
+    public boolean isActive(Feature feature, ActivationStrategyContexts contexts) {
 
         Validate.notNull(feature, "feature is required");
+        Validate.notNull(contexts, "contexts are required");
 
         FeatureState state = stateRepository.getFeatureState(feature);
 
@@ -70,22 +79,37 @@ public class DefaultFeatureManager implements FeatureManager {
             state = getMetaData(feature).getDefaultFeatureState();
         }
 
-        if (state.isEnabled()) {
+        if (!state.isEnabled()) {
+            return false;
+        }
 
-            // if no strategy is selected, the decision is simple
-            String strategyId = state.getStrategyId();
-            if (strategyId == null || strategyId.isEmpty()) {
-                return true;
+        // if no strategy is selected, the decision is simple
+        String strategyId = state.getStrategyId();
+        if (Strings.isEmpty(strategyId)) {
+            return true;
+        }
+
+        FeatureUser user = userProvider.getCurrentUser();
+
+        for (ActivationStrategy strategy : strategyProvider.getActivationStrategies()) {
+            if (!strategyId.equalsIgnoreCase(strategy.getId())) {
+                continue;
             }
 
-            FeatureUser user = userProvider.getCurrentUser();
+            if (strategy instanceof ContextAwareActivationStrategy) {
+                //noinspection unchecked
+                ContextAwareActivationStrategy<Object> contextAwareStrategy = (ContextAwareActivationStrategy<Object>) strategy;
 
-            // check the selected strategy
-            for (ActivationStrategy strategy : strategyProvider.getActivationStrategies()) {
-                if (strategy.getId().equalsIgnoreCase(strategyId)) {
-                    return strategy.isActive(state, user);
+                if (!contexts.hasContext(contextAwareStrategy.getClass())) {
+                    return false;
                 }
+
+                Object context = contexts.get(contextAwareStrategy.getClass());
+
+                return contextAwareStrategy.isActive(state, user, context);
             }
+
+            return strategy.isActive(state, user);
         }
 
         // if the strategy was not found, the feature should be off
@@ -113,7 +137,6 @@ public class DefaultFeatureManager implements FeatureManager {
     public List<ActivationStrategy> getActivationStrategies() {
         return strategyProvider.getActivationStrategies();
     }
-
 
     @Override
     public FeatureUser getCurrentFeatureUser() {
