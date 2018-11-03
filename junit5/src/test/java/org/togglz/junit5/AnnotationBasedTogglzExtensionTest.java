@@ -1,6 +1,7 @@
 package org.togglz.junit5;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Nested;
@@ -65,5 +66,43 @@ class AnnotationBasedTogglzExtensionTest {
         }
 
     }
+
+    @AllEnabled(MyFeatures.class)
+    abstract class EnabledParentTest {
+
+        @Test
+        void methodInParentClass() {
+            assertTrue(MyFeatures.ONE.isActive());
+            assertTrue(MyFeatures.TWO.isActive());
+            assertTrue(MyFeatures.THREE.isActive());
+        }
+
+        @Test
+        void testFeatureManagerParameter(TestFeatureManager featureManager) {
+            assertNotNull(featureManager);
+        }
+    }
+
+    @Nested
+    class EnabledChildTest extends EnabledParentTest {}
+
+    @AllDisabled(MyFeatures.class)
+    abstract class DisabledParentTest {
+
+        @Test
+        void methodInParentClass() {
+            assertFalse(MyFeatures.ONE.isActive());
+            assertFalse(MyFeatures.TWO.isActive());
+            assertFalse(MyFeatures.THREE.isActive());
+        }
+
+        @Test
+        void testFeatureManagerParameter(TestFeatureManager featureManager) {
+            assertNotNull(featureManager);
+        }
+    }
+
+    @Nested
+    class DisabledChildTest extends DisabledParentTest {}
 
 }
