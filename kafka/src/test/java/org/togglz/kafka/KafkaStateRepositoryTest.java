@@ -2,9 +2,6 @@ package org.togglz.kafka;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.FEATURE_A;
-import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.FEATURE_B;
-import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.UNUSED_FEATURE;
 
 import com.salesforce.kafka.test.junit4.SharedKafkaTestResource;
 import java.time.Duration;
@@ -32,7 +29,7 @@ public class KafkaStateRepositoryTest {
 
     try (KafkaStateRepository stateRepository = createStateRepository(TOPIC)) {
       for (int i = 0; i < 100; i++) {
-        TestFeatures feature = ThreadLocalRandom.current().nextBoolean() ? FEATURE_A : FEATURE_B;
+        Features feature = ThreadLocalRandom.current().nextBoolean() ? Features.FEATURE_A : Features.FEATURE_B;
         boolean enabled = ThreadLocalRandom.current().nextBoolean();
 
         stateRepository.setFeatureState(newFeatureState(feature).setEnabled(enabled));
@@ -44,7 +41,7 @@ public class KafkaStateRepositoryTest {
   public void shouldReturnNullWhenTopicIsEmpty() {
     KafkaStateRepository stateRepository = createStateRepository(EMPTY_TOPIC);
 
-    FeatureState receivedFeatureState = stateRepository.getFeatureState(FEATURE_A);
+    FeatureState receivedFeatureState = stateRepository.getFeatureState(Features.FEATURE_A);
 
     assertThat(receivedFeatureState).isNull();
   }
@@ -53,8 +50,8 @@ public class KafkaStateRepositoryTest {
   public void shouldReturnNullWhenFeatureHasNotBeenUsedYet() {
     KafkaStateRepository stateRepository = createStateRepository(TOPIC);
 
-    stateRepository.setFeatureState(newFeatureState(FEATURE_B).setEnabled(false));
-    FeatureState receivedFeatureState = stateRepository.getFeatureState(UNUSED_FEATURE);
+    stateRepository.setFeatureState(newFeatureState(Features.FEATURE_B).setEnabled(false));
+    FeatureState receivedFeatureState = stateRepository.getFeatureState(Features.UNUSED_FEATURE);
 
     assertThat(receivedFeatureState).isNull();
   }
@@ -62,7 +59,7 @@ public class KafkaStateRepositoryTest {
   @Test
   public void shouldUpdateFeatureStateWithSingleStateRepository() {
     KafkaStateRepository stateRepository = createStateRepository(TOPIC);
-    FeatureState featureState = newFeatureState(FEATURE_A).setEnabled(false);
+    FeatureState featureState = newFeatureState(Features.FEATURE_A).setEnabled(false);
 
     FeatureState receivedFeatureState = setAndGetFeatureState(stateRepository, stateRepository, featureState);
 
@@ -73,7 +70,7 @@ public class KafkaStateRepositoryTest {
   public void shouldUpdateFeatureStateWithMultipleStateRepositories() {
     KafkaStateRepository sendingRepository = createStateRepository(TOPIC);
     KafkaStateRepository pollingRepository = createStateRepository(TOPIC);
-    FeatureState featureState = newFeatureState(FEATURE_B).setEnabled(true);
+    FeatureState featureState = newFeatureState(Features.FEATURE_B).setEnabled(true);
 
     FeatureState receivedFeatureState = setAndGetFeatureState(sendingRepository, pollingRepository, featureState);
 
@@ -84,7 +81,7 @@ public class KafkaStateRepositoryTest {
   public void shouldUpdateFeatureStateWithActivationStrategy() {
     KafkaStateRepository sendingRepository = createStateRepository(TOPIC);
     KafkaStateRepository pollingRepository = createStateRepository(TOPIC);
-    FeatureState featureState = newFeatureStateWithActivationStrategy(FEATURE_A).setEnabled(true);
+    FeatureState featureState = newFeatureStateWithActivationStrategy(Features.FEATURE_A).setEnabled(true);
 
     FeatureState receivedFeatureState = setAndGetFeatureState(sendingRepository, pollingRepository, featureState);
 
@@ -142,7 +139,7 @@ public class KafkaStateRepositoryTest {
     }
   }
 
-  public enum TestFeatures implements org.togglz.core.Feature {
+  public enum Features implements Feature {
     FEATURE_A, FEATURE_B, UNUSED_FEATURE
   }
 
