@@ -142,7 +142,7 @@ public class KafkaStateRepositoryTest {
     }
   }
 
-  public enum TestFeatures implements Feature {
+  public enum TestFeatures implements org.togglz.core.Feature {
     FEATURE_A, FEATURE_B, UNUSED_FEATURE
   }
 
