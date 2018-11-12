@@ -12,6 +12,7 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 import static org.togglz.core.util.FeatureStateStorageWrapper.featureStateForWrapper;
 import static org.togglz.core.util.FeatureStateStorageWrapper.wrapperForFeatureState;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -239,6 +240,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
   static class FeatureStateConsumer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(FeatureStateConsumer.class);
+    private static final Gson GSON = new GsonBuilder().create();
+
     private final KafkaConsumer<String, String> kafkaConsumer;
     private final BiConsumer<String, FeatureStateStorageWrapper> updateHandler;
     private final String inboundTopic;
@@ -384,7 +388,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     }
 
     private FeatureStateStorageWrapper deserialize(String featureStateAsString) {
-      return new GsonBuilder().create().fromJson(featureStateAsString, FeatureStateStorageWrapper.class);
+      return GSON.fromJson(featureStateAsString, FeatureStateStorageWrapper.class);
     }
 
     private void updatePartitionOffset(int partition, long offset) {
@@ -430,6 +434,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
   static class FeatureStateProducer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(FeatureStateProducer.class);
+    private static final Gson GSON = new GsonBuilder().create();
+
     private final KafkaProducer<String, String> producer;
     private final String outboundTopic;
 
@@ -468,7 +475,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     }
 
     private String serialize(FeatureStateStorageWrapper storageWrapper) {
-      return new GsonBuilder().create().toJson(storageWrapper);
+      return GSON.toJson(storageWrapper);
     }
 
     private ProducerRecord<String, String> buildRecord(String featureName, String featureStateAsString) {
