@@ -338,8 +338,6 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
           processRecords(records);
 
           updateConsumerLag();
-
-          kafkaConsumer.commitSync();
         }
       } catch (WakeupException e) {
         LOG.info("Received shutdown signal.");
