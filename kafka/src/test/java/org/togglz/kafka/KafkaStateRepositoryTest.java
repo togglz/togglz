@@ -2,9 +2,9 @@ package org.togglz.kafka;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.togglz.kafka.KafkaStateRepositoryTest.Features.FEATURE_A;
-import static org.togglz.kafka.KafkaStateRepositoryTest.Features.FEATURE_B;
-import static org.togglz.kafka.KafkaStateRepositoryTest.Features.UNUSED_FEATURE;
+import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.FEATURE_A;
+import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.FEATURE_B;
+import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.UNUSED_FEATURE;
 
 import com.salesforce.kafka.test.junit4.SharedKafkaTestResource;
 import java.time.Duration;
@@ -32,7 +32,7 @@ public class KafkaStateRepositoryTest {
 
     try (KafkaStateRepository stateRepository = createStateRepository(TOPIC)) {
       for (int i = 0; i < 100; i++) {
-        Features feature = ThreadLocalRandom.current().nextBoolean() ? FEATURE_A : FEATURE_B;
+        TestFeatures feature = ThreadLocalRandom.current().nextBoolean() ? FEATURE_A : FEATURE_B;
         boolean enabled = ThreadLocalRandom.current().nextBoolean();
 
         stateRepository.setFeatureState(newFeatureState(feature).setEnabled(enabled));
@@ -142,7 +142,7 @@ public class KafkaStateRepositoryTest {
     }
   }
 
-  public enum Features implements Feature {
+  public enum TestFeatures implements Feature {
     FEATURE_A, FEATURE_B, UNUSED_FEATURE
   }
 
