@@ -292,11 +292,11 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
         LOG.info("FeatureStateConsumer has already been started.");
       } else {
         try {
-          LOG.info("Starting to start FeatureStateConsumer.");
+          LOG.debug("Starting to start FeatureStateConsumer.");
           asThreadWithExceptionHandler(this::run).start();
-          LOG.info("Successfully started FeatureStateConsumer.");
+          LOG.debug("Successfully started FeatureStateConsumer.");
           initializationLatch.await(initializationTimeout.toMillis(), MILLISECONDS);
-          LOG.info("Successfully initialized FeatureStateConsumer.");
+          LOG.debug("Successfully initialized FeatureStateConsumer.");
         } catch (InterruptedException e) {
           throw new RuntimeException("An error occurred while awaiting initialization.", e);
         }
@@ -306,10 +306,10 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     private synchronized void close() {
       if (running) {
         try {
-          LOG.info("Starting to close FeatureStateConsumer.");
+          LOG.debug("Starting to close FeatureStateConsumer.");
           kafkaConsumer.wakeup();
           shutdownLatch.await();
-          LOG.info("Successfully closed FeatureStateConsumer.");
+          LOG.debug("Successfully closed FeatureStateConsumer.");
         } catch (InterruptedException e) {
           LOG.error("An error occurred while closing FeatureStateConsumer.", e);
         }
@@ -359,9 +359,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     }
 
     private void assignConsumer() {
-      LOG.info("Starting to retrieve partitions for topic {}.", inboundTopic);
+      LOG.debug("Starting to retrieve partitions for topic {}.", inboundTopic);
       List<TopicPartition> topicPartitions = getTopicPartitions();
-      LOG.info("Successfully retrieved topic partitions {}.", topicPartitions);
+      LOG.debug("Successfully retrieved topic partitions {}.", topicPartitions);
 
       kafkaConsumer.assign(topicPartitions);
       kafkaConsumer.seekToBeginning(topicPartitions);
@@ -383,11 +383,11 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
         String featureStateAsString = record.value();
 
         try {
-          LOG.info("Starting to process state of feature {}.", featureName);
+          LOG.debug("Starting to process state of feature {}.", featureName);
           FeatureStateStorageWrapper storageWrapper = deserialize(featureStateAsString);
-          LOG.info("Successfully deserialized state of feature {}.", featureName);
+          LOG.debug("Successfully deserialized state of feature {}.", featureName);
           updateHandler.accept(featureName, storageWrapper);
-          LOG.info("Successfully processed state of feature {}.", featureName);
+          LOG.debug("Successfully processed state of feature {}.", featureName);
           updatePartitionOffset(record.partition(), record.offset());
         } catch (Exception e) {
           throw new RuntimeException("An error occurred while processing state of feature " + featureName + ".", e);
@@ -400,9 +400,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     }
 
     private void updatePartitionOffset(int partition, long offset) {
-      LOG.info("Starting to update offset {} of partition {}.", offset, partition);
+      LOG.debug("Starting to update offset {} of partition {}.", offset, partition);
       offsets.put(new TopicPartition(inboundTopic, partition), offset);
-      LOG.info("Successfully updated offset {} of partition {}.", offset, partition);
+      LOG.debug("Successfully updated offset {} of partition {}.", offset, partition);
     }
 
     private void updateConsumerLag() {
@@ -429,9 +429,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
     private void shutdown() {
       try {
-        LOG.info("Starting to close KafkaConsumer.");
+        LOG.debug("Starting to close KafkaConsumer.");
         kafkaConsumer.close();
-        LOG.info("Successfully closed KafkaConsumer.");
+        LOG.debug("Successfully closed KafkaConsumer.");
       } catch (RuntimeException e) {
         LOG.error("An error occurred while closing KafkaConsumer.", e);
       } finally {
@@ -461,9 +461,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
     private void close() {
       try {
-        LOG.info("Starting to close KafkaProducer.");
+        LOG.debug("Starting to close KafkaProducer.");
         producer.close();
-        LOG.info("Successfully closed KafkaProducer.");
+        LOG.debug("Successfully closed KafkaProducer.");
       } catch (RuntimeException e) {
         LOG.error("An error occurred while closing KafkaProducer.", e);
       }
@@ -473,9 +473,9 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
       String featureName = feature.name();
 
       try {
-        LOG.info("Starting to update state of feature {}.", featureName);
+        LOG.debug("Starting to update state of feature {}.", featureName);
         String featureStateAsString = serialize(storageWrapper);
-        LOG.info("Successfully serialized state of feature {}.", featureName);
+        LOG.debug("Successfully serialized state of feature {}.", featureName);
         producer.send(buildRecord(featureName, featureStateAsString), buildCallback(featureName));
       } catch (Exception e) {
         LOG.error("An error occurred while updating state of feature {}.", featureName, e);
@@ -493,7 +493,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     private Callback buildCallback(String featureName) {
       return (metadata, exception) -> {
         if (exception == null) {
-          LOG.info("Successfully updated state of feature {}.", featureName);
+          LOG.debug("Successfully updated state of feature {}.", featureName);
         } else {
           LOG.error("An error occurred while updating state of feature {}.", featureName, exception);
         }
