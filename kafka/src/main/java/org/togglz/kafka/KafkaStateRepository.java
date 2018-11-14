@@ -1,5 +1,7 @@
 package org.togglz.kafka;
 
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofSeconds;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.apache.kafka.clients.CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG;
@@ -12,8 +14,8 @@ import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_
 import static org.togglz.core.util.FeatureStateStorageWrapper.featureStateForWrapper;
 import static org.togglz.core.util.FeatureStateStorageWrapper.wrapperForFeatureState;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +86,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
   private KafkaStateRepository(Builder builder) {
     featureStates = new ConcurrentHashMap<>();
-    featureStateConsumer = new FeatureStateConsumer(builder, featureStates::put);
+    featureStateConsumer = new FeatureStateConsumer(builder, this::handleUpdate);
     featureStateProducer = new FeatureStateProducer(builder);
 
     featureStateConsumer.start();
@@ -124,7 +126,11 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
   @Override
   public void setFeatureState(FeatureState featureState) {
-    featureStateProducer.send(featureState.getFeature(), wrapperForFeatureState(featureState));
+    FeatureStateStorageWrapper storageWrapper = wrapperForFeatureState(featureState);
+
+    featureStateProducer.send(featureState.getFeature(), storageWrapper);
+
+    handleUpdate(featureState.getFeature().name(), storageWrapper);
   }
 
   /**
@@ -149,13 +155,17 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     return featureStateConsumer.consumerLag();
   }
 
+  private void handleUpdate(String featureName, FeatureStateStorageWrapper storageWrapper) {
+    featureStates.put(featureName, storageWrapper);
+  }
+
   public static class Builder {
 
     private String bootstrapServers;
     private String inboundTopic;
     private String outboundTopic;
-    private Duration pollingTimeout;
-    private Duration initializationTimeout;
+    private Duration pollingTimeout = ofMillis(500);
+    private Duration initializationTimeout = ofSeconds(5);
 
     private Builder() {
     }
@@ -201,7 +211,8 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     /**
      * Defines the polling interval of the underlying Kafka consumer. A higher value will
      * increase the latency of {@link FeatureState} updates. A lower value will increase
-     * the I/O pressure on the Kafka cluster.
+     * the I/O pressure on the Kafka cluster. If no polling timeout is provided, a default
+     * value of {@code 500 ms} will be used.
      *
      * @param pollingTimeout the polling interval
      * @return the current instance of this builder
@@ -214,7 +225,8 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     /**
      * Defines an upper bound for the initialization time of the {@link KafkaStateRepository}.
      * If the underlying Kafka consumer is not able to read all data from Kafka within the
-     * given interval, the {@link #build()} method will throw an exception.
+     * given interval, the {@link #build()} method will throw an exception. If no initialization
+     * timeout is provided, a default value of {@code 5 s} will be used.
      *
      * @param initializationTimeout the upper bound for the initialization time
      * @return the current instance of this builder
@@ -238,10 +250,10 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
 
   }
 
-  static class FeatureStateConsumer {
+  private static class FeatureStateConsumer {
 
     private static final Logger LOG = LoggerFactory.getLogger(FeatureStateConsumer.class);
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final KafkaConsumer<String, String> kafkaConsumer;
     private final BiConsumer<String, FeatureStateStorageWrapper> updateHandler;
@@ -255,7 +267,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     private volatile boolean running;
     private volatile long consumerLag;
 
-    FeatureStateConsumer(Builder builder, BiConsumer<String, FeatureStateStorageWrapper> updateHandler) {
+    private FeatureStateConsumer(Builder builder, BiConsumer<String, FeatureStateStorageWrapper> updateHandler) {
       Properties properties = new Properties();
       properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, requireNonNull(builder.bootstrapServers));
       properties.setProperty(KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
@@ -275,61 +287,58 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
       consumerLag = Long.MAX_VALUE;
     }
 
-    void start() {
+    private synchronized void start() {
       if (running) {
         LOG.info("FeatureStateConsumer has already been started.");
       } else {
-        synchronized (this) {
-          if (running) {
-            LOG.info("FeatureStateConsumer has already been started.");
-          } else {
-            try {
-              LOG.info("Starting to start FeatureStateConsumer.");
-              new Thread(this::run).start();
-              LOG.info("Successfully started FeatureStateConsumer.");
-              running = true;
-              initializationLatch.await(initializationTimeout.toMillis(), MILLISECONDS);
-              LOG.info("Successfully initialized FeatureStateConsumer.");
-            } catch (InterruptedException e) {
-              throw new RuntimeException("An error occurred while awaiting initialization.", e);
-            }
-          }
+        try {
+          LOG.info("Starting to start FeatureStateConsumer.");
+          asThreadWithExceptionHandler(this::run).start();
+          LOG.info("Successfully started FeatureStateConsumer.");
+          initializationLatch.await(initializationTimeout.toMillis(), MILLISECONDS);
+          LOG.info("Successfully initialized FeatureStateConsumer.");
+        } catch (InterruptedException e) {
+          throw new RuntimeException("An error occurred while awaiting initialization.", e);
         }
       }
     }
 
-    void close() {
+    private synchronized void close() {
       if (running) {
-        synchronized (this) {
-          if (running) {
-            try {
-              LOG.info("Starting to close FeatureStateConsumer.");
-              kafkaConsumer.wakeup();
-              shutdownLatch.await();
-              running = false;
-              LOG.info("Successfully closed FeatureStateConsumer.");
-            } catch (InterruptedException e) {
-              LOG.error("An error occurred while closing FeatureStateConsumer.", e);
-            }
-          } else {
-            LOG.info("FeatureStateConsumer has already been closed.");
-          }
+        try {
+          LOG.info("Starting to close FeatureStateConsumer.");
+          kafkaConsumer.wakeup();
+          shutdownLatch.await();
+          LOG.info("Successfully closed FeatureStateConsumer.");
+        } catch (InterruptedException e) {
+          LOG.error("An error occurred while closing FeatureStateConsumer.", e);
         }
       } else {
         LOG.info("FeatureStateConsumer has already been closed.");
       }
     }
 
-    boolean isRunning() {
+    private boolean isRunning() {
       return running;
     }
 
-    long consumerLag() {
+    private long consumerLag() {
       return consumerLag;
+    }
+
+    private Thread asThreadWithExceptionHandler(Runnable runnable) {
+      Thread thread = new Thread(runnable);
+
+      thread.setUncaughtExceptionHandler((currentThread, throwable) ->
+          LOG.error("An uncaught error has been raised.", throwable)
+      );
+
+      return thread;
     }
 
     private void run() {
       assignConsumer();
+      running = true;
 
       try {
         while (true) {
@@ -341,9 +350,10 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
         }
       } catch (WakeupException e) {
         LOG.info("Received shutdown signal.");
-      } catch (Exception e) {
-        LOG.error("An error occurred while processing feature states.", e);
+      } catch (RuntimeException e) {
+        LOG.error("An error occurred while processing feature states: KafkaConsumer will be closed.", e);
       } finally {
+        running = false;
         shutdown();
       }
     }
@@ -385,8 +395,8 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
       }
     }
 
-    private FeatureStateStorageWrapper deserialize(String featureStateAsString) {
-      return GSON.fromJson(featureStateAsString, FeatureStateStorageWrapper.class);
+    private FeatureStateStorageWrapper deserialize(String featureStateAsString) throws IOException {
+      return MAPPER.readValue(featureStateAsString, FeatureStateStorageWrapper.class);
     }
 
     private void updatePartitionOffset(int partition, long offset) {
@@ -422,23 +432,23 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
         LOG.info("Starting to close KafkaConsumer.");
         kafkaConsumer.close();
         LOG.info("Successfully closed KafkaConsumer.");
-      } catch (Exception e) {
-        LOG.error("An error occurred while closing KafkaConsumer!", e);
+      } catch (RuntimeException e) {
+        LOG.error("An error occurred while closing KafkaConsumer.", e);
       } finally {
         shutdownLatch.countDown();
       }
     }
   }
 
-  static class FeatureStateProducer {
+  private static class FeatureStateProducer {
 
     private static final Logger LOG = LoggerFactory.getLogger(FeatureStateProducer.class);
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final KafkaProducer<String, String> producer;
     private final String outboundTopic;
 
-    FeatureStateProducer(Builder builder) {
+    private FeatureStateProducer(Builder builder) {
       Properties properties = new Properties();
       properties.setProperty(BOOTSTRAP_SERVERS_CONFIG, requireNonNull(builder.bootstrapServers));
       properties.setProperty(KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -449,17 +459,17 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
       this.outboundTopic = requireNonNull(builder.outboundTopic);
     }
 
-    void close() {
+    private void close() {
       try {
         LOG.info("Starting to close KafkaProducer.");
         producer.close();
         LOG.info("Successfully closed KafkaProducer.");
-      } catch (Exception e) {
-        LOG.error("An error occurred while closing KafkaProducer!", e);
+      } catch (RuntimeException e) {
+        LOG.error("An error occurred while closing KafkaProducer.", e);
       }
     }
 
-    void send(Feature feature, FeatureStateStorageWrapper storageWrapper) {
+    private void send(Feature feature, FeatureStateStorageWrapper storageWrapper) {
       String featureName = feature.name();
 
       try {
@@ -472,8 +482,8 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
       }
     }
 
-    private String serialize(FeatureStateStorageWrapper storageWrapper) {
-      return GSON.toJson(storageWrapper);
+    private String serialize(FeatureStateStorageWrapper storageWrapper) throws IOException {
+      return MAPPER.writeValueAsString(storageWrapper);
     }
 
     private ProducerRecord<String, String> buildRecord(String featureName, String featureStateAsString) {

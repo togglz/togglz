@@ -1,5 +1,6 @@
 package org.togglz.kafka;
 
+import static java.util.UUID.randomUUID;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.FEATURE_A;
@@ -8,6 +9,8 @@ import static org.togglz.kafka.KafkaStateRepositoryTest.TestFeatures.UNUSED_FEAT
 
 import com.salesforce.kafka.test.junit4.SharedKafkaTestResource;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -27,8 +30,8 @@ public class KafkaStateRepositoryTest {
 
   @BeforeClass
   public static void createTopics() {
-    sharedKafkaTestResource.getKafkaTestUtils().createTopic(TOPIC, 5, (short) 1);
-    sharedKafkaTestResource.getKafkaTestUtils().createTopic(EMPTY_TOPIC, 5, (short) 1);
+    createTopic(TOPIC);
+    createTopic(EMPTY_TOPIC);
 
     try (KafkaStateRepository stateRepository = createStateRepository(TOPIC)) {
       for (int i = 0; i < 100; i++) {
@@ -64,7 +67,7 @@ public class KafkaStateRepositoryTest {
     KafkaStateRepository stateRepository = createStateRepository(TOPIC);
     FeatureState featureState = newFeatureState(FEATURE_A).setEnabled(false);
 
-    FeatureState receivedFeatureState = setAndGetFeatureState(stateRepository, stateRepository, featureState);
+    FeatureState receivedFeatureState = setAndGetFeatureState(stateRepository, featureState);
 
     assertThat(receivedFeatureState).isEqualToComparingFieldByField(featureState);
   }
@@ -99,17 +102,29 @@ public class KafkaStateRepositoryTest {
   }
 
   @Test
-  public void shouldHaveNoConsumerLagAfterInitialization() {
-    KafkaStateRepository stateRepository = createStateRepository(TOPIC);
+  public void shouldNotBeRunningAfterKafkaConsumerCrashed() {
+    String topicName = createTopicName();
+    createTopic(topicName);
+    KafkaStateRepository stateRepository = createStateRepository(topicName);
 
-    assertThat(stateRepository.consumerLag()).isZero();
+    sendRecordAndAwaitNextPoll(topicName, FEATURE_A, "invalid_value");
+
+    assertThat(stateRepository.isRunning()).isFalse();
+  }
+
+  private static String createTopicName() {
+    return randomUUID().toString();
+  }
+
+  private static void createTopic(String topicName) {
+    sharedKafkaTestResource.getKafkaTestUtils().createTopic(topicName, 5, (short) 1);
   }
 
   private static KafkaStateRepository createStateRepository(String topic) {
     return KafkaStateRepository.builder()
         .bootstrapServers(sharedKafkaTestResource.getKafkaConnectString())
         .inboundTopic(topic)
-        .outboundTopic(TOPIC)
+        .outboundTopic(topic)
         .pollingTimeout(POLLING_TIMEOUT)
         .initializationTimeout(Duration.ofSeconds(1))
         .build();
@@ -126,6 +141,14 @@ public class KafkaStateRepositoryTest {
   }
 
   private static FeatureState setAndGetFeatureState(
+      KafkaStateRepository stateRepository,
+      FeatureState featureState
+  ) {
+    stateRepository.setFeatureState(featureState);
+    return stateRepository.getFeatureState(featureState.getFeature());
+  }
+
+  private static FeatureState setAndGetFeatureState(
       KafkaStateRepository sendingRepository,
       KafkaStateRepository pollingRepository,
       FeatureState featureState
@@ -133,6 +156,16 @@ public class KafkaStateRepositoryTest {
     sendingRepository.setFeatureState(featureState);
     awaitNextPoll();
     return pollingRepository.getFeatureState(featureState.getFeature());
+  }
+
+  private static void sendRecordAndAwaitNextPoll(String topicName, Feature feature, String value) {
+    Map<byte[], byte[]> record = new HashMap<>();
+
+    record.put(feature.name().getBytes(), value.getBytes());
+
+    sharedKafkaTestResource.getKafkaTestUtils().produceRecords(record, topicName, 0);
+
+    awaitNextPoll();
   }
 
   private static void awaitNextPoll() {
