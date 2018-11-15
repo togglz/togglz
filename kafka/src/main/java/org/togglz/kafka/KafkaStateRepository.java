@@ -1,5 +1,6 @@
 package org.togglz.kafka;
 
+import static java.lang.Thread.currentThread;
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
 import static java.util.Objects.requireNonNull;
@@ -165,7 +166,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
     private String inboundTopic;
     private String outboundTopic;
     private Duration pollingTimeout = ofMillis(500);
-    private Duration initializationTimeout = ofSeconds(5);
+    private Duration initializationTimeout = ofSeconds(30);
 
     private Builder() {
     }
@@ -226,7 +227,7 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
      * Defines an upper bound for the initialization time of the {@link KafkaStateRepository}.
      * If the underlying Kafka consumer is not able to read all data from Kafka within the
      * given interval, the {@link #build()} method will throw an exception. If no initialization
-     * timeout is provided, a default value of {@code 5 s} will be used.
+     * timeout is provided, a default value of {@code 30 s} will be used.
      *
      * @param initializationTimeout the upper bound for the initialization time
      * @return the current instance of this builder
@@ -295,10 +296,14 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
           LOG.debug("Starting to start FeatureStateConsumer.");
           asThreadWithExceptionHandler(this::run).start();
           LOG.debug("Successfully started FeatureStateConsumer.");
-          initializationLatch.await(initializationTimeout.toMillis(), MILLISECONDS);
-          LOG.debug("Successfully initialized FeatureStateConsumer.");
+          if (initializationLatch.await(initializationTimeout.toMillis(), MILLISECONDS)) {
+            LOG.debug("Successfully initialized FeatureStateConsumer.");
+          } else {
+            throw new RuntimeException("Failed to initialize FeatureStateConsumer.");
+          }
         } catch (InterruptedException e) {
-          throw new RuntimeException("An error occurred while awaiting initialization.", e);
+          LOG.warn("Starting of FeatureStateConsumer was interrupted.", e);
+          currentThread().interrupt();
         }
       }
     }
@@ -311,7 +316,8 @@ public class KafkaStateRepository implements AutoCloseable, StateRepository {
           shutdownLatch.await();
           LOG.debug("Successfully closed FeatureStateConsumer.");
         } catch (InterruptedException e) {
-          LOG.error("An error occurred while closing FeatureStateConsumer.", e);
+          LOG.warn("Closing of FeatureStateConsumer was interrupted.", e);
+          currentThread().interrupt();
         }
       } else {
         LOG.info("FeatureStateConsumer has already been closed.");
