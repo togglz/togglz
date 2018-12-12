@@ -28,7 +28,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.spi.FeatureProvider;
 import org.togglz.spring.boot.actuate.TogglzEndpoint;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
@@ -58,10 +57,10 @@ public class TogglzEndpointAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnBean({FeatureProvider.class, FeatureManager.class})
+    @ConditionalOnBean(FeatureManager.class)
     @ConditionalOnMissingBean
     @ConditionalOnEnabledEndpoint
-    public TogglzEndpoint togglzEndpoint(FeatureProvider featureProvider, FeatureManager featureManager) {
-        return new TogglzEndpoint(featureProvider, featureManager);
+    public TogglzEndpoint togglzEndpoint(FeatureManager featureManager) {
+        return new TogglzEndpoint(featureManager);
     }
 }

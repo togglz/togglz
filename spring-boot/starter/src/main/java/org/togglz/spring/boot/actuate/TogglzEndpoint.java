@@ -24,7 +24,6 @@ import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.spi.FeatureProvider;
 import org.togglz.spring.boot.autoconfigure.TogglzFeature;
 
 import java.util.ArrayList;
@@ -39,14 +38,9 @@ import java.util.List;
 @Endpoint(id = "togglz")
 public class TogglzEndpoint  {
 
-    private final FeatureProvider featureProvider;
-
     private final FeatureManager featureManager;
 
-    public TogglzEndpoint(FeatureProvider featureProvider, FeatureManager featureManager) {
-        Assert.notNull(featureProvider, "FeatureProvider must not be null");
-        this.featureProvider = featureProvider;
-
+    public TogglzEndpoint(FeatureManager featureManager) {
         Assert.notNull(featureManager, "FeatureManager must not be null");
         this.featureManager = featureManager;
     }
@@ -64,7 +58,7 @@ public class TogglzEndpoint  {
 
     @WriteOperation
     public TogglzFeature setFeatureState(@Selector String featureName, boolean enabled) {
-        final Feature feature = featureProvider.getFeatures().stream()
+        final Feature feature = featureManager.getFeatures().stream()
                 .filter(f -> f.name().equals(featureName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Could not find feature with name " + featureName));
