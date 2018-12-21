@@ -64,14 +64,9 @@ public class TogglzEndpoint  {
                 .orElseThrow(() -> new IllegalArgumentException("Could not find feature with name " + featureName));
 
         FeatureState featureState = featureManager.getFeatureState(feature);
+        featureState.setEnabled(enabled);
+        featureManager.setFeatureState(featureState);
 
-        if (featureState.isEnabled() != enabled) {
-            featureState.setEnabled(enabled);
-            featureManager.setFeatureState(featureState);
-
-            return new TogglzFeature(feature, featureState);
-        }
-
-        return null;
+        return new TogglzFeature(feature, featureState);
     }
 }

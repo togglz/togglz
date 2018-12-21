@@ -106,25 +106,6 @@ public class TogglzEndpointTest extends BaseTest {
                 });
     }
 
-    @Test
-    public void shouldReturnNullIfTheRequestedStateAlreadyExists() {
-        contextRunner.withConfiguration(AutoConfigurations.of(
-                TogglzAutoConfiguration.class,
-                TogglzEndpointAutoConfiguration.class))
-                .withPropertyValues(
-                        "togglz.features.FEATURE_ONE.enabled: true")
-                .run((context) -> {
-                    // Given
-                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
-
-                    // When
-                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", true);
-
-                    // Then
-                    assertThat(togglzFeature).isNull();
-                });
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowAnIllegalArgumentExceptionIfTheFeatureDoesNotExist() {
         contextRunner.withConfiguration(AutoConfigurations.of(
