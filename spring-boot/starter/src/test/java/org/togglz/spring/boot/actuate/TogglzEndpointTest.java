@@ -16,16 +16,15 @@
 
 package org.togglz.spring.boot.actuate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.togglz.spring.boot.actuate.TogglzEndpoint;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzFeature;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for Spring Boot 2 compatible {@link TogglzEndpoint}.
@@ -67,6 +66,58 @@ public class TogglzEndpointTest extends BaseTest {
                 assertThat(features.get(1).getParams().get("date")).isEqualTo("2016-07-01");
                 assertThat(features.get(1).getParams().get("time")).isEqualTo("08:30:00");
             });
+    }
+
+    @Test
+    public void shouldEnableAFeature() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+                .withPropertyValues(
+                        "togglz.features.FEATURE_ONE.enabled: false")
+                .run((context) -> {
+                    // Given
+                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+
+                    // When
+                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", true);
+
+                    // Then
+                    assertThat(togglzFeature.isEnabled()).isTrue();
+                });
+    }
+
+    @Test
+    public void shouldDisableAFeature() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+                .withPropertyValues(
+                        "togglz.features.FEATURE_ONE.enabled: true")
+                .run((context) -> {
+                    // Given
+                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+
+                    // When
+                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
+
+                    // Then
+                    assertThat(togglzFeature.isEnabled()).isFalse();
+                });
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowAnIllegalArgumentExceptionIfTheFeatureDoesNotExist() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+                .run((context) -> {
+                    // Given
+                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+
+                    // When
+                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
+                });
     }
 
     @Test

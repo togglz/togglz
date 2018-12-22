@@ -16,17 +16,19 @@
 
 package org.togglz.spring.boot.actuate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.Selector;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.spring.boot.autoconfigure.TogglzFeature;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Spring Boot 2+ {@link Endpoint} to expose Togglz info.
@@ -52,5 +54,19 @@ public class TogglzEndpoint  {
         }
         Collections.sort(features);
         return features;
+    }
+
+    @WriteOperation
+    public TogglzFeature setFeatureState(@Selector String featureName, boolean enabled) {
+        final Feature feature = featureManager.getFeatures().stream()
+                .filter(f -> f.name().equals(featureName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Could not find feature with name " + featureName));
+
+        FeatureState featureState = featureManager.getFeatureState(feature);
+        featureState.setEnabled(enabled);
+        featureManager.setFeatureState(featureState);
+
+        return new TogglzFeature(feature, featureState);
     }
 }
