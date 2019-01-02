@@ -18,9 +18,7 @@ package org.togglz.spring.boot.autoconfigure;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.AllNestedConditions;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.togglz.console.TogglzConsoleServlet;
@@ -34,8 +32,6 @@ import org.togglz.console.TogglzConsoleServlet;
  * @author Marcel Overdijk
  * @author Rui Figueira
  */
-@ConditionalOnWebApplication
-@ConditionalOnClass(TogglzConsoleServlet.class)
 public abstract class TogglzConsoleBaseConfiguration {
 
     private final TogglzProperties properties;
