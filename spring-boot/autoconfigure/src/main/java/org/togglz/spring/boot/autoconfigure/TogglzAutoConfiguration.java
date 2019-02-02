@@ -40,6 +40,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.togglz.console.TogglzConsoleServlet;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
@@ -222,6 +223,8 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
+    @ConditionalOnWebApplication
+    @ConditionalOnClass(TogglzConsoleServlet.class)
     @Conditional(TogglzConsoleBaseConfiguration.OnConsoleAndNotUseManagementPort.class)
     protected static class TogglzConsoleConfiguration extends TogglzConsoleBaseConfiguration {
 

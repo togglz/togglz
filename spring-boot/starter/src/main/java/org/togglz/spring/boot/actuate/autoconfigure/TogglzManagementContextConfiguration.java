@@ -25,9 +25,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.togglz.console.TogglzConsoleServlet;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzConsoleBaseConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzProperties;
@@ -45,6 +47,8 @@ import org.togglz.spring.boot.autoconfigure.TogglzProperties;
 public class TogglzManagementContextConfiguration {
 
     @Configuration
+    @ConditionalOnWebApplication
+    @ConditionalOnClass(TogglzConsoleServlet.class)
     @ConditionalOnBean(ManagementServerProperties.class)
     @Conditional(TogglzConsoleBaseConfiguration.OnConsoleAndUseManagementPort.class)
     protected static class TogglzConsoleConfiguration extends TogglzConsoleBaseConfiguration {
