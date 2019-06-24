@@ -1,8 +1,10 @@
 package org.togglz.core.activation;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.util.Collections;
 import org.togglz.core.util.Validate;
 
 /**
@@ -18,6 +20,7 @@ public class ParameterBuilder implements Parameter {
     private boolean optional;
     private String description;
     private boolean largeText;
+    private List<Select2Data> select2Data;
 
     /**
      * Creates a new builder for a parameter with the given name. The name is used to store and retrieve the parameter from the
@@ -79,6 +82,14 @@ public class ParameterBuilder implements Parameter {
         return this;
     }
 
+    /**
+     * Sets an optional description for the parameter displayed in the admin console.
+     */
+    public ParameterBuilder select2Data(List<Select2Data> select2Data) {
+        this.select2Data = select2Data;
+        return this;
+    }
+
     @Override
     public String getName() {
         return name;
@@ -112,4 +123,13 @@ public class ParameterBuilder implements Parameter {
         return description;
     }
 
+    @Override
+    public boolean isDropDownList() {
+        return !(select2Data == null || select2Data.isEmpty());
+    }
+
+    @Override
+    public List<Select2Data> getSelect2Data() {
+        return select2Data;
+    }
 }

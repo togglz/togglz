@@ -64,6 +64,38 @@
       <div class="col-sm-10">
         ${if param.largeText}
           <textarea id="${param.inputId}" name="${param.inputId}" class="form-control" rows="6">${param.value}</textarea>
+        ${end}
+        ${if param.DropDownList}
+        <select id="select-${param.inputId}" class="multiselect-param" name="select-${param.inputId}" multiple="multiple">
+          ${foreach param.Select2Data selectData}
+          <option value="${selectData.id}">${selectData.text}</option>
+          ${end}
+        </select>
+        <input id="selectedIds-${param.inputId}" name="${param.inputId}" type="text" class="form-control hidden" value="${param.value}"/>
+        <script type="text/javascript">
+        $(document).ready(function() {
+          var multiSelectDropdown = $('#select-${param.inputId}');
+
+          // Initialize select2 multiselect dropdown
+          multiSelectDropdown.select2({
+            placeholder: 'Select an option',
+            allowClear: true
+          });
+
+          // Trigers on change on the dropdown
+          multiSelectDropdown.change(function(){
+            var selectedData = "";
+            var comma = '';
+            multiSelectDropdown.find(':selected').each(function(index) {
+              if(index > 0 ) {
+                comma =',';
+              }
+              selectedData = selectedData + comma + multiSelectDropdown.find(':selected')[index].value;
+            });
+            $('#selectedIds-${param.inputId}').val(selectedData);
+          })
+        });
+        </script>
         ${else}
           <input id="${param.inputId}" name="${param.inputId}" type="text" class="form-control" value="${param.value}"/>
         ${end}

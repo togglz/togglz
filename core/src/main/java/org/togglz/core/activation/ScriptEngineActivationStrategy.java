@@ -121,6 +121,17 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
             return Strings.isNotBlank(value) && languages.contains(value);
         }
 
+        @Override
+        public boolean isDropDownList() {
+            return false;
+        }
+
+        @Override
+        public List<Select2Data> getSelect2Data() {
+            return null;
+        }
     }
+
+
 
 }

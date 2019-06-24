@@ -37,3 +37,7 @@ table.feature-overview td.feature-label ul.attributes {
 .feature-disabled {
     color: #d9534f
 }
+
+.select2-container {
+    width: 100%;
+}

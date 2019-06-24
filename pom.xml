@@ -177,31 +177,14 @@
     <module>servlet</module>
     <module>console</module>
     <module>cdi</module>
-    <module>guice</module>
     <module>spring-core</module>
     <module>spring-web</module>
     <module>spring-security</module>
     <module>spring-boot</module>
-    <module>deltaspike</module>
-    <module>shiro</module>
-    <module>jsf</module>
     <module>jsp</module>
-    <module>appengine</module>
-    <module>cloud-datastore</module>
-    <module>archaius</module>
-    <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
-    <module>distribution</module>
-    <module>cassandra</module>
-    <module>hazelcast</module>
     <module>zookeeper</module>
-    <module>dynamodb</module>
-    <module>amazon-s3</module>
-    <module>benchmarks</module>
-    <module>spring-mobile</module>
-    <module>slack</module>
-    <module>redis</module>
   </modules>
 
   <developers>

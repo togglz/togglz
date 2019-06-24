@@ -4,8 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.togglz.console.util.HtmlUtils;
 import org.togglz.core.activation.Parameter;
+import org.togglz.core.activation.Select2Data;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
+
+import java.util.List;
 
 public class ParameterModel {
 
@@ -93,4 +96,11 @@ public class ParameterModel {
         return Strings.isNotBlank(value);
     }
 
+    public boolean isDropDownList() {
+        return parameter.isDropDownList();
+    }
+
+    public List<Select2Data> getSelect2Data() {
+        return parameter.getSelect2Data();
+    }
 }

@@ -1,6 +1,7 @@
 package org.togglz.servlet.activation;
 
 import org.togglz.core.activation.Parameter;
+import org.togglz.core.activation.Select2Data;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
@@ -135,7 +136,16 @@ public class ClientIpActivationStrategy implements ActivationStrategy
                                     
          return true;
       }
-      
+
+       @Override
+       public boolean isDropDownList() {
+           return false;
+       }
+
+       @Override
+       public List<Select2Data> getSelect2Data() {
+           return null;
+       }
    }
 
 }
