@@ -48,7 +48,7 @@ public class EditPageHandler extends RequestHandlerBase {
             }
         }
         if (feature == null) {
-            response.sendError(403);
+            response.sendError(400);
             return;
         }
 
