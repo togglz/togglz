@@ -1,13 +1,17 @@
 # ft3_tokklz
 Kotlin wrapper for togglz library.
 
+It's not possible to use the `Feature`-Interface for enum features as in Java, because it's `name`-method clashes with the buildin `name`-method of the enum class.
+
+Therefore this wrapper uses a plain enum without implementing `Feature` and provides a `FeatureProvider` to wrap it into a Feature. 
+
 # Usage (with spring)
 
 Import Dependency: 
 
 `implementation("org.togglz:kotlin:2.7.0-SNAPSHOT")`
 
-Create an enum for your feature togglz but don't extend the Togglz-Features interface:
+Create an enum for your feature togglz but don't extend the Togglz-Feature interface:
 
 ```
  enum class KotlinTestFeatures {
@@ -23,11 +27,14 @@ Create an enum for your feature togglz but don't extend the Togglz-Features inte
 }
 ```
 
-Create a spring config that creates a FeatureProvider:
+Create a spring config that creates a `FeatureManager`and a `FeatureProvider`:
 
 ```
 @Configuration
 class MyTogglzConfiguration {
+
+    @Bean
+    fun featureProvider() = EnumClassFeatureProvider(KotlinTestFeatures::class.java)
 
     @Bean
     @Primary
@@ -46,11 +53,6 @@ class MyTogglzConfiguration {
         return featureManager
     }
 
-    @Configuration
-    class FeatureProviderConfiguration {
-        @Bean
-        fun featureProvider() = EnumClassFeatureProvider(KotlinTestFeatures::class.java)
-    }
 }
 ```
 
