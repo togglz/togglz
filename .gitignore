@@ -12,3 +12,4 @@ generated-sources/
 *.versionsBackup
 *.orig
 test-output
+/kotlin/.kotlintest/
