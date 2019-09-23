@@ -105,6 +105,13 @@ public class DefaultFeatureManagerTest {
     }
 
     @Test
+    public void testIsActiveForUserWithNotEnabledFeature() {
+        // missing strategy should return false
+        // EXPERIMENTAL disabled for all
+        assertFalse(manager.isActive(MyFeatures.EXPERIMENTAL, "someUserCode"));
+    }
+
+    @Test
     public void testIsActiveUsingDefaultFeatureState() {
         FeatureProvider featureProvider = mock(FeatureProvider.class);
         FeatureMetaData featureMetaData = mock(FeatureMetaData.class);
