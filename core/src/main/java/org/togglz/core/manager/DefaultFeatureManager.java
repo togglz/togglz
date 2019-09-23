@@ -73,7 +73,7 @@ public class DefaultFeatureManager implements FeatureManager {
         return this.isActive(feature, simpleFeatureUser);
     }
 
-    private boolean isActive(Feature feature, FeatureUser featureUser) {
+    private boolean isActive(Feature feature, FeatureUser user) {
 
         Validate.notNull(feature, "feature is required");
 
@@ -94,7 +94,7 @@ public class DefaultFeatureManager implements FeatureManager {
             // check the selected strategy
             for (ActivationStrategy strategy : strategyProvider.getActivationStrategies()) {
                 if (strategy.getId().equalsIgnoreCase(strategyId)) {
-                    return strategy.isActive(state, featureUser);
+                    return strategy.isActive(state, user);
                 }
             }
         }
