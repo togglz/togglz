@@ -1,7 +1,7 @@
 package org.togglz.core.manager;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -10,7 +10,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.GradualActivationStrategy;
 import org.togglz.core.activation.UsernameActivationStrategy;
+import org.togglz.core.annotation.ActivationParameter;
+import org.togglz.core.annotation.DefaultActivationStrategy;
+import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -86,6 +90,18 @@ public class DefaultFeatureManagerTest {
 
         // EMPTY_STRATEGY enabled for all
         assertEquals(true, manager.isActive(MyFeatures.EMPTY_STRATEGY));
+    }
+
+    @Test
+    public void testIsActiveForUserGradual100() {
+        // Gradual Strategy to 100% of users
+        assertTrue(manager.isActive(MyFeatures.GRADUAL_ROLLOUT_100, "someUserCode"));
+    }
+
+    @Test
+    public void testIsActiveForUserGradual1() {
+        // Gradual Strategy to 1% of users
+        assertFalse(manager.isActive(MyFeatures.GRADUAL_ROLLOUT_1, "someUserCode"));
     }
 
     @Test
@@ -180,7 +196,23 @@ public class DefaultFeatureManagerTest {
         EXPERIMENTAL,
         MISSING_STRATEGY,
         EMPTY_STRATEGY,
-        NOT_STORED_FEATURE;
+        NOT_STORED_FEATURE,
+
+        @EnabledByDefault
+        @DefaultActivationStrategy(id = GradualActivationStrategy.ID,
+                parameters = {
+                        @ActivationParameter(name = "percentage", value = "100")
+                }
+        )
+        GRADUAL_ROLLOUT_100,
+
+        @EnabledByDefault
+        @DefaultActivationStrategy(id = GradualActivationStrategy.ID,
+                parameters = {
+                        @ActivationParameter(name = "percentage", value = "1")
+                }
+        )
+        GRADUAL_ROLLOUT_1;
     }
 
 }

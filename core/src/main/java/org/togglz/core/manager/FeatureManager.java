@@ -1,8 +1,5 @@
 package org.togglz.core.manager;
 
-import java.util.List;
-import java.util.Set;
-
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
@@ -11,6 +8,9 @@ import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 
@@ -52,6 +52,17 @@ public interface FeatureManager {
      * @return <code>true</code> if the feature is active, <code>false</code> otherwise
      */
     boolean isActive(Feature feature);
+
+
+    /**
+     * Checks whether the supplied feature is active or not. Please note that this method will create a new
+     * {@link org.togglz.core.user.SimpleFeatureUser} to validate if a specific feature is enabled for this user.
+     *
+     * @param feature The feature to check
+     * @param uCode User unique identifier
+     * @return <code>true</code> if the feature is active, <code>false</code> otherwise
+     */
+    boolean isActive(Feature feature, String uCode);
 
     /**
      * Get the current feature user. This method will internally use the configured {@link UserProvider} to obtain the
