@@ -148,6 +148,7 @@
           <suppressionFiles>
             <suppressionFile>project-suppression.xml</suppressionFile>
           </suppressionFiles>
+          <skipArtifactType>pom</skipArtifactType>
         </configuration>
         <executions>
           <execution>
