@@ -145,6 +145,9 @@
           <skipProvidedScope>true</skipProvidedScope>
           <skipRuntimeScope>true</skipRuntimeScope>
           <skipSystemScope>true</skipSystemScope>
+          <suppressionFiles>
+            <suppressionFile>project-suppression.xml</suppressionFile>
+          </suppressionFiles>
         </configuration>
         <executions>
           <execution>
