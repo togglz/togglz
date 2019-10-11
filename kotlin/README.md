@@ -1,4 +1,3 @@
-# ft3_tokklz
 Kotlin wrapper for togglz library.
 
 It's not possible to use the `Feature`-Interface for enum features as in Java, because it's `name`-method clashes with the buildin `name`-method of the enum class.
@@ -54,6 +53,29 @@ class MyTogglzConfiguration {
     }
 
 }
+```
+
+##Enable all togglz
+
+for unit tests:
+```
+val featureManager = createFeatureManagerForTest(KotlinTestFeatures::class)
+KFeatureManagerSupport.allEnabledFeatureConfig(featureManager)
+```
+
+
+for spring acceptance tests:
+```
+@Autowired
+val featureManager: FeatureManager
+....
+KFeatureManagerSupport.allEnabledFeatureConfig(featureManager)
+```
+
+##Enable one toggle
+
+```
+KFeatureManagerSupport.enable(Feature { KotlinTestFeatures.BAR.name })
 ```
 
 
