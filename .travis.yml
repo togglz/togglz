@@ -1,4 +1,7 @@
 language: java
+cache:
+  directories:
+    - $HOME/.m2/repository/org/owasp/dependency-check-data/
 install:
   - "mvn -P ${CONTAINER} -DJBOSS_REPO=true -DskipTests=true -B install"
 script:

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <suppress>
+        <notes>False positive: found because of name "hazelcast" in module name - possible security
+            issues resulting from used hazelcast library will be found nevertheless.</notes>
+        <packageUrl regex="true">^pkg:maven/org\.togglz/togglz\-hazelcast@.*$</packageUrl>
+        <cpe>cpe:/a:hazelcast:hazelcast</cpe>
+    </suppress>
+    <suppress>
+        <notes>False positive: CVE-2016-3093 describes as vulnerability in the Struts framework in
+            combination with the ognl library.</notes>
+        <packageUrl regex="true">^pkg:maven/ognl/ognl@.*$</packageUrl>
+        <cve>CVE-2016-3093</cve>
+    </suppress>
+</suppressions>

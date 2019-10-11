@@ -136,6 +136,30 @@
         </configuration>
       </plugin>
 
+      <!-- OWASP -->
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>5.2.2</version>
+        <configuration>
+          <format>ALL</format>
+          <skipProvidedScope>true</skipProvidedScope>
+          <skipRuntimeScope>true</skipRuntimeScope>
+          <skipSystemScope>true</skipSystemScope>
+          <suppressionFiles>
+            <suppressionFile>project-suppression.xml</suppressionFile>
+          </suppressionFiles>
+          <skipArtifactType>pom</skipArtifactType>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
 
     <pluginManagement>
