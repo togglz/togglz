@@ -1,24 +1,19 @@
 package org.togglz.core.util;
 
+import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
+import org.togglz.core.Feature;
+import org.togglz.core.manager.FeatureManager;
+
+import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.junit.Test;
-import org.mockito.Matchers;
-import org.togglz.core.Feature;
-import org.togglz.core.manager.FeatureManager;
 
 public class FeatureMapTest {
 
@@ -89,21 +84,11 @@ public class FeatureMapTest {
     }
 
     private Feature featureNamed(final String name) {
-
-        return Matchers.argThat(new BaseMatcher<Feature>() {
-
-            @Override
-            public boolean matches(Object obj) {
-                if (obj instanceof Feature) {
-                    return ((Feature) obj).name().equals(name);
-                }
-                return false;
+        return ArgumentMatchers.argThat(feature -> {
+            if (feature != null) {
+                return feature.name().equals(name);
             }
-
-            @Override
-            public void describeTo(Description desc) {
-                desc.appendText("Does not match: " + name);
-            }
+            return false;
         });
 
     }
