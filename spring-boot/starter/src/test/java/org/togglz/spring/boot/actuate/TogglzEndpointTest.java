@@ -37,6 +37,7 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void getAllFeatures() throws Exception {
         contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
             .withPropertyValues(
@@ -71,6 +72,7 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldEnableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
@@ -90,6 +92,7 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldDisableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
@@ -109,6 +112,7 @@ public class TogglzEndpointTest extends BaseTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowAnIllegalArgumentExceptionIfTheFeatureDoesNotExist() {
         contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .run((context) -> {
