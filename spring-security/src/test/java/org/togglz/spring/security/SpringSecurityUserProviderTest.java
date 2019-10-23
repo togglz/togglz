@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.core.Authentication;
@@ -17,15 +18,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ SecurityContextHolder.class })
+@PowerMockIgnore("javax.security.*")
 public class SpringSecurityUserProviderTest {
 
     private SpringSecurityUserProvider userProvider;
@@ -92,11 +95,12 @@ public class SpringSecurityUserProviderTest {
 
         // assert
         Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_ROLES);
+        assertTrue(authoritiesAttr instanceof Set);
+        Set authSet = (Set) authoritiesAttr;
 
-        assertThat(authoritiesAttr, notNullValue());
-        assertThat(authoritiesAttr, is(Set.class));
+        assertThat(authSet, notNullValue());
 
-        Set<String> authoritySet = (Set<String>) authoritiesAttr;
+        Set<String> authoritySet = (Set<String>) authSet;
         assertThat(authoritySet.size(), is(2));
         assertThat(authoritySet.contains("ROLE_1"), is(true));
         assertThat(authoritySet.contains("ROLE_2"), is(true));
