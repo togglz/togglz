@@ -1,7 +1,6 @@
 package org.togglz.spring.mobile;
 
 import org.assertj.core.api.Assertions;
-import org.junit.After;
 import org.junit.Test;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceType;
@@ -13,23 +12,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.mobile.device.DeviceType.*;
 import static org.togglz.spring.mobile.DeviceActivationStrategyTest.MockRequest.requestFrom;
 import static org.togglz.spring.mobile.DeviceActivationStrategyTest.MockRequestAssert.assertThat;
-import static org.springframework.mobile.device.DeviceType.MOBILE;
-import static org.springframework.mobile.device.DeviceType.NORMAL;
-import static org.springframework.mobile.device.DeviceType.TABLET;
-
-
 
 /**
  * Created by achhabra on 10/17/16.
  */
 public class DeviceActivationStrategyTest {
 
-    protected static class MockRequest {
+    static class MockRequest {
         private final HttpServletRequest request;
 
-        public static MockRequest requestFrom(DeviceType deviceType) {
+        static MockRequest requestFrom(DeviceType deviceType) {
             Device device = mock(Device.class);
             when(device.isNormal()).thenReturn(NORMAL.equals(deviceType));
             when(device.isTablet()).thenReturn(TABLET.equals(deviceType));
@@ -45,23 +40,23 @@ public class DeviceActivationStrategyTest {
         
     }
 
-    protected static class MockRequestAssert extends org.assertj.core.api.AbstractAssert<MockRequestAssert, MockRequest> {
-        protected MockRequestAssert(MockRequest actual) {
+    static class MockRequestAssert extends org.assertj.core.api.AbstractAssert<MockRequestAssert, MockRequest> {
+        MockRequestAssert(MockRequest actual) {
             super(actual, MockRequestAssert.class);
         }
 
-        public static MockRequestAssert assertThat(MockRequest actual) {
+        static MockRequestAssert assertThat(MockRequest actual) {
             return new MockRequestAssert(actual);
         }
 
-        public MockRequestAssert isActiveWithParams(String... params) {
+        MockRequestAssert isActiveWithParams(String... params) {
             if (!strategy().isActive(featureState(params), null)) {
                 Assertions.fail("Expected the strategy to turn the feature active with params " + params);
             }
             return this;
         }
 
-        public MockRequestAssert isInactiveWithParams(String... params) {
+        MockRequestAssert isInactiveWithParams(String... params) {
             if (strategy().isActive(featureState(params), null)) {
                 Assertions.fail("Expected the strategy to turn the feature inactive with params " + params);
             }
@@ -87,7 +82,7 @@ public class DeviceActivationStrategyTest {
         }
     }
 
-    public void cleanup() {
+    private void cleanup() {
         HttpServletRequestHolder.release();
     }
 

@@ -16,7 +16,6 @@ import static org.springframework.mobile.device.DeviceType.MOBILE;
 import static org.springframework.mobile.device.DeviceType.NORMAL;
 import static org.springframework.mobile.device.DeviceType.TABLET;
 
-
 /**
  * Activation strategy that will use the Device type used by client to decide if a feature is active or not.
  * Based on spring-mobile http://projects.spring.io/spring-mobile/
@@ -27,8 +26,9 @@ import static org.springframework.mobile.device.DeviceType.TABLET;
  */
 public class DeviceActivationStrategy implements ActivationStrategy {
 
-    public static final String YES = "YES";
-    public static final String ID = "devicerollout";
+    static final String ID = "devicerollout";
+
+    private static final String YES = "YES";
 
     @Override
     public String getId() {
@@ -57,15 +57,12 @@ public class DeviceActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-
         HttpServletRequest request = HttpServletRequestHolder.get();
-        if (request != null) {
-            Device device = DeviceUtils.getCurrentDevice(request);
-            DeviceType deviceType = device.isMobile() ? MOBILE : (device.isTablet() ? TABLET : NORMAL);
-            return (YES.equalsIgnoreCase(featureState.getParameter(deviceType.name())));
-
+        if (request == null) {
+            return false;
         }
-        return false;
-
+        Device device = DeviceUtils.getCurrentDevice(request);
+        DeviceType deviceType = device.isMobile() ? MOBILE : (device.isTablet() ? TABLET : NORMAL);
+        return (YES.equalsIgnoreCase(featureState.getParameter(deviceType.name())));
     }
 }
