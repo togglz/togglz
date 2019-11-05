@@ -48,7 +48,7 @@
     <!-- Set version of OSGi bundles without 'SNAPSHOT', etc. -->
     <osgi.bundles.version>2.6.0</osgi.bundles.version>
 
-    <spring.version>4.3.18.RELEASE</spring.version>
+    <spring.version>4.3.25.RELEASE</spring.version>
     
     <project.root.basedir>${project.parent.basedir}</project.root.basedir>
   </properties>
