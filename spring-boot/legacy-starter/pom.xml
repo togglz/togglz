@@ -14,6 +14,7 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
+    <thymeleaf-togglz.version>1.0.1.RELEASE</thymeleaf-togglz.version>
   </properties>
 
   <dependencyManagement>
@@ -48,11 +49,6 @@
 
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.togglz</groupId>
       <artifactId>togglz-console</artifactId>
       <optional>true</optional>
     </dependency>
@@ -78,6 +74,42 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.heneke.thymeleaf</groupId>
+      <artifactId>thymeleaf-extras-togglz</artifactId>
+      <version>${thymeleaf-togglz.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-security</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
       <optional>true</optional>
     </dependency>
 

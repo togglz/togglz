@@ -21,13 +21,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-
 import org.junit.Test;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
-import org.togglz.spring.boot.autoconfigure.TogglzFeature;
-import org.togglz.spring.boot.legacy.actuate.TogglzEndpoint;
+import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
+import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzFeature;
+
+import java.util.List;
 
 /**
  * Tests for {@link TogglzEndpoint}.

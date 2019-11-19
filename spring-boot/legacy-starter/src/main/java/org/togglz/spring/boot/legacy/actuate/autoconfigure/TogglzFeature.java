@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
-
-import java.util.Map;
+package org.togglz.spring.boot.legacy.actuate.autoconfigure;
 
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
+
+import java.util.Map;
 
 /**
  * Data Transfer Object for Togglz feature information.

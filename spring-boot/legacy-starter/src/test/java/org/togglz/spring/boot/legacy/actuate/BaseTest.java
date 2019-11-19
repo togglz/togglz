@@ -33,7 +33,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
+import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzManagementContextConfiguration;
 

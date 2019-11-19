@@ -30,9 +30,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.togglz.console.TogglzConsoleServlet;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
-import org.togglz.spring.boot.autoconfigure.TogglzConsoleBaseConfiguration;
-import org.togglz.spring.boot.autoconfigure.TogglzProperties;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz.

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
+package org.togglz.spring.boot.legacy.actuate.autoconfigure;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.AllNestedConditions;

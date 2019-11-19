@@ -14,18 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+package org.togglz.spring.boot.actuate.autoconfigure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.util.StringUtils;
@@ -33,6 +22,12 @@ import org.springframework.validation.annotation.Validated;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Configuration properties for Togglz.

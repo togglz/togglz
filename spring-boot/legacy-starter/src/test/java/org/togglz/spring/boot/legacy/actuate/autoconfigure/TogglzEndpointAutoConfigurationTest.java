@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.legacy.actuate.BaseTest;
 import org.togglz.spring.boot.legacy.actuate.TogglzEndpoint;
 

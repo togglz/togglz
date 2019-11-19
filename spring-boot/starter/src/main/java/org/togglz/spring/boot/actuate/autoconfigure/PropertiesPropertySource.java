@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
+package org.togglz.spring.boot.actuate.autoconfigure;
 
 import org.togglz.core.repository.property.PropertySource;
 

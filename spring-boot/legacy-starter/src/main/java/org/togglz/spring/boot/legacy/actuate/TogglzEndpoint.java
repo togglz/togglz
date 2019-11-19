@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.spring.boot.autoconfigure.TogglzFeature;
+import org.togglz.spring.boot.legacy.actuate.autoconfigure.TogglzFeature;
 
 /**
  * {@link Endpoint} to expose Togglz info.

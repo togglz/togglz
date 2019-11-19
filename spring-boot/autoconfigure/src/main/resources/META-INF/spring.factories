@@ -1,3 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration
