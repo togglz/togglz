@@ -28,7 +28,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.togglz.core.manager.FeatureManager;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.legacy.actuate.TogglzEndpoint;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 

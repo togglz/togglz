@@ -14,6 +14,7 @@
 
   <properties>
     <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+    <thymeleaf-togglz.version>1.0.1.RELEASE</thymeleaf-togglz.version>
     <assertj.version>3.9.1</assertj.version>
   </properties>
 
@@ -60,6 +61,44 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator-autoconfigure</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.0.17.Final</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.heneke.thymeleaf</groupId>
+      <artifactId>thymeleaf-extras-togglz</artifactId>
+      <version>${thymeleaf-togglz.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-security</artifactId>
       <optional>true</optional>
     </dependency>
 

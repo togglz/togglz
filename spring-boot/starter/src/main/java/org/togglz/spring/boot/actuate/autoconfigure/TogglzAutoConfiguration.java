@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.autoconfigure;
+package org.togglz.spring.boot.actuate.autoconfigure;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
+import com.github.heneke.thymeleaf.togglz.TogglzDialect;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -44,11 +37,7 @@ import org.togglz.console.TogglzConsoleServlet;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
-import org.togglz.core.manager.CompositeFeatureProvider;
-import org.togglz.core.manager.EnumBasedFeatureProvider;
-import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.FeatureManagerBuilder;
-import org.togglz.core.manager.PropertyFeatureProvider;
+import org.togglz.core.manager.*;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.composite.CompositeStateRepository;
@@ -58,13 +47,14 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
-import org.togglz.spring.boot.autoconfigure.TogglzProperties.FeatureSpec;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 import org.togglz.spring.web.FeatureInterceptor;
 
-import com.github.heneke.thymeleaf.togglz.TogglzDialect;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Togglz.
@@ -182,7 +172,7 @@ public class TogglzAutoConfiguration {
                     stateRepository = new FileBasedStateRepository(resource.getFile());
                 }
             } else {
-                Map<String, FeatureSpec> features = properties.getFeatures();
+                Map<String, TogglzProperties.FeatureSpec> features = properties.getFeatures();
                 stateRepository = new InMemoryStateRepository();
                 for (String name : features.keySet()) {
                     stateRepository.setFeatureState(features.get(name).state(name));
