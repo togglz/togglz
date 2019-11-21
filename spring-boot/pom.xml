@@ -20,6 +20,7 @@
   <modules>
     <module>legacy-starter</module>
     <module>starter</module>
+    <module>reactive-starter</module>
   </modules>
   
   <dependencyManagement>
