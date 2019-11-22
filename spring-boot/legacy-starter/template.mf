@@ -7,7 +7,7 @@ Bundle-Name: ${project.name}
 Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
- com.github.heneke.thymeleaf.togglz.*;version="0",
+ org.thymeleaf.*;version="0",
  javax.servlet.*;version="0",
  javax.validation.*;version="0",
  org.springframework.*;version="[3.0,5.0)",

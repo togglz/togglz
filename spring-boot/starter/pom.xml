@@ -14,7 +14,6 @@
 
   <properties>
     <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-    <thymeleaf-togglz.version>1.0.1.RELEASE</thymeleaf-togglz.version>
     <assertj.version>3.9.1</assertj.version>
   </properties>
 
@@ -65,16 +64,21 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>6.0.17.Final</version>
-      <optional>true</optional>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+      <version>3.0.11.RELEASE</version>
     </dependency>
 
     <dependency>
-      <groupId>com.github.heneke.thymeleaf</groupId>
-      <artifactId>thymeleaf-extras-togglz</artifactId>
-      <version>${thymeleaf-togglz.version}</version>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring4</artifactId>
+      <version>3.0.11.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>6.0.17.Final</version>
       <optional>true</optional>
     </dependency>
 
