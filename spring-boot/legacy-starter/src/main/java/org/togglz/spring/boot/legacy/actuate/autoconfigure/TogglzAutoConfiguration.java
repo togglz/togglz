@@ -46,6 +46,7 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
+import org.togglz.spring.boot.legacy.actuate.thymeleaf.TogglzDialect;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 import org.togglz.spring.security.SpringSecurityUserProvider;
