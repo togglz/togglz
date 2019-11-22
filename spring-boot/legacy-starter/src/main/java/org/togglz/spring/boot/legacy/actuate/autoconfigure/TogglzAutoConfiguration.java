@@ -16,7 +16,6 @@
 
 package org.togglz.spring.boot.legacy.actuate.autoconfigure;
 
-import com.github.heneke.thymeleaf.togglz.TogglzDialect;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
