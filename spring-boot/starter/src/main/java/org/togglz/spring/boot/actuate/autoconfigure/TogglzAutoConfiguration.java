@@ -16,7 +16,6 @@
 
 package org.togglz.spring.boot.actuate.autoconfigure;
 
-import com.github.heneke.thymeleaf.togglz.TogglzDialect;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -47,6 +46,7 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
+import org.togglz.spring.boot.actuate.thymeleaf.TogglzDialect;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 import org.togglz.spring.security.SpringSecurityUserProvider;
