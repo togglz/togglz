@@ -1,5 +1,7 @@
 package org.togglz.hazelcast;
 
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.client.config.ClientConfig;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -8,6 +10,9 @@ import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
+
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -29,25 +34,48 @@ public class HazelcastStateRepository implements StateRepository {
 
 	protected final HazelcastInstance hazelcastInstance;
 	protected final Config hazelcastConfig;
+	protected final ClientConfig hazelcastClientConfig;
 	protected final String mapName;
 
 	public HazelcastStateRepository(Config hazelcastConfig, String mapName) {
 		this.mapName = mapName;
 		this.hazelcastConfig = hazelcastConfig;
-		hazelcastInstance=createHazelcastInstance();
+		this.hazelcastClientConfig = null;
+		this.hazelcastInstance=createHazelcastInstance();
+	}
+
+	public HazelcastStateRepository(ClientConfig hazelcastClientConfig, String mapName) {
+		this.mapName = mapName;
+		this.hazelcastConfig = null;
+		this.hazelcastClientConfig = hazelcastClientConfig;
+		this.hazelcastInstance=createHazelcastInstance();
+	}
+
+	public HazelcastStateRepository(HazelcastInstance hazelcastInstance, String mapName) {
+		this.mapName = mapName;
+		this.hazelcastConfig = null;
+		this.hazelcastClientConfig = null;
+		this.hazelcastInstance=hazelcastInstance;
 	}
 	
 	private HazelcastStateRepository(Builder builder) {
-
 		mapName = builder.mapName;
 		hazelcastConfig = builder.hazelcastConfig;
-		hazelcastInstance=createHazelcastInstance();
+		hazelcastClientConfig = builder.hazelcastClientConfig;
+		this.hazelcastInstance= builder.hazelcastInstance==null ? builder.hazelcastInstance
+				: createHazelcastInstance();
 	}
 
 	private HazelcastInstance createHazelcastInstance() {
-		return hazelcastConfig != null ?
-				Hazelcast.newHazelcastInstance(hazelcastConfig) :
-				Hazelcast.newHazelcastInstance();
+		if(hazelcastClientConfig==null && hazelcastConfig==null) {
+			return Hazelcast.newHazelcastInstance();
+		}
+
+		if(hazelcastClientConfig==null) {
+			return Hazelcast.newHazelcastInstance(hazelcastConfig);
+		}
+
+		return HazelcastClient.newHazelcastClient(hazelcastClientConfig);
 	}
 
 	@Override
@@ -87,6 +115,8 @@ public class HazelcastStateRepository implements StateRepository {
 
 		private String mapName = "togglz";
 		private Config hazelcastConfig = null;
+		private ClientConfig hazelcastClientConfig = null;
+		private HazelcastInstance hazelcastInstance = null;
 
 		/**
 		 * Creates a new builder for a {@link HazelcastStateRepository}.
@@ -137,11 +167,27 @@ public class HazelcastStateRepository implements StateRepository {
 			return this;
 		}
 
+		public Builder clientConfig(ClientConfig hazelcastClientConfig) {
+			this.hazelcastClientConfig = hazelcastClientConfig;
+			return this;
+		}
+
+		public Builder hazelcastInstance(HazelcastInstance hazelcastInstance) {
+			this.hazelcastInstance = hazelcastInstance;
+			return this;
+		}
+
 		/**
 		 * Creates a new {@link HazelcastStateRepository} using the current
 		 * settings.
 		 */
 		public HazelcastStateRepository build() {
+			long count = Stream.of(hazelcastClientConfig, hazelcastConfig, hazelcastInstance)
+					.filter(Objects::nonNull)
+					.count();
+			if(count!=1) {
+				throw new IllegalStateException("Please only configure exactly one of hazelcastClientConfig, hazelcastConfig, or hazelcastInstance");
+			}
 			return new HazelcastStateRepository(this);
 		}
 
