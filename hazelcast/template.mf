@@ -7,6 +7,5 @@ Bundle-Name: ${project.name}
 Version-Patterns:
  default;pattern="[=.=.=, =.+1.0)"
 Import-Template:
- org.togglz.hazelcast.*;version=${osgi.bundles.version:default}",
  org.togglz.core.*;version="${osgi.bundles.version:default}",
  com.hazelcast.*;version="[3.5.2, 4.0)"
