@@ -55,16 +55,13 @@ import org.togglz.spring.boot.actuate.thymeleaf.TogglzDialect;
  */
 public class FeatureInactiveAttrProcessor extends AbstractFeatureAttrProcessor {
 
-    public static final String ATTR_NAME = "inactive";
-    public static final int ATTR_PRECEDENCE = StandardIfTagProcessor.PRECEDENCE;
-
     public FeatureInactiveAttrProcessor(final TemplateMode templateMode, String dialectPrefix) {
-        super(templateMode, dialectPrefix, ATTR_NAME, ATTR_PRECEDENCE);
+        super(templateMode, dialectPrefix, "inactive", StandardIfTagProcessor.PRECEDENCE);
     }
 
     @Override
     protected boolean isVisible(final ITemplateContext context, final IProcessableElementTag tag, final AttributeName attributeName, final String attributeValue) {
-        return !determineFeatureState(context, tag, attributeName, attributeValue, true);
+        return !determineFeatureState(context, attributeValue, true);
     }
 }
 
