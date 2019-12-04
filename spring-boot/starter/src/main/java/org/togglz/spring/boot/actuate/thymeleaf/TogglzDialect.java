@@ -47,7 +47,7 @@ public class TogglzDialect extends AbstractProcessorDialect {
         this("Togglz Dialect", "togglz", StandardDialect.PROCESSOR_PRECEDENCE);
     }
 
-    private TogglzDialect(final String name, final String prefix, final int processorPrecedence) {
+    public TogglzDialect(final String name, final String prefix, final int processorPrecedence) {
         super(name, prefix, processorPrecedence);
     }
 

@@ -57,6 +57,9 @@ public class FeatureActiveAttrProcessor extends AbstractFeatureAttrProcessor {
 
     public FeatureActiveAttrProcessor(final TemplateMode templateMode, final String dialectPrefix) {
         super(templateMode, dialectPrefix, "active", StandardIfTagProcessor.PRECEDENCE);
+
+    public FeatureActiveAttrProcessor(final TemplateMode templateMode, final String dialectPrefix) {
+        super(templateMode, dialectPrefix, ATTR_NAME, ATTR_PRECEDENCE);
     }
 
     @Override
