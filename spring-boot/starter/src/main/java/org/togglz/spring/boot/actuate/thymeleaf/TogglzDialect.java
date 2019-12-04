@@ -43,14 +43,11 @@ import org.togglz.spring.boot.actuate.thymeleaf.processor.FeatureInactiveAttrPro
  */
 public class TogglzDialect extends AbstractProcessorDialect {
 
-    public static final String DEFAULT_PREFIX = "togglz";
-    public static final String NAME = "Togglz Dialect";
-
     public TogglzDialect() {
-        this(NAME, DEFAULT_PREFIX, StandardDialect.PROCESSOR_PRECEDENCE);
+        this("Togglz Dialect", "togglz", StandardDialect.PROCESSOR_PRECEDENCE);
     }
 
-    public TogglzDialect(final String name, final String prefix, final int processorPrecedence) {
+    private TogglzDialect(final String name, final String prefix, final int processorPrecedence) {
         super(name, prefix, processorPrecedence);
     }
 
