@@ -41,28 +41,28 @@ public class HazelcastStateRepository implements StateRepository {
 		this.mapName = mapName;
 		this.hazelcastConfig = hazelcastConfig;
 		this.hazelcastClientConfig = null;
-		this.hazelcastInstance=createHazelcastInstance();
+		this.hazelcastInstance = createHazelcastInstance();
 	}
 
 	public HazelcastStateRepository(ClientConfig hazelcastClientConfig, String mapName) {
 		this.mapName = mapName;
 		this.hazelcastConfig = null;
 		this.hazelcastClientConfig = hazelcastClientConfig;
-		this.hazelcastInstance=createHazelcastInstance();
+		this.hazelcastInstance = createHazelcastInstance();
 	}
 
 	public HazelcastStateRepository(HazelcastInstance hazelcastInstance, String mapName) {
 		this.mapName = mapName;
 		this.hazelcastConfig = null;
 		this.hazelcastClientConfig = null;
-		this.hazelcastInstance=hazelcastInstance;
+		this.hazelcastInstance = hazelcastInstance;
 	}
 	
 	private HazelcastStateRepository(Builder builder) {
 		mapName = builder.mapName;
 		hazelcastConfig = builder.hazelcastConfig;
 		hazelcastClientConfig = builder.hazelcastClientConfig;
-		this.hazelcastInstance= builder.hazelcastInstance==null ? builder.hazelcastInstance
+		this.hazelcastInstance = builder.hazelcastInstance!=null ? builder.hazelcastInstance
 				: createHazelcastInstance();
 	}
 
@@ -182,15 +182,27 @@ public class HazelcastStateRepository implements StateRepository {
 		 * settings.
 		 */
 		public HazelcastStateRepository build() {
-			long count = Stream.of(hazelcastClientConfig, hazelcastConfig, hazelcastInstance)
-					.filter(Objects::nonNull)
-					.count();
-			if(count!=1) {
-				throw new IllegalStateException("Please only configure exactly one of hazelcastClientConfig, hazelcastConfig, or hazelcastInstance");
-			}
+		    checkStateOfWhatIsSet();
 			return new HazelcastStateRepository(this);
 		}
 
-	}
+        private void checkStateOfWhatIsSet() {
+		    int countOfWhatIsSet = 0;
+		    if(hazelcastClientConfig!=null) {
+		        countOfWhatIsSet++;
+            }
+		    if(hazelcastConfig!=null) {
+		        countOfWhatIsSet++;
+            }
+		    if(hazelcastInstance!=null) {
+		        countOfWhatIsSet++;
+            }
+
+            if(countOfWhatIsSet>1) {
+                throw new IllegalStateException("Please only configure exactly one of hazelcastClientConfig, hazelcastConfig, or hazelcastInstance");
+            }
+        }
+
+    }
 
 }
