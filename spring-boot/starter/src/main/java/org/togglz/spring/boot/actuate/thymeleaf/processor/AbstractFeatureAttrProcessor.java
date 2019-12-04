@@ -20,8 +20,6 @@
 package org.togglz.spring.boot.actuate.thymeleaf.processor;
 
 import org.thymeleaf.context.ITemplateContext;
-import org.thymeleaf.engine.AttributeName;
-import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
@@ -44,8 +42,6 @@ public abstract class AbstractFeatureAttrProcessor extends AbstractStandardCondi
      * Determines the feature state
      *
      * @param context        the template context
-     * @param tag            the tag
-     * @param attributeName  the attribute name
      * @param attributeValue the attribute value
      * @param defaultState   the default state if the expression evaluates to null
      * @return the feature state
