@@ -9,4 +9,4 @@ Version-Patterns:
 Import-Template:
  org.togglz.hazelcast.*;version=${osgi.bundles.version:default}",
  org.togglz.core.*;version="${osgi.bundles.version:default}",
- com.hazelcast.*;version="[3.5.2, 4.0)" 
+ com.hazelcast.*;version="[3.5.2, 4.0)"
