@@ -2,17 +2,13 @@ package org.togglz.hazelcast;
 
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
-import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.StateRepository;
-
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
-
-import java.util.Objects;
-import java.util.stream.Stream;
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.StateRepository;
 
 /**
  * <p>
