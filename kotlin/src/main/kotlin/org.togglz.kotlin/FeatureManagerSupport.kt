@@ -9,7 +9,7 @@ import org.togglz.core.manager.FeatureManagerBuilder
 import org.togglz.core.repository.FeatureState
 import kotlin.reflect.KClass
 
-object KFeatureManagerSupport {
+object FeatureManagerSupport {
 
     fun createFeatureManagerForTest(featureClass: KClass<out Enum<*>>): FeatureManager {
         val featureManager = FeatureManagerBuilder.begin()
@@ -19,7 +19,7 @@ object KFeatureManagerSupport {
         return featureManager
     }
 
-    fun allEnabledFeatureConfig(featureManager: FeatureManager) {
+    fun enableAllFeatures(featureManager: FeatureManager) {
         for (feature in featureManager.features) {
             if (shouldRunInTests(feature, featureManager)) {
                 featureManager.setFeatureState(FeatureState(feature, true))
@@ -28,7 +28,7 @@ object KFeatureManagerSupport {
         clearCache()
     }
 
-    fun allDisabledFeatureConfig(featureManager: FeatureManager) {
+    fun disableAllFeatures(featureManager: FeatureManager) {
         for (feature in featureManager.features) {
             featureManager.setFeatureState(FeatureState(feature, false))
         }
