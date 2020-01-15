@@ -226,6 +226,7 @@
     <module>spring-mobile</module>
     <module>slack</module>
     <module>redis</module>
+    <module>kotlin</module>
   </modules>
 
   <developers>
