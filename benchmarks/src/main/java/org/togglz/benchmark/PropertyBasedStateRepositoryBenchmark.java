@@ -18,9 +18,8 @@ import java.io.IOException;
  * @date 5/26/16
  */
 public class PropertyBasedStateRepositoryBenchmark extends AbstractStateRepositoryBenchmark {
-    FeatureManager manager;
-    File tempFile;
 
+    private File tempFile;
 
     @Override
     public StateRepository initializeStateRepository() throws IOException {
@@ -34,7 +33,6 @@ public class PropertyBasedStateRepositoryBenchmark extends AbstractStateReposito
         tempFile.delete();
     }
 
-
     // run this method to execute this test
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -44,5 +42,4 @@ public class PropertyBasedStateRepositoryBenchmark extends AbstractStateReposito
 
         new Runner(opt).run();
     }
-
 }

@@ -17,7 +17,7 @@ public class ApplicationVersionActivationStrategyTest {
     private static final String CURRENT_VERSION = "beta.141242134213";
 
     @Before
-    public void setup() {
+    public void setUp() {
         SystemProperty.applicationVersion.set(CURRENT_VERSION);
         helper.setUp();
     }

@@ -20,7 +20,7 @@ public class SystemPropertyActivationStrategyTest {
     private FeatureState state ;
 
     @Before
-    public void setup() {
+    public void setUp() {
         System.clearProperty("foo.bar");
         setState("foo.bar", "true");
     }

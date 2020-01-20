@@ -22,7 +22,7 @@ public class CachingStateRepositoryTest {
     private StateRepository delegate;
 
     @Before
-    public void setup() {
+    public void setUp() {
         delegate = Mockito.mock(StateRepository.class);
         // the mock supports the ENUM
         Mockito.when(delegate.getFeatureState(DummyFeature.TEST))
