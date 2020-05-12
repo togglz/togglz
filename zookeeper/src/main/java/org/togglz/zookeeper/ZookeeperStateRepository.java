@@ -13,6 +13,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.FeatureStateStorageWrapper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
@@ -78,10 +79,15 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     public void setFeatureState(FeatureState featureState) {
         FeatureStateStorageWrapper wrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
         try {
-            String json = objectMapper.writeValueAsString(wrapper);
+            byte[] bytes = objectMapper.writeValueAsString(wrapper).getBytes(StandardCharsets.UTF_8);
             String path = featuresZnode + "/" + featureState.getFeature().name();
-            curatorFramework.createContainers(path);
-            curatorFramework.setData().forPath(path, json.getBytes("UTF-8"));
+
+            if (curatorFramework.checkExists().forPath(path) == null) {
+                curatorFramework.create().forPath(path, bytes);
+            } else {
+                curatorFramework.setData().forPath(path, bytes);
+            }
+
             states.put(featureState.getFeature().name(), wrapper);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -140,7 +146,6 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     private boolean pathHasAFeatureInIt(String updatedPath) {
         return updatedPath.length() > featuresZnode.length();
     }
-
 
 
     public static Builder newBuilder(CuratorFramework curatorFramework, String featuresZnode) {
