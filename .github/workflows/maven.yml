@@ -15,4 +15,4 @@ jobs:
         java-version: '8.0.252'
         architecture: x64
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -P wildfly-managed -DJBOSS_REPO=true -B install --file pom.xml
