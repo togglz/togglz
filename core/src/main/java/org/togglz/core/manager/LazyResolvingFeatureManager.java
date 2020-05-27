@@ -9,6 +9,7 @@ import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.ActivationStrategyContexts;
 import org.togglz.core.user.FeatureUser;
 
 /**
@@ -42,6 +43,11 @@ public class LazyResolvingFeatureManager implements FeatureManager {
     @Override
     public boolean isActive(Feature feature) {
         return getDelegate().isActive(feature);
+    }
+
+    @Override
+    public boolean isActive(Feature feature, ActivationStrategyContexts contexts) {
+        return getDelegate().isActive(feature, contexts);
     }
 
     @Override

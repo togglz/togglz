@@ -12,6 +12,7 @@ import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.metadata.enums.EnumFeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
+import org.togglz.core.spi.ActivationStrategyContexts;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Validate;
 
@@ -53,6 +54,11 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
+        return activeFeatures.contains(feature.name());
+    }
+
+    @Override
+    public boolean isActive(Feature feature, ActivationStrategyContexts contexts) {
         return activeFeatures.contains(feature.name());
     }
 

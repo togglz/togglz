@@ -10,11 +10,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
+import org.togglz.core.activation.StringWhitelistActivationStrategy;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
+import org.togglz.core.spi.ActivationStrategyContexts;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
@@ -25,6 +27,8 @@ public class DefaultFeatureManagerTest {
     private StateRepository repository;
     private FeatureManager manager;
     private TestFeatureUserProvider featureUserProvider;
+
+    private static final String WHITELIST_CONTEXT = "WHITELIST_CONTEXT";
 
     @Before
     public void before() {
@@ -38,6 +42,11 @@ public class DefaultFeatureManagerTest {
         repository.setFeatureState(new FeatureState(MyFeatures.EXPERIMENTAL, false));
         repository.setFeatureState(new FeatureState(MyFeatures.EMPTY_STRATEGY, true)
             .setStrategyId(""));
+        repository.setFeatureState(
+            new FeatureState(MyFeatures.CONTEXT_AWARE_FEATURE, true)
+                .setStrategyId(StringWhitelistActivationStrategy.ID)
+                .setParameter(StringWhitelistActivationStrategy.PARAM_WHITELIST, WHITELIST_CONTEXT)
+        );
 
         featureUserProvider = new TestFeatureUserProvider();
 
@@ -81,8 +90,30 @@ public class DefaultFeatureManagerTest {
         featureUserProvider.setFeatureUser(null);
         assertEquals(false, manager.isActive(MyFeatures.EXPERIMENTAL));
 
+        // CONTEXT_AWARE_FEATURE disabled if no context provided
+        assertEquals(false, manager.isActive(MyFeatures.CONTEXT_AWARE_FEATURE));
+
+        // CONTEXT_AWARE_FEATURE disabled for OTHER_CONTEXT
+        assertEquals(false, manager.isActive(
+            MyFeatures.CONTEXT_AWARE_FEATURE,
+            ActivationStrategyContexts.builder()
+                .add(StringWhitelistActivationStrategy.class, "OTHER_CONTEXT")
+                .build()
+        ));
+
+        // CONTEXT_AWARE_FEATURE enabled for WHITELIST_CONTEXT
+        assertEquals(true, manager.isActive(
+            MyFeatures.CONTEXT_AWARE_FEATURE,
+            ActivationStrategyContexts.builder()
+                .add(StringWhitelistActivationStrategy.class, WHITELIST_CONTEXT)
+                .build()
+        ));
+
         // MISSING_STRATEGY disabled for all
         assertEquals(false, manager.isActive(MyFeatures.MISSING_STRATEGY));
+
+        // EMPTY_STRATEGY enabled for all
+        assertEquals(true, manager.isActive(MyFeatures.EMPTY_STRATEGY));
 
         // EMPTY_STRATEGY enabled for all
         assertEquals(true, manager.isActive(MyFeatures.EMPTY_STRATEGY));
@@ -147,7 +178,6 @@ public class DefaultFeatureManagerTest {
             .userProvider(featureUserProvider)
             .build();
 
-
         FeatureState state = manager.getFeatureState(MyFeatures.NOT_STORED_FEATURE);
         assertEquals(MyFeatures.NOT_STORED_FEATURE, state.getFeature());
         assertEquals(true, state.isEnabled());
@@ -180,7 +210,8 @@ public class DefaultFeatureManagerTest {
         EXPERIMENTAL,
         MISSING_STRATEGY,
         EMPTY_STRATEGY,
-        NOT_STORED_FEATURE;
+        NOT_STORED_FEATURE,
+        CONTEXT_AWARE_FEATURE;
     }
 
 }
