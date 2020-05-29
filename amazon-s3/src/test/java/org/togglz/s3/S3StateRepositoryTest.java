@@ -1,18 +1,21 @@
 package org.togglz.s3;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AnonymousAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.core.exception.SdkClientException;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.http.AbortableInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.utils.IoUtils;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,28 +24,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNull;
 
 public class S3StateRepositoryTest {
-    
-    private AmazonS3Client client;
+
+    private S3Client client;
     private S3StateRepository repository;
 
     @Before
     public void setup() {
-        client = new AmazonS3ClientMOCK(new AnonymousAWSCredentials());
-        client.withEndpoint(String.format("http://localhost:8001"));
-        client.createBucket("testbucket");
+        client = new AmazonS3ClientMOCK();
+        client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
 
         repository = S3StateRepository.newBuilder(client, "testbucket").build();
     }
-	
+
     @SuppressWarnings("serial")
     @Test
     public void testGetSetFeatureState() {
         assertNull(repository.getFeatureState(TestFeature.FEATURE_1));
 
         FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
-            .setEnabled(true)
-            .setStrategyId("abc")
-            .setParameter("key1", "value1");
+                .setEnabled(true)
+                .setStrategyId("abc")
+                .setParameter("key1", "value1");
 
         repository.setFeatureState(initState);
 
@@ -63,9 +65,9 @@ public class S3StateRepositoryTest {
     @Test
     public void testUpdateFeatureState() {
         FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
-            .setEnabled(true)
-            .setStrategyId("abc")
-            .setParameter("key1", "value1");
+                .setEnabled(true)
+                .setStrategyId("abc")
+                .setParameter("key1", "value1");
 
         repository.setFeatureState(initState);
 
@@ -74,9 +76,9 @@ public class S3StateRepositoryTest {
         assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
 
         FeatureState updatedState = new FeatureState(TestFeature.FEATURE_1)
-            .setEnabled(false)
-            .setStrategyId("def")
-            .setParameter("key2", "value2");
+                .setEnabled(false)
+                .setStrategyId("def")
+                .setParameter("key2", "value2");
 
         repository.setFeatureState(updatedState);
 
@@ -97,36 +99,59 @@ public class S3StateRepositoryTest {
         FEATURE_1
     }
 
-    private static class AmazonS3ClientMOCK extends AmazonS3Client {
-        Map<String, Map<String, S3Object>> repo = new HashMap<String, Map<String, S3Object>>();
+    private static class AmazonS3ClientMOCK implements S3Client {
+        Map<String, Map<String, String>> repo = new HashMap<>();
 
-        public AmazonS3ClientMOCK(AWSCredentials awsCredentials) {
-            super(awsCredentials);
+        @Override
+        public ResponseInputStream<GetObjectResponse> getObject(GetObjectRequest getObjectRequest) {
+            String s3Object = repo.get(getObjectRequest.bucket()).get(getObjectRequest.key());
+            if (s3Object == null) {
+                InputStream empty = new InputStream() {
+                    @Override
+                    public int read() {
+                        return -1;  // end of stream
+                    }
+                };
+                return new ResponseInputStream<>(GetObjectResponse.builder().build(), AbortableInputStream.create(empty));
+            }
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s3Object.toString().getBytes());
+            return new ResponseInputStream<>(GetObjectResponse.builder().build(), AbortableInputStream.create(byteArrayInputStream));
         }
 
         @Override
-        public S3Object getObject(String bucketName, String key) {
-            return repo.get(bucketName).get(key);
+        public PutObjectResponse putObject(PutObjectRequest putObjectRequest, RequestBody requestBody) throws AwsServiceException, SdkClientException {
+            Map<String, String> r2 = repo.get(putObjectRequest.bucket());
+
+            String s = null;
+            try {
+                s = IoUtils.toUtf8String(requestBody.contentStreamProvider().newStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (r2.isEmpty()) {
+                r2.put(putObjectRequest.key(), s);
+                repo.put(putObjectRequest.bucket(), r2);
+            } else {
+                r2.put(putObjectRequest.key(), s);
+            }
+            return PutObjectResponse.builder().build();
         }
 
         @Override
-        public PutObjectResult putObject(String bucketName, String key, String content) {
-            Map<String, S3Object> r2 = repo.get(bucketName);
-
-            ByteArrayInputStream in = new ByteArrayInputStream(content.getBytes());
-            S3Object s3obj = new S3Object();
-            s3obj.setObjectContent(new S3ObjectInputStream(in, null));
-
-            r2.put(key, s3obj);
-
-            return new PutObjectResult();
+        public CreateBucketResponse createBucket(CreateBucketRequest createBucketRequest) throws BucketAlreadyExistsException, BucketAlreadyOwnedByYouException, AwsServiceException, SdkClientException, S3Exception {
+            repo.put(createBucketRequest.bucket(), new HashMap<>());
+            return CreateBucketResponse.builder().build();
         }
 
         @Override
-        public Bucket createBucket(String bucketName) {
-            repo.put(bucketName, new HashMap<String, S3Object>());
+        public String serviceName() {
+            return null;
+        }
 
-            return new Bucket();
+        @Override
+        public void close() {
+
         }
     }
 }
