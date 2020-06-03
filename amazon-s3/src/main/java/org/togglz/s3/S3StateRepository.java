@@ -50,12 +50,14 @@ public class S3StateRepository implements StateRepository {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(keyPrefix + feature.name()).build();
             InputStream object = client.getObject(getObjectRequest);
-            String content = IoUtils.toUtf8String(object);
-            if (!content.isEmpty()) {
-                FeatureStateStorageWrapper wrapper = objectMapper.reader()
-                        .forType(FeatureStateStorageWrapper.class)
-                        .readValue(content);
-                return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+            if (object != null) {
+                String content = IoUtils.toUtf8String(object);
+                if (!content.isEmpty()) {
+                    FeatureStateStorageWrapper wrapper = objectMapper.reader()
+                            .forType(FeatureStateStorageWrapper.class)
+                            .readValue(content);
+                    return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+                }
             }
         } catch (NoSuchKeyException e) {
             return null;
