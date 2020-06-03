@@ -9,5 +9,5 @@ Version-Patterns:
 Import-Template:
  org.togglz.core.*;version="${osgi.bundles.version:default}",
  com.fasterxml.jackson.*;version="2.7.4",
- com.amazonaws.*;version="1.11.29"
+ software.amazon.awssdk.*;version="2.13.24"
  
