@@ -13,14 +13,6 @@ Want to learn more? Have a look at an usage example or check the quickstart guid
 This project exists thanks to all the people who contribute. 
 <a href="../../graphs/contributors"><img src="https://opencollective.com/togglz/contributors.svg?width=890" /></a>
 
-
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/togglz#backer)]
-
-<a href="https://opencollective.com/togglz#backers" target="_blank"><img src="https://opencollective.com/togglz/backers.svg?width=890"></a>
-
-
 ## Sponsors
 
 Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/togglz#sponsor)]
