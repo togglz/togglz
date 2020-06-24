@@ -54,12 +54,6 @@ public class Deployments {
             .as(JavaArchive.class);
     }
 
-    public static JavaArchive getTogglzSeamSecurityArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-seam-security.jar")
-            .importDirectory("../seam-security/target/classes")
-            .as(JavaArchive.class);
-    }
-
     public static JavaArchive getTogglzShiroArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-shiro.jar")
             .importDirectory("../shiro/target/classes")
