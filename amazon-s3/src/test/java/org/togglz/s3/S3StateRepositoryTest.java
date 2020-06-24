@@ -1,7 +1,7 @@
 package org.togglz.s3;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
@@ -20,25 +20,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class S3StateRepositoryTest {
+class S3StateRepositoryTest {
 
-    private S3Client client;
     private S3StateRepository repository;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        client = new AmazonS3ClientMOCK();
+        S3Client client = new AmazonS3ClientMOCK();
         client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
 
         repository = S3StateRepository.newBuilder(client, "testbucket").build();
     }
 
-    @SuppressWarnings("serial")
     @Test
-    public void testGetSetFeatureState() {
+    void getSetFeatureState() {
         assertNull(repository.getFeatureState(TestFeature.FEATURE_1));
 
         FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
@@ -50,11 +47,11 @@ public class S3StateRepositoryTest {
 
         FeatureState actualState = repository.getFeatureState(TestFeature.FEATURE_1);
 
-        assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
-        assertThat(actualState.getStrategyId()).isEqualTo("abc");
-        assertThat(actualState.isEnabled()).isEqualTo(true);
-        assertThat(actualState.getParameter("key1")).isEqualTo("value1");
-        assertThat(actualState.getParameterNames()).isEqualTo(new HashSet<String>() {
+        assertEquals(actualState.getFeature(), initState.getFeature());
+        assertEquals(actualState.getStrategyId(), "abc");
+        assertTrue(actualState.isEnabled());
+        assertEquals(actualState.getParameter("key1"), "value1");
+        assertEquals(actualState.getParameterNames(), new HashSet<String>() {
             {
                 add("key1");
             }
@@ -63,7 +60,7 @@ public class S3StateRepositoryTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testUpdateFeatureState() {
+    void testUpdateFeatureState() {
         FeatureState initState = new FeatureState(TestFeature.FEATURE_1)
                 .setEnabled(true)
                 .setStrategyId("abc")
@@ -73,7 +70,7 @@ public class S3StateRepositoryTest {
 
         FeatureState actualState = repository.getFeatureState(TestFeature.FEATURE_1);
 
-        assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
+        assertEquals(actualState.getFeature(), initState.getFeature());
 
         FeatureState updatedState = new FeatureState(TestFeature.FEATURE_1)
                 .setEnabled(false)
@@ -84,11 +81,11 @@ public class S3StateRepositoryTest {
 
         actualState = repository.getFeatureState(TestFeature.FEATURE_1);
 
-        assertThat(actualState.getFeature()).isEqualTo(initState.getFeature());
-        assertThat(actualState.getStrategyId()).isEqualTo("def");
-        assertThat(actualState.isEnabled()).isEqualTo(false);
-        assertThat(actualState.getParameter("key2")).isEqualTo("value2");
-        assertThat(actualState.getParameterNames()).isEqualTo(new HashSet<String>() {
+        assertEquals(actualState.getFeature(), initState.getFeature());
+        assertEquals(actualState.getStrategyId(), "def");
+        assertFalse(actualState.isEnabled());
+        assertEquals(actualState.getParameter("key2"), "value2");
+        assertEquals(actualState.getParameterNames(), new HashSet<String>() {
             {
                 add("key2");
             }
@@ -114,7 +111,7 @@ public class S3StateRepositoryTest {
                 };
                 return new ResponseInputStream<>(GetObjectResponse.builder().build(), AbortableInputStream.create(empty));
             }
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s3Object.toString().getBytes());
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s3Object.getBytes());
             return new ResponseInputStream<>(GetObjectResponse.builder().build(), AbortableInputStream.create(byteArrayInputStream));
         }
 
@@ -139,7 +136,7 @@ public class S3StateRepositoryTest {
         }
 
         @Override
-        public CreateBucketResponse createBucket(CreateBucketRequest createBucketRequest) throws BucketAlreadyExistsException, BucketAlreadyOwnedByYouException, AwsServiceException, SdkClientException, S3Exception {
+        public CreateBucketResponse createBucket(CreateBucketRequest createBucketRequest) throws AwsServiceException, SdkClientException {
             repo.put(createBucketRequest.bucket(), new HashMap<>());
             return CreateBucketResponse.builder().build();
         }
