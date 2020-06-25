@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
