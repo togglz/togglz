@@ -16,7 +16,7 @@
 
 package org.togglz.spring.boot.actuate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
@@ -24,7 +24,7 @@ import org.togglz.spring.boot.autoconfigure.TogglzFeature;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for Spring Boot 2 compatible {@link TogglzEndpoint}.
@@ -51,21 +51,21 @@ public class TogglzEndpointTest extends BaseTest {
                 List<TogglzFeature> features = endpoint.getAllFeatures();
 
                 // Assert we have 2 features
-                assertThat(features).hasSize(2);
+                assertEquals(2, features.size());
 
                 // Assert feature one
-                assertThat(features.get(0).getName()).isEqualTo("FEATURE_ONE");
-                assertThat(features.get(0).isEnabled()).isTrue();
-                assertThat(features.get(0).getStrategy()).isNull();
-                assertThat(features.get(0).getParams()).isEmpty();
+                assertEquals("FEATURE_ONE", features.get(0).getName());
+                assertTrue(features.get(0).isEnabled());
+                assertNull(features.get(0).getStrategy());
+                assertEquals(0, features.get(0).getParams());
 
                 // Assert feature two
-                assertThat(features.get(1).getName()).isEqualTo("FEATURE_TWO");
-                assertThat(features.get(1).isEnabled()).isFalse();
-                assertThat(features.get(1).getStrategy()).isEqualTo("release-date");
-                assertThat(features.get(1).getParams()).hasSize(2);
-                assertThat(features.get(1).getParams().get("date")).isEqualTo("2016-07-01");
-                assertThat(features.get(1).getParams().get("time")).isEqualTo("08:30:00");
+                assertEquals("FEATURE_TWO", features.get(1).getName());
+                assertFalse(features.get(1).isEnabled());
+                assertEquals("release-date", features.get(1).getStrategy());
+                assertEquals(2, features.get(1).getParams());
+                assertEquals("2016-07-01", features.get(1).getParams().get("date"));
+                assertEquals("08:30:00", features.get(1).getParams().get("time"));
             });
     }
 
@@ -85,7 +85,7 @@ public class TogglzEndpointTest extends BaseTest {
                     final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", true);
 
                     // Then
-                    assertThat(togglzFeature.isEnabled()).isTrue();
+                    assertTrue(togglzFeature.isEnabled());
                 });
     }
 
@@ -105,11 +105,11 @@ public class TogglzEndpointTest extends BaseTest {
                     final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
 
                     // Then
-                    assertThat(togglzFeature.isEnabled()).isFalse();
+                    assertFalse(togglzFeature.isEnabled());
                 });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowAnIllegalArgumentExceptionIfTheFeatureDoesNotExist() {
         contextRunner.withConfiguration(AutoConfigurations.of(
                 DispatcherServletPathConfig.class,
@@ -120,7 +120,9 @@ public class TogglzEndpointTest extends BaseTest {
                     TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
 
                     // When
-                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
+                    assertThrows(IllegalArgumentException.class, () -> {
+                        final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
+                    });
                 });
     }
 
@@ -129,7 +131,7 @@ public class TogglzEndpointTest extends BaseTest {
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("management.endpoint.togglz.enabled: false")
             .run((context) -> {
-                assertThat(context.getBeansOfType(TogglzEndpoint.class)).isEmpty();
+                assertEquals(0, context.getBeansOfType(TogglzEndpoint.class).size());
             });
     }
 

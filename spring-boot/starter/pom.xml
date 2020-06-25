@@ -14,7 +14,6 @@
 
   <properties>
     <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
-    <assertj.version>3.9.1</assertj.version>
   </properties>
 
   <dependencyManagement>
@@ -26,11 +25,6 @@
         <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
-      </dependency>
-      <dependency>
-          <groupId>org.assertj</groupId>
-          <artifactId>assertj-core</artifactId>
-          <version>${assertj.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
