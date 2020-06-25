@@ -1,25 +1,24 @@
 package org.togglz.core.activation;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 
-public class GradualActivationStrategyTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class GradualActivationStrategyTest {
 
     private final ActivationStrategy strategy = new TestingGradualActivationStrategy();
 
     @Test
-    public void shouldAlwaysReturnFalseForZeroPercent() {
-
+    void shouldAlwaysReturnFalseForZeroPercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "0");
@@ -36,8 +35,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldAlwaysReturnTrueForOneHundredPercent() {
-
+    void shouldAlwaysReturnTrueForOneHundredPercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "100");
@@ -54,8 +52,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldWorkCorrectlyForOnePercent() {
-
+    void shouldWorkCorrectlyForOnePercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "1");
@@ -74,8 +71,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldWorkCorrectlyForNinetyNinePercent() {
-
+    void shouldWorkCorrectlyForNinetyNinePercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "99");
@@ -95,8 +91,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldFindCorrectDecisionForIntermediateValues() {
-
+    void shouldFindCorrectDecisionForIntermediateValues() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "50");
@@ -113,8 +108,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldReturnFalseForInvalidPercentage() {
-
+    void shouldReturnFalseForInvalidPercentage() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "100x");

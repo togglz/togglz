@@ -1,12 +1,9 @@
 package org.togglz.appengine.repository;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -16,6 +13,8 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit Tests for MemcacheStateRepository
@@ -30,7 +29,7 @@ public class MemcacheStateRepositoryTest {
     private MemcacheService ms = MemcacheServiceFactory.getMemcacheService();
     private StateRepository delegate;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         helper.setUp();
         delegate = Mockito.mock(StateRepository.class);
@@ -38,7 +37,7 @@ public class MemcacheStateRepositoryTest {
             .thenReturn(new FeatureState(TestFeature.F1, true));
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         ms.clearAll();
         helper.tearDown();

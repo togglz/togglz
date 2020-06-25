@@ -1,57 +1,55 @@
 package org.togglz.core.activation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 
-public class IPActivationStrategyTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class IPActivationStrategyTest {
 
     private final ServerIpActivationStrategy strategy = new ServerIpActivationStrategy();
 
     @Test
-    public void shouldReturnFalseForEmptyIPlist() {
+    void shouldReturnFalseForEmptyIPlist() {
         FeatureUser user = new SimpleFeatureUser("ea", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE).enable().setStrategyId(ServerIpActivationStrategy.ID);
         boolean active = strategy.isActive(state, user);
-        assertEquals(false, active);
+        assertFalse(active);
     }
 
     @Test
-    public void shouldReturnTrueForFeatureOnCorrectMachine() {
+    void shouldReturnTrueForFeatureOnCorrectMachine() {
         FeatureUser user = new SimpleFeatureUser("ea", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE).enable().setStrategyId(ServerIpActivationStrategy.ID);
         state.setParameter(ServerIpActivationStrategy.PARAM_IPS, getMachineIP());
         boolean active = strategy.isActive(state, user);
-        assertEquals(true, active);
+        assertTrue(active);
     }
 
     @Test
-    public void shouldReturnFalseForFeatureOnOtherMachine() {
+    void shouldReturnFalseForFeatureOnOtherMachine() {
         FeatureUser user = new SimpleFeatureUser("ea", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE).enable().setStrategyId(ServerIpActivationStrategy.ID);
         state.setParameter(ServerIpActivationStrategy.PARAM_IPS, "1.1.1.1");
         boolean active = strategy.isActive(state, user);
-        assertEquals(false, active);
+        assertFalse(active);
     }
 
     @Test
-    public void multipleMachineIps() {
+    void multipleMachineIps() {
         FeatureUser user = new SimpleFeatureUser("ea", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE).enable().setStrategyId(ServerIpActivationStrategy.ID);
         state.setParameter(ServerIpActivationStrategy.PARAM_IPS, "1.1.1.1,2.2.2.2," + getMachineIP());
         boolean active = strategy.isActive(state, user);
-        assertEquals(true, active);
+        assertTrue(active);
     }
 
     /**
@@ -65,12 +63,10 @@ public class IPActivationStrategyTest {
             if (interfaces != null) {
                 while (interfaces.hasMoreElements()) {
                     Enumeration<InetAddress> addresses = interfaces.nextElement().getInetAddresses();
-                    if (addresses != null) {
-                        while (addresses.hasMoreElements()) {
-                            String hostAddress = addresses.nextElement().getHostAddress();
-                            if (hostAddress != null) {
-                                return hostAddress.trim();
-                            }
+                    while (addresses.hasMoreElements()) {
+                        String hostAddress = addresses.nextElement().getHostAddress();
+                        if (hostAddress != null) {
+                            return hostAddress.trim();
                         }
                     }
                 }
@@ -87,5 +83,4 @@ public class IPActivationStrategyTest {
     private enum MyFeature implements Feature {
         FEATURE
     }
-
 }

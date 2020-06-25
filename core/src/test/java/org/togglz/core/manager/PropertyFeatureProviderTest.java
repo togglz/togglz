@@ -1,17 +1,18 @@
 package org.togglz.core.manager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Properties;
 import java.util.Set;
 
 import org.assertj.core.api.Condition;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PropertyFeatureProviderTest {
 
@@ -172,10 +173,10 @@ public class PropertyFeatureProviderTest {
         PropertyFeatureProvider provider = new PropertyFeatureProvider(properties);
 
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
-        assertThat(metadata.getDefaultFeatureState().isEnabled()).isFalse();
+        assertFalse(metadata.getDefaultFeatureState().isEnabled());
         metadata.getDefaultFeatureState().setEnabled(true);
 
-        assertThat(provider.getMetaData(new NamedFeature("F1")).getDefaultFeatureState().isEnabled()).isFalse();
+        assertFalse(provider.getMetaData(new NamedFeature("F1")).getDefaultFeatureState().isEnabled());
     }
 
         private Condition<FeatureGroup> groupNamed(final String name) {

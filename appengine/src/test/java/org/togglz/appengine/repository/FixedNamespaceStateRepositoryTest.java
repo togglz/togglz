@@ -1,12 +1,12 @@
 package org.togglz.appengine.repository;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -16,7 +16,9 @@ import com.google.appengine.api.NamespaceManager;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
 public class FixedNamespaceStateRepositoryTest {
 
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
@@ -31,12 +33,12 @@ public class FixedNamespaceStateRepositoryTest {
 
     private static final String ORIGINAL_NAMESPACE = "foobar";
 
-    @Before
+    @BeforeEach
     public void setup() {
         helper.setUp();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         helper.tearDown();
     }
@@ -46,14 +48,18 @@ public class FixedNamespaceStateRepositoryTest {
         new FixedNamespaceStateRepository("", mockedStateRepository);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldNotAcceptNullNamespace() {
-        new FixedNamespaceStateRepository(null, mockedStateRepository);
+        assertThrows(NullPointerException.class, () -> {
+            new FixedNamespaceStateRepository(null, mockedStateRepository);
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void shouldNotAcceptNullDecorated() {
-        new FixedNamespaceStateRepository("", null);
+        assertThrows(NullPointerException.class, () -> {
+            new FixedNamespaceStateRepository("", null);
+        });
     }
 
     @Test

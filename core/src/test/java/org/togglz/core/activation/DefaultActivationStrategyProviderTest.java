@@ -2,7 +2,8 @@ package org.togglz.core.activation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class DefaultActivationStrategyProviderTest {
 
-    private DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
+    private final DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
 
     @Test
     public void shouldLoadDefaultStrategies() {
@@ -30,7 +31,6 @@ public class DefaultActivationStrategyProviderTest {
 
     @Test
     public void shouldNotContainCustomStrategyIfNotAdded() {
-
         assertThat(provider.getActivationStrategies())
             .extracting("id")
             .doesNotContain(CustomActivationStrategy.class.getSimpleName())

@@ -1,71 +1,70 @@
 package org.togglz.core.activation;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by ddcchrisk on 5/26/16.
  */
-public class SystemPropertyActivationStrategyTest {
+class SystemPropertyActivationStrategyTest {
 
     private final SystemPropertyActivationStrategy strategy = new SystemPropertyActivationStrategy();
-    private FeatureUser user = new SimpleFeatureUser("who-cares-what-my-name-is");
+    private final FeatureUser user = new SimpleFeatureUser("who-cares-what-my-name-is");
     private FeatureState state ;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         System.clearProperty("foo.bar");
         setState("foo.bar", "true");
     }
 
     @Test
-    public void shouldBeFalseIfPropertyDoesNotExist() {
-        //no property exists
+    void shouldBeFalseIfPropertyDoesNotExist() {
         assertFalse(strategy.isActive(state,user));
 
     }
 
     @Test
-    public void shouldBeFalseIfPropertyExistsButisFalse() {
+    void shouldBeFalseIfPropertyExistsButisFalse() {
         System.setProperty("foo.bar", "false");
         assertFalse(strategy.isActive(state,user));
     }
 
     @Test
-    public void shouldBeFalseIfPropertyExistsButisInvalid() {
+    void shouldBeFalseIfPropertyExistsButisInvalid() {
         System.setProperty("foo.bar", "foobar");
         assertFalse(strategy.isActive(state,user));
     }
 
     @Test
-    public void shouldBeTrueIfPropertyStringsMatch() {
+    void shouldBeTrueIfPropertyStringsMatch() {
         setState("foo.bar", "foobar");
         System.setProperty("foo.bar", "foobar");
         assertTrue(strategy.isActive(state,user));
     }
 
     @Test
-    public void shouldBeTrueIfPropertyAndStateValueMatchFalse() {
+    void shouldBeTrueIfPropertyAndStateValueMatchFalse() {
         setState("foo.bar", "false");
         System.setProperty("foo.bar", "false");
         assertTrue(strategy.isActive(state,user));
     }
 
     @Test
-    public void shouldBeTrueIfPropertyExistsAndIsTrue() {
+    void shouldBeTrueIfPropertyExistsAndIsTrue() {
         System.setProperty("foo.bar", "true");
         assertTrue(strategy.isActive(state,user));
     }
 
     @Test
-    public void shouldBeFalseIfPropertyExistsAndIsEmpty() {
+    void shouldBeFalseIfPropertyExistsAndIsEmpty() {
         setState("foo.bar", "");
         System.setProperty("foo.bar", "");
         assertFalse(strategy.isActive(state,user));
@@ -73,7 +72,7 @@ public class SystemPropertyActivationStrategyTest {
     }
 
     @Test
-    public void shouldBeFalseIfNoMatchingFeatureState() {
+    void shouldBeFalseIfNoMatchingFeatureState() {
         System.setProperty("foo.bar", "true");
         setState("foo.baz", "true");
         assertFalse(strategy.isActive(state,user));

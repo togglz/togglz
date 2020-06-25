@@ -6,8 +6,9 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
 import org.apache.curator.test.TestingServer;
 import org.apache.zookeeper.client.ZooKeeperSaslClient;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
@@ -21,10 +22,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Ryan Gardner
@@ -78,7 +77,7 @@ public class ZookeeperStateRepositoryTest {
         stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, TEST_ZNODE).build();
     }
 
-    @After
+    @AfterEach
     public void cleanUp() throws Exception {
         stopServer(serverClientPair);
     }
@@ -102,7 +101,7 @@ public class ZookeeperStateRepositoryTest {
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
 
-        assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
+        assertTrue(reflectionEquals(savedFeatureState, loadedFeatureState));
     }
 
     @Test
@@ -112,11 +111,11 @@ public class ZookeeperStateRepositoryTest {
         stateRepository.setFeatureState(savedFeatureState);
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(loadedFeatureState.isEnabled(), is(true));
+        assertTrue(loadedFeatureState.isEnabled());
 
         stateRepository.setFeatureState(savedFeatureState.disable());
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(loadedFeatureState.isEnabled(), is(false));
+        assertFalse(loadedFeatureState.isEnabled());
     }
 
     @Test
@@ -128,7 +127,7 @@ public class ZookeeperStateRepositoryTest {
         stateRepository.setFeatureState(savedFeatureState);
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
+        assertTrue(reflectionEquals(savedFeatureState, loadedFeatureState));
 
         // Modify data in ZK
         FeatureStateStorageWrapper externallySetStateWrapper = new FeatureStateStorageWrapper();
@@ -152,7 +151,7 @@ public class ZookeeperStateRepositoryTest {
         Thread.sleep(500);
 
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(reflectionEquals(externallySetState, loadedFeatureState), is(true));
+        assertTrue(reflectionEquals(externallySetState, loadedFeatureState));
     }
 
     @Test
@@ -167,11 +166,10 @@ public class ZookeeperStateRepositoryTest {
         expectedFeatureState.setEnabled(true);
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(reflectionEquals(expectedFeatureState, loadedFeatureState), is(true));
+        assertTrue(reflectionEquals(expectedFeatureState, loadedFeatureState));
     }
 
-
-    private static enum TestFeature implements Feature {
+    private enum TestFeature implements Feature {
         FEATURE,
     }
 }

@@ -1,15 +1,12 @@
 package org.togglz.redis;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -18,17 +15,19 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.embedded.RedisServer;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 public class RedisStateRepositoryTest {
 
     private RedisServer redisServer;
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
         redisServer = new RedisServer();
         redisServer.start();
     }
 
-    @After
+    @AfterEach
     public void after() {
         redisServer.stop();
     }

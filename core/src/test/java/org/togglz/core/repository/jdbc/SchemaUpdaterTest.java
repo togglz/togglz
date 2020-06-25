@@ -1,9 +1,5 @@
 package org.togglz.core.repository.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,10 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.DbUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SchemaUpdaterTest {
 
@@ -119,13 +117,13 @@ public class SchemaUpdaterTest {
 
             // second feature didn't change
             assertEquals("F2", dataAfter.get(1)[0]);
-            assertEquals(null, dataAfter.get(1)[1]);
-            assertEquals(null, dataAfter.get(1)[2]);
+            assertNull(dataAfter.get(1)[1]);
+            assertNull(dataAfter.get(1)[2]);
 
             // second feature didn't change
             assertEquals("F3", dataAfter.get(2)[0]);
-            assertEquals(null, dataAfter.get(2)[1]);
-            assertEquals(null, dataAfter.get(2)[2]);
+            assertNull(dataAfter.get(2)[1]);
+            assertNull(dataAfter.get(2)[2]);
 
         } finally {
             DbUtils.closeQuietly(connection);
@@ -133,11 +131,11 @@ public class SchemaUpdaterTest {
 
     }
 
-    private int update(Connection connection, String sql) throws SQLException {
+    private void update(Connection connection, String sql) throws SQLException {
         Statement statement = null;
         try {
             statement = connection.createStatement();
-            return statement.executeUpdate(sql);
+            statement.executeUpdate(sql);
         } finally {
             DbUtils.closeQuietly(statement);
         }
@@ -151,7 +149,7 @@ public class SchemaUpdaterTest {
             ResultSet resultSet = null;
             try {
                 resultSet = statement.executeQuery(sql);
-                List<Object[]> result = new ArrayList<Object[]>();
+                List<Object[]> result = new ArrayList<>();
                 while (resultSet.next()) {
                     List<Object> row = new ArrayList<Object>();
                     for (int i = 0; i < resultSet.getMetaData().getColumnCount(); i++) {

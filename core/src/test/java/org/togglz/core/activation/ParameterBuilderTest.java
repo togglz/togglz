@@ -1,17 +1,14 @@
 package org.togglz.core.activation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ParameterBuilderTest {
+class ParameterBuilderTest {
 
     @Test
-    public void testMinimalParameter() {
-
+    void testMinimalParameter() {
         Parameter param = ParameterBuilder.create("uniqueId");
 
         assertEquals(param.getName(), "uniqueId");
@@ -20,12 +17,10 @@ public class ParameterBuilderTest {
         assertFalse(param.isOptional());
         assertFalse(param.isLargeText());
         assertNull(param.getDescription());
-
     }
 
     @Test
-    public void testParameterWithCustomName() {
-
+    void testParameterWithCustomName() {
         Parameter param = ParameterBuilder.create("uniqueId").label("My Parameter");
 
         assertEquals(param.getName(), "uniqueId");
@@ -34,12 +29,10 @@ public class ParameterBuilderTest {
         assertFalse(param.isOptional());
         assertFalse(param.isLargeText());
         assertNull(param.getDescription());
-
     }
 
     @Test
-    public void testOptionalParameter() {
-
+    void testOptionalParameter() {
         Parameter param = ParameterBuilder.create("uniqueId").label("My Parameter").optional();
 
         assertEquals(param.getName(), "uniqueId");
@@ -48,12 +41,10 @@ public class ParameterBuilderTest {
         assertTrue(param.isOptional());
         assertFalse(param.isLargeText());
         assertNull(param.getDescription());
-
     }
 
     @Test
-    public void testLargeTextParameter() {
-
+    void testLargeTextParameter() {
         Parameter param = ParameterBuilder.create("uniqueId").label("My Parameter").largeText();
 
         assertEquals(param.getName(), "uniqueId");
@@ -62,12 +53,10 @@ public class ParameterBuilderTest {
         assertFalse(param.isOptional());
         assertTrue(param.isLargeText());
         assertNull(param.getDescription());
-
     }
 
     @Test
-    public void testParameterWithDescription() {
-
+    void testParameterWithDescription() {
         Parameter param = ParameterBuilder.create("uniqueId").label("My Parameter").description("Some text");
 
         assertEquals(param.getName(), "uniqueId");
@@ -76,12 +65,10 @@ public class ParameterBuilderTest {
         assertFalse(param.isOptional());
         assertFalse(param.isLargeText());
         assertEquals(param.getDescription(), "Some text");
-
     }
 
     @Test
-    public void testParameterWithRegularExpression() {
-
+    void testParameterWithRegularExpression() {
         Parameter param = ParameterBuilder.create("uniqueId").matching("[a-z]+");
 
         assertEquals(param.getName(), "uniqueId");
@@ -92,7 +79,5 @@ public class ParameterBuilderTest {
 
         assertTrue(param.isValid("lowercase"));
         assertFalse(param.isValid("UPPERCASE"));
-
     }
-
 }

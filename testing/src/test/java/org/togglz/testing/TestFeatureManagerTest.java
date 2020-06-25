@@ -1,11 +1,11 @@
 package org.togglz.testing;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.util.NamedFeature;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestFeatureManagerTest {
 

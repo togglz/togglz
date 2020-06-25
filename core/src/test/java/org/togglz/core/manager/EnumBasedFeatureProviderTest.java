@@ -1,56 +1,57 @@
 package org.togglz.core.manager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.InfoLink;
 import org.togglz.core.annotation.Label;
 import org.togglz.core.annotation.Owner;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
+import org.togglz.core.util.Strings;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Arrays;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EnumBasedFeatureProviderTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailForNull() {
-        new EnumBasedFeatureProvider(null);
+        assertThrows(IllegalArgumentException.class, () -> new EnumBasedFeatureProvider(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailForArrayWithNull() {
-        new EnumBasedFeatureProvider(ValidFeatureEnum.class, null);
+        assertThrows(IllegalArgumentException.class, () -> new EnumBasedFeatureProvider(ValidFeatureEnum.class, null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFailForNonEnumType() {
-        new EnumBasedFeatureProvider(NotAnEnum.class);
+        assertThrows(IllegalArgumentException.class, () -> new EnumBasedFeatureProvider(NotAnEnum.class));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldFailForDuplicateFeatureName() {
-
         EnumBasedFeatureProvider provider = new EnumBasedFeatureProvider();
         provider.addFeatureEnum(ValidFeatureEnum.class);
-        provider.addFeatureEnum(DuplicateNameFeatureEnum.class); // should throw IllegalStateException
+        assertThrows(IllegalStateException.class, () -> provider.addFeatureEnum(DuplicateNameFeatureEnum.class));
     }
 
     @Test
     public void shouldReturnCorrectListOfFeaturesForEnum() {
-
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
-        assertThat(provider.getFeatures())
-                .containsSequence(ValidFeatureEnum.FEATURE1, ValidFeatureEnum.FEATURE2);
-
+        assertEquals(provider.getFeatures().toArray()[0], ValidFeatureEnum.FEATURE1);
+        assertEquals(provider.getFeatures().toArray()[1], ValidFeatureEnum.FEATURE2);
     }
 
     @Test
     public void shouldReturnMetaDataWithCorrectLabel() {
-
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
-        assertThat(metaData.getLabel()).isEqualTo("First feature");
 
+        assertEquals("First feature", metaData.getLabel());
     }
 
     @Test
@@ -59,40 +60,39 @@ public class EnumBasedFeatureProviderTest {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData =
                 provider.getMetaData(new OtherFeatureImpl(ValidFeatureEnum.FEATURE1.name()));
-        assertThat(metaData.getLabel()).isEqualTo("First feature");
-
+        assertEquals("First feature", metaData.getLabel());
     }
 
     @Test
     public void shouldReturnOwnerNameIfAnnotationPresent() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_OWNER);
-        assertThat(metaData.getAttributes())
-                .containsValue("Christian");
+
+        assertTrue(metaData.getAttributes().containsValue("Christian"));
     }
 
     @Test
     public void shouldReturnNullForOwnerNameByDefault() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
-        assertThat(metaData.getAttributes())
-                .doesNotContainValue("Christian");
+
+        assertFalse(metaData.getAttributes().containsValue("Christian"));
     }
 
     @Test
     public void shouldReturnInfoLinkIfAnnotationPresent() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_LINK);
-        assertThat(metaData.getAttributes())
-                .containsValue("https://github.com/togglz/togglz/pull/33");
+
+        assertTrue(metaData.getAttributes().containsValue("https://github.com/togglz/togglz/pull/33"));
     }
 
     @Test
     public void shouldReturnNullForInfoLinkByDefault() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
-        assertThat(metaData.getAttributes())
-                .doesNotContainValue("https://github.com/togglz/togglz/pull/33");
+
+        assertFalse(metaData.getAttributes().containsValue("https://github.com/togglz/togglz/pull/33"));
     }
 
     @Test
@@ -103,11 +103,9 @@ public class EnumBasedFeatureProviderTest {
                 .addFeatureEnum(OtherFeatureEnum.class);
 
         // all feature are in the list
-        assertThat(provider.getFeatures())
-                .hasSize(ValidFeatureEnum.values().length + OtherFeatureEnum.values().length)
-                .contains(ValidFeatureEnum.FEATURE1)
-                .contains(OtherFeatureEnum.ADDITIONAL_FEATURE);
-
+        assertEquals(ValidFeatureEnum.values().length + OtherFeatureEnum.values().length, provider.getFeatures().size());
+        assertTrue(provider.getFeatures().contains(ValidFeatureEnum.FEATURE1));
+        assertTrue(provider.getFeatures().contains(OtherFeatureEnum.ADDITIONAL_FEATURE));
     }
 
     @Test
@@ -117,11 +115,8 @@ public class EnumBasedFeatureProviderTest {
                 .addFeatureEnum(ValidFeatureEnum.class)
                 .addFeatureEnum(OtherFeatureEnum.class);
 
-        assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel())
-                .isEqualTo("First feature");
-        assertThat(provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel())
-                .isEqualTo("Additional Feature");
-
+        assertEquals("First feature", provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel());
+        assertEquals("Additional Feature", provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel());
     }
 
     @Test
@@ -130,23 +125,17 @@ public class EnumBasedFeatureProviderTest {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
 
         // all feature are in the list
-        assertThat(provider.getFeatures())
-                .hasSize(ValidFeatureEnum.values().length + OtherFeatureEnum.values().length)
-                .contains(ValidFeatureEnum.FEATURE1)
-                .contains(OtherFeatureEnum.ADDITIONAL_FEATURE);
-
+        assertEquals(ValidFeatureEnum.values().length + OtherFeatureEnum.values().length, provider.getFeatures().size());
+        assertTrue(provider.getFeatures().contains(ValidFeatureEnum.FEATURE1));
+        assertTrue(provider.getFeatures().contains(OtherFeatureEnum.ADDITIONAL_FEATURE));
     }
 
     @Test
     public void shouldBuildMetadataForMultipleEnumsViaConstructor() {
-
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
 
-        assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel())
-                .isEqualTo("First feature");
-        assertThat(provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel())
-                .isEqualTo("Additional Feature");
-
+        assertEquals("First feature", provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel());
+        assertEquals("Additional Feature", provider.getMetaData(OtherFeatureEnum.ADDITIONAL_FEATURE).getLabel());
     }
 
     @Test
@@ -154,22 +143,24 @@ public class EnumBasedFeatureProviderTest {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
 
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
-        assertThat(metaData.getDefaultFeatureState().isEnabled()).isEqualTo(false);
+        assertFalse(metaData.getDefaultFeatureState().isEnabled());
         metaData.getDefaultFeatureState().setEnabled(true);
 
-        assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getDefaultFeatureState().isEnabled()).isEqualTo(false);
+        assertFalse(provider.getMetaData(ValidFeatureEnum.FEATURE1).getDefaultFeatureState().isEnabled());
     }
 
     @Test
     public void providerShouldNotEagerlyCreateFeaturesSet() {
         FeatureProvider provider = new EnumBasedFeatureProvider();
-        assertThat(provider.getFeatures()).isEmpty();
+        assertEquals(0, provider.getFeatures().size());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void providerShouldThrowIllegalStateExceptionIfGetMetaDataIsCalledonEmptyProviderInstance() {
         FeatureProvider provider = new EnumBasedFeatureProvider();
-        assertThat(provider.getMetaData(ValidFeatureEnum.FEATURE1).getDefaultFeatureState().isEnabled()).isEqualTo(false);
+        assertThrows(IllegalStateException.class, () -> {
+            provider.getMetaData(ValidFeatureEnum.FEATURE1).getDefaultFeatureState().isEnabled();
+        });
     }
     private static class NotAnEnum implements Feature {
 
@@ -203,13 +194,11 @@ public class EnumBasedFeatureProviderTest {
     }
 
     public enum DuplicateNameFeatureEnum implements Feature {
-
         @Label("Duplicate feature name")
         FEATURE1
-
     }
 
-    private class OtherFeatureImpl implements Feature {
+    private static class OtherFeatureImpl implements Feature {
 
         private final String name;
 
@@ -221,7 +210,5 @@ public class EnumBasedFeatureProviderTest {
         public String name() {
             return name;
         }
-
     }
-
 }

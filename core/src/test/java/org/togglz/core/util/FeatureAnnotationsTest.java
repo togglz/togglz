@@ -1,24 +1,17 @@
 package org.togglz.core.util;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
-import static junit.framework.Assert.assertEquals;
-
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Set;
-import org.junit.Test;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
 import org.togglz.core.annotation.FeatureGroup;
 import org.togglz.core.annotation.Label;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+
+import java.lang.annotation.*;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FeatureAnnotationsTest {
 
@@ -40,38 +33,31 @@ public class FeatureAnnotationsTest {
 
         @EnabledByDefault
         FEATURE_ENABLED_BY_DEFAULT;
-
     }
 
-    private static enum MyFeature2 implements Feature {
-
+    private enum MyFeature2 implements Feature {
         FEATURE_WITH_NO_ANNOTATIONS
-
     }
 
     @Test
-    public void testGetLabel() {
-
+    void testGetLabel() {
         assertEquals("Some feature with a label", FeatureAnnotations.getLabel(MyFeature.FEATURE_WITH_LABEL));
         assertEquals("FEATURE_WITHOUT_LABEL", FeatureAnnotations.getLabel(MyFeature.FEATURE_WITHOUT_LABEL));
-
     }
 
     @Test
-    public void testIsEnabledByDefault() {
-
-        assertEquals(false, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITH_LABEL));
-        assertEquals(false, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITHOUT_LABEL));
-        assertEquals(true, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_ENABLED_BY_DEFAULT));
-
+    void testIsEnabledByDefault() {
+        assertFalse(FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITH_LABEL));
+        assertFalse(FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITHOUT_LABEL));
+        assertTrue(FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_ENABLED_BY_DEFAULT));
     }
 
     @Test
-    public void getAnnotationsWillReturnBothFieldAndClassLevelAnnotations() throws Exception {
+    void getAnnotationsWillReturnBothFieldAndClassLevelAnnotations() {
         Set<Annotation> result = FeatureAnnotations.getAnnotations(MyFeature.FEATURE_ENABLED_BY_DEFAULT);
 
-        assertThat(result, notNullValue());
-        assertThat(result.size(), is(2));
+        assertNotNull(result);
+        assertEquals(2, result.size());
 
         // verify both EnabledByDefault and ClassLevelGroup are there
         Iterables.find(result, createAnnotationTypePredicate(EnabledByDefault.class));
@@ -79,37 +65,32 @@ public class FeatureAnnotationsTest {
     }
 
     @Test
-    public void getAnnotationsWillReturnEmptySetWhenThereAreNoAnnotations() throws Exception {
+    void getAnnotationsWillReturnEmptySetWhenThereAreNoAnnotations() {
         Set<Annotation> result = FeatureAnnotations.getAnnotations(MyFeature2.FEATURE_WITH_NO_ANNOTATIONS);
 
-        assertThat(result, notNullValue());
-        assertThat(result.size(), is(0));
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
 
     private Predicate<Annotation> createAnnotationTypePredicate(final Class<? extends Annotation> annotationType) {
-        return new Predicate<Annotation>() {
-            @Override
-            public boolean apply(Annotation annotation) {
-                return annotation.annotationType().equals(annotationType);
-            }
-        };
+        return annotation -> annotation.annotationType().equals(annotationType);
     }
 
     @Test
-    public void getAnnotationWillReturnFieldLevelAnnotation() throws Exception {
+    void getAnnotationWillReturnFieldLevelAnnotation() {
         EnabledByDefault result = FeatureAnnotations.getAnnotation(MyFeature.FEATURE_ENABLED_BY_DEFAULT, EnabledByDefault.class);
-        assertThat(result, notNullValue());
+        assertNotNull(result);
     }
 
     @Test
-    public void getAnnotationWillReturnClassLevelAnnotation() throws Exception {
+    void getAnnotationWillReturnClassLevelAnnotation() {
         ClassLevelGroup result = FeatureAnnotations.getAnnotation(MyFeature.FEATURE_ENABLED_BY_DEFAULT, ClassLevelGroup.class);
-        assertThat(result, notNullValue());
+        assertNotNull(result);
     }
 
     @Test
-    public void getAnnotationWillReturnNullWhenAnnotationDoesNotExist() throws Exception {
+    void getAnnotationWillReturnNullWhenAnnotationDoesNotExist() {
         Label result = FeatureAnnotations.getAnnotation(MyFeature.FEATURE_ENABLED_BY_DEFAULT, Label.class);
-        assertThat(result, nullValue());
+        assertNull(result);
     }
 }

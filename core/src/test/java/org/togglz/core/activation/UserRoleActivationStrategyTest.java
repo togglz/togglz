@@ -1,31 +1,26 @@
 package org.togglz.core.activation;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.togglz.core.activation.UserRoleActivationStrategy.ID;
-import static org.togglz.core.activation.UserRoleActivationStrategy.NAME;
-import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_DESC;
-import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_LABEL;
-import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_NAME;
-import static org.togglz.core.activation.UserRoleActivationStrategy.USER_ATTRIBUTE_ROLES;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.user.FeatureUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.togglz.core.repository.FeatureState;
-import org.togglz.core.user.FeatureUser;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+import static org.togglz.core.activation.UserRoleActivationStrategy.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UserRoleActivationStrategyTest {
+@ExtendWith(MockitoExtension.class)
+class UserRoleActivationStrategyTest {
 
     @InjectMocks
     private UserRoleActivationStrategy activationStrategy;
@@ -38,103 +33,102 @@ public class UserRoleActivationStrategyTest {
 
     private Set<String> userRoles;
 
-    @Before
-    public void setUp() throws Exception {
-        userRoles = new HashSet<String>();
+    @BeforeEach
+    public void setUp() {
+        userRoles = new HashSet<>();
     }
 
     @Test
-    public void getIdWillReturnConstant() throws Exception {
-        assertThat(activationStrategy.getId(), is(ID));
+    void getIdWillReturnConstant() {
+        assertEquals(ID, activationStrategy.getId());
     }
 
     @Test
-    public void getNameWillReturnConstant() throws Exception {
-        assertThat(activationStrategy.getName(), is(NAME));
+    void getNameWillReturnConstant() {
+        assertEquals(NAME, activationStrategy.getName());
     }
 
     @Test
-    public void getParametersWillReturnRoles() throws Exception {
+    void getParametersWillReturnRoles() {
         Parameter[] result = activationStrategy.getParameters();
 
-        assertThat(result.length, is(1));
+        assertEquals(1, result.length);
 
         Parameter param = result[0];
-        assertThat(param.getName(), is(PARAM_ROLES_NAME));
-        assertThat(param.getDescription(), is(PARAM_ROLES_DESC));
-        assertThat(param.getLabel(), is(PARAM_ROLES_LABEL));
-        assertThat(param.isLargeText(), is(true));
+        assertEquals(PARAM_ROLES_NAME, param.getName());
+        assertEquals(PARAM_ROLES_DESC, param.getDescription());
+        assertEquals(PARAM_ROLES_LABEL, param.getLabel());
+        assertTrue(param.isLargeText());
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenThereIsNoUser() throws Exception {
+    void isActiveWillReturnFalseWhenThereIsNoUser() {
         boolean result = activationStrategy.isActive(state, null);
 
-        assertThat(result, is(false));
+        assertFalse(result);
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenThereIsNoRolesAttribute() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(null);
+    void isActiveWillReturnFalseWhenThereIsNoRolesAttribute() {
+        when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(null);
 
         boolean result = activationStrategy.isActive(state, user);
 
-        assertThat(result, is(false));
+        assertFalse(result);
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenThereIsNoRolesParam() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
-        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn(null);
+    void isActiveWillReturnFalseWhenThereIsNoRolesParam() {
+        when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
+        when(state.getParameter(PARAM_ROLES_NAME)).thenReturn(null);
 
         boolean result = activationStrategy.isActive(state, user);
 
-        assertThat(result, is(false));
+        assertFalse(result);
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenRolesParamIsBlank() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
-        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("   ");
+    void isActiveWillReturnFalseWhenRolesParamIsBlank() {
+        when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
+        when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("   ");
 
         boolean result = activationStrategy.isActive(state, user);
 
-        assertThat(result, is(false));
+        assertFalse(result);
     }
 
     @Test
-    public void isActiveWillReturnFalseWhenUserHasNoneOfSelectedRoles() throws Exception {
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
-        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
+    void isActiveWillReturnFalseWhenUserHasNoneOfSelectedRoles() {
+        when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
+        when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
         boolean result = activationStrategy.isActive(state, user);
 
-        assertThat(result, is(false));
+        assertFalse(result);
     }
 
     @Test
-    public void isActiveWillReturnTrueWhenUserHasAnyOfSelectedRoles() throws Exception {
+    void isActiveWillReturnTrueWhenUserHasAnyOfSelectedRoles() {
         userRoles.add("ROLE_2");
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
-        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
+        when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
+        when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("ROLE_1, ROLE_2, ROLE_3");
 
         boolean result = activationStrategy.isActive(state, user);
 
-        assertThat(result, is(true));
+        assertTrue(result);
     }
 
     @Test
-    public void doesntFailForOtherCollectionTypes() {
-
+    void doesntFailForOtherCollectionTypes() {
         Collection<String> userRoles = new ArrayList<String>();
         userRoles.add("SOME_ROLE");
 
-        Mockito.when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
-        Mockito.when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("SOME_ROLE");
+        when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);
+        when(state.getParameter(PARAM_ROLES_NAME)).thenReturn("SOME_ROLE");
 
         boolean result = activationStrategy.isActive(state, user);
 
-        assertThat(result, is(true));
+        assertTrue(result);
 
     }
 }
