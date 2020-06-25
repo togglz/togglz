@@ -1,20 +1,19 @@
 package org.togglz.core.logging;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
-@RunWith(MockitoJUnitRunner.class)
-public class LoggingStateRepositoryTest {
+@ExtendWith(MockitoExtension.class)
+class LoggingStateRepositoryTest {
 
     @Mock
     private Log log;
@@ -23,7 +22,7 @@ public class LoggingStateRepositoryTest {
     private StateRepository delegate;
 
     @Test
-    public void shouldDelegateGetFeatureState() throws Exception {
+    void shouldDelegateGetFeatureState() {
         // GIVEN
         LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate);
         when(delegate.getFeatureState(DummyFeature.TEST)).thenReturn(new FeatureState(DummyFeature.TEST, true));
@@ -32,11 +31,11 @@ public class LoggingStateRepositoryTest {
         FeatureState featureState = loggingStateRepository.getFeatureState(DummyFeature.TEST);
 
         // THEN
-        assertThat(featureState.getFeature().name(), equalTo(DummyFeature.TEST.name()));
+        assertEquals(DummyFeature.TEST.name(), featureState.getFeature().name());
     }
 
     @Test
-    public void shouldDelegateSetFeatureStateAndLog() {
+    void shouldDelegateSetFeatureStateAndLog() {
         // GIVEN
         LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate, log);
 
@@ -48,7 +47,7 @@ public class LoggingStateRepositoryTest {
     }
 
     @Test
-    public void shouldDelegateSetFeatureStateAndLogCustomLogMessage() {
+    void shouldDelegateSetFeatureStateAndLogCustomLogMessage() {
         // GIVEN
         LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate, "Feature \"{1}\": \"{2}\"", log);
 
@@ -60,7 +59,7 @@ public class LoggingStateRepositoryTest {
     }
 
     @Test
-    public void shouldDelegateSetFeatureStateAndLogCustomLogMessageWithoutPlaceholders() {
+    void shouldDelegateSetFeatureStateAndLogCustomLogMessageWithoutPlaceholders() {
         // GIVEN
         LoggingStateRepository loggingStateRepository = new LoggingStateRepository(delegate, "Feature toggled", log);
         new LoggingStateRepository(delegate, "Feature toggled");

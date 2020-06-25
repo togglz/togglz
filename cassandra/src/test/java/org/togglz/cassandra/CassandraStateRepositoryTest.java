@@ -1,7 +1,6 @@
 package org.togglz.cassandra;
 
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -11,6 +10,7 @@ import org.cassandraunit.dataset.DataSet;
 import org.cassandraunit.dataset.yaml.ClassPathYamlDataSet;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.togglz.core.Feature;
@@ -63,7 +63,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 
         final FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
 
-        assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
+        Assert.assertTrue(reflectionEquals(savedFeatureState, loadedFeatureState));
     }
 
     @Test
@@ -72,11 +72,11 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
         stateRepository.setFeatureState(savedFeatureState);
 
         FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(loadedFeatureState.isEnabled(), is(true));
+        Assert.assertTrue(loadedFeatureState.isEnabled());
 
         stateRepository.setFeatureState(savedFeatureState.disable());
         loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-        assertThat(loadedFeatureState.isEnabled(), is(false));
+        Assert.assertFalse(loadedFeatureState.isEnabled());
     }
 
     @Test
@@ -102,14 +102,14 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
 		stateRepository.setFeatureState(savedFeatureState);
 
 		FeatureState loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
-		assertThat(reflectionEquals(savedFeatureState, loadedFeatureState), is(true));
+		Assert.assertTrue(reflectionEquals(savedFeatureState, loadedFeatureState));
 
 		// save same feature, but without activation strategy. should remove an existing one
 		final FeatureState featureStateWithoutStrategy = new FeatureState(TestFeature.FEATURE);
 		stateRepository.setFeatureState(featureStateWithoutStrategy);
 		loadedFeatureState = stateRepository.getFeatureState(TestFeature.FEATURE);
 
-		assertThat(reflectionEquals(featureStateWithoutStrategy, loadedFeatureState), is(true));
+		Assert.assertTrue(reflectionEquals(featureStateWithoutStrategy, loadedFeatureState));
 	}
 
     private enum TestFeature implements Feature {

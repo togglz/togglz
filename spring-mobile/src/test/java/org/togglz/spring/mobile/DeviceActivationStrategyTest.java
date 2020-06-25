@@ -1,7 +1,7 @@
 package org.togglz.spring.mobile;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.mobile.device.Device;
 import org.springframework.mobile.device.DeviceType;
 import org.togglz.core.Feature;
@@ -87,7 +87,7 @@ public class DeviceActivationStrategyTest {
     }
 
     @Test
-    public void shouldBeInactiveForEmptyParams() throws Exception {
+    public void shouldBeInactiveForEmptyParams() {
         String[] emptyArguments = new String[]{"", "", ""};
         assertThat(requestFrom(NORMAL)).isInactiveWithParams(emptyArguments);
         cleanup();
@@ -98,7 +98,7 @@ public class DeviceActivationStrategyTest {
     }
 
     @Test
-    public void shouldBeActiveForDesktop() throws Exception {
+    public void shouldBeActiveForDesktop() {
         String[] desktopOn = new String[]{"YES", "NO", "NO"};
         assertThat(requestFrom(NORMAL)).isActiveWithParams(desktopOn);
         cleanup();
@@ -109,7 +109,7 @@ public class DeviceActivationStrategyTest {
     }
 
     @Test
-    public void shouldBeActiveForTablet() throws Exception {
+    public void shouldBeActiveForTablet() {
         String[] tabletOn = new String[]{"NO", "YES", "NO"};
         assertThat(requestFrom(NORMAL)).isInactiveWithParams(tabletOn);
         cleanup();
@@ -131,7 +131,7 @@ public class DeviceActivationStrategyTest {
     }
 
     @Test
-    public void shouldBeAccurateForLowerCaseParams() throws Exception {
+    public void shouldBeAccurateForLowerCaseParams() {
         String[] desktopOn = new String[]{"yes", "no", "yes"};
         assertThat(requestFrom(NORMAL)).isActiveWithParams(desktopOn);
         cleanup();

@@ -1,23 +1,20 @@
 package org.togglz.core.activation;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 
-public class UsernameActivationStrategyTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class UsernameActivationStrategyTest {
 
     private final UsernameActivationStrategy strategy = new UsernameActivationStrategy();
 
     @Test
-    public void shouldReturnFalseForEmptyUserlist() {
-
+    void shouldReturnFalseForEmptyUserlist() {
         FeatureUser user = new SimpleFeatureUser("ck", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE)
             .enable()
@@ -25,13 +22,12 @@ public class UsernameActivationStrategyTest {
 
         boolean active = strategy.isActive(state, user);
 
-        assertEquals(false, active);
+        assertFalse(active);
 
     }
 
     @Test
-    public void shouldReturnFalseForUnknownUser() {
-
+    void shouldReturnFalseForUnknownUser() {
         FeatureUser user = null;
         FeatureState state = new FeatureState(MyFeature.FEATURE)
             .enable()
@@ -40,13 +36,11 @@ public class UsernameActivationStrategyTest {
 
         boolean active = strategy.isActive(state, user);
 
-        assertEquals(false, active);
-
+        assertFalse(active);
     }
 
     @Test
-    public void shouldReturnFalseForDifferentUser() {
-
+    void shouldReturnFalseForDifferentUser() {
         FeatureUser user = new SimpleFeatureUser("john", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE)
             .enable()
@@ -55,13 +49,12 @@ public class UsernameActivationStrategyTest {
 
         boolean active = strategy.isActive(state, user);
 
-        assertEquals(false, active);
+        assertFalse(active);
 
     }
 
     @Test
-    public void shouldReturnTrueForCorrectUser() {
-
+    void shouldReturnTrueForCorrectUser() {
         FeatureUser user = new SimpleFeatureUser("ck", false);
         FeatureState state = new FeatureState(MyFeature.FEATURE)
             .enable()
@@ -70,27 +63,24 @@ public class UsernameActivationStrategyTest {
 
         boolean active = strategy.isActive(state, user);
 
-        assertEquals(true, active);
+        assertTrue(active);
 
     }
 
     @Test
-    public void shouldReturnCorrectParameterList() {
-
+    void shouldReturnCorrectParameterList() {
         Parameter[] parameters = strategy.getParameters();
 
-        assertThat(parameters, notNullValue());
-        assertThat(parameters.length, is(1));
+        assertNotNull(parameters);
+        assertEquals(1, parameters.length);
 
         Parameter userParam = parameters[0];
 
-        assertThat(userParam, notNullValue());
-        assertThat(userParam.getName(), is(UsernameActivationStrategy.PARAM_USERS));
-
+        assertNotNull(userParam);
+        assertEquals(UsernameActivationStrategy.PARAM_USERS, userParam.getName());
     }
 
     private enum MyFeature implements Feature {
         FEATURE;
     }
-
 }

@@ -1,52 +1,52 @@
 package org.togglz.core.repository.mem;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.sql.SQLException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
-public class InMemoryStateRepositoryTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class InMemoryStateRepositoryTest {
 
     private InMemoryStateRepository repository;
 
-    @Before
-    public void before() throws SQLException {
+    @BeforeEach
+    void before() throws SQLException {
         repository = new InMemoryStateRepository();
     }
 
     @Test
-    public void testGetFeatureStateNotSameAsSetFeatureState() {
+    void testGetFeatureStateNotSameAsSetFeatureState() {
         FeatureState featureState = createDisabledFeatureState();
         repository.setFeatureState(featureState);
         FeatureState featureStateFromRepo = repository.getFeatureState(MyFeature.FEATURE1);
-        assertThat(featureStateFromRepo).isNotSameAs(featureState);
+        assertNotEquals(featureState, featureStateFromRepo);
     }
 
     @Test
-    public void testGetFeatureStateChangeNotAffectsInternalRepositoryState() {
+    void testGetFeatureStateChangeNotAffectsInternalRepositoryState() {
         repository.setFeatureState(createDisabledFeatureState());
         FeatureState featureStateFromRepo = repository.getFeatureState(MyFeature.FEATURE1);
-        assertThat(featureStateFromRepo.isEnabled()).isFalse();
+        assertFalse(featureStateFromRepo.isEnabled());
         // change feature state but not "persist" it (we don't call repository.setFeatureState)
         featureStateFromRepo.setEnabled(true);
         // obtain persisted feature again
         featureStateFromRepo = repository.getFeatureState(MyFeature.FEATURE1);
-        assertThat(featureStateFromRepo.isEnabled()).isFalse();
+        assertFalse(featureStateFromRepo.isEnabled());
     }
 
     @Test
-    public void testSetFeatureStateChangeNotAffectsInternalRepositoryState() {
+    void testSetFeatureStateChangeNotAffectsInternalRepositoryState() {
         FeatureState featureState = createDisabledFeatureState();
         repository.setFeatureState(featureState);
         // change feature state after "persisting" it
         featureState.setEnabled(true);
         // obtain persisted feature
         FeatureState featureStateFromRepo = repository.getFeatureState(MyFeature.FEATURE1);
-        assertThat(featureStateFromRepo.isEnabled()).isFalse();
+        assertFalse(featureStateFromRepo.isEnabled());
     }
 
     protected FeatureState createDisabledFeatureState() {
@@ -55,7 +55,7 @@ public class InMemoryStateRepositoryTest {
         return featureState;
     }
 
-    private static enum MyFeature implements Feature {
+    private enum MyFeature implements Feature {
         FEATURE1,
         FEATURE2
     }

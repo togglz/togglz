@@ -1,16 +1,19 @@
 package org.togglz.appengine.user;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.user.FeatureUser;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Unit tests for {@link UserServiceUserProvider}.
@@ -23,13 +26,13 @@ public class UserServiceUserProviderTest {
     private UserServiceUserProvider userProvider;
     private UserService userService = UserServiceFactory.getUserService();
 
-    @Before
+    @BeforeEach
     public void setup() {
         helper.setUp();
         userProvider = new UserServiceUserProvider(userService);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         helper.tearDown();
     }

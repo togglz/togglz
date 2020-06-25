@@ -4,20 +4,20 @@ import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class HazelcastStateRepositoryTest {
+class HazelcastStateRepositoryTest {
 
-	private StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
+	private final StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
 
 	@Test
-	public void testSetFeatureStateNotExisitingInMap() {
+	void testSetFeatureStateNotExisitingInMap() {
 		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
@@ -28,7 +28,7 @@ public class HazelcastStateRepositoryTest {
 	}
 
 	@Test
-	public void testSetFeatureStateExistingInMap() {
+	void testSetFeatureStateExistingInMap() {
 		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
@@ -46,7 +46,7 @@ public class HazelcastStateRepositoryTest {
 	}
 
 	@Test
-	public void onlyConfigSetBuildsSuccessfully() {
+	void onlyConfigSetBuildsSuccessfully() {
 		HazelcastStateRepository stateRepository = HazelcastStateRepository.newBuilder()
 				.config(new Config())
 				.build();
@@ -55,7 +55,7 @@ public class HazelcastStateRepositoryTest {
 	}
 
 	@Test
-	public void onlyClientConfigSetBuildsSuccessfully() {
+	void onlyClientConfigSetBuildsSuccessfully() {
 		HazelcastStateRepository stateRepository = HazelcastStateRepository.newBuilder()
 				.clientConfig(new ClientConfig())
 				.build();
@@ -64,7 +64,7 @@ public class HazelcastStateRepositoryTest {
 	}
 
 	@Test
-	public void onlyHazelcastInstanceSetBuildsSuccessfully() {
+	void onlyHazelcastInstanceSetBuildsSuccessfully() {
 		HazelcastStateRepository stateRepository = HazelcastStateRepository.newBuilder()
 				.hazelcastInstance(Hazelcast.newHazelcastInstance())
 				.build();
@@ -72,11 +72,13 @@ public class HazelcastStateRepositoryTest {
 		assertNotNull(stateRepository);
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void multipleConfiguredPiecesThrowsIllegalStateException() {
-		HazelcastStateRepository.newBuilder()
-				.clientConfig(new ClientConfig())
-				.config(new Config())
-				.build();
+	@Test
+	void multipleConfiguredPiecesThrowsIllegalStateException() {
+		assertThrows(IllegalStateException.class, () -> {
+			HazelcastStateRepository.newBuilder()
+					.clientConfig(new ClientConfig())
+					.config(new Config())
+					.build();
+		});
 	}
 }

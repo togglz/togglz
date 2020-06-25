@@ -1,11 +1,10 @@
 package org.togglz.core.manager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
 import org.togglz.core.activation.DefaultActivationStrategyProvider;
@@ -13,6 +12,9 @@ import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FeatureManagerBuilderTest {
 
@@ -33,17 +35,17 @@ public class FeatureManagerBuilderTest {
 
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldFailIfAddingStrategyWithCustomProvider() {
 
         CustomStrategyProvider provider = new CustomStrategyProvider();
-
-        FeatureManagerBuilder.begin()
-            .featureEnum(Features.class)
-            .activationStrategyProvider(provider)
-            .activationStrategy(new CustomActivationStrategy())
-            .build();
-
+        assertThrows(IllegalStateException.class, () -> {
+            FeatureManagerBuilder.begin()
+                    .featureEnum(Features.class)
+                    .activationStrategyProvider(provider)
+                    .activationStrategy(new CustomActivationStrategy())
+                    .build();
+        });
     }
 
     private enum Features implements Feature {

@@ -2,16 +2,14 @@ package org.togglz.dynamodb;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Ryan Gardner
@@ -22,13 +20,15 @@ public class DynamoDBStateRepositoryIT {
 
     private static final Logger log = LoggerFactory.getLogger(DynamoDBStateRepositoryIT.class);
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void builderFailsIfTableDoesntExist() {
         log.debug("PORT is {}", PORT);
 
         AmazonDynamoDBClient client = setupAmazonDbClient();
 
-        new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).build();
+        assertThrows(RuntimeException.class, () -> {
+            new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).build();
+        });
     }
 
     @Test
@@ -52,18 +52,18 @@ public class DynamoDBStateRepositoryIT {
         AmazonDynamoDBClient client = setupAmazonDbClient();
         DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
 
-        assertThat(repository.getFeatureState(TestFeature.FEATURE), is(nullValue()));
+        assertNull(repository.getFeatureState(TestFeature.FEATURE));
 
         FeatureState disabledState = new FeatureState(TestFeature.FEATURE).disable();
         repository.setFeatureState(disabledState);
-        assertThat(repository.getFeatureState(TestFeature.FEATURE).isEnabled(), is(false));
+        assertFalse(repository.getFeatureState(TestFeature.FEATURE).isEnabled());
 
         FeatureState enabledState = new FeatureState(TestFeature.FEATURE).enable();
         repository.setFeatureState(enabledState);
-        assertThat(repository.getFeatureState(TestFeature.FEATURE).isEnabled(), is(true));
+        assertTrue(repository.getFeatureState(TestFeature.FEATURE).isEnabled());
 
         repository.setFeatureState(disabledState);
-        assertThat(repository.getFeatureState(TestFeature.FEATURE).isEnabled(), is(false));
+        assertFalse(repository.getFeatureState(TestFeature.FEATURE).isEnabled());
     }
 
     @Test
@@ -72,19 +72,17 @@ public class DynamoDBStateRepositoryIT {
         AmazonDynamoDBClient client = setupAmazonDbClient();
         DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
 
-        assertThat(repository.getFeatureState(TestFeature.ANOTHER_FEATURE), is(nullValue()));
+        assertNull(repository.getFeatureState(TestFeature.ANOTHER_FEATURE));
 
         FeatureState stateWithStrategy = new FeatureState(TestFeature.ANOTHER_FEATURE).enable().setStrategyId("SomeStrategyId").setParameter("SomeParameter", "SomeValue");
         repository.setFeatureState(stateWithStrategy );
-        assertThat(repository.getFeatureState(TestFeature.ANOTHER_FEATURE).isEnabled(), is(true));
-        assertThat(repository.getFeatureState(TestFeature.ANOTHER_FEATURE).getStrategyId(), is(equalTo("SomeStrategyId")));
-        assertThat(repository.getFeatureState(TestFeature.ANOTHER_FEATURE).getParameter("SomeParameter"), is(equalTo("SomeValue")));
+        assertTrue(repository.getFeatureState(TestFeature.ANOTHER_FEATURE).isEnabled());
+        assertEquals("SomeStrategyId", repository.getFeatureState(TestFeature.ANOTHER_FEATURE).getStrategyId());
+        assertEquals("SomeValue", repository.getFeatureState(TestFeature.ANOTHER_FEATURE).getParameter("SomeParameter"));
     }
-
 
     private enum TestFeature implements Feature {
         FEATURE,
         ANOTHER_FEATURE
     }
-
 }

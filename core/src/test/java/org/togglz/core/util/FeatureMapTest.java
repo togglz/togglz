@@ -1,24 +1,20 @@
 package org.togglz.core.util;
 
-import org.junit.Test;
-import org.mockito.ArgumentMatcher;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 
 import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class FeatureMapTest {
+class FeatureMapTest {
 
     @Test
-    public void canBootstrapViaConstructor() {
+    void canBootstrapViaConstructor() {
         FeatureManager featureManager = mock(FeatureManager.class);
         Set<Feature> features = new HashSet<Feature>();
         String name1 = "Feature 1";
@@ -33,16 +29,15 @@ public class FeatureMapTest {
         when(featureManager.isActive(featureNamed(name1))).thenReturn(true);
         when(featureManager.isActive(featureNamed(name2))).thenReturn(false);
         Map<Object, Boolean> map = new FeatureMap(featureManager);
-        assertThat(map.size(), equalTo(2));
-        assertThat(map.isEmpty(), is(false));
-        assertThat(map.get(name1), equalTo(true));
-        assertThat(map.get(name2), equalTo(false));
-        assertThat(map.get("unknown"), equalTo(false));
+        assertEquals(2, map.size());
+        assertFalse(map.isEmpty());
+        assertTrue(map.get(name1));
+        assertFalse(map.get(name2));
+        assertFalse(map.get("unknown"));
     }
 
     @Test
-    public void shouldReturnCorrectSize() {
-
+    void shouldReturnCorrectSize() {
         List<Feature> features = Arrays.<Feature>asList(
             new NamedFeature("f1"),
             new NamedFeature("f2")
@@ -53,34 +48,30 @@ public class FeatureMapTest {
 
         FeatureMap map = new FeatureMap(featureManager);
 
-        assertThat(map).hasSize(2);
-
+        assertEquals(2, map.size());
     }
 
     @Test
-    public void shouldSupportLookupByFeatureName() {
+    void shouldSupportLookupByFeatureName() {
+        FeatureManager featureManager = mock(FeatureManager.class);
+        when(featureManager.isActive(featureNamed("test"))).thenReturn(true);
+
+        FeatureMap map = new FeatureMap(featureManager);
+
+        assertEquals(true, map.get("test"));
+        assertEquals(false, map.get("other"));
+    }
+
+    @Test
+    void shouldSupportLookupByFeatureInstance() {
 
         FeatureManager featureManager = mock(FeatureManager.class);
         when(featureManager.isActive(featureNamed("test"))).thenReturn(true);
 
         FeatureMap map = new FeatureMap(featureManager);
 
-        assertThat(map.get("test")).isEqualTo(true);
-        assertThat(map.get("other")).isEqualTo(false);
-
-    }
-
-    @Test
-    public void shouldSupportLookupByFeatureInstance() {
-
-        FeatureManager featureManager = mock(FeatureManager.class);
-        when(featureManager.isActive(featureNamed("test"))).thenReturn(true);
-
-        FeatureMap map = new FeatureMap(featureManager);
-
-        assertThat(map.get(new NamedFeature("test"))).isEqualTo(true);
-        assertThat(map.get(new NamedFeature("other"))).isEqualTo(false);
-
+        assertEquals(true, map.get("test"));
+        assertEquals(false, map.get("other"));
     }
 
     private Feature featureNamed(final String name) {
@@ -92,5 +83,4 @@ public class FeatureMapTest {
         });
 
     }
-
 }

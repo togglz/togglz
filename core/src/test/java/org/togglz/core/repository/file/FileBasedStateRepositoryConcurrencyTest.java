@@ -9,9 +9,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.assertj.core.data.MapEntry;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
@@ -23,7 +23,7 @@ public class FileBasedStateRepositoryConcurrencyTest {
 
     private final int NUMBER_OF_FEATURES = 100;
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
         testFile = File.createTempFile(this.getClass().getSimpleName(), "test");
         executor = Executors.newFixedThreadPool(NUMBER_OF_FEATURES);
@@ -77,8 +77,8 @@ public class FileBasedStateRepositoryConcurrencyTest {
 
     }
 
-    @After
-    public void after() throws Exception {
+    @AfterEach
+    public void after() {
         executor.shutdownNow();
         testFile.delete();
     }

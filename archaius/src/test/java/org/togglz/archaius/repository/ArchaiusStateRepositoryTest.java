@@ -1,26 +1,20 @@
 package org.togglz.archaius.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureState;
-
 import com.netflix.config.ConcurrentCompositeConfiguration;
 import com.netflix.config.ConcurrentMapConfiguration;
 import com.netflix.config.ConfigurationManager;
+import org.junit.jupiter.api.*;
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ArchaiusStateRepositoryTest {
 
     private static ConcurrentMapConfiguration mapConfiguration;
     private ArchaiusStateRepository repository;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
 
         // creates and installs a concurrent composite configuration which is needed because
@@ -32,13 +26,13 @@ public class ArchaiusStateRepositoryTest {
         ConfigurationManager.install(compositeConfiguration);
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
 
         this.repository = new ArchaiusStateRepository();
     }
 
-    @After
+    @AfterEach
     public void teardownTest() {
 
         mapConfiguration.clear();
@@ -61,8 +55,8 @@ public class ArchaiusStateRepositoryTest {
 
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(false, state.isEnabled());
-        assertEquals(null, state.getStrategyId());
+        assertFalse(state.isEnabled());
+        assertNull(state.getStrategyId());
         assertEquals(0, state.getParameterNames().size());
     }
 
@@ -78,8 +72,8 @@ public class ArchaiusStateRepositoryTest {
          */
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(true, state.isEnabled());
-        assertEquals(null, state.getStrategyId());
+        assertTrue(state.isEnabled());
+        assertNull(state.getStrategyId());
         assertEquals(0, state.getParameterNames().size());
     }
 
@@ -107,10 +101,11 @@ public class ArchaiusStateRepositoryTest {
         assertEquals("B", state.getParameter("two"));
     }
 
-    @Test(expected=UnsupportedOperationException.class)
+    @Test
     public void setState() {
-        
-        repository.setFeatureState(new FeatureState(TestFeature.F1, true));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> {
+            repository.setFeatureState(new FeatureState(TestFeature.F1, true));
+        });
     }
 
     private static void addState(String name, boolean enabled) {

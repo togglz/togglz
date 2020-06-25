@@ -18,10 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
@@ -64,7 +61,7 @@ public class SpringSecurityUserProviderTest {
         FeatureUser user = userProvider.getCurrentUser();
 
         // assert
-        assertThat(user.isFeatureAdmin(), is(true));
+        assertTrue(user.isFeatureAdmin());
     }
 
     @Test
@@ -79,7 +76,7 @@ public class SpringSecurityUserProviderTest {
         FeatureUser user = userProvider.getCurrentUser();
 
         // assert
-        assertThat(user.isFeatureAdmin(), is(false));
+        assertFalse(user.isFeatureAdmin());
     }
 
     @Test
@@ -98,11 +95,11 @@ public class SpringSecurityUserProviderTest {
         assertTrue(authoritiesAttr instanceof Set);
         Set authSet = (Set) authoritiesAttr;
 
-        assertThat(authSet, notNullValue());
+        assertNotNull(authSet);
 
         Set<String> authoritySet = (Set<String>) authSet;
-        assertThat(authoritySet.size(), is(2));
-        assertThat(authoritySet.contains("ROLE_1"), is(true));
-        assertThat(authoritySet.contains("ROLE_2"), is(true));
+        assertEquals(2, authoritySet.size());
+        assertTrue(authoritySet.contains("ROLE_1"));
+        assertTrue(authoritySet.contains("ROLE_2"));
     }
 }

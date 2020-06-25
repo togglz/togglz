@@ -1,23 +1,24 @@
 package org.togglz.core.context;
 
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.NoOpUserProvider;
 
-public class ThreadLocalFeatureManagerProviderTest {
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+class ThreadLocalFeatureManagerProviderTest {
 
     /**
      * Binds a FeatureManager to the thread before starting each test
      */
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         FeatureManager featureManager = new FeatureManagerBuilder()
                 .featureEnum(MyFeature.class)
                 .stateRepository(new InMemoryStateRepository())
@@ -29,8 +30,8 @@ public class ThreadLocalFeatureManagerProviderTest {
     /**
      * Release the FeatureManager after it
      */
-    @After
-    public void after() {
+    @AfterEach
+    void after() {
         ThreadLocalFeatureManagerProvider.release();
     }
 
@@ -38,7 +39,7 @@ public class ThreadLocalFeatureManagerProviderTest {
      * The first test requires a FeatureManager
      */
     @Test
-    public void firstTest() {
+    void firstTest() {
         FeatureManager featureManager = FeatureContext.getFeatureManager();
         assertNotNull(featureManager);
     }
@@ -47,14 +48,13 @@ public class ThreadLocalFeatureManagerProviderTest {
      * The second test also
      */
     @Test
-    public void secondTest() {
+    void secondTest() {
         FeatureManager featureManager = FeatureContext.getFeatureManager();
         assertNotNull(featureManager);
     }
 
-    private static enum MyFeature implements Feature {
+    private enum MyFeature implements Feature {
         FEATURE1,
         FEATURE2;
     }
-
 }

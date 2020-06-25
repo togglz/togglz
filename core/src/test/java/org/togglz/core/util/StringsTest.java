@@ -1,15 +1,16 @@
 package org.togglz.core.util;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class StringsTest {
+class StringsTest {
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertTrue(Strings.isEmpty(null));
         assertTrue(Strings.isEmpty(""));
         assertFalse(Strings.isEmpty("   "));
@@ -17,7 +18,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testIsNotEmpty() {
+    void testIsNotEmpty() {
         assertFalse(Strings.isNotEmpty(null));
         assertFalse(Strings.isNotEmpty(""));
         assertTrue(Strings.isNotEmpty("   "));
@@ -25,8 +26,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testSplitAndTrim() {
-
+    void testSplitAndTrim() {
         assertEquals(0, Strings.splitAndTrim(null, ",").size());
         assertEquals(0, Strings.splitAndTrim("   ", ",").size());
 
@@ -42,7 +42,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrim() {
+    void testTrim() {
         assertNull(Strings.trim(null));
         assertEquals("", Strings.trim(""));
         assertEquals("", Strings.trim("   "));
@@ -50,7 +50,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrimToNull() {
+    void testTrimToNull() {
         assertNull(Strings.trimToNull(null));
         assertNull(Strings.trimToNull(""));
         assertNull(Strings.trimToNull("   "));
@@ -58,7 +58,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testToBoolean() {
+    void testToBoolean() {
         assertNull(Strings.toBoolean(null));
         assertNull(Strings.toBoolean(""));
         assertNull(Strings.toBoolean("   "));
@@ -82,8 +82,8 @@ public class StringsTest {
         assertEquals(Boolean.FALSE, Strings.toBoolean("   0   "));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testToBooleanThrowsIfStringIsInvalid() {
-        Strings.toBoolean("foo");
+    @Test
+    void testToBooleanThrowsIfStringIsInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> Strings.toBoolean("foo"));
     }
 }

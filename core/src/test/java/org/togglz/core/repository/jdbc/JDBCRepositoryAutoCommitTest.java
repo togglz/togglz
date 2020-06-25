@@ -1,7 +1,5 @@
 package org.togglz.core.repository.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -11,26 +9,26 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.util.DefaultMapSerializer;
 
-public class JDBCRepositoryAutoCommitTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private DataSource dataSource;
+class JDBCRepositoryAutoCommitTest {
 
     private JDBCStateRepository repository;
 
     @Test
-    public void shouldUpdateWithAutoCommitEnabled() {
+    void shouldUpdateWithAutoCommitEnabled() {
         givenSomeDataSourceWithAutoCommitSetTo(true);
         whenTheFeatureIsEnabled();
         thenTheDatabaseShouldBeUpdated();
     }
 
     @Test
-    public void shouldUpdateWithAutoCommitDisabled() {
+    void shouldUpdateWithAutoCommitDisabled() {
         givenSomeDataSourceWithAutoCommitSetTo(false);
         whenTheFeatureIsEnabled();
         thenTheDatabaseShouldBeUpdated();
@@ -39,9 +37,8 @@ public class JDBCRepositoryAutoCommitTest {
     private void givenSomeDataSourceWithAutoCommitSetTo(boolean autoCommit) {
         String url = "jdbc:h2:mem:" + this.getClass().getSimpleName() + System.currentTimeMillis();
         JdbcConnectionPool pool = JdbcConnectionPool.create(url, "sa", "");
-        dataSource = new AutoCommitTestDataSource(pool, autoCommit);
-        repository = new JDBCStateRepository(dataSource, "TOGGLZ", true,
-            DefaultMapSerializer.multiline());
+        DataSource dataSource = new AutoCommitTestDataSource(pool, autoCommit);
+        repository = JDBCStateRepository.newBuilder(dataSource).tableName("TOGGLZ").createTable(true).serializer(DefaultMapSerializer.multiline()).build();
     }
 
     private void whenTheFeatureIsEnabled() {
@@ -53,13 +50,13 @@ public class JDBCRepositoryAutoCommitTest {
 
     private void thenTheDatabaseShouldBeUpdated() {
         FeatureState state = repository.getFeatureState(AutoCommitFeature.F1);
-        assertThat(state).isNotNull();
-        assertThat(state.isEnabled()).isTrue();
-        assertThat(state.getStrategyId()).isEqualTo("foobar");
+        assertNotNull(state);
+        assertTrue(state.isEnabled());
+        assertEquals("foobar", state.getStrategyId());
     }
 
-    private static enum AutoCommitFeature implements Feature {
-        F1;
+    private enum AutoCommitFeature implements Feature {
+        F1
     }
 
     private static class AutoCommitTestDataSource implements DataSource {
@@ -68,7 +65,7 @@ public class JDBCRepositoryAutoCommitTest {
 
         private final boolean autoCommit;
 
-        public AutoCommitTestDataSource(DataSource delegate, boolean autoCommit) {
+        AutoCommitTestDataSource(DataSource delegate, boolean autoCommit) {
             this.delegate = delegate;
             this.autoCommit = autoCommit;
         }
@@ -116,10 +113,8 @@ public class JDBCRepositoryAutoCommitTest {
         }
 
         @Override
-        public Connection getConnection(String username, String password) throws SQLException {
+        public Connection getConnection(String username, String password) {
             throw new IllegalStateException("Should not happen in the test");
         }
-
     }
-
 }
