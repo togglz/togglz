@@ -57,6 +57,11 @@ public class TestFeatureManager implements FeatureManager {
     }
 
     @Override
+    public boolean isActive(Feature feature, String uCode) {
+        return this.isActive(feature);
+    }
+
+    @Override
     public FeatureUser getCurrentFeatureUser() {
         return null;
     }

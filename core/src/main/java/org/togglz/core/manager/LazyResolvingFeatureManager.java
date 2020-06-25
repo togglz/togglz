@@ -45,6 +45,11 @@ public class LazyResolvingFeatureManager implements FeatureManager {
     }
 
     @Override
+    public boolean isActive(Feature feature, String uCode) {
+        return getDelegate().isActive(feature, uCode);
+    }
+
+    @Override
     public FeatureUser getCurrentFeatureUser() {
         return getDelegate().getCurrentFeatureUser();
     }

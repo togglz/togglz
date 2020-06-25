@@ -42,6 +42,11 @@ public class FallbackTestFeatureManager implements FeatureManager {
     }
 
     @Override
+    public boolean isActive(Feature feature, String uCode) {
+        return true;
+    }
+
+    @Override
     public FeatureUser getCurrentFeatureUser() {
         return null;
     }

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;
+import org.togglz.core.context.FeatureContext;
 import org.togglz.core.metadata.EmptyFeatureMetaData;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
@@ -13,6 +14,7 @@ import org.togglz.core.repository.StateRepository;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
+import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.util.Validate;
 
@@ -61,6 +63,17 @@ public class DefaultFeatureManager implements FeatureManager {
 
     @Override
     public boolean isActive(Feature feature) {
+        FeatureUser user = userProvider.getCurrentUser();
+        return isActive(feature, user);
+    }
+
+    @Override
+    public boolean isActive(Feature feature, String uCode) {
+        SimpleFeatureUser simpleFeatureUser = new SimpleFeatureUser(uCode);
+        return this.isActive(feature, simpleFeatureUser);
+    }
+
+    private boolean isActive(Feature feature, FeatureUser user) {
 
         Validate.notNull(feature, "feature is required");
 
@@ -77,8 +90,6 @@ public class DefaultFeatureManager implements FeatureManager {
             if (strategyId == null || strategyId.isEmpty()) {
                 return true;
             }
-
-            FeatureUser user = userProvider.getCurrentUser();
 
             // check the selected strategy
             for (ActivationStrategy strategy : strategyProvider.getActivationStrategies()) {
