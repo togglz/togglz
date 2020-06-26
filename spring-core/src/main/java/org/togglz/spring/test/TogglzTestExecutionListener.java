@@ -26,7 +26,7 @@ import org.togglz.core.repository.FeatureState;
 public class TogglzTestExecutionListener extends AbstractTestExecutionListener {
 
 	@Override
-	public void beforeTestMethod(TestContext testContext) throws Exception {
+	public void beforeTestMethod(TestContext testContext) {
 		ApplicationContext context = testContext.getApplicationContext();
 		if (context.getBeanNamesForType(FeatureManager.class).length!=1) {
 			return;
