@@ -33,9 +33,9 @@ public class TogglzTestExecutionListener extends AbstractTestExecutionListener {
 		}
 		FeatureManager manager = context.getBean(FeatureManager.class);
 		for (Feature feature : manager.getFeatures()) {
-			FeatureState defaults = manager.getMetaData(feature).getDefaultFeatureState();
+			FeatureState defaultFeatureState = manager.getMetaData(feature).getDefaultFeatureState();
 			FeatureState state = manager.getFeatureState(feature);
-			if (defaults.isEnabled()) {
+			if (defaultFeatureState.isEnabled()) {
 				state.enable();
 			}
 			manager.setFeatureState(state);
