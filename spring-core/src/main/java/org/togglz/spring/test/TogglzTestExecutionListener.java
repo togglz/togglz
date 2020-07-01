@@ -37,8 +37,6 @@ public class TogglzTestExecutionListener extends AbstractTestExecutionListener {
 			FeatureState state = manager.getFeatureState(feature);
 			if (defaults.isEnabled()) {
 				state.enable();
-			} else {
-				state.disable();
 			}
 			manager.setFeatureState(state);
 		}
