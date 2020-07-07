@@ -17,6 +17,7 @@
 package org.togglz.spring.test;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.Ordered;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 import org.togglz.core.Feature;
@@ -24,6 +25,11 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
 
 public class TogglzTestExecutionListener extends AbstractTestExecutionListener {
+
+	@Override
+	public int getOrder() {
+		return Ordered.HIGHEST_PRECEDENCE;
+	}
 
 	@Override
 	public void beforeTestMethod(TestContext testContext) {
