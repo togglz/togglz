@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.spring.boot.autoconfigure.TogglzFeature;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
 import java.util.ArrayList;
 import java.util.Collections;

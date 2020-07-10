@@ -18,9 +18,9 @@ package org.togglz.spring.boot.actuate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
-import org.togglz.spring.boot.autoconfigure.TogglzFeature;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
 import java.util.List;
 

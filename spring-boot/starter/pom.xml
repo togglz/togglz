@@ -42,11 +42,6 @@
 
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-spring-boot-autoconfigure</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.togglz</groupId>
       <artifactId>togglz-console</artifactId>
       <optional>true</optional>
     </dependency>
@@ -70,7 +65,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate</groupId>
+      <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>6.0.17.Final</version>
       <optional>true</optional>
@@ -92,6 +87,16 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-spring-web</artifactId>
     </dependency>
 
     <dependency>

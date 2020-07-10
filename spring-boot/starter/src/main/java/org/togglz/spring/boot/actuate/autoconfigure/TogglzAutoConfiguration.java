@@ -48,7 +48,6 @@ import org.togglz.core.user.NoOpUserProvider;
 import org.togglz.core.user.UserProvider;
 import org.togglz.spring.boot.actuate.thymeleaf.TogglzDialect;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
-import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 import org.togglz.spring.web.FeatureInterceptor;
 
@@ -68,7 +67,7 @@ public class TogglzAutoConfiguration {
 
     @Bean
     public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener(
-        ObjectProvider<ContextRefreshedEventFilter> contextRefreshedEventFilter) {
+        ObjectProvider<TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter> contextRefreshedEventFilter) {
         return new TogglzApplicationContextBinderApplicationListener(contextRefreshedEventFilter.getIfAvailable());
     }
 
