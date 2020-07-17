@@ -22,6 +22,7 @@ import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,12 +36,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TogglzEndpointTest extends BaseTest {
 
     @Test
-    public void getAllFeatures() throws Exception {
+    public void getAllFeatures() {
         contextRunner.withConfiguration(AutoConfigurations.of(
                 DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
             .withPropertyValues(
+                    "management.endpoints.web.exposure.include=*",
                     "togglz.features.FEATURE_ONE.enabled: true",
                     "togglz.features.FEATURE_TWO.enabled: false",
                     "togglz.features.FEATURE_TWO.strategy: release-date",
@@ -57,13 +59,14 @@ public class TogglzEndpointTest extends BaseTest {
                 assertEquals("FEATURE_ONE", features.get(0).getName());
                 assertTrue(features.get(0).isEnabled());
                 assertNull(features.get(0).getStrategy());
-                assertEquals(0, features.get(0).getParams());
+                assertEquals(0, features.get(0).getParams().size());
+                assertEquals(Collections.emptyMap(), features.get(0).getParams());
 
                 // Assert feature two
                 assertEquals("FEATURE_TWO", features.get(1).getName());
                 assertFalse(features.get(1).isEnabled());
                 assertEquals("release-date", features.get(1).getStrategy());
-                assertEquals(2, features.get(1).getParams());
+                assertEquals(2, features.get(1).getParams().size());
                 assertEquals("2016-07-01", features.get(1).getParams().get("date"));
                 assertEquals("08:30:00", features.get(1).getParams().get("time"));
             });
@@ -76,6 +79,7 @@ public class TogglzEndpointTest extends BaseTest {
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
+                        "management.endpoints.web.exposure.include=*",
                         "togglz.features.FEATURE_ONE.enabled: false")
                 .run((context) -> {
                     // Given
@@ -96,6 +100,7 @@ public class TogglzEndpointTest extends BaseTest {
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
+                        "management.endpoints.web.exposure.include=*",
                         "togglz.features.FEATURE_ONE.enabled: true")
                 .run((context) -> {
                     // Given
@@ -115,6 +120,7 @@ public class TogglzEndpointTest extends BaseTest {
                 DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
+                .withPropertyValues("management.endpoints.web.exposure.include=*")
                 .run((context) -> {
                     // Given
                     TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
@@ -129,9 +135,10 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void endpointDisabled() {
         contextRunnerWithFeatureProviderConfig()
-            .withPropertyValues("management.endpoint.togglz.enabled: false")
+            .withPropertyValues(
+                    "management.endpoint.togglz.enabled: true")
             .run((context) -> {
-                assertEquals(0, context.getBeansOfType(TogglzEndpoint.class).size());
+                assertEquals(1, context.getBeansOfType(TogglzEndpoint.class).size());
             });
     }
 

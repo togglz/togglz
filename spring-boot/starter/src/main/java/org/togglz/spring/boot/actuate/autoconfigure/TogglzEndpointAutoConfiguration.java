@@ -16,7 +16,7 @@
 
 package org.togglz.spring.boot.actuate.autoconfigure;
 
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -33,7 +33,7 @@ import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListe
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Togglz Endpoint (Spring Boot 2.x).
+ * {@link EnableAutoConfiguration Auto-configuration} for Togglz Endpoint (Spring Boot 2.3.x).
  *
  * @author Rui Figueira
  */
@@ -58,7 +58,7 @@ public class TogglzEndpointAutoConfiguration {
     @Bean
     @ConditionalOnBean(FeatureManager.class)
     @ConditionalOnMissingBean
-    @ConditionalOnEnabledEndpoint
+    //@ConditionalOnAvailableEndpoint(endpoint = TogglzEndpoint.class)
     public TogglzEndpoint togglzEndpoint(FeatureManager featureManager) {
         return new TogglzEndpoint(featureManager);
     }
