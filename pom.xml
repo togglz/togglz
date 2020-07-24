@@ -140,8 +140,9 @@
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
-        <version>5.3.0</version>
+        <version>5.3.2</version>
         <configuration>
+          <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
           <format>ALL</format>
           <skipProvidedScope>true</skipProvidedScope>
           <skipRuntimeScope>true</skipRuntimeScope>
