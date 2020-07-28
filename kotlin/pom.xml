@@ -103,17 +103,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.eclipse.virgo.bundlor</groupId>
-        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-        <executions>
-          <execution>
-            <id>bundlor</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
       </plugin>

@@ -45,9 +45,6 @@
     <!-- Wildfly version used for integration tests -->
     <wildfly.version>8.2.1.Final</wildfly.version>
 
-    <!-- Set version of OSGi bundles without 'SNAPSHOT', etc. -->
-    <osgi.bundles.version>2.7.2</osgi.bundles.version>
-
     <spring.version>4.3.25.RELEASE</spring.version>
     
     <project.root.basedir>${project.parent.basedir}</project.root.basedir>
@@ -92,47 +89,13 @@
         </executions>
       </plugin>
 
-      <!-- Bundlor -->
-      <plugin>
-        <groupId>org.eclipse.virgo.bundlor</groupId>
-        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-        <executions>
-          <execution>
-            <id>bundlor</id>
-            <goals>
-              <goal>bundlor</goal>
-            </goals>
-            <configuration>
-              <failOnWarnings>true</failOnWarnings>
-              <osgiProfilePath>${project.root.basedir}/java6-server.profile</osgiProfilePath>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-           <dependency>
-             <groupId>org.eclipse.virgo.bundlor</groupId>
-             <artifactId>org.eclipse.virgo.bundlor</artifactId>
-             <version>1.1.2.RELEASE</version>
-           </dependency>
-           <dependency>
-             <groupId>org.eclipse.virgo.bundlor</groupId>
-             <artifactId>org.eclipse.virgo.bundlor.blint</artifactId>
-             <version>1.1.2.RELEASE</version>
-           </dependency>
-         </dependencies>
-      </plugin>
-
       <!-- JAR -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <archive>
-            <manifestFile>
-              target/classes/META-INF/MANIFEST.MF
-            </manifestFile>
-          </archive>
+          <useDefaultManifestFile>true</useDefaultManifestFile>
         </configuration>
       </plugin>
 
@@ -176,12 +139,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.eclipse.virgo.bundlor</groupId>
-          <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-          <version>1.1.2.RELEASE</version>
         </plugin>
 
         <plugin>
