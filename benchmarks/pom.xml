@@ -115,16 +115,6 @@
                     <useDefaultManifestFile>true</useDefaultManifestFile>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.eclipse.virgo.bundlor</groupId>
-                <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-                <executions>
-                    <execution>
-                        <id>bundlor</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
