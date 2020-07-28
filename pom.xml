@@ -213,7 +213,6 @@
     <module>jsp</module>
     <module>appengine</module>
     <module>cloud-datastore</module>
-    <module>archaius</module>
     <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
@@ -421,12 +420,6 @@
       <dependency>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-appengine</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-archaius</artifactId>
         <version>${project.version}</version>
       </dependency>
 

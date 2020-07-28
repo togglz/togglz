@@ -102,10 +102,6 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-archaius</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
       <artifactId>togglz-cassandra</artifactId>
     </dependency>
     <dependency>

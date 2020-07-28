@@ -44,7 +44,6 @@
         <include>org.togglz:togglz-appengine:jar:*</include>
         <include>org.togglz:togglz-guice:jar:*</include>
         <include>org.togglz:togglz-mongodb:jar:*</include>
-        <include>org.togglz:togglz-archaius:jar:*</include>
         <include>org.togglz:togglz-cassandra:jar:*</include>
         <include>org.togglz:togglz-hazelcast:jar:*</include>
         <include>org.togglz:togglz-zookeeper:jar:*</include>
