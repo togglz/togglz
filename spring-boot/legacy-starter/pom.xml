@@ -65,11 +65,11 @@
       <optional>true</optional>
     </dependency>
 
-    <dependency>
-      <groupId>org.jboss.spec.javax.servlet</groupId>
-      <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-      <scope>provided</scope>
-    </dependency>
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <scope>provided</scope>
+      </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
