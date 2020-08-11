@@ -1,3 +1,4 @@
 org.togglz.servlet.activation.ClientIpActivationStrategy
+org.togglz.servlet.activation.HeaderActivationStrategy
 org.togglz.servlet.activation.QueryParameterActivationStrategy
 org.togglz.servlet.activation.ServerNameActivationStrategy
