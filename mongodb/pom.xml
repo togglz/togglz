@@ -12,6 +12,12 @@
   <name>Togglz - MongoDB integration</name>
   <description>Togglz - MongoDB integration</description>
 
+  <properties>
+    <mongo.version>4.1.0</mongo.version>
+    <testcontainers.version>1.14.3</testcontainers.version>
+  </properties>
+
+
   <dependencies>
 
     <dependency>
@@ -21,21 +27,25 @@
 
     <dependency>
       <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
-      <version>3.4.0</version>
+      <artifactId>mongodb-driver-core</artifactId>
+      <version>${mongo.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-sync</artifactId>
+      <version>${mongo.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.github.fakemongo</groupId>
-      <artifactId>fongo</artifactId>
-      <version>2.0.6</version>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>mongodb</artifactId>
+      <version>${testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
 

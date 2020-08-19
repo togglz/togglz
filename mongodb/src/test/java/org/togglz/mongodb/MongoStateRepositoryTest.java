@@ -1,9 +1,11 @@
 package org.togglz.mongodb;
 
-import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.MongoClient;
-import org.junit.Rule;
-import org.junit.Test;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.MongoDBContainer;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
@@ -13,18 +15,25 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MongoStateRepositoryTest {
+class MongoStateRepositoryTest {
 
     private final Random random = new Random(System.currentTimeMillis());
 
-    @Rule
-    public FongoRule fongoRule = new FongoRule();
+    static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.2.5");
 
+    @BeforeAll
+    public static void beforeClass() {
+        mongoDBContainer.start();
+    }
+
+    @AfterAll
+    public static void afterClass() {
+        mongoDBContainer.stop();
+    }
 
     @Test
-    public void testInsertAndUpdate() {
-
-        final MongoClient mongoClient = this.fongoRule.getMongoClient();
+    void testInsertAndUpdate() {
+        final MongoClient mongoClient = MongoClients.create(mongoDBContainer.getReplicaSetUrl());
 
         final MongoStateRepository mongoStateRepository = MongoStateRepository.newBuilder(mongoClient, "mongo-state-repository-test").build();
 
@@ -72,10 +81,6 @@ public class MongoStateRepositoryTest {
     }
 
     private enum TestFeature implements Feature {
-
         FEATURE_1
-
     }
-
-
 }
