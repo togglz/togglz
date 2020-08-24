@@ -29,6 +29,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -50,6 +51,7 @@ import org.togglz.spring.boot.actuate.thymeleaf.TogglzDialect;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.security.SpringSecurityUserProvider;
 import org.togglz.spring.web.FeatureInterceptor;
+import org.togglz.spring.web.spi.HttpServletRequestHolderFilter;
 
 import java.io.IOException;
 import java.util.List;
@@ -241,6 +243,17 @@ public class TogglzAutoConfiguration {
         @ConditionalOnMissingBean
         public TogglzDialect togglzDialect() {
             return new TogglzDialect();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnClass({OncePerRequestFilter.class })
+    @ConditionalOnMissingBean(HttpServletRequestHolderFilter.class)
+    protected static class RequestHolderFilterConfiguration {
+
+        @Bean
+        public HttpServletRequestHolderFilter requestHolderFilter() {
+            return new HttpServletRequestHolderFilter();
         }
     }
 }
