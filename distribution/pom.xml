@@ -20,7 +20,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.1.0</version>
         <configuration>
           <finalName>togglz-${project.version}</finalName>
           <appendAssemblyId>false</appendAssemblyId>
