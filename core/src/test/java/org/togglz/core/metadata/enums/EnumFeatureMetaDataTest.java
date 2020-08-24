@@ -1,7 +1,5 @@
 package org.togglz.core.metadata.enums;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.ActivationParameter;
@@ -15,7 +13,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,12 +68,12 @@ public class EnumFeatureMetaDataTest {
         assertEquals(2, groups.size());
 
         // verify field level group is there
-        FeatureGroup group1 = Iterables.find(groups, createFeatureGroupLabelPredicate(FIELD_LEVEL_GROUP_LABEL));
-        assertTrue(group1.contains(TestFeatures.FEATURE));
+        List<FeatureGroup> group1 = groups.stream().filter(createFeatureGroupLabelPredicate(FIELD_LEVEL_GROUP_LABEL)).collect(Collectors.toList());
+        assertTrue(group1.get(0).contains(TestFeatures.FEATURE));
 
         // verify class level group is there
-        FeatureGroup group2 = Iterables.find(groups, createFeatureGroupLabelPredicate(CLASS_LEVEL_GROUP_LABEL));
-        assertTrue(group2.contains(TestFeatures.FEATURE));
+        List<FeatureGroup> group2 = groups.stream().filter(createFeatureGroupLabelPredicate(CLASS_LEVEL_GROUP_LABEL)).collect(Collectors.toList());
+        assertTrue(group2.get(0).contains(TestFeatures.FEATURE));
     }
 
     @Test

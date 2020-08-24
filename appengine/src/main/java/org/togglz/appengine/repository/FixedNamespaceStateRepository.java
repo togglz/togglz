@@ -8,7 +8,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 import com.google.appengine.api.NamespaceManager;
-import com.google.common.base.Preconditions;
+import org.togglz.core.util.Preconditions;
 
 /**
  * Decorates the given StateRepository enforcing its operations to run within a given namespace. 
@@ -30,12 +30,7 @@ public class FixedNamespaceStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(final Feature feature) {
-        return withinNamespace(namespace, new Work<FeatureState> () {
-            @Override
-            public FeatureState run() {
-                return decorated.getFeatureState(feature);
-            }
-        });
+        return withinNamespace(namespace, () -> decorated.getFeatureState(feature));
     }
 
     @Override
