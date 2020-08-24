@@ -11,7 +11,8 @@ import static java.util.Collections.singleton;
 /**
  * A test config source provider for MicroProfile Config
  */
-public class TestConfigSourceProvider implements ConfigSourceProvider{
+public class TestConfigSourceProvider implements ConfigSourceProvider {
+
     @Override
     public Iterable<ConfigSource> getConfigSources(ClassLoader classLoader) {
         return singleton(TestConfigSource.INSTANCE);
@@ -20,6 +21,7 @@ public class TestConfigSourceProvider implements ConfigSourceProvider{
     public static class TestConfigSource implements ConfigSource {
         public static TestConfigSource INSTANCE = new TestConfigSource();
         private Map<String, String> properties = new HashMap<>();
+
         @Override
         public Map<String, String> getProperties() {
             return properties;
@@ -40,7 +42,7 @@ public class TestConfigSourceProvider implements ConfigSourceProvider{
         }
 
         public void putProperty(String key, String value) {
-            properties.put(key,value);
+            properties.put(key, value);
         }
     }
 }
