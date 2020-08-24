@@ -1,7 +1,6 @@
 package org.togglz.appengine.repository;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -45,7 +44,7 @@ public class MemcacheStateRepositoryTest {
     }
 
     @Test
-    public void testCachingOfReadOperationsWithTimeToLife() throws InterruptedException {
+    void testCachingOfReadOperationsWithTimeToLife() throws InterruptedException {
 
         MemcacheStateRepository repository = new MemcacheStateRepository(delegate);
 
@@ -64,7 +63,7 @@ public class MemcacheStateRepositoryTest {
     }
 
     @Test
-    public void testStateModifyExpiresCache() throws InterruptedException {
+    void testStateModifyExpiresCache() throws InterruptedException {
 
         MemcacheStateRepository repository = new MemcacheStateRepository(delegate);
 

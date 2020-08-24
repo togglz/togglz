@@ -5,11 +5,10 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Value;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.util.Preconditions;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     private String getStrategyId(Entity featureEntity) {
         if (featureEntity.contains(STRATEGY_ID)) {
             final String strategyId = featureEntity.getString(STRATEGY_ID);
-            if (!Strings.isNullOrEmpty(strategyId)) {
+            if (strategyId != null && !strategyId.isEmpty()) {
                 return strategyId.trim();
             }
         }

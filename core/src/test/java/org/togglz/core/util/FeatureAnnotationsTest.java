@@ -1,7 +1,5 @@
 package org.togglz.core.util;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.EnabledByDefault;
@@ -9,8 +7,11 @@ import org.togglz.core.annotation.FeatureGroup;
 import org.togglz.core.annotation.Label;
 
 import java.lang.annotation.*;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FeatureAnnotationsTest {
@@ -60,8 +61,11 @@ public class FeatureAnnotationsTest {
         assertEquals(2, result.size());
 
         // verify both EnabledByDefault and ClassLevelGroup are there
-        Iterables.find(result, createAnnotationTypePredicate(EnabledByDefault.class));
-        Iterables.find(result, createAnnotationTypePredicate(ClassLevelGroup.class));
+        List<Annotation> enabledByDefault = result.stream().filter(createAnnotationTypePredicate(EnabledByDefault.class)).collect(toList());
+        assertFalse(enabledByDefault.isEmpty());
+
+        List<Annotation> classLevelGroup = result.stream().filter(createAnnotationTypePredicate(ClassLevelGroup.class)).collect(toList());
+        assertFalse(classLevelGroup.isEmpty());
     }
 
     @Test

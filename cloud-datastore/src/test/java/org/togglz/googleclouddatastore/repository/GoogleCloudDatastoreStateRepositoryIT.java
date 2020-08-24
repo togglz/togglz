@@ -8,7 +8,6 @@ import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Transaction;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
-import com.google.common.collect.ImmutableMap;
 import org.joda.time.Duration;
 import org.junit.jupiter.api.*;
 import org.togglz.core.Feature;
@@ -16,6 +15,7 @@ import org.togglz.core.repository.FeatureState;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -217,7 +217,9 @@ public class GoogleCloudDatastoreStateRepositoryIT {
     }
 
     private void givenEnabledFeatureWithStrategy(String featureName) {
-        put(featureName, true, STRATEGY_ID, ImmutableMap.of("param23", "foobar"));
+        put(featureName, true, STRATEGY_ID, new HashMap<String, String>() {{
+            put("param23", "foobar");
+        }});
     }
 
     private void putWithinTransaction(final String name, final boolean enabled, final Transaction txn) {

@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.google.appengine.api.datastore.*;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -38,7 +37,7 @@ public class DatastoreStateRepositoryTest {
     }
 
     @Test
-    public void customKindName() throws EntityNotFoundException {
+    public void customKindName() {
         final String kind = "CustomKind";
         repository = new DatastoreStateRepository(kind, datastoreService);
         assertEquals(kind, repository.kind());
