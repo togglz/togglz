@@ -45,7 +45,7 @@
     <!-- Wildfly version used for integration tests -->
     <wildfly.version>8.2.1.Final</wildfly.version>
 
-    <spring.version>4.3.25.RELEASE</spring.version>
+    <spring.version>5.2.7.RELEASE</spring.version>
     
     <project.root.basedir>${project.parent.basedir}</project.root.basedir>
   </properties>
