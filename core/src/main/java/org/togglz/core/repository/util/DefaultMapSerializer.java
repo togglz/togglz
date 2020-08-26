@@ -130,7 +130,7 @@ public class DefaultMapSerializer implements MapSerializer {
                 props.load(new StringReader(input));
             }
 
-            LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> result = new LinkedHashMap<>();
             for (Entry<Object, Object> entry : props.entrySet()) {
                 result.put(entry.getKey().toString(), entry.getValue().toString());
             }
