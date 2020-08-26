@@ -37,7 +37,7 @@ public class SpringSecurityUserProviderTest {
     private Authentication authentication;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         mockStatic(SecurityContextHolder.class);
 
         when(SecurityContextHolder.getContext()).thenReturn(securityContext);
@@ -49,7 +49,7 @@ public class SpringSecurityUserProviderTest {
     }
 
     @Test
-    public void getCurrentUserWillReturnFeatureAdminWhenAuthoritiesContainFeatureAdminAuthority() throws Exception {
+    public void getCurrentUserWillReturnFeatureAdminWhenAuthoritiesContainFeatureAdminAuthority() {
         // arrange
         Collection authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_1"));
@@ -65,7 +65,7 @@ public class SpringSecurityUserProviderTest {
     }
 
     @Test
-    public void getCurrentUserWillReturnNormalUserWhenAuthoritiesDoNotContainFeatureAdminAuthority() throws Exception {
+    public void getCurrentUserWillReturnNormalUserWhenAuthoritiesDoNotContainFeatureAdminAuthority() {
         // arrange
         Collection authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_1"));
@@ -80,7 +80,7 @@ public class SpringSecurityUserProviderTest {
     }
 
     @Test
-    public void getCurrentUserWillCopyAuthoritiesFromAuthenticationIntoFeatureUser() throws Exception {
+    public void getCurrentUserWillCopyAuthoritiesFromAuthenticationIntoFeatureUser() {
         // arrange
         Collection authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_1"));
