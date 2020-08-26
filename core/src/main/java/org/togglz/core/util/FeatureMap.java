@@ -53,7 +53,6 @@ public class FeatureMap implements Map<Object, Boolean> {
         }
 
         return manager.isActive(feature);
-
     }
 
     @Override

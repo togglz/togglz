@@ -23,40 +23,36 @@ public class SpringSecurityUserProvider implements UserProvider {
 
     @Override
     public FeatureUser getCurrentUser() {
-
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
 
         // null if no authentication data is available for the current thread
-        if (authentication != null) {
-
-            // try to obtain the name of this user
-            String name = getUserName(authentication);
-
-            // check for the authority for feature admins
-            Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-            boolean featureAdmin = isFeatureAdmin(authentication, authorities);
-
-            SimpleFeatureUser user = new SimpleFeatureUser(name, featureAdmin);
-            user.setAttribute(USER_ATTRIBUTE_ROLES, authorities);
-            return user;
-
+        if (authentication == null) {
+            return null;
         }
-        return null;
+
+        // try to obtain the name of this user
+        String name = getUserName(authentication);
+
+        // check for the authority for feature admins
+        Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        boolean featureAdmin = isFeatureAdmin(authorities);
+
+        SimpleFeatureUser user = new SimpleFeatureUser(name, featureAdmin);
+        user.setAttribute(USER_ATTRIBUTE_ROLES, authorities);
+        return user;
     }
 
-    protected boolean isFeatureAdmin(Authentication authentication, Set<String> authorities) {
+    private boolean isFeatureAdmin(Set<String> authorities) {
         return featureAdminAuthority != null && authorities.contains(featureAdminAuthority);
     }
 
-    protected String getUserName(Authentication authentication) {
+    private String getUserName(Authentication authentication) {
         Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) principal;
-            return userDetails.getUsername();
-        } else {
+        if (!(principal instanceof UserDetails)) {
             return principal.toString();
         }
+        UserDetails userDetails = (UserDetails) principal;
+        return userDetails.getUsername();
     }
-
 }

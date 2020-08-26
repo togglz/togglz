@@ -69,12 +69,8 @@ public class Strings {
         return s != null && !s.isEmpty();
     }
 
-    public static boolean equalsIgnoreCase(String s, String v) {
-        return s != null && s.trim().equalsIgnoreCase(v);
-    }
-
     public static List<String> splitAndTrim(String value, String regex) {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (isNotBlank(value)) {
             String[] segements = value.split(regex);
             for (String segment : segements) {

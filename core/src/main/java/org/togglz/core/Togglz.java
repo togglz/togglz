@@ -21,40 +21,23 @@ public class Togglz {
      * The version of Togglz or <code>null</code> if it cannot be identified
      */
     public static String getVersion() {
-
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = Togglz.class.getClassLoader();
         }
 
         URL url = classLoader.getResource("META-INF/maven/org.togglz/togglz-core/pom.properties");
-        if (url != null) {
+        if (url == null) {
+            return null;
+        }
 
-            InputStream stream = null;
-            try {
-
-                stream = url.openStream();
-
-                Properties props = new Properties();
-                props.load(stream);
-
-                return Strings.trimToNull(props.getProperty("version"));
-
-            } catch (IOException e) {
-                // ignore
-            } finally {
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        // ignore
-                    }
-                }
-            }
-
+        try (InputStream stream = url.openStream()) {
+            Properties props = new Properties();
+            props.load(stream);
+            return Strings.trimToNull(props.getProperty("version"));
+        } catch (IOException e) {
+            // ignore
         }
         return null;
-
     }
-
 }

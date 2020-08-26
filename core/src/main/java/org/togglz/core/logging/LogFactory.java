@@ -1,11 +1,8 @@
 package org.togglz.core.logging;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.*;
 
 import org.togglz.core.spi.LogProvider;
-import org.togglz.core.util.Lists;
 import org.togglz.core.util.Weighted;
 
 /**
@@ -31,9 +28,8 @@ public class LogFactory {
         if (_logProvider == null) {
             synchronized (LogFactory.class) {
                 if (_logProvider == null) {
-
-                    List<LogProvider> providers = Lists.asList(ServiceLoader.load(LogProvider.class).iterator());
-                    Collections.sort(providers, new Weighted.WeightedComparator());
+                    List<LogProvider> providers = asList(ServiceLoader.load(LogProvider.class).iterator());
+                    providers.sort(new Weighted.WeightedComparator());
                     _logProvider = providers.get(0);
 
                 }
@@ -43,4 +39,11 @@ public class LogFactory {
         return _logProvider;
     }
 
+    private static <E> List<E> asList(Iterator<E> i) {
+        List<E> list = new ArrayList<E>();
+        while (i.hasNext()) {
+            list.add(i.next());
+        }
+        return list;
+    }
 }
