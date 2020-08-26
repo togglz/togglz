@@ -278,83 +278,6 @@ public final class Preconditions {
    * is fine with that.
    */
 
-    /**
-     * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size
-     * {@code size}. An element index may range from zero, inclusive, to {@code size}, exclusive.
-     *
-     * @param index a user-supplied index identifying an element of an array, list or string
-     * @param size  the size of that array, list or string
-     * @return the value of {@code index}
-     * @throws IndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
-     * @throws IllegalArgumentException  if {@code size} is negative
-     */
-    public static int checkElementIndex(int index, int size) {
-        return checkElementIndex(index, size, "index");
-    }
-
-    /**
-     * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size
-     * {@code size}. An element index may range from zero, inclusive, to {@code size}, exclusive.
-     *
-     * @param index a user-supplied index identifying an element of an array, list or string
-     * @param size  the size of that array, list or string
-     * @param desc  the text to use to describe this index in an error message
-     * @return the value of {@code index}
-     * @throws IndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
-     * @throws IllegalArgumentException  if {@code size} is negative
-     */
-    public static int checkElementIndex(
-            int index, int size, String desc) {
-        // Carefully optimized for execution by hotspot (explanatory comment above)
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(badElementIndex(index, size, desc));
-        }
-        return index;
-    }
-
-    private static String badElementIndex(int index, int size, String desc) {
-        if (index < 0) {
-            return format("%s (%s) must not be negative", desc, index);
-        } else if (size < 0) {
-            throw new IllegalArgumentException("negative size: " + size);
-        } else { // index >= size
-            return format("%s (%s) must be less than size (%s)", desc, index, size);
-        }
-    }
-
-    /**
-     * Ensures that {@code index} specifies a valid <i>position</i> in an array, list or string of
-     * size {@code size}. A position index may range from zero to {@code size}, inclusive.
-     *
-     * @param index a user-supplied index identifying a position in an array, list or string
-     * @param size  the size of that array, list or string
-     * @return the value of {@code index}
-     * @throws IndexOutOfBoundsException if {@code index} is negative or is greater than {@code size}
-     * @throws IllegalArgumentException  if {@code size} is negative
-     */
-    public static int checkPositionIndex(int index, int size) {
-        return checkPositionIndex(index, size, "index");
-    }
-
-    /**
-     * Ensures that {@code index} specifies a valid <i>position</i> in an array, list or string of
-     * size {@code size}. A position index may range from zero to {@code size}, inclusive.
-     *
-     * @param index a user-supplied index identifying a position in an array, list or string
-     * @param size  the size of that array, list or string
-     * @param desc  the text to use to describe this index in an error message
-     * @return the value of {@code index}
-     * @throws IndexOutOfBoundsException if {@code index} is negative or is greater than {@code size}
-     * @throws IllegalArgumentException  if {@code size} is negative
-     */
-    public static int checkPositionIndex(int index, int size, String desc) {
-        // Carefully optimized for execution by hotspot (explanatory comment above)
-        if (index < 0 || index > size) {
-            throw new IndexOutOfBoundsException(badPositionIndex(index, size, desc));
-        }
-        return index;
-    }
-
     private static String badPositionIndex(int index, int size, String desc) {
         if (index < 0) {
             return format("%s (%s) must not be negative", desc, index);
@@ -418,7 +341,7 @@ public final class Preconditions {
             if (placeholderStart == -1) {
                 break;
             }
-            builder.append(template.substring(templateStart, placeholderStart));
+            builder.append(template, templateStart, placeholderStart);
             builder.append(args[i++]);
             templateStart = placeholderStart + 2;
         }

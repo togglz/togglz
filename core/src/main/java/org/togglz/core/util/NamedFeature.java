@@ -32,6 +32,6 @@ public class NamedFeature implements Feature, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof NamedFeature) ? this.name.equals(((NamedFeature) o).name()) : false;
+        return o instanceof NamedFeature && this.name.equals(((NamedFeature) o).name());
     }
 }

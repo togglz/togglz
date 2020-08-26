@@ -16,8 +16,6 @@
 
 package org.togglz.core.util;
 
-import java.util.Arrays;
-
 import static org.togglz.core.util.Preconditions.checkNotNull;
 
 /**
@@ -123,9 +121,8 @@ public final class MoreObjects {
      */
     public static final class ToStringHelper {
         private final String className;
-        private ValueHolder holderHead = new ValueHolder();
+        private final ValueHolder holderHead = new ValueHolder();
         private ValueHolder holderTail = holderHead;
-        private boolean omitNullValues = false;
 
         /**
          * Use {@link MoreObjects#toStringHelper(Object)} to create an instance.
@@ -135,21 +132,9 @@ public final class MoreObjects {
         }
 
         /**
-         * Configures the {@link ToStringHelper} so {@link #toString()} will ignore
-         * properties with null value. The order of calling this method, relative
-         * to the {@code add()}/{@code addValue()} methods, is not significant.
-         *
-         * @since 12.0
-         */
-        public ToStringHelper omitNullValues() {
-            omitNullValues = true;
-            return this;
-        }
-
-        /**
          * Adds a name/value pair to the formatted output in {@code name=value}
          * format. If {@code value} is {@code null}, the string {@code "null"}
-         * is used, unless {@link #omitNullValues()} is called, in which case this
+         * is used in which case this
          * name/value pair will not be added.
          */
         public ToStringHelper add(String name, Object value) {
@@ -229,21 +214,18 @@ public final class MoreObjects {
         @Override
         public String toString() {
             // create a copy to keep it consistent in case value changes
-            boolean omitNullValuesSnapshot = omitNullValues;
             String nextSeparator = "";
             StringBuilder builder = new StringBuilder(32).append(className)
                     .append('{');
             for (ValueHolder valueHolder = holderHead.next; valueHolder != null;
                  valueHolder = valueHolder.next) {
-                if (!omitNullValuesSnapshot || valueHolder.value != null) {
-                    builder.append(nextSeparator);
-                    nextSeparator = ", ";
+                builder.append(nextSeparator);
+                nextSeparator = ", ";
 
-                    if (valueHolder.name != null) {
-                        builder.append(valueHolder.name).append('=');
-                    }
-                    builder.append(valueHolder.value);
+                if (valueHolder.name != null) {
+                    builder.append(valueHolder.name).append('=');
                 }
+                builder.append(valueHolder.value);
             }
             return builder.append('}').toString();
         }
@@ -252,12 +234,6 @@ public final class MoreObjects {
             ValueHolder valueHolder = new ValueHolder();
             holderTail = holderTail.next = valueHolder;
             return valueHolder;
-        }
-
-        private ToStringHelper addHolder(Object value) {
-            ValueHolder valueHolder = addHolder();
-            valueHolder.value = value;
-            return this;
         }
 
         private ToStringHelper addHolder(String name, Object value) {

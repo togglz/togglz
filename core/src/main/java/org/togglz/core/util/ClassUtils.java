@@ -4,7 +4,6 @@ public class ClassUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T createInstance(String classname, Class<T> interfaceClazz) {
-
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         if (classLoader == null) {
@@ -12,18 +11,12 @@ public class ClassUtils {
         }
 
         try {
-
             Class<T> clazz = (Class<T>) Class.forName(classname, true, classLoader);
             return clazz.newInstance();
-
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Unknown class: " + classname);
-        } catch (InstantiationException e) {
-            throw new IllegalArgumentException("Could not create an instance of class: " + classname, e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalArgumentException("Could not create an instance of class: " + classname, e);
         }
-
     }
-
 }
