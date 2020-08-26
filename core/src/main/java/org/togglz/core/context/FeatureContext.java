@@ -93,7 +93,7 @@ public class FeatureContext {
         while (providerIterator.hasNext()) {
             providerList.add(providerIterator.next());
         }
-        Collections.sort(providerList, new Weighted.WeightedComparator());
+        providerList.sort(new Weighted.WeightedComparator());
 
         if (log.isDebugEnabled()) {
             log.debug("Found " + providerList.size() + " FeatureManagerProvider implementations...");

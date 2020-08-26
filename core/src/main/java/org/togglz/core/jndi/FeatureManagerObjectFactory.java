@@ -26,21 +26,17 @@ import org.togglz.core.manager.TogglzConfig;
  * 
  * @author Christian Kaltepoth
  * 
- * @see http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#Adding_Custom_Resource_Factories
+ * @see "http://tomcat.apache.org/tomcat-7.0-doc/jndi-resources-howto.html#Adding_Custom_Resource_Factories"
  */
 public class FeatureManagerObjectFactory implements ObjectFactory {
 
     @Override
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
-
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) {
         TogglzConfig config = getConfiguration(obj);
-
         if (config == null) {
             throw new IllegalArgumentException("Unable to find TogglzConfig implementation..");
         }
-
         return new FeatureManagerBuilder().togglzConfig(config).build();
-
     }
 
     /**
@@ -49,7 +45,6 @@ public class FeatureManagerObjectFactory implements ObjectFactory {
      * @param obj The {@link Object} obtained from {@link #getObjectInstance(Object, Name, Context, Hashtable)}.
      */
     protected TogglzConfig getConfiguration(Object obj) {
-
         if (obj instanceof Reference) {
             Reference reference = (Reference) obj;
 
@@ -58,25 +53,18 @@ public class FeatureManagerObjectFactory implements ObjectFactory {
                 RefAddr refAddr = addrs.nextElement();
 
                 if ("togglzConfig".equals(refAddr.getType())) {
-
                     String classname = refAddr.getContent().toString().trim();
                     return (TogglzConfig) createInstance(classname);
-
                 }
-
             }
-
         }
-
         return null;
-
     }
 
     /**
      * Creates an instance of the supplied class.
      */
     protected Object createInstance(String classname) {
-
         // get the classloader to use
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
@@ -85,17 +73,9 @@ public class FeatureManagerObjectFactory implements ObjectFactory {
 
         // create an instance of the class using the default constructor
         try {
-
             return classLoader.loadClass(classname).newInstance();
-
-        } catch (InstantiationException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
-
     }
-
 }

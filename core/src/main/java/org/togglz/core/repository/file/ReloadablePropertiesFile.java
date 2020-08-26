@@ -85,8 +85,7 @@ class ReloadablePropertiesFile implements PropertySource {
     }
 
     public Set<String> getKeysStartingWith(String prefix) {
-
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
 
         Enumeration<?> keys = values.propertyNames();
         while (keys.hasMoreElements()) {
@@ -95,9 +94,7 @@ class ReloadablePropertiesFile implements PropertySource {
                 result.add(key);
             }
         }
-
         return result;
-
     }
 
     public PropertySource.Editor getEditor() {
@@ -105,7 +102,6 @@ class ReloadablePropertiesFile implements PropertySource {
     }
 
     private void write(Properties newValues) {
-
         try {
 
             FileOutputStream fos = new FileOutputStream(file);
@@ -118,12 +114,11 @@ class ReloadablePropertiesFile implements PropertySource {
         }
         lastRead = 0;
         lastCheck = 0;
-
     }
 
     private class PropertyFileEditor implements PropertySource.Editor {
 
-        private Properties newValues;
+        private final Properties newValues;
 
         private PropertyFileEditor(Properties props) {
             newValues = new Properties();
@@ -152,7 +147,5 @@ class ReloadablePropertiesFile implements PropertySource {
         public void commit() {
             write(newValues);
         }
-
     }
-
 }

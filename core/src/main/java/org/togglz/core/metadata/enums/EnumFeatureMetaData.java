@@ -31,9 +31,9 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
     private final FeatureState defaultFeatureState;
 
-    private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+    private final Set<FeatureGroup> groups = new HashSet<>();
 
-    private final Map<String, String> attributes = new LinkedHashMap<String, String>();
+    private final Map<String, String> attributes = new LinkedHashMap<>();
 
     public EnumFeatureMetaData(Feature feature) {
 

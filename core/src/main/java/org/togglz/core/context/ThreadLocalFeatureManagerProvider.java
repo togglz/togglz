@@ -16,7 +16,7 @@ import org.togglz.core.spi.FeatureManagerProvider;
  */
 public class ThreadLocalFeatureManagerProvider implements FeatureManagerProvider {
 
-    private static ThreadLocal<FeatureManager> threadLocal = new ThreadLocal<FeatureManager>();
+    private static final ThreadLocal<FeatureManager> threadLocal = new ThreadLocal<>();
 
     /**
      * Store the supplied {@link FeatureManager} in the thread context. After calling this method all calls of
