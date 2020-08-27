@@ -57,18 +57,18 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.wildfly</groupId>
+      <groupId>org.wildfly.arquillian</groupId>
       <artifactId>wildfly-arquillian-container-managed</artifactId>
-      <version>8.2.1.Final</version>
+      <version>2.2.0.Final</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
           <artifactId>wildfly-arquillian-common</artifactId>
-          <groupId>org.wildfly</groupId>
+          <groupId>org.wildfly.arquillian</groupId>
         </exclusion>
         <exclusion>
           <artifactId>wildfly-arquillian-protocol-jmx</artifactId>
-          <groupId>org.wildfly</groupId>
+          <groupId>org.wildfly.arquillian</groupId>
         </exclusion>
         <exclusion>
           <artifactId>xnio-api</artifactId>
@@ -99,22 +99,24 @@
           <groupId>org.jboss.remotingjmx</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>jboss-sasl</artifactId>
-          <groupId>org.jboss.sasl</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>javax.inject</artifactId>
           <groupId>javax.inject</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>wildfly-launcher</artifactId>
+          <groupId>org.wildfly.core</groupId>
         </exclusion>
         <exclusion>
           <artifactId>arquillian-core-api</artifactId>
           <groupId>org.jboss.arquillian.core</groupId>
         </exclusion>
-        <exclusion>
-          <artifactId>wildfly-build-config</artifactId>
-          <groupId>org.wildfly</groupId>
-        </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.floreysoft</groupId>
+      <artifactId>jmte</artifactId>
+      <version>6.0.0</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

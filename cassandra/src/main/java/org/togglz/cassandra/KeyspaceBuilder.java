@@ -1,13 +1,6 @@
 package org.togglz.cassandra;
 
-import com.netflix.astyanax.AstyanaxContext;
-import com.netflix.astyanax.Keyspace;
-import com.netflix.astyanax.connectionpool.impl.ConnectionPoolConfigurationImpl;
-import com.netflix.astyanax.connectionpool.impl.CountingConnectionPoolMonitor;
-import com.netflix.astyanax.impl.AstyanaxConfigurationImpl;
-import com.netflix.astyanax.thrift.ThriftFamilyFactory;
-
-import static com.netflix.astyanax.connectionpool.NodeDiscoveryType.RING_DESCRIBE;
+import org.apache.cassandra.db.Keyspace;
 
 /**
  * <p>

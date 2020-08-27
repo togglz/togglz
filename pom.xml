@@ -39,8 +39,8 @@
   <properties>
 
     <!-- Minimal Java version -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
 
     <!-- Wildfly version used for integration tests -->
     <wildfly.version>8.2.1.Final</wildfly.version>
@@ -238,7 +238,7 @@
                     <artifactItem>
                       <groupId>org.wildfly</groupId>
                       <artifactId>wildfly-dist</artifactId>
-                      <version>${wildfly.version}</version>
+                      <version>20.0.1.Final</version>
                       <type>zip</type>
                       <overWrite>false</overWrite>
                       <outputDirectory>target/container</outputDirectory>
@@ -252,9 +252,9 @@
       </build>
       <dependencies>
         <dependency>
-          <groupId>org.wildfly</groupId>
+          <groupId>org.wildfly.arquillian</groupId>
           <artifactId>wildfly-arquillian-container-managed</artifactId>
-          <version>${wildfly.version}</version>
+          <version>2.2.0.Final</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
@@ -269,9 +269,9 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>org.wildfly</groupId>
+          <groupId>org.wildfly.arquillian</groupId>
           <artifactId>wildfly-arquillian-container-remote</artifactId>
-          <version>${wildfly.version}</version>
+          <version>2.2.0.Final</version>
           <scope>test</scope>
         </dependency>
       </dependencies>

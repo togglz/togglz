@@ -1,13 +1,10 @@
 package org.togglz.cassandra;
 
-import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
-import org.cassandraunit.AbstractCassandraUnit4TestCase;
-import org.cassandraunit.dataset.DataSet;
-import org.cassandraunit.dataset.yaml.ClassPathYamlDataSet;
+import com.netflix.astyanax.Keyspace;
+import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
+import org.cassandraunit.AbstractCassandraUnit4CQLTestCase;
+import org.cassandraunit.dataset.CQLDataSet;
+import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
 import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.junit.After;
 import org.junit.Assert;
@@ -16,21 +13,25 @@ import org.junit.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
-import com.netflix.astyanax.Keyspace;
-import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
+
+import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test for {@link CassandraStateRepository}
  *
  * @author artur@callfire.com
  */
-public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase {
+public class CassandraStateRepositoryTest extends AbstractCassandraUnit4CQLTestCase {
 
     private CassandraStateRepository stateRepository;
 
+
+
     @Override
-    public DataSet getDataSet() {
-        return new ClassPathYamlDataSet("yaml/testDataSet.yaml");
+    public CQLDataSet getDataSet() {
+        return new ClassPathCQLDataSet("yaml/testDataSet.yaml");
     }
 
     @Before
@@ -42,7 +43,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
     }
 
     @After
-    public void cleanUp() throws Exception {
+    public void cleanUp() {
         EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
     }
 

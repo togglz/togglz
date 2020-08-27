@@ -2,12 +2,12 @@ package org.togglz.servlet.user;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.servlet.util.HttpServletRequestHolder;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
