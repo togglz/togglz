@@ -48,22 +48,9 @@ public class Deployments {
             .as(JavaArchive.class);
     }
 
-    public static JavaArchive getTogglzJSFArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsf.jar")
-            .importDirectory("../jsf/target/classes")
-            .as(JavaArchive.class);
-    }
-
     public static JavaArchive getTogglzShiroArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-shiro.jar")
             .importDirectory("../shiro/target/classes")
             .as(JavaArchive.class);
     }
-
-    public static JavaArchive getTogglzJSPArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsp.jar")
-            .importDirectory("../jsp/target/classes")
-            .as(JavaArchive.class);
-    }
-
 }
