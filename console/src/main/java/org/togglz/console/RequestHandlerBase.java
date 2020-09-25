@@ -23,7 +23,7 @@ public abstract class RequestHandlerBase implements RequestHandler {
 
         HttpServletResponse response = event.getResponse();
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("content", body);
         model.put("serverInfo", event.getContext().getServerInfo());
         model.put("togglzTitle", Togglz.getNameWithVersion());
@@ -61,7 +61,4 @@ public abstract class RequestHandlerBase implements RequestHandler {
             output.write(buffer, 0, n);
         }
     }
-
-
-
 }
