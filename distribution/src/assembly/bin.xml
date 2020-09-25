@@ -62,7 +62,6 @@
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
         <include>org.togglz:togglz-testing:jar:*</include>
-        <include>org.togglz:togglz-junit:jar:*</include>
       </includes>
     </dependencySet>
 
