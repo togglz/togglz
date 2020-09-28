@@ -12,6 +12,10 @@
 	<name>Togglz - Hazelcast integration</name>
 	<description>Togglz - Hazelcast integration</description>
 
+	<properties>
+		<hazelcast.version>3.12.9</hazelcast.version>
+	</properties>
+
 	<dependencies>
 
 		<dependency>
@@ -21,12 +25,12 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
-			<version>3.12.3</version>
+			<version>${hazelcast.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast-client</artifactId>
-			<version>3.12.3</version>
+			<version>${hazelcast.version}</version>
 		</dependency>
 
 		<dependency>
@@ -34,10 +38,11 @@
 			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.10</version>
+			<version>3.11</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
