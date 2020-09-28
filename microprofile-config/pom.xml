@@ -14,7 +14,7 @@
     <description>Togglz - MicroProfile Config integration</description>
 
     <properties>
-        <microprofile.config.version>1.3</microprofile.config.version>
+        <microprofile.config.version>1.4</microprofile.config.version>
     </properties>
 
     <dependencies>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.apache.geronimo.config</groupId>
             <artifactId>geronimo-config-impl</artifactId>
-            <version>1.0</version>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
