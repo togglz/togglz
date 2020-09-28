@@ -65,8 +65,8 @@ class HeaderActivationStrategyTest {
   @Test
   public void shouldNotBeActiveWhenOnlyNonMatchingParametersArePresent() {
     Map<String, String[]> parameters = new HashMap<>();
-    parameters.put("somethingThatDoesNotMatch", (String[]) Arrays.asList("true").toArray());
-    parameters.put("somethingElse", (String[]) Arrays.asList("aValue").toArray());
+    parameters.put("somethingThatDoesNotMatch", new String[]{"true"});
+    parameters.put("somethingElse", new String[]{"aValue"});
     when(request.getParameterMap()).thenReturn(parameters);
 
     boolean isActive = strategy.isActive(state, user);
