@@ -30,21 +30,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <developers>
-    <developer>
-      <id>marceloverdijk</id>
-      <email>maceloverdijk@gmail.com</email>
-      <name>Marcel Overdijk</name>
-      <timezone>CET</timezone>
-    </developer>
-    <developer>
-      <id>rui.figueira</id>
-      <email>rui.figueira@gmail.com</email>
-      <name>Rui Figueira</name>
-      <timezone>WET</timezone>
-    </developer>
-  </developers>
-
   <dependencies>
 
     <dependency>
