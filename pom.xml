@@ -170,7 +170,6 @@
     <module>cloud-datastore</module>
     <module>mongodb</module>
     <module>testing</module>
-    <module>junit</module>
     <module>distribution</module>
     <module>cassandra</module>
     <module>hazelcast</module>
@@ -381,12 +380,6 @@
       <dependency>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-servlet</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-junit</artifactId>
         <version>${project.version}</version>
       </dependency>
 
