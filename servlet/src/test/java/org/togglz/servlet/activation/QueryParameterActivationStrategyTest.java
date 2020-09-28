@@ -67,8 +67,9 @@ public class QueryParameterActivationStrategyTest {
     @Test
     public void shouldNotBeActiveWhenOnlyNonMatchingParametersArePresent() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("somethingThatDoesNotMatch", (String[]) Arrays.asList("true").toArray());
-        parameters.put("somethingElse", (String[]) Arrays.asList("aValue").toArray());
+        parameters.put("somethingThatDoesNotMatch", new String[]{"true"});
+        parameters.put("somethingElse", new String[]{"aValue"});
+
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
@@ -79,8 +80,8 @@ public class QueryParameterActivationStrategyTest {
     @Test
     public void shouldNotBeActiveWhenMatchingParameterHasANonMatchingValue() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("toggleFeatureX", (String[]) Arrays.asList("false").toArray());
-        parameters.put("toggleAll", (String[]) Arrays.asList("nope").toArray());
+        parameters.put("toggleFeatureX", new String[]{"false"});
+        parameters.put("toggleAll", new String[]{"nope"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
@@ -102,8 +103,8 @@ public class QueryParameterActivationStrategyTest {
     @Test
     public void shouldBeActiveWhenAnAcceptedParameterAndValueArePresent() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("toggleFeatureX", (String[]) Arrays.asList("true").toArray());
-        parameters.put("toggleAll", (String[]) Arrays.asList("nope").toArray());
+        parameters.put("toggleFeatureX", new String[]{"true"});
+        parameters.put("toggleAll", new String[]{"nope"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
@@ -125,7 +126,7 @@ public class QueryParameterActivationStrategyTest {
     @Test
     public void shouldBeActiveWhenAnAcceptedParameterWithoutRequiredValueIsPresentAndItHasAValue() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("parameterWithoutValue", (String[]) Arrays.asList("anyVal").toArray());
+        parameters.put("parameterWithoutValue", new String[]{"anyVal"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
@@ -153,7 +154,7 @@ public class QueryParameterActivationStrategyTest {
         parameters.put("anotherParam", null);
         when(request.getParameterMap()).thenReturn(parameters);
 
-        parameters.put("test", (String[]) Arrays.asList("matches", "nomatch", "notanything").toArray());
+        parameters.put("test", new String[]{"matches", "nomatch", "notanything"});
         state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS, "test=matches");
 
         boolean isActive = strategy.isActive(state, user);
@@ -182,7 +183,7 @@ public class QueryParameterActivationStrategyTest {
     @Test
     public void refererParamsShouldNotOverrideRequestParamsButWillQualifyAsActiveIfSeparate() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("toggleFeatureX", (String[]) Arrays.asList("false").toArray());
+        parameters.put("toggleFeatureX", new String[]{"false"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         when(request.getHeader("referer")).thenReturn("http://mysite.com/?toggleFeatureX=true");
