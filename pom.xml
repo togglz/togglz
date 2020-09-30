@@ -186,16 +186,10 @@
 
   <developers>
     <developer>
-      <id>chkal</id>
-      <email>christian@kaltepoth.de</email>
-      <name>Christian Kaltepoth</name>
+      <id>bennetelli</id>
+      <email>mail@bennet-schulz.de</email>
+      <name>Bennet Schulz</name>
       <timezone>CET</timezone>
-    </developer>
-    <developer>
-      <id>fabito</id>
-      <email>fabio.uechi@gmail.com</email>
-      <name>Fábio Franco Uechi</name>
-      <timezone>GMT-3</timezone>
     </developer>
   </developers>
 
