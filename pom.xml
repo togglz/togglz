@@ -292,7 +292,7 @@
       </activation>
       <modules>
         <module>microprofile-config</module>
-        <module>junit5</module>
+        <module>junit</module>
       </modules>
     </profile>
 
