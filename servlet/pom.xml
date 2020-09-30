@@ -47,6 +47,12 @@
       <artifactId>togglz-test-harness</artifactId>
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>org.jboss.spec.javax.annotation</groupId>
+          <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+          <version>1.0.0.Final</version>
+          <scope>test</scope>
+      </dependency>
 
   </dependencies>
 </project>
