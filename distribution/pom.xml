@@ -111,11 +111,6 @@
     </dependency>
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-spring-mobile</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.togglz</groupId>
       <artifactId>togglz-cloud-datastore</artifactId>
       <version>${project.version}</version>
     </dependency>
