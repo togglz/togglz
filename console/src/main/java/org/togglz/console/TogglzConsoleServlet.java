@@ -2,13 +2,11 @@ package org.togglz.console;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +28,7 @@ public class TogglzConsoleServlet extends HttpServlet {
     protected boolean secured = true;
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
 
         featureManager = new LazyResolvingFeatureManager();
 
@@ -42,15 +40,14 @@ public class TogglzConsoleServlet extends HttpServlet {
         }
 
         // build list of request handlers
-        Iterator<RequestHandler> handlerIterator = ServiceLoader.load(RequestHandler.class).iterator();
-        while (handlerIterator.hasNext()) {
-            handlers.add((RequestHandler) handlerIterator.next());
+        for (RequestHandler requestHandler : ServiceLoader.load(RequestHandler.class)) {
+            handlers.add(requestHandler);
         }
 
     }
 
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         RequestEvent consoleRequest =
             new RequestEvent(featureManager, servletContext, request, response);
@@ -59,19 +56,17 @@ public class TogglzConsoleServlet extends HttpServlet {
         RequestHandler handler = getHandlerFor(path);
 
         if (handler != null) {
-            if (!secured || !handler.adminOnly() || isFeatureAdmin(request)) {
+            if (!secured || !handler.adminOnly() || isFeatureAdmin()) {
                 handler.process(consoleRequest);
             } else {
                 response.sendError(403, "You are not allowed to access the Togglz Console");
             }
             return;
         }
-
         response.sendError(404);
-
     }
 
-    protected boolean isFeatureAdmin(HttpServletRequest request) {
+    protected boolean isFeatureAdmin() {
         FeatureUser user = featureManager.getCurrentFeatureUser();
         return user != null && user.isFeatureAdmin();
     }
