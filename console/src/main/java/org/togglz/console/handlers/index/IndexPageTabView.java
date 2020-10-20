@@ -19,9 +19,9 @@ public class IndexPageTabView {
 
     private final IndexPageTab allTab;
 
-    private final Map<String, IndexPageTab> tabMap = new HashMap<String, IndexPageTab>();
+    private final Map<String, IndexPageTab> tabMap = new HashMap<>();
 
-    private final List<IndexPageTab> tabs = new ArrayList<IndexPageTab>();
+    private final List<IndexPageTab> tabs = new ArrayList<>();
 
     private int nextIndex = 0;
 
@@ -39,7 +39,6 @@ public class IndexPageTabView {
         allTab.add(row);
 
         for (FeatureGroup group : metadata.getGroups()) {
-
             String label = group.getLabel();
             IndexPageTab tab = tabMap.get(label);
             if (tab == null) {
@@ -50,9 +49,7 @@ public class IndexPageTabView {
             tab.add(row);
 
         }
-
         Collections.sort(tabs);
-
     }
 
     public List<IndexPageTab> getTabs() {

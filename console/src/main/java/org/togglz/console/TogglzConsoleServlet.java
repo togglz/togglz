@@ -19,7 +19,7 @@ public class TogglzConsoleServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    protected final List<RequestHandler> handlers = new ArrayList<RequestHandler>();
+    protected final List<RequestHandler> handlers = new ArrayList<>();
 
     protected ServletContext servletContext;
 
