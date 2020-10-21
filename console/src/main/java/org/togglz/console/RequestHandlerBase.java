@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import com.floreysoft.jmte.Engine;
 
 public abstract class RequestHandlerBase implements RequestHandler {
 
-    private final Charset UTF8 = StandardCharsets.UTF_8;
+    private final Charset UTF8 = Charset.forName("UTF8");
 
     protected void writeResponse(RequestEvent event, String body) throws IOException {
 
