@@ -2,7 +2,7 @@ package org.togglz.console.model;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.togglz.console.util.HtmlUtils;
+import org.owasp.encoder.Encode;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
@@ -58,11 +58,7 @@ public class ParameterModel {
     }
 
     public String getValue() {
-        return value;
-    }
-
-    public String getValueEscaped() {
-        return HtmlUtils.escape(value);
+        return value == null ? "" : Encode.forHtml(value);
     }
 
     public void setValue(String value) {

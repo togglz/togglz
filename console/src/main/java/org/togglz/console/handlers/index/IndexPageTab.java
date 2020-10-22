@@ -8,7 +8,7 @@ import org.togglz.console.model.FeatureModel;
 public class IndexPageTab implements Comparable<IndexPageTab> {
 
     private final int index;
-    private final List<FeatureModel> rows = new ArrayList<>();
+    private final List<FeatureModel> rows = new ArrayList<FeatureModel>();
     private final String label;
 
     private IndexPageTab(int index, String label) {

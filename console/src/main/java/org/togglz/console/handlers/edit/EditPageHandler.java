@@ -34,6 +34,7 @@ public class EditPageHandler extends RequestHandlerBase {
 
     @Override
     public void process(RequestEvent event) throws IOException {
+
         FeatureManager featureManager = event.getFeatureManager();
         HttpServletRequest request = event.getRequest();
         HttpServletResponse response = event.getResponse();
@@ -83,11 +84,13 @@ public class EditPageHandler extends RequestHandlerBase {
             else {
                 renderEditPage(event, featureModel);
             }
+
         }
+
     }
 
     private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
-        List<CSRFToken> tokens = new ArrayList<>();
+        List<CSRFToken> tokens = new ArrayList<CSRFToken>();
         for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
             CSRFToken token = provider.getToken(event.getRequest());
             if (token != null) {
@@ -95,7 +98,7 @@ public class EditPageHandler extends RequestHandlerBase {
             }
         }
 
-        Map<String, Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put("model", featureModel);
         model.put("tokens", tokens);
 

@@ -1,24 +1,20 @@
 package org.togglz.console;
 
+import com.floreysoft.jmte.Engine;
+import org.togglz.core.Togglz;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import org.togglz.core.Togglz;
-
-import com.floreysoft.jmte.Engine;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public abstract class RequestHandlerBase implements RequestHandler {
-
-    private final Charset UTF8 = StandardCharsets.UTF_8;
 
     protected void writeResponse(RequestEvent event, String body) throws IOException {
 
@@ -37,7 +33,7 @@ public abstract class RequestHandlerBase implements RequestHandler {
 
         response.setContentType("text/html");
         ServletOutputStream outputStream = response.getOutputStream();
-        outputStream.write(result.getBytes(UTF8));
+        outputStream.write(result.getBytes(UTF_8));
         response.flushBuffer();
 
     }
@@ -46,7 +42,7 @@ public abstract class RequestHandlerBase implements RequestHandler {
         InputStream stream = loadResource(name);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         copy(stream, bos);
-        return new String(bos.toByteArray(), UTF8);
+        return new String(bos.toByteArray(), UTF_8);
     }
 
     protected InputStream loadResource(String name) {
@@ -57,7 +53,7 @@ public abstract class RequestHandlerBase implements RequestHandler {
 
     protected void copy(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[1024];
-        int n = 0;
+        int n;
         while (-1 != (n = input.read(buffer))) {
             output.write(buffer, 0, n);
         }

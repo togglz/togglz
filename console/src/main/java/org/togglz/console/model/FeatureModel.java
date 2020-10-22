@@ -19,8 +19,6 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Strings;
 import org.togglz.core.util.Validate;
 
-import static java.util.Comparator.comparing;
-
 public class FeatureModel {
 
     private final Feature feature;
@@ -40,11 +38,16 @@ public class FeatureModel {
         this.feature = feature;
         this.metadata = metadata;
 
-        this.attributes = new LinkedHashMap<>(metadata.getAttributes());
+        this.attributes = new LinkedHashMap<String, String>(metadata.getAttributes());
         this.infoLink = this.attributes.remove("InfoLink");
 
-        List<ActivationStrategy> sortedImpls = new ArrayList<>(impls);
-        sortedImpls.sort(comparing(ActivationStrategy::getName));
+        List<ActivationStrategy> sortedImpls = new ArrayList<ActivationStrategy>(impls);
+        Collections.sort(sortedImpls, new Comparator<ActivationStrategy>() {
+            @Override
+            public int compare(ActivationStrategy o1, ActivationStrategy o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
 
         int paramIndex = 1;
         int strategyIndex = 1;
@@ -63,6 +66,7 @@ public class FeatureModel {
     }
 
     public void populateFromFeatureState(FeatureState featureState) {
+
         String strategyId = Strings.trimToNull(featureState.getStrategyId());
         this.strategy = getStrategyById(strategyId);
 
@@ -71,6 +75,7 @@ public class FeatureModel {
         for (ParameterModel param : getParameters()) {
             param.readValueFrom(featureState);
         }
+
     }
 
     public void restoreFromRequest(HttpServletRequest request) {
@@ -88,7 +93,8 @@ public class FeatureModel {
     }
 
     public List<String> getValidationErrors() {
-        List<String> errors = new ArrayList<>();
+
+        List<String> errors = new ArrayList<String>();
 
         // validate parameters of the strategy
         if (strategy != null) {
@@ -101,7 +107,9 @@ public class FeatureModel {
                 }
             }
         }
+
         return errors;
+
     }
 
     private StrategyModel getStrategyById(String id) {
@@ -113,8 +121,8 @@ public class FeatureModel {
         return null;
     }
 
-    private List<ParameterModel> getParameters() {
-        List<ParameterModel> params = new ArrayList<>();
+    public List<ParameterModel> getParameters() {
+        List<ParameterModel> params = new ArrayList<ParameterModel>();
         for (StrategyModel strategy : strategies) {
             params.addAll(strategy.getParameters());
         }
@@ -133,12 +141,15 @@ public class FeatureModel {
         FeatureState state = new FeatureState(feature, enabled);
 
         if (strategy != null) {
+
             state.setStrategyId(strategy.getId());
 
             for (ParameterModel param : strategy.getParameters()) {
                 state.setParameter(param.getId(), Strings.trimToNull(param.getValue()));
             }
+
         }
+
         return state;
     }
 
