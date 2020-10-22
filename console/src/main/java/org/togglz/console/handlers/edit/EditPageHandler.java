@@ -90,7 +90,6 @@ public class EditPageHandler extends RequestHandlerBase {
     }
 
     private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
-
         List<CSRFToken> tokens = new ArrayList<CSRFToken>();
         for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
             CSRFToken token = provider.getToken(event.getRequest());
@@ -106,6 +105,5 @@ public class EditPageHandler extends RequestHandlerBase {
         String template = getResourceAsString("edit.html");
         String content = new Engine().transform(template, model);
         writeResponse(event, content);
-
     }
 }
