@@ -8,7 +8,7 @@ Therefore this wrapper uses a plain enum without implementing `Feature` and prov
 
 Import dependency: 
 
-`implementation("org.togglz:kotlin:2.7.0-SNAPSHOT")`
+`implementation("org.togglz:togglz-kotlin:2.8.0")`
 
 Create an enum for your feature toggles but don't extend the Togglz-Feature interface:
 
