@@ -17,7 +17,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public abstract class RequestHandlerBase implements RequestHandler {
 
     protected void writeResponse(RequestEvent event, String body) throws IOException {
-
         HttpServletResponse response = event.getResponse();
 
         Map<String, Object> model = new HashMap<>();
