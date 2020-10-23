@@ -93,8 +93,7 @@ public class FeatureModel {
     }
 
     public List<String> getValidationErrors() {
-
-        List<String> errors = new ArrayList<String>();
+        List<String> errors = new ArrayList<>();
 
         // validate parameters of the strategy
         if (strategy != null) {
@@ -107,9 +106,7 @@ public class FeatureModel {
                 }
             }
         }
-
         return errors;
-
     }
 
     private StrategyModel getStrategyById(String id) {
@@ -122,7 +119,7 @@ public class FeatureModel {
     }
 
     public List<ParameterModel> getParameters() {
-        List<ParameterModel> params = new ArrayList<ParameterModel>();
+        List<ParameterModel> params = new ArrayList<>();
         for (StrategyModel strategy : strategies) {
             params.addAll(strategy.getParameters());
         }
@@ -134,22 +131,17 @@ public class FeatureModel {
     }
 
     public FeatureState toFeatureState() {
-
         Validate.isTrue(getValidationErrors().isEmpty(),
             "Calling toFeatureState() is only allowed for a valid model");
 
         FeatureState state = new FeatureState(feature, enabled);
 
         if (strategy != null) {
-
             state.setStrategyId(strategy.getId());
-
             for (ParameterModel param : strategy.getParameters()) {
                 state.setParameter(param.getId(), Strings.trimToNull(param.getValue()));
             }
-
         }
-
         return state;
     }
 

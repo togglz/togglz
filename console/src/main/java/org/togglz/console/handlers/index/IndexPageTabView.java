@@ -19,9 +19,9 @@ public class IndexPageTabView {
 
     private final IndexPageTab allTab;
 
-    private final Map<String, IndexPageTab> tabMap = new HashMap<String, IndexPageTab>();
+    private final Map<String, IndexPageTab> tabMap = new HashMap<>();
 
-    private final List<IndexPageTab> tabs = new ArrayList<IndexPageTab>();
+    private final List<IndexPageTab> tabs = new ArrayList<>();
 
     private int nextIndex = 0;
 
@@ -32,14 +32,12 @@ public class IndexPageTabView {
     }
 
     public void add(Feature feature, FeatureMetaData metadata, FeatureState featureState) {
-
         // all features are shown in the ALL tab
         FeatureModel row = new FeatureModel(feature, metadata, strategies);
         row.populateFromFeatureState(featureState);
         allTab.add(row);
 
         for (FeatureGroup group : metadata.getGroups()) {
-
             String label = group.getLabel();
             IndexPageTab tab = tabMap.get(label);
             if (tab == null) {
@@ -48,11 +46,8 @@ public class IndexPageTabView {
                 tabs.add(tab);
             }
             tab.add(row);
-
         }
-
         Collections.sort(tabs);
-
     }
 
     public List<IndexPageTab> getTabs() {

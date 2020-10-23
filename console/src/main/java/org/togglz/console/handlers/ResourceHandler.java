@@ -50,10 +50,7 @@ public class ResourceHandler extends RequestHandlerBase {
             } else {
                 response.setContentType("image/" + type);
             }
-
             copy(stream, response.getOutputStream());
-
         }
-
     }
 }
