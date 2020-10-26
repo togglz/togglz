@@ -10,8 +10,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 class HttpPostRequest {
 
@@ -61,6 +62,6 @@ class HttpPostRequest {
 
     private String readResponse(final HttpURLConnection connection) throws IOException {
         InputStream inputStream = connection.getInputStream();
-        return IOUtils.toString(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+        return IOUtils.toString(new InputStreamReader(inputStream, UTF_8));
     }
 }

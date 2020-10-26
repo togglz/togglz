@@ -135,13 +135,7 @@ class ReloadablePropertiesFile implements PropertySource {
         }
 
         public void removeKeysStartingWith(String prefix) {
-            Iterator<Entry<Object, Object>> iterator = newValues.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<Object, Object> entry = iterator.next();
-                if (entry.getKey().toString().startsWith(prefix)) {
-                    iterator.remove();
-                }
-            }
+            newValues.entrySet().removeIf(entry -> entry.getKey().toString().startsWith(prefix));
         }
 
         public void commit() {
