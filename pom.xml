@@ -73,7 +73,9 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
-          <additionalparam>${javadoc.disable.doclint}</additionalparam>
+          <additionalOptions>
+            <additionalOption>${javadoc.disable.doclint}</additionalOption>
+          </additionalOptions>
           <links>
             <link>http://docs.oracle.com/javase/6/docs/api/</link>
             <link>http://docs.oracle.com/javaee/6/api/</link>
