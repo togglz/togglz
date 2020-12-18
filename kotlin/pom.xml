@@ -35,6 +35,7 @@
       <groupId>io.kotlintest</groupId>
       <artifactId>kotlintest-runner-junit5</artifactId>
       <version>3.4.2</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
