@@ -1,12 +1,12 @@
 package org.togglz.servlet.activation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 public class HeaderActivationStrategy implements ActivationStrategy {

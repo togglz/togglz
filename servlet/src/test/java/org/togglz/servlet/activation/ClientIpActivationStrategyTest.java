@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequest.requestFrom;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequestAssert.assertThat;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,8 +16,6 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.servlet.activation.ClientIpActivationStrategy.AddressParameter;
 import org.togglz.servlet.util.HttpServletRequestHolder;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class ClientIpActivationStrategyTest {
 

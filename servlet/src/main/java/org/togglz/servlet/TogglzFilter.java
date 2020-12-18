@@ -2,15 +2,9 @@ package org.togglz.servlet;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.togglz.core.Togglz;
 import org.togglz.core.bootstrap.FeatureManagerBootstrapper;
 import org.togglz.core.context.ContextClassLoaderFeatureManagerProvider;
@@ -40,7 +34,7 @@ public class TogglzFilter implements Filter {
 
     private CompositeRequestListener requestListener;
 
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
         // build the configuration object
         TogglzFilterConfig config = new TogglzFilterConfig(filterConfig.getServletContext());
@@ -121,7 +115,6 @@ public class TogglzFilter implements Filter {
     }
 
     public void destroy() {
-
         // release only if the filter created it
         if (bootstrappedFeatureManager != null) {
 
@@ -132,9 +125,7 @@ public class TogglzFilter implements Filter {
 
             // release
             ContextClassLoaderFeatureManagerProvider.release();
-
         }
-
     }
 
 }

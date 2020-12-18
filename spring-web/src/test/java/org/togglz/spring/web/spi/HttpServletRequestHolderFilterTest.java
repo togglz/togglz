@@ -47,7 +47,7 @@ public class HttpServletRequestHolderFilterTest {
 
     filter.doFilter(request, response, filterChain);
     verifyStatic(HttpServletRequestHolder.class, times(1));
-    HttpServletRequestHolder.bind(any());
+    SpringHttpServletRequestHolder.bind(any());
   }
 
   @Test
@@ -61,7 +61,7 @@ public class HttpServletRequestHolderFilterTest {
   @Test
   public void shouldReleaseRequestOnExceptionWhileBinding() {
     PowerMockito.doThrow(new RuntimeException("boooom")).when(HttpServletRequestHolder.class);
-    HttpServletRequestHolder.bind(any());
+    SpringHttpServletRequestHolder.bind(any());
     assertThrows(RuntimeException.class, () -> filter.doFilter(request, response, filterChain));
     verifyStatic(HttpServletRequestHolder.class, times(1));
     HttpServletRequestHolder.release();

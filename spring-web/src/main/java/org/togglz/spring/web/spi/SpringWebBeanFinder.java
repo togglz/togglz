@@ -21,7 +21,7 @@ public class SpringWebBeanFinder extends AbstractSpringBeanFinder {
             servletContext = (ServletContext) context;
         }
         if (servletContext == null) {
-            HttpServletRequest request = HttpServletRequestHolder.get();
+            HttpServletRequest request = SpringHttpServletRequestHolder.get();
             if (request != null) {
                 servletContext = request.getServletContext();
             }
@@ -38,9 +38,7 @@ public class SpringWebBeanFinder extends AbstractSpringBeanFinder {
         if (applicationContext == null) {
             applicationContext = ContextClassLoaderApplicationContextHolder.get();
         }
-
         return applicationContext;
-
     }
 
 }

@@ -1,5 +1,6 @@
 package org.togglz.servlet.activation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
@@ -12,8 +13,6 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Activation strategy that will use the IP address of the client to decide if a feature is active or not.

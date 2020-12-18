@@ -1,6 +1,6 @@
 package org.togglz.servlet;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 /**
  * Encapsulates the configuration provided by the various web context parameters.

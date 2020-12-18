@@ -1,5 +1,6 @@
 package org.togglz.servlet.activation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.activation.ParameterBuilder;
 import org.togglz.core.logging.Log;
@@ -10,7 +11,6 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,7 +45,6 @@ public class QueryParameterActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-
         HttpServletRequest request = HttpServletRequestHolder.get();
         if (request == null) {
             return false;

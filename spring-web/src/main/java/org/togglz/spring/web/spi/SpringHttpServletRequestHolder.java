@@ -1,6 +1,6 @@
-package org.togglz.servlet.util;
+package org.togglz.spring.web.spi;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author Christian Kaltepoth
  * 
  */
-public class HttpServletRequestHolder {
+public class SpringHttpServletRequestHolder {
 
     private static ThreadLocal<HttpServletRequest> threadLocal = new ThreadLocal<>();
 
@@ -18,18 +18,6 @@ public class HttpServletRequestHolder {
      * Associate the request with the current thread.
      */
     public static void bind(HttpServletRequest request) {
-        if (request != null && threadLocal.get() != null) {
-            throw new IllegalStateException("HttpServletRequestHolder.bind() called for a "
-                    + "thread that already has a request associated with it. It's likely that the request "
-                    + "was not correctly removed from the thread before it is put back into the thread pool.");
-        }
-        threadLocal.set(request);
-    }
-
-    /**
-     * Associate the request with the current thread.
-     */
-    public static void binds(HttpServletRequest request) {
         if (request != null && threadLocal.get() != null) {
             throw new IllegalStateException("HttpServletRequestHolder.bind() called for a "
                     + "thread that already has a request associated with it. It's likely that the request "

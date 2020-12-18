@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.ServletContext;
-
+import jakarta.servlet.ServletContext;
 import org.togglz.core.spi.BeanFinder;
 
 import com.google.inject.Binding;

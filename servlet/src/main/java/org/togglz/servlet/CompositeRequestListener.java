@@ -3,9 +3,8 @@ package org.togglz.servlet;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.Validate;

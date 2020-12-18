@@ -2,14 +2,8 @@ package org.togglz.servlet.test.user.thread;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.thread.ThreadLocalUserProvider;
 

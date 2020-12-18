@@ -9,8 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
+import jakarta.servlet.http.HttpServletRequest;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.metadata.FeatureMetaData;
@@ -18,6 +17,8 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.util.Strings;
 import org.togglz.core.util.Validate;
+
+import static java.util.Comparator.*;
 
 public class FeatureModel {
 
@@ -38,16 +39,11 @@ public class FeatureModel {
         this.feature = feature;
         this.metadata = metadata;
 
-        this.attributes = new LinkedHashMap<String, String>(metadata.getAttributes());
+        this.attributes = new LinkedHashMap<>(metadata.getAttributes());
         this.infoLink = this.attributes.remove("InfoLink");
 
-        List<ActivationStrategy> sortedImpls = new ArrayList<ActivationStrategy>(impls);
-        Collections.sort(sortedImpls, new Comparator<ActivationStrategy>() {
-            @Override
-            public int compare(ActivationStrategy o1, ActivationStrategy o2) {
-                return o1.getName().compareTo(o2.getName());
-            }
-        });
+        List<ActivationStrategy> sortedImpls = new ArrayList<>(impls);
+        sortedImpls.sort(comparing(ActivationStrategy::getName));
 
         int paramIndex = 1;
         int strategyIndex = 1;
@@ -60,13 +56,10 @@ public class FeatureModel {
             for (Parameter param : impl.getParameters()) {
                 strategy.add(new ParameterModel(paramIndex++, param, strategy));
             }
-
         }
-
     }
 
     public void populateFromFeatureState(FeatureState featureState) {
-
         String strategyId = Strings.trimToNull(featureState.getStrategyId());
         this.strategy = getStrategyById(strategyId);
 

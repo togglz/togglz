@@ -6,11 +6,10 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 
-import java.lang.annotation.Annotation;
-import java.util.concurrent.ConcurrentHashMap;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This interceptor checks if a controller or controller method is annotated with the

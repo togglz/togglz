@@ -2,12 +2,11 @@ package org.togglz.servlet.test.util;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.togglz.servlet.TogglzFilter;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
@@ -19,7 +18,7 @@ public class HttpServletRequestHolderServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
-    protected void doGet(HttpServletRequest ignoreMe, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest ignoreMe, HttpServletResponse resp) throws IOException {
 
         HttpServletRequest request = HttpServletRequestHolder.get();
 
@@ -32,7 +31,6 @@ public class HttpServletRequestHolderServlet extends HttpServlet {
 
         }
         resp.sendError(404);
-
     }
 
 }

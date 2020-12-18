@@ -2,8 +2,7 @@ package org.togglz.servlet.user;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
+import jakarta.servlet.http.HttpServletRequest;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
@@ -31,7 +30,6 @@ public class ServletUserProvider implements UserProvider {
 
     @Override
     public FeatureUser getCurrentUser() {
-
         HttpServletRequest request = HttpServletRequestHolder.get();
 
         if (request == null) {
