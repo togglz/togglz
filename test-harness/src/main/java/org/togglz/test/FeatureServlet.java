@@ -19,17 +19,12 @@ public class FeatureServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         FeatureManager featureManager = FeatureContext.getFeatureManager();
-
         StringBuilder builder = new StringBuilder();
-
         for (Feature f : featureManager.getFeatures()) {
-            builder.append(f.name() + " = " + featureManager.isActive(f) + "\n");
+            builder.append(f.name()).append(" = ").append(featureManager.isActive(f)).append("\n");
         }
-
         resp.getOutputStream().write(builder.toString().getBytes());
-
     }
 
 }

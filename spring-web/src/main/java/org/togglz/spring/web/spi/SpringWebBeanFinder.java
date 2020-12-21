@@ -40,7 +40,6 @@ public class SpringWebBeanFinder extends AbstractSpringBeanFinder {
         }
 
         return applicationContext;
-
     }
 
 }

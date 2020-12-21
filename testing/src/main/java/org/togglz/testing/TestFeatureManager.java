@@ -17,17 +17,15 @@ import java.util.Set;
 import static java.util.Collections.emptyList;
 
 /**
- * 
  * A {@link FeatureManager} implementation that allows easy manipulation of features in testing environments.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class TestFeatureManager implements FeatureManager {
 
     private final Class<? extends Feature> featureEnum;
 
-    private final Set<String> activeFeatures = new HashSet<String>();
+    private final Set<String> activeFeatures = new HashSet<>();
 
     public TestFeatureManager(Class<? extends Feature> featureEnum) {
         Validate.notNull(featureEnum, "The featureEnum argument is required");
@@ -42,7 +40,7 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public Set<Feature> getFeatures() {
-        return new HashSet<Feature>(Arrays.asList(featureEnum.getEnumConstants()));
+        return new HashSet<>(Arrays.asList(featureEnum.getEnumConstants()));
     }
 
     @Override

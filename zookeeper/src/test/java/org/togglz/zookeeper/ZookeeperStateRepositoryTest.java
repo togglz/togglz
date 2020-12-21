@@ -5,9 +5,9 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
 import org.apache.curator.test.TestingServer;
+import org.apache.zookeeper.client.ZKClientConfig;
 import org.apache.zookeeper.client.ZooKeeperSaslClient;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
@@ -21,13 +21,12 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Ryan Gardner
- * @date 5/26/16
  */
 public class ZookeeperStateRepositoryTest {
 
@@ -49,13 +48,13 @@ public class ZookeeperStateRepositoryTest {
         TestingServer server = new TestingServer();
         CuratorFramework client;
         // for environments where sasl is set, null it our for our test
-        System.setProperty(ZooKeeperSaslClient.ENABLE_CLIENT_SASL_KEY, "false");
+        System.setProperty(ZKClientConfig.ENABLE_CLIENT_SASL_DEFAULT, "false");
 
         client = CuratorFrameworkFactory.builder().connectString(server.getConnectString()).retryPolicy(new RetryOneTime(2000)).build();
         client.start();
 
         for (Map.Entry<String, String> initialData : data.entrySet()) {
-            client.create().creatingParentContainersIfNeeded().forPath(initialData.getKey(), initialData.getValue().getBytes("UTF-8"));
+            client.create().creatingParentContainersIfNeeded().forPath(initialData.getKey(), initialData.getValue().getBytes(UTF_8));
         }
         return new ServerClientPair(server, client);
     }
@@ -72,7 +71,7 @@ public class ZookeeperStateRepositoryTest {
         setupTestWithData(Collections.EMPTY_MAP);
     }
 
-    public void setupTestWithData(Map<String,String> initialParameters) throws Exception {
+    public void setupTestWithData(Map<String, String> initialParameters) throws Exception {
         serverClientPair = startServer(initialParameters);
         stateRepository = ZookeeperStateRepository.newBuilder(serverClientPair.client, TEST_ZNODE).build();
     }
@@ -136,15 +135,12 @@ public class ZookeeperStateRepositoryTest {
         final String json = objectMapper.writeValueAsString(externallySetStateWrapper);
 
         final CountDownLatch latch = new CountDownLatch(1);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    serverClientPair.client.setData().forPath(TEST_ZNODE + "/FEATURE", json.getBytes("UTF-8"));
-                    latch.countDown();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            try {
+                serverClientPair.client.setData().forPath(TEST_ZNODE + "/FEATURE", json.getBytes(UTF_8));
+                latch.countDown();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
         latch.await(2, TimeUnit.SECONDS);

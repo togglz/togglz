@@ -13,14 +13,17 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.FeatureStateStorageWrapper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static java.nio.charset.StandardCharsets.*;
 import static org.togglz.core.util.FeatureStateStorageWrapper.featureStateForWrapper;
 
 public class ZookeeperStateRepository implements StateRepository, TreeCacheListener {
+
     private static final Logger log = LoggerFactory.getLogger(ZookeeperStateRepository.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -81,7 +84,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
             String json = objectMapper.writeValueAsString(wrapper);
             String path = featuresZnode + "/" + featureState.getFeature().name();
             curatorFramework.createContainers(path);
-            curatorFramework.setData().forPath(path, json.getBytes("UTF-8"));
+            curatorFramework.setData().forPath(path, json.getBytes(UTF_8));
             states.put(featureState.getFeature().name(), wrapper);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -117,8 +120,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
                 }
                 break;
             case NODE_REMOVED:
-                String removedPath = eventData.getPath();
-                featureName = removedPath;
+                featureName = eventData.getPath();
                 if (featureName.contains("/")) {
                     break;
                 }
@@ -140,8 +142,6 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
     private boolean pathHasAFeatureInIt(String updatedPath) {
         return updatedPath.length() > featuresZnode.length();
     }
-
-
 
     public static Builder newBuilder(CuratorFramework curatorFramework, String featuresZnode) {
         return new Builder(curatorFramework, featuresZnode);

@@ -18,17 +18,12 @@ public class UserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         FeatureManager featureManager = FeatureContext.getFeatureManager();
         FeatureUser user = featureManager.getCurrentFeatureUser();
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("USER = " + (user != null ? user.getName() : "null"));
-        builder.append("ADMIN = " + (user != null ? user.isFeatureAdmin() : "null"));
-
-        resp.getOutputStream().write(builder.toString().getBytes());
-
+        String builder = "USER = " + (user != null ? user.getName() : "null") +
+                "ADMIN = " + (user != null ? user.isFeatureAdmin() : "null");
+        resp.getOutputStream().write(builder.getBytes());
     }
-
 }

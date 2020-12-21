@@ -9,17 +9,14 @@ import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link VariationSet} that allows to build the set dynamically.
- * 
- * @author Christian Kaltepoth
- * 
+ *
  * @param <F> The feature class
+ * @author Christian Kaltepoth
  */
-public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
-{
+public class VariationSetBuilder<F extends Feature> implements VariationSet<F> {
 
-    public static <F extends Feature> VariationSetBuilder<F> create(Class<F> featureClass)
-    {
-        return new VariationSetBuilder<F>(featureClass);
+    public static <F extends Feature> VariationSetBuilder<F> create(Class<F> featureClass) {
+        return new VariationSetBuilder<>(featureClass);
     }
 
     private final Class<F> featureClass;
@@ -28,8 +25,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     private final Set<F> featuresToEnable = new HashSet<F>();
     private final Set<F> featuresToDisable = new HashSet<F>();
 
-    protected VariationSetBuilder(Class<F> featureEnum)
-    {
+    protected VariationSetBuilder(Class<F> featureEnum) {
         Validate.notNull(featureEnum, "The featureEnum argument is required");
         Validate.isTrue(featureEnum.isEnum(), "This class only works with feature enums");
         this.featureClass = featureEnum;
@@ -38,8 +34,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     /**
      * Vary this feature in the variation set.
      */
-    public VariationSetBuilder<F> vary(F f)
-    {
+    public VariationSetBuilder<F> vary(F f) {
         featuresToVary.add(f);
         featuresToEnable.remove(f);
         featuresToDisable.remove(f);
@@ -49,8 +44,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     /**
      * Enable this feature in the variation set.
      */
-    public VariationSetBuilder<F> enable(F f)
-    {
+    public VariationSetBuilder<F> enable(F f) {
         featuresToVary.remove(f);
         featuresToEnable.add(f);
         featuresToDisable.remove(f);
@@ -60,8 +54,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     /**
      * Disable this feature in the variation set.
      */
-    public VariationSetBuilder<F> disable(F f)
-    {
+    public VariationSetBuilder<F> disable(F f) {
         featuresToVary.remove(f);
         featuresToEnable.remove(f);
         featuresToDisable.add(f);
@@ -90,15 +83,14 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.togglz.junit.vary.VariationSet#getVariants()
      */
     @Override
-    public Set<Set<F>> getVariants()
-    {
+    public Set<Set<F>> getVariants() {
 
         // start with a single variant with all feature disabled
-        Set<Set<F>> variantSet = new LinkedHashSet<Set<F>>();
+        Set<Set<F>> variantSet = new LinkedHashSet<>();
         variantSet.add(new HashSet<F>());
 
         for (F feature : featureClass.getEnumConstants()) {
@@ -127,9 +119,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
             }
 
         }
-
         return variantSet;
-
     }
 
     private Set<Set<F>> deepCopy(Set<Set<F>> src) {
@@ -141,8 +131,7 @@ public class VariationSetBuilder<F extends Feature> implements VariationSet<F>
     }
 
     @Override
-    public Class<F> getFeatureClass()
-    {
+    public Class<F> getFeatureClass() {
         return featureClass;
     }
 
