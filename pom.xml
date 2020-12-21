@@ -11,7 +11,7 @@
 
   <groupId>org.togglz</groupId>
   <artifactId>togglz-project</artifactId>
-  <version>2.9.2-SNAPSHOT</version>
+  <version>2.9.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Togglz</name>
@@ -239,27 +239,6 @@
     </profile>
 
     <profile>
-      <id>javadoc-disable-doclint</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <properties>
-        <javadoc.disable.doclint>-Xdoclint:none</javadoc.disable.doclint>
-      </properties>
-    </profile>
-
-    <profile>
-      <id>java8-features</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <modules>
-        <module>microprofile-config</module>
-        <module>junit</module>
-      </modules>
-    </profile>
-
-    <profile>
       <id>owasp-dependency-check</id>
       <build>
         <plugins>
@@ -289,7 +268,6 @@
         </plugins>
       </build>
     </profile>
-
   </profiles>
 
   <dependencyManagement>
