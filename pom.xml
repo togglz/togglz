@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -101,32 +102,6 @@
           <useDefaultManifestFile>true</useDefaultManifestFile>
         </configuration>
       </plugin>
-
-      <!-- OWASP -->
-      <plugin>
-        <groupId>org.owasp</groupId>
-        <artifactId>dependency-check-maven</artifactId>
-        <version>6.0.3</version>
-        <configuration>
-          <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
-          <format>ALL</format>
-          <skipProvidedScope>true</skipProvidedScope>
-          <skipRuntimeScope>true</skipRuntimeScope>
-          <skipSystemScope>true</skipSystemScope>
-          <suppressionFiles>
-            <suppressionFile>project-suppression.xml</suppressionFile>
-          </suppressionFiles>
-          <skipArtifactType>pom</skipArtifactType>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
 
     <pluginManagement>
@@ -282,6 +257,37 @@
         <module>microprofile-config</module>
         <module>junit</module>
       </modules>
+    </profile>
+
+    <profile>
+      <id>owasp-dependency-check</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+            <version>6.0.3</version>
+            <configuration>
+              <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+              <format>HTML</format>
+              <skipProvidedScope>true</skipProvidedScope>
+              <skipRuntimeScope>true</skipRuntimeScope>
+              <skipSystemScope>true</skipSystemScope>
+              <suppressionFiles>
+                <suppressionFile>project-suppression.xml</suppressionFile>
+              </suppressionFiles>
+              <skipArtifactType>pom</skipArtifactType>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>aggregate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
   </profiles>
