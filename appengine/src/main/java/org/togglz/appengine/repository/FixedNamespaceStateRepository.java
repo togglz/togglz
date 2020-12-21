@@ -1,8 +1,7 @@
 package org.togglz.appengine.repository;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -43,8 +42,8 @@ public class FixedNamespaceStateRepository implements StateRepository {
         });
     }
 
-    static interface Work<T> {
-        public T run();
+    interface Work<T> {
+        T run();
     }
     
     static abstract class VoidWork implements Work<Void> {
@@ -60,8 +59,7 @@ public class FixedNamespaceStateRepository implements StateRepository {
         String oldNamespace = NamespaceManager.get();
         NamespaceManager.set(namespace);
         try {
-            R r = work.run();
-            return r;
+            return work.run();
         } finally {
             NamespaceManager.set(oldNamespace);
         }
