@@ -13,3 +13,4 @@ generated-sources/
 *.orig
 test-output
 /kotlin/.kotlintest/
+/console/dependency-reduced-pom.xml
