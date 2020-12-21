@@ -106,7 +106,7 @@
       <plugin>
         <groupId>org.owasp</groupId>
         <artifactId>dependency-check-maven</artifactId>
-        <version>6.0.2</version>
+        <version>6.0.3</version>
         <configuration>
           <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
           <format>ALL</format>
@@ -121,7 +121,7 @@
         <executions>
           <execution>
             <goals>
-              <goal>aggregate</goal>
+              <goal>check</goal>
             </goals>
           </execution>
         </executions>

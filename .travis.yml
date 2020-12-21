@@ -5,7 +5,7 @@ cache:
 install:
   - "mvn -P ${CONTAINER} -DJBOSS_REPO=true -DskipTests=true -B install"
 script:
-  - "mvn -P ${CONTAINER} -DJBOSS_REPO=true test"
+  - "mvn -P ${CONTAINER} -DJBOSS_REPO=true test org.owasp:dependency-check-maven:check"
 after_success:
   - "bash .travis-sonatype-deploy.sh"
 jdk:
