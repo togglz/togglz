@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Marcel Overdijk
  */
-@ConfigurationProperties(prefix = "togglz", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "togglz")
 @Validated
 public class TogglzProperties {
 
