@@ -12,10 +12,6 @@
   <name>Togglz - DeltaSpike integration</name>
   <description>Togglz - DeltaSpike integration</description>
 
-  <properties>
-    <deltaspike.version>1.7.2</deltaspike.version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.togglz</groupId>
@@ -25,7 +21,7 @@
     <dependency>
       <groupId>org.apache.deltaspike.core</groupId>
       <artifactId>deltaspike-core-api</artifactId>
-      <version>${deltaspike.version}</version>
+      <version>1.9.4</version>
       <scope>provided</scope>
     </dependency>
 
