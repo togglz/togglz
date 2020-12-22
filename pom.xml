@@ -48,8 +48,6 @@
 
     <spring.version>5.2.7.RELEASE</spring.version>
     <junit.version>5.7.0</junit.version>
-
-    <project.root.basedir>${project.parent.basedir}</project.root.basedir>
   </properties>
 
   <build>
