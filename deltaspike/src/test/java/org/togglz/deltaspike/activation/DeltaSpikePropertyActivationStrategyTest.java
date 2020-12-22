@@ -1,12 +1,10 @@
 package org.togglz.deltaspike.activation;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoints;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.AbstractPropertyDrivenActivationStrategy;
 import org.togglz.core.activation.Parameter;
@@ -14,9 +12,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.deltaspike.TestConfigSourceProvider;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * <p>
@@ -25,20 +21,16 @@ import static org.junit.Assert.assertTrue;
  *
  * @author Alasdair Mercer
  */
-@RunWith(Theories.class)
 public class DeltaSpikePropertyActivationStrategyTest {
-
-    @DataPoints
-    public static final boolean[] DATA_POINTS = { true, false };
 
     private DeltaSpikePropertyActivationStrategy strategy;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         strategy = new DeltaSpikePropertyActivationStrategy();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         TestConfigSourceProvider.clearProperties();
     }
@@ -53,7 +45,8 @@ public class DeltaSpikePropertyActivationStrategyTest {
         assertTrue(Strings.isNotBlank(strategy.getName()));
     }
 
-    @Theory
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
     public void testIsActiveWithNoParam(boolean enabled) {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
 
@@ -62,7 +55,8 @@ public class DeltaSpikePropertyActivationStrategyTest {
         assertEquals(enabled, strategy.isActive(featureState, null));
     }
 
-    @Theory
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
     public void testIsActiveWithParam(boolean enabled) {
         String paramValue = "foo";
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
@@ -97,7 +91,6 @@ public class DeltaSpikePropertyActivationStrategyTest {
     }
 
     public enum TestFeatures implements Feature {
-
         FEATURE_ONE
     }
 }
