@@ -31,7 +31,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.togglz.console.TogglzConsoleServlet;
 import org.togglz.core.Feature;
@@ -228,7 +228,7 @@ public class TogglzAutoConfiguration {
     @ConditionalOnWebApplication
     @ConditionalOnClass(HandlerInterceptorAdapter.class)
     @ConditionalOnProperty(prefix = "togglz.web", name = "register-feature-interceptor", havingValue = "true")
-    protected static class TogglzFeatureInterceptorConfiguration extends WebMvcConfigurerAdapter {
+    protected static class TogglzFeatureInterceptorConfiguration implements WebMvcConfigurer {
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
             registry.addInterceptor(new FeatureInterceptor());
