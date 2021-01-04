@@ -20,6 +20,7 @@ import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
@@ -38,6 +39,7 @@ import java.util.List;
  *
  * @author Rui Figueira
  */
+@Component
 @Endpoint(id = "togglz")
 public class TogglzEndpoint  {
 
