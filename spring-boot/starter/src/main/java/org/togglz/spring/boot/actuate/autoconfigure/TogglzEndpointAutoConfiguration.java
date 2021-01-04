@@ -16,7 +16,6 @@
 
 package org.togglz.spring.boot.actuate.autoconfigure;
 
-import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -58,7 +57,6 @@ public class TogglzEndpointAutoConfiguration {
     @Bean
     @ConditionalOnBean(FeatureManager.class)
     @ConditionalOnMissingBean
-    //@ConditionalOnAvailableEndpoint(endpoint = TogglzEndpoint.class)
     public TogglzEndpoint togglzEndpoint(FeatureManager featureManager) {
         return new TogglzEndpoint(featureManager);
     }

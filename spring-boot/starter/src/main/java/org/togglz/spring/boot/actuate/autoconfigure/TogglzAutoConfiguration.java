@@ -69,7 +69,7 @@ public class TogglzAutoConfiguration {
 
     @Bean
     public TogglzApplicationContextBinderApplicationListener togglzApplicationContextBinderApplicationListener(
-        ObjectProvider<TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter> contextRefreshedEventFilter) {
+            ObjectProvider<TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter> contextRefreshedEventFilter) {
         return new TogglzApplicationContextBinderApplicationListener(contextRefreshedEventFilter.getIfAvailable());
     }
 
@@ -86,9 +86,8 @@ public class TogglzAutoConfiguration {
             Class<? extends Feature>[] featureEnums = properties.getFeatureEnums();
             if (featureEnums != null && featureEnums.length > 0) {
                 return new CompositeFeatureProvider(new EnumBasedFeatureProvider(featureEnums), provider);
-            } else {
-                return provider;
             }
+            return provider;
         }
     }
 
@@ -101,7 +100,7 @@ public class TogglzAutoConfiguration {
 
         @Bean
         public FeatureManager featureManager(FeatureProvider featureProvider, List<StateRepository> stateRepositories,
-                UserProvider userProvider, ActivationStrategyProvider activationStrategyProvider) {
+                                             UserProvider userProvider, ActivationStrategyProvider activationStrategyProvider) {
             StateRepository stateRepository = null;
             if (stateRepositories.size() == 1) {
                 stateRepository = stateRepositories.get(0);
@@ -126,10 +125,12 @@ public class TogglzAutoConfiguration {
             if (name != null && name.length() > 0) {
                 featureManagerBuilder.name(name);
             }
-            featureManagerBuilder.featureProvider(featureProvider).stateRepository(stateRepository)
-                    .userProvider(userProvider).activationStrategyProvider(activationStrategyProvider).build();
-            FeatureManager manager = featureManagerBuilder.build();
-            return manager;
+            return featureManagerBuilder
+                    .featureProvider(featureProvider)
+                    .stateRepository(stateRepository)
+                    .userProvider(userProvider)
+                    .activationStrategyProvider(activationStrategyProvider)
+            .build();
         }
     }
 
@@ -200,7 +201,7 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({ EnableWebSecurity.class, AuthenticationEntryPoint.class, SpringSecurityUserProvider.class })
+    @ConditionalOnClass({EnableWebSecurity.class, AuthenticationEntryPoint.class, SpringSecurityUserProvider.class})
     @ConditionalOnMissingBean(UserProvider.class)
     protected static class SpringSecurityUserProviderConfiguration {
 
@@ -247,7 +248,7 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass({OncePerRequestFilter.class })
+    @ConditionalOnClass({OncePerRequestFilter.class})
     @ConditionalOnMissingBean(HttpServletRequestHolderFilter.class)
     protected static class RequestHolderFilterConfiguration {
 
