@@ -199,6 +199,24 @@ public class FileBasedStateRepositoryTest {
     }
 
     @Test
+    public void createMissingFile() throws IOException {
+        File file = new File("test.properties");
+
+        try {
+            FileBasedStateRepository repo = new FileBasedStateRepository(file);
+
+            repo.setFeatureState(new FeatureState(MyFeature.FEATURE1, true));
+
+            Properties newProps = readPropertiesFile(file);
+
+            assertEquals(1, newProps.size());
+            assertEquals("true", newProps.getProperty("FEATURE1"));
+        } finally {
+            file.delete();
+        }
+    }
+
+    @Test
     public void disableFeature() throws IOException {
 
         Properties initialProps = new Properties();

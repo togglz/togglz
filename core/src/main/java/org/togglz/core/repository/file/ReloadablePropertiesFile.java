@@ -1,21 +1,13 @@
 package org.togglz.core.repository.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.property.PropertySource;
 import org.togglz.core.util.IOUtils;
+
+import java.io.*;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Please note that this class is NOT thread-safe.
@@ -44,6 +36,15 @@ class ReloadablePropertiesFile implements PropertySource {
     }
 
     public synchronized void reloadIfUpdated() {
+        if (!this.file.exists()) {
+            try {
+                if (this.file.createNewFile()) {
+                    log.debug("Created non-existent file.");
+                }
+            } catch (IOException e) {
+                log.error("Error creating missing file " + this.file.getName(), e);
+            }
+        }
 
         long now = System.currentTimeMillis();
         if (now - lastCheck > minCheckInterval) {
@@ -128,8 +129,7 @@ class ReloadablePropertiesFile implements PropertySource {
         public void setValue(String key, String value) {
             if (value != null) {
                 newValues.setProperty(key, value);
-            }
-            else {
+            } else {
                 newValues.remove(key);
             }
         }
