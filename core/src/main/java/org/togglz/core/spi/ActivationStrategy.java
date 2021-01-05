@@ -31,7 +31,7 @@ public interface ActivationStrategy {
      * find a decision.
      * 
      * @param featureState The feature state which represents the current configuration of the feature. The implementation of
-     *        the method typically uses {@link FeatureState#getParameter(String)} to access custom configuration paramater
+     *        the method typically uses {@link FeatureState#getParameter(String)} to access custom configuration parameter
      *        values.
      * @param user The user for which to decide whether the feature is active. May be <code>null</code> if the user could not be
      *        identified by the {@link UserProvider}.
