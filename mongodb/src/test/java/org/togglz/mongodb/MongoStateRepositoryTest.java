@@ -2,9 +2,7 @@ package org.togglz.mongodb;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.*;
 import org.testcontainers.containers.MongoDBContainer;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -15,24 +13,24 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MongoStateRepositoryTest {
+public class MongoStateRepositoryTest {
 
     private final Random random = new Random(System.currentTimeMillis());
 
     static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.2.5");
 
-    @BeforeAll
+    @BeforeClass
     public static void beforeClass() {
         mongoDBContainer.start();
     }
 
-    @AfterAll
+    @AfterClass
     public static void afterClass() {
         mongoDBContainer.stop();
     }
 
     @Test
-    void testInsertAndUpdate() {
+    public void testInsertAndUpdate() {
         final MongoClient mongoClient = MongoClients.create(mongoDBContainer.getReplicaSetUrl());
 
         final MongoStateRepository mongoStateRepository = MongoStateRepository.newBuilder(mongoClient, "mongo-state-repository-test").build();
