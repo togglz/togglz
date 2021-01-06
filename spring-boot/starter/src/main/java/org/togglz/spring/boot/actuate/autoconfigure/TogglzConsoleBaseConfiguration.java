@@ -79,7 +79,7 @@ public abstract class TogglzConsoleBaseConfiguration {
         static class OnConsole {
         }
 
-        @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "false")
+        @ConditionalOnProperty(prefix = "togglz.console", name = "use-management-port", havingValue = "false", matchIfMissing = true)
         static class OnNotUseManagementPort {
         }
 
