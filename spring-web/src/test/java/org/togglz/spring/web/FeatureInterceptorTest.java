@@ -3,7 +3,6 @@ package org.togglz.spring.web;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -21,6 +20,10 @@ import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 
+/**
+ * @author ractive
+ * @author m-schroeer
+ */
 public class FeatureInterceptorTest {
 
     private static final int METHOD_FEATURE_TWO_RESPONSE_STATUS = 302;
@@ -57,19 +60,19 @@ public class FeatureInterceptorTest {
         FeatureContext.clearCache();
     }
 
-    @FeaturesAreActive(featureClass = TestFeatures.class, features = "CLASS_FEATURE")
+    @FeaturesAreActive(features = "CLASS_FEATURE")
     private static class TestController {
         @SuppressWarnings("unused")
         public void classFeature() { }
         
-        @FeaturesAreActive(featureClass = TestFeatures.class, features = "METHOD_FEATURE")
+        @FeaturesAreActive(features = "METHOD_FEATURE")
         public void methodFeature() { }
         
-        @FeaturesAreActive(featureClass = TestFeatures.class, features = {"METHOD_FEATURE", "METHOD_FEATURE_TWO"}, responseStatus = METHOD_FEATURE_TWO_RESPONSE_STATUS)
+        @FeaturesAreActive(features = {"METHOD_FEATURE", "METHOD_FEATURE_TWO"}, responseStatus = METHOD_FEATURE_TWO_RESPONSE_STATUS)
         public void methodFeatureTwo() { }
         
-        @FeaturesAreActive(featureClass = NoEnumFeature.class, features = "A")
-        public void methodFeatureNoEnum() { }
+        @FeaturesAreActive(features = {"METHOD_FEATURE", "NO_FEATURE", "METHOD_FEATURE_TWO"})
+        public void methodFeatureAtLeastOneIsNoFeature() { }
     }
 
     private static class NonAnnotatedTestController {
@@ -131,8 +134,10 @@ public class FeatureInterceptorTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void preHandle_methodFeatureNoEnum_InvalidEnum() throws Exception {
-        assertPrehandle("methodFeatureNoEnum", false, HttpStatus.NOT_FOUND.value());
+    public void preHandle_MethodFeatureAtLeastOneIsNoFeature_AllActualFeaturesActive() throws Exception {
+        enableFeature(TestFeatures.METHOD_FEATURE);
+        enableFeature(TestFeatures.METHOD_FEATURE_TWO);
+        assertPrehandle("methodFeatureAtLeastOneIsNoFeature", false, HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -141,7 +146,6 @@ public class FeatureInterceptorTest {
         HandlerMethod handler = new HandlerMethod(controller, "classFeature");
         FeaturesAreActive annotation = FeatureInterceptor.handlerAnnotation(handler, FeaturesAreActive.class);
         assertNotNull(annotation);
-        assertEquals(TestFeatures.class, annotation.featureClass());
         assertEquals(HttpStatus.NOT_FOUND.value(), annotation.responseStatus());
         assertThat(annotation.features()).containsExactly("CLASS_FEATURE");
     }
@@ -152,19 +156,10 @@ public class FeatureInterceptorTest {
         HandlerMethod handler = new HandlerMethod(controller, "methodFeatureTwo");
         FeaturesAreActive annotation = FeatureInterceptor.handlerAnnotation(handler, FeaturesAreActive.class);
         assertNotNull(annotation);
-        assertEquals(TestFeatures.class, annotation.featureClass());
         assertEquals(302, annotation.responseStatus());
         assertThat(annotation.features()).containsExactly("METHOD_FEATURE", "METHOD_FEATURE_TWO");
     }
 
-    @Test
-    public void enumFrom() {
-        assertEquals(TestFeatures.CLASS_FEATURE, FeatureInterceptor.enumFrom("CLASS_FEATURE", TestFeatures.class));
-        assertEquals(TestFeatures.METHOD_FEATURE, FeatureInterceptor.enumFrom("METHOD_FEATURE", TestFeatures.class));
-        assertNull(FeatureInterceptor.enumFrom("FOO", TestFeatures.class));
-        assertNull(FeatureInterceptor.enumFrom(null, TestFeatures.class));
-    }
-   
     private void enableFeature(TestFeatures feature) {
         repository.setFeatureState(new FeatureState(feature, true));
         assertTrue(manager.isActive(feature));
