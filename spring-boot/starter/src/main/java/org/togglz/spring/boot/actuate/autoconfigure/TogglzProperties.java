@@ -362,7 +362,7 @@ public class TogglzProperties {
 
 		/**
 		 * Register the FeatureInterceptor that allows you to activate a
-		 * controller or contoller methods based on features.
+		 * controller or controller methods based on features.
 		 */
 		private boolean registerFeatureInterceptor = false;
 
