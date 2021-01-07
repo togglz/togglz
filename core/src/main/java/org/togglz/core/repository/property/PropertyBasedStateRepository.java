@@ -1,6 +1,7 @@
 package org.togglz.core.repository.property;
 
 import java.util.List;
+import java.util.Properties;
 
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;

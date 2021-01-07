@@ -28,7 +28,7 @@ public interface TogglzBootstrap {
      * Create the {@link FeatureManager} for the application. Implementations typically use {@link FeatureManagerBuilder} which
      * offers a fluent API for configuring all the aspects of Togglz.
      *
-     * @return The new {@link FeatureManager}, never <code>null</code>.
+     * @return The new {@link FeatureManager}, never {@code null}.
      */
     FeatureManager createFeatureManager();
 

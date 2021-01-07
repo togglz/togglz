@@ -3,7 +3,6 @@ package org.togglz.core.activation;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -123,18 +122,18 @@ class GradualActivationStrategyTest {
     }
 
     private enum GradualFeature implements Feature {
-        FEATURE;
+        FEATURE
     }
 
-    private class TestingGradualActivationStrategy extends GradualActivationStrategy {
+    private static class TestingGradualActivationStrategy extends GradualActivationStrategy {
 
-        private final Pattern HASH_PATTERN = Pattern.compile("^hash\\-(\\d+)$");;
+        private final Pattern HASH_PATTERN = Pattern.compile("^hash-(\\d+)$");
 
         @Override
         protected int calculateHashCode(FeatureUser user, Feature feature) {
             Matcher matcher = HASH_PATTERN.matcher(user.getName());
             if (matcher.matches()) {
-                return Integer.valueOf(matcher.group(1));
+                return Integer.parseInt(matcher.group(1));
             }
             return super.calculateHashCode(user, feature);
         }

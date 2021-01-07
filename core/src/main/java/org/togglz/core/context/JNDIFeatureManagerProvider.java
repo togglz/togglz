@@ -11,7 +11,7 @@ import org.togglz.core.spi.FeatureManagerProvider;
 /**
  *
  * Implementation of {@link FeatureManagerProvider} that tries to look up a {@link FeatureManager} from JNDI using the name
- * <code>java:/comp/env/FeatureManager</code>.
+ * {@code java:/comp/env/FeatureManager}.
  *
  * @author Christian Kaltepoth
  *
