@@ -10,7 +10,7 @@
 
   <container qualifier="wildfly-managed" default="true">
     <configuration>
-      <property name="jbossHome">../target/container/wildfly-20.0.1.Final/</property>
+      <property name="jbossHome">../target/container/wildfly-8.2.1.Final/</property>
     </configuration>
   </container>
 
