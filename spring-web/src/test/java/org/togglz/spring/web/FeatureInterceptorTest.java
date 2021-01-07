@@ -24,7 +24,7 @@ import org.togglz.core.repository.mem.InMemoryStateRepository;
 public class FeatureInterceptorTest {
 
     private static final int METHOD_FEATURE_TWO_RESPONSE_STATUS = 302;
-    
+
     private FeatureManager manager;
     private InMemoryStateRepository repository;
 
@@ -33,7 +33,7 @@ public class FeatureInterceptorTest {
         METHOD_FEATURE,
         METHOD_FEATURE_TWO
     }
-    
+
     private static class NoEnumFeature implements Feature {
         @Override
         public String name() {
@@ -47,7 +47,7 @@ public class FeatureInterceptorTest {
             .featureEnum(TestFeatures.class)
             .stateRepository(repository)
             .build();
-        
+
         ThreadLocalFeatureManagerProvider.bind(manager);
     }
 
@@ -61,78 +61,78 @@ public class FeatureInterceptorTest {
     private static class TestController {
         @SuppressWarnings("unused")
         public void classFeature() { }
-        
+
         @FeaturesAreActive(featureClass = TestFeatures.class, features = "METHOD_FEATURE")
         public void methodFeature() { }
-        
+
         @FeaturesAreActive(featureClass = TestFeatures.class, features = {"METHOD_FEATURE", "METHOD_FEATURE_TWO"}, responseStatus = METHOD_FEATURE_TWO_RESPONSE_STATUS)
         public void methodFeatureTwo() { }
-        
+
         @FeaturesAreActive(featureClass = NoEnumFeature.class, features = "A")
         public void methodFeatureNoEnum() { }
     }
 
     private static class NonAnnotatedTestController {
         @SuppressWarnings("unused")
-        public void doit() { }
+        public void doIt() { }
     }
 
     @Test
     public void preHandle_noAnnotations() throws Exception {
         FeatureInterceptor featureInterceptor = new FeatureInterceptor();
-        
+
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         NonAnnotatedTestController controller = new NonAnnotatedTestController();
-        HandlerMethod handler = new HandlerMethod(controller, "doit");
-        
+        HandlerMethod handler = new HandlerMethod(controller, "doIt");
+
         assertEquals(true, featureInterceptor.preHandle(request, response, handler));
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void preHandle_ClassFeature_Inactive() throws Exception {
-        assertPrehandle("classFeature", false, HttpStatus.NOT_FOUND.value());
+        assertPreHandle("classFeature", false, HttpStatus.NOT_FOUND.value());
     }
 
     @Test
     public void preHandle_ClassFeature_Active() throws Exception {
         enableFeature(TestFeatures.CLASS_FEATURE);
-        assertPrehandle("classFeature", true, HttpStatus.OK.value());
+        assertPreHandle("classFeature", true, HttpStatus.OK.value());
     }
 
     @Test
     public void preHandle_MethodFeature_Inactive() throws Exception {
-        assertPrehandle("methodFeature", false, HttpStatus.NOT_FOUND.value());
+        assertPreHandle("methodFeature", false, HttpStatus.NOT_FOUND.value());
     }
-    
+
     @Test
     public void preHandle_MethodFeature_Active() throws Exception {
         enableFeature(TestFeatures.METHOD_FEATURE);
-        assertPrehandle("methodFeature", true, HttpStatus.OK.value());
+        assertPreHandle("methodFeature", true, HttpStatus.OK.value());
     }
 
     @Test
     public void preHandle_MethodFeatureTwo_Inactive() throws Exception {
-        assertPrehandle("methodFeatureTwo", false, METHOD_FEATURE_TWO_RESPONSE_STATUS);
+        assertPreHandle("methodFeatureTwo", false, METHOD_FEATURE_TWO_RESPONSE_STATUS);
     }
-    
+
     @Test
     public void preHandle_MethodFeatureTwo_OnlyOneActive() throws Exception {
         enableFeature(TestFeatures.METHOD_FEATURE);
-        assertPrehandle("methodFeatureTwo", false, METHOD_FEATURE_TWO_RESPONSE_STATUS);
+        assertPreHandle("methodFeatureTwo", false, METHOD_FEATURE_TWO_RESPONSE_STATUS);
     }
 
     @Test
     public void preHandle_MethodFeatureTwo_AllActive() throws Exception {
         enableFeature(TestFeatures.METHOD_FEATURE);
         enableFeature(TestFeatures.METHOD_FEATURE_TWO);
-        assertPrehandle("methodFeatureTwo", true, HttpStatus.OK.value());
+        assertPreHandle("methodFeatureTwo", true, HttpStatus.OK.value());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void preHandle_methodFeatureNoEnum_InvalidEnum() throws Exception {
-        assertPrehandle("methodFeatureNoEnum", false, HttpStatus.NOT_FOUND.value());
+        assertPreHandle("methodFeatureNoEnum", false, HttpStatus.NOT_FOUND.value());
     }
 
     @Test
@@ -164,20 +164,20 @@ public class FeatureInterceptorTest {
         assertNull(FeatureInterceptor.enumFrom("FOO", TestFeatures.class));
         assertNull(FeatureInterceptor.enumFrom(null, TestFeatures.class));
     }
-   
+
     private void enableFeature(TestFeatures feature) {
         repository.setFeatureState(new FeatureState(feature, true));
         assertTrue(manager.isActive(feature));
     }
 
-    private void assertPrehandle(String methodName, boolean expectedReturnValue, int expectedStatusCode) throws NoSuchMethodException, Exception {
+    private void assertPreHandle(String methodName, boolean expectedReturnValue, int expectedStatusCode) throws NoSuchMethodException, Exception {
         FeatureInterceptor featureInterceptor = new FeatureInterceptor();
-        
+
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
         TestController controller = new TestController();
         HandlerMethod handler = new HandlerMethod(controller, methodName);
-        
+
         assertEquals(expectedReturnValue, featureInterceptor.preHandle(request, response, handler));
         assertEquals(expectedStatusCode, response.getStatus());
     }

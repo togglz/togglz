@@ -12,12 +12,12 @@ public class Deployments {
             .create(WebArchive.class, "test.war")
             .addAsLibraries(
                 getTogglzCoreArchive(),
-                getTogglzSerlvetArchive())
+                getTogglzServletArchive())
             .addClass(FeatureServlet.class)
             .addClass(UserServlet.class);
     }
 
-    public static JavaArchive getTogglzSerlvetArchive() {
+    public static JavaArchive getTogglzServletArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-servlet.jar")
             .importDirectory("../servlet/target/classes")
             .as(JavaArchive.class);

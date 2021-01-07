@@ -11,19 +11,19 @@ import org.togglz.core.util.Strings;
 /**
  * This implementation of {@link StateRepository} stores the state of features in a {@link Properties} format.
  * The properties are managed through an implementation of {@link PropertySource} to manage the actual source
- * of the property values. 
+ * of the property values.
  * <p>
- * The file format has changed since version 2.0.0 because of the new extendible activation strategy support. Old file formats
+ * The file format has changed since version 2.0.0 because of the new extendable activation strategy support. Old file formats
  * will be automatically migrated. The new format looks like this:
  * </p>
- * 
+ *
  * <pre>
  * FEATURE_ONE = true
  * FEATURE_ONE.strategy = gradual
  * FEATURE_ONE.param.percentage = 25
  * FEATURE_TWO = false
  * </pre>
- * 
+ *
  * <p>
  * A feature is enabled if the value is one of {@code true}, {@code yes}, {@code enable}, or {@code enabled}; any other
  * value and the feature is considered disabled.
@@ -34,7 +34,7 @@ public class PropertyBasedStateRepository implements StateRepository {
     private final PropertySource propertySource;
 
     public PropertyBasedStateRepository(PropertySource propertySource) {
-        
+
         this.propertySource = propertySource;
     }
 

@@ -101,7 +101,7 @@ class GradualActivationStrategyTest {
         assertTrue(strategy.isActive(state, aUserWithHash(25)));
         assertTrue(strategy.isActive(state, aUserWithHash(49)));
 
-        // for hash values 50-99 the feaute is active
+        // for hash values 50-99 the feature is active
         assertFalse(strategy.isActive(state, aUserWithHash(50)));
         assertFalse(strategy.isActive(state, aUserWithHash(99)));
 

@@ -169,7 +169,7 @@ public class TogglzProperties {
 		private String label;
 
 		/**
-		 * Optional strategy ID to identify the activation strategey to use for this feature.
+		 * Optional strategy ID to identify the activation strategy to use for this feature.
 		 */
 		private String strategy;
 

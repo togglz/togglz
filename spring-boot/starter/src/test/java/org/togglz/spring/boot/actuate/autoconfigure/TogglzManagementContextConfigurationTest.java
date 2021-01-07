@@ -38,7 +38,7 @@ public class TogglzManagementContextConfigurationTest extends BaseTest {
     @Test
     public void consoleWithCustomManagementContextPath() {
         // With TogglzManagementContextConfiguration responsible for creating the admin console servlet registration bean,
-        // if a custom managememnt context path is provided it should be used as prefix.
+        // if a custom management context path is provided it should be used as prefix.
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("management.server.servlet.context-path: /manage")
             .run((context) -> {

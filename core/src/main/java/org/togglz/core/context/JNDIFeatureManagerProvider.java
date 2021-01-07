@@ -9,12 +9,12 @@ import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 
 /**
- * 
+ *
  * Implementation of {@link FeatureManagerProvider} that tries to look up a {@link FeatureManager} from JNDI using the name
  * <code>java:/comp/env/FeatureManager</code>.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
 
@@ -39,7 +39,7 @@ public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
                 return (FeatureManager) initialContext.lookup(JNDI_NAME);
 
             } catch (NamingException e) {
-                log.debug("FeatureMananger not found: " + e.getMessage());
+                log.debug("FeatureManager not found: " + e.getMessage());
             }
 
         }
