@@ -28,7 +28,7 @@ public class FeatureInterceptorTest {
     private FeatureManager manager;
     private InMemoryStateRepository repository;
 
-    private static enum TestFeatures implements Feature {
+    private enum TestFeatures implements Feature {
         CLASS_FEATURE,
         METHOD_FEATURE,
         METHOD_FEATURE_TWO
@@ -86,7 +86,7 @@ public class FeatureInterceptorTest {
         NonAnnotatedTestController controller = new NonAnnotatedTestController();
         HandlerMethod handler = new HandlerMethod(controller, "doIt");
 
-        assertEquals(true, featureInterceptor.preHandle(request, response, handler));
+        assertTrue(featureInterceptor.preHandle(request, response, handler));
         assertEquals(200, response.getStatus());
     }
 
@@ -170,7 +170,7 @@ public class FeatureInterceptorTest {
         assertTrue(manager.isActive(feature));
     }
 
-    private void assertPreHandle(String methodName, boolean expectedReturnValue, int expectedStatusCode) throws NoSuchMethodException, Exception {
+    private void assertPreHandle(String methodName, boolean expectedReturnValue, int expectedStatusCode) throws Exception {
         FeatureInterceptor featureInterceptor = new FeatureInterceptor();
 
         MockHttpServletRequest request = new MockHttpServletRequest();

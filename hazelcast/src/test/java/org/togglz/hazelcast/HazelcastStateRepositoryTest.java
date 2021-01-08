@@ -74,11 +74,9 @@ class HazelcastStateRepositoryTest {
 
 	@Test
 	void multipleConfiguredPiecesThrowsIllegalStateException() {
-		assertThrows(IllegalStateException.class, () -> {
-			HazelcastStateRepository.newBuilder()
-					.clientConfig(new ClientConfig())
-					.config(new Config())
-					.build();
-		});
+		assertThrows(IllegalStateException.class, () -> HazelcastStateRepository.newBuilder()
+				.clientConfig(new ClientConfig())
+				.config(new Config())
+				.build());
 	}
 }

@@ -176,12 +176,12 @@ public class TogglzProperties {
 		/**
 		 * Names of the groups that this feature belongs to (optional).
 		 */
-		private Set<String> groups = new LinkedHashSet<>();
+		private final Set<String> groups = new LinkedHashSet<>();
 
 		/**
 		 * Parameters that can be used by the activation strategy.
 		 */
-		private Map<String, String> param = new LinkedHashMap<>();
+		private final Map<String, String> param = new LinkedHashMap<>();
 
 		public boolean isEnabled() {
 			return enabled;

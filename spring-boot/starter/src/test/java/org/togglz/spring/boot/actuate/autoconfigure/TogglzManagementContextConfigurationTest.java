@@ -17,7 +17,7 @@
 package org.togglz.spring.boot.actuate.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
 
@@ -41,27 +41,21 @@ public class TogglzManagementContextConfigurationTest extends BaseTest {
         // if a custom management context path is provided it should be used as prefix.
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("management.server.servlet.context-path: /manage")
-            .run((context) -> {
-                assertThat(getUrlMappings(context)).contains("/manage/togglz-console/*");
-            });
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/manage/togglz-console/*"));
     }
 
     @Test
     public void customConsolePath() {
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("togglz.console.path: /custom")
-            .run((context) -> {
-                assertThat(getUrlMappings(context)).contains("/custom/*");
-            });
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/custom/*"));
     }
 
     @Test
     public void customConsolePathWithTrailingSlash() {
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("togglz.console.path: /custom/")
-            .run((context) -> {
-                assertThat(getUrlMappings(context)).contains("/custom/*");
-            });
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/custom/*"));
     }
 
     @SuppressWarnings("unchecked")
