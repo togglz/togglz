@@ -65,7 +65,7 @@ public class ZookeeperStateRepository implements StateRepository, TreeCacheListe
         log.info("Waiting for zookeeper state to be fully read");
         initializationLatch.await();
         long duration = System.nanoTime() - startTime;
-        log.debug("Initizlied the zookeeper state repository in {} ms", TimeUnit.NANOSECONDS.toMillis(duration));
+        log.debug("Initialized the zookeeper state repository in {} ms", TimeUnit.NANOSECONDS.toMillis(duration));
     }
 
     @Override
