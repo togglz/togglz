@@ -69,16 +69,15 @@
       <!-- Javadocs -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.7.1</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
-          <additionalOptions>
-            <additionalOption>${javadoc.disable.doclint}</additionalOption>
-          </additionalOptions>
-          <links>
-            <link>http://docs.oracle.com/javase/6/docs/api/</link>
-            <link>http://docs.oracle.com/javaee/6/api/</link>
-          </links>
+          <doclint>none</doclint>
         </configuration>
         <executions>
           <execution>
@@ -470,13 +469,5 @@
 
     </dependencies>
   </dependencyManagement>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>com.springsource.repository.bundles.external</id>
-      <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
-      <url>https://repository.springsource.com/maven/bundles/external</url>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>
