@@ -17,13 +17,13 @@ class HazelcastStateRepositoryTest {
 	private final StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
 
 	@Test
-	void testSetFeatureStateNotExisitingInMap() {
+	void testSetFeatureStateNotExistingInMap() {
 		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
-		
+
 		final FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
-		
+
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
 	}
 
@@ -32,7 +32,7 @@ class HazelcastStateRepositoryTest {
 		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
-		
+
 		FeatureState storedFeatureState = stateRepository.getFeatureState(feature);
 		assertTrue(storedFeatureState.isEnabled());
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
@@ -41,7 +41,7 @@ class HazelcastStateRepositoryTest {
 		stateRepository.setFeatureState(featureState);
 		storedFeatureState = stateRepository.getFeatureState(feature);
 		assertFalse(storedFeatureState.isEnabled());
-		
+
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
 	}
 
@@ -74,11 +74,9 @@ class HazelcastStateRepositoryTest {
 
 	@Test
 	void multipleConfiguredPiecesThrowsIllegalStateException() {
-		assertThrows(IllegalStateException.class, () -> {
-			HazelcastStateRepository.newBuilder()
-					.clientConfig(new ClientConfig())
-					.config(new Config())
-					.build();
-		});
+		assertThrows(IllegalStateException.class, () -> HazelcastStateRepository.newBuilder()
+				.clientConfig(new ClientConfig())
+				.config(new Config())
+				.build());
 	}
 }

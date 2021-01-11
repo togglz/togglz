@@ -36,7 +36,7 @@ public class ServletBasicOperationTest {
     private URL url;
 
     @Test
-    public void testSerlvetBasicFeatures() throws IOException {
+    public void testServletBasicFeatures() throws IOException {
 
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features");
