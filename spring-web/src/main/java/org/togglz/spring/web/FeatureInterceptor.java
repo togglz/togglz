@@ -5,9 +5,13 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
+import org.togglz.core.manager.FeatureManager;
 
 import java.lang.annotation.Annotation;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +22,9 @@ import javax.servlet.http.HttpServletResponse;
  * activated or not.
  * <p>
  * Set the togglz.web.register-feature-interceptor to {@code true} to activate this interceptor.
+ *
+ * @author ractive
+ * @author m-schroeer
  */
 public class FeatureInterceptor extends HandlerInterceptorAdapter {
     /**
@@ -59,16 +66,26 @@ public class FeatureInterceptor extends HandlerInterceptorAdapter {
             
             if (annotationHolder.hasAnnotation()) {
                 FeaturesAreActive featuresAreActiveAnnotation = annotationHolder.getAnnotation();
-                if (!Enum.class.isAssignableFrom(featuresAreActiveAnnotation.featureClass())) {
-                    throw new IllegalArgumentException("The featureClass of the " + FeaturesAreActive.class.getSimpleName() + " annotation must be an enum");
+
+                Set<String> annotationFeatureNames = Stream.of(
+                        featuresAreActiveAnnotation.features())
+                        .collect(Collectors.toSet());
+
+                FeatureManager featureManager = FeatureContext.getFeatureManager();
+
+                if (!getFeatureNames(featureManager).containsAll(annotationFeatureNames)) {
+                    throw new IllegalArgumentException("At least one given feature of '" + annotationFeatureNames + "' is not a feature!");
                 }
-                for (String f : featuresAreActiveAnnotation.features()) {
-                    @SuppressWarnings("unchecked")
-                    Feature feature = (Feature) enumFrom(f, (Class<? extends Enum<?>>) featuresAreActiveAnnotation.featureClass());
-                    if (feature != null && !FeatureContext.getFeatureManager().isActive(feature)) {
-                        response.sendError(featuresAreActiveAnnotation.responseStatus());
-                        return false;
-                    }
+
+                boolean allFeaturesOfAnnotationMatch = featureManager.getFeatures()
+                        .stream()
+                        // reduce to features of annotation
+                        .filter(feature -> annotationFeatureNames.contains(feature.name()))
+                        .allMatch(featureManager::isActive);
+
+                if (!allFeaturesOfAnnotationMatch) {
+                    response.sendError(featuresAreActiveAnnotation.responseStatus());
+                    return false;
                 }
             }
         }
@@ -83,14 +100,9 @@ public class FeatureInterceptor extends HandlerInterceptorAdapter {
         return annotation;
     }
     
-    protected static <T extends Enum<?>> T enumFrom(String name, Class<T> enumType) {
-        if (name != null) {
-            for (T item : enumType.getEnumConstants()) {
-                if (name.equals(item.name())) {
-                    return item;
-                }
-            }
-        }
-        return null;
+    protected static Set<String> getFeatureNames(final FeatureManager featureManager) {
+        return featureManager.getFeatures().stream()
+                .map(Feature::name)
+                .collect(Collectors.toSet());
     }
 }
