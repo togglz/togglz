@@ -10,6 +10,7 @@ public class TogglzCSRFTokenCache {
 
 	private static final PassiveExpiringMap<String, CSRFToken> expiringMap;
 	private static final Object lock = new Object();
+
 	static {
 		PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, CSRFToken>
 				expirationPolicy = new PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<>(
@@ -17,13 +18,13 @@ public class TogglzCSRFTokenCache {
 		expiringMap = new PassiveExpiringMap<>(expirationPolicy, new HashMap<>());
 	}
 
-	public static void cacheToken(CSRFToken token) {
+	static void cacheToken(CSRFToken token) {
 		synchronized (lock) {
 			expiringMap.put(token.getValue(), token);
 		}
 	}
 
-	public static boolean isTokenInCache(CSRFToken token) {
+	static boolean isTokenInCache(CSRFToken token) {
 		synchronized (lock) {
 			return expiringMap.containsKey(token.getValue());
 		}

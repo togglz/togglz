@@ -7,8 +7,7 @@ import org.togglz.servlet.spi.CSRFTokenValidator;
 
 public class TogglzCSRFTokenValidator implements CSRFTokenValidator {
 
-
-	public static final String CSRF_TOKEN_NAME = "togglz_csrf";
+	static final String CSRF_TOKEN_NAME = "togglz_csrf";
 
 	@Override
 	public boolean isTokenValid(HttpServletRequest request) {
