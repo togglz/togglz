@@ -19,6 +19,7 @@ import org.togglz.core.spi.ActivationStrategy;
 
 import com.floreysoft.jmte.Engine;
 import org.togglz.core.util.Services;
+import org.togglz.servlet.spi.CSRFTokenValidator;
 
 public class EditPageHandler extends RequestHandlerBase {
 
@@ -37,7 +38,10 @@ public class EditPageHandler extends RequestHandlerBase {
         FeatureManager featureManager = event.getFeatureManager();
         HttpServletRequest request = event.getRequest();
         HttpServletResponse response = event.getResponse();
-
+		if(!validateCSRFToken(event)) {
+			renderErrorPage(event);
+			return;
+		}
         // identify the feature
         Feature feature = null;
         String featureAsString = request.getParameter("f");
@@ -78,7 +82,6 @@ public class EditPageHandler extends RequestHandlerBase {
                 response.sendRedirect("index");
 
             }
-
             // got validation errors
             else {
                 renderEditPage(event, featureModel);
@@ -88,6 +91,24 @@ public class EditPageHandler extends RequestHandlerBase {
 
     }
 
+    private boolean validateCSRFToken(RequestEvent event) {
+    	boolean isValid = true;
+		for (CSRFTokenValidator validator : Services.get(CSRFTokenValidator.class)) {
+			if(!validator.isTokenValid(event.getRequest())){
+				isValid = false;
+				break;
+			}
+		}
+		return isValid;
+	}
+
+    private void renderErrorPage(RequestEvent event) throws IOException {
+		String template = getResourceAsString("error.html");
+		String content = new Engine().transform(template, new HashMap<>());
+		event.getResponse().setStatus(401);
+		writeResponse(event, content);
+	}
+
     private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
         List<CSRFToken> tokens = new ArrayList<>();
         for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
@@ -96,7 +117,6 @@ public class EditPageHandler extends RequestHandlerBase {
                 tokens.add(token);
             }
         }
-
         Map<String, Object> model = new HashMap<>();
         model.put("model", featureModel);
         model.put("tokens", tokens);

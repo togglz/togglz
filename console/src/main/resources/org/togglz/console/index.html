@@ -67,8 +67,7 @@
                 ${end}
               </td>
               <td class="feature-actions">
-                <a class="btn btn-sm btn-default" href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
-                  <span class="glyphicon glyphicon-cog text-muted"></span>
+                  <a class="btn btn-sm btn-default" href="edit?f=${feature.name}${foreach tokens token}${if token.name = "togglz_csrf"}&${token.name}=${token.value}${end}${end}" title="Edit ${feature.label} feature">                  <span class="glyphicon glyphicon-cog text-muted"></span>
                 </a>
               </td>
             </tr>
