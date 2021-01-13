@@ -3,7 +3,7 @@ package org.togglz.spring.web;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
@@ -27,7 +27,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author ractive
  * @author m-schroeer
  */
-public class FeatureInterceptor extends HandlerInterceptorAdapter {
+public class FeatureInterceptor implements HandlerInterceptor {
+
     /**
      * Used to store annotations in a ConcurrentHashMap which does not allow storing {@code null} values.
      * 
@@ -91,7 +92,7 @@ public class FeatureInterceptor extends HandlerInterceptorAdapter {
                 }
             }
         }
-        return super.preHandle(request, response, handler);
+        return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     // TODO: When deprecated field FeaturesAreActive#responseStatus is removed, this method could be removed as well and
