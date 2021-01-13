@@ -1,6 +1,7 @@
 package org.togglz.spring.web;
 
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.togglz.core.Feature;
@@ -84,12 +85,36 @@ public class FeatureInterceptor extends HandlerInterceptorAdapter {
                         .allMatch(featureManager::isActive);
 
                 if (!allFeaturesOfAnnotationMatch) {
-                    response.sendError(featuresAreActiveAnnotation.responseStatus());
+                    final int errorStatusCode = getErrorStatus(featuresAreActiveAnnotation).value();
+                    response.sendError(errorStatusCode);
                     return false;
                 }
             }
         }
         return super.preHandle(request, response, handler);
+    }
+
+    // TODO: When deprecated field FeaturesAreActive#responseStatus is removed, this method could be removed as well and
+    //       be replaced by inline call to FeaturesAreActive#errorResponseStatus.
+    private HttpStatus getErrorStatus(final FeaturesAreActive annotation) {
+        final HttpStatus responseHttpStatus = HttpStatus.valueOf(annotation.responseStatus());
+
+        final HttpStatus errorResponseStatus = annotation.errorResponseStatus();
+
+        if (errorResponseStatus == responseHttpStatus) {
+            return errorResponseStatus;
+        } else {
+            // errorResponseStatus != responseHttpStatus
+            if (errorResponseStatus == FeaturesAreActive.DEFAULT_ERROR_RESPONSE_STATUS) {
+                // return the non-default value
+                return responseHttpStatus;
+            } else if (responseHttpStatus == FeaturesAreActive.DEFAULT_ERROR_RESPONSE_STATUS) {
+                // return the non-default value
+                return errorResponseStatus;
+            } else {
+                throw new IllegalArgumentException("'responseStatus' and 'errorResponseStatus' cannot be both non-default and different!");
+            }
+        }
     }
 
     protected static <A extends Annotation> A handlerAnnotation(HandlerMethod handlerMethod, Class<A> annotationClass) {
