@@ -53,6 +53,7 @@ import org.togglz.spring.security.SpringSecurityUserProvider;
 import org.togglz.spring.web.FeatureInterceptor;
 import org.togglz.spring.web.spi.HttpServletRequestHolderFilter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -168,6 +169,10 @@ public class TogglzAutoConfiguration {
             if (featuresFile != null) {
                 Resource resource = this.resourceLoader.getResource(featuresFile);
                 Integer minCheckInterval = properties.getFeaturesFileMinCheckInterval();
+                File resourceFile = resource.getFile();
+                if(properties.isCreateFeaturesFileIfAbsent() && !resourceFile.exists()) {
+                    resourceFile.createNewFile();
+                }
                 if (minCheckInterval != null) {
                     stateRepository = new FileBasedStateRepository(resource.getFile(), minCheckInterval);
                 } else {
