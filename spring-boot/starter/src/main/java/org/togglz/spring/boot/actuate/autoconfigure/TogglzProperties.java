@@ -67,6 +67,11 @@ public class TogglzProperties {
 	private String featuresFile;
 
 	/**
+	 * Enable auto creation of features file if it does not exists.
+	 */
+	private boolean createFeaturesFileIfAbsent = true;
+
+	/**
 	 * The minimum amount of time in milliseconds to wait between checks of the
 	 * file's modification date.
 	 */
@@ -124,6 +129,10 @@ public class TogglzProperties {
 	public void setFeaturesFile(String featuresFile) {
 		this.featuresFile = featuresFile;
 	}
+
+	public boolean isCreateFeaturesFileIfAbsent() { return createFeaturesFileIfAbsent; }
+
+	public void setCreateFeaturesFileIfAbsent(boolean createFeaturesFileIfAbsent) { this.createFeaturesFileIfAbsent = createFeaturesFileIfAbsent; }
 
 	public Integer getFeaturesFileMinCheckInterval() {
 		return featuresFileMinCheckInterval;
