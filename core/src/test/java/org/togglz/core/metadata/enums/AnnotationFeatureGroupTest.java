@@ -39,14 +39,14 @@ class AnnotationFeatureGroupTest {
     }
 
     @Test
-    void buildWillReturnNullWhenFeatureGroupAnnotationIsNotPresent() throws Exception {
+    void buildWillReturnNullWhenFeatureGroupAnnotationIsNotPresent() {
         FeatureGroup result = AnnotationFeatureGroup.build(Label.class);
 
         assertNull(result);
     }
 
     @Test
-    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForFieldLevelGroup() throws Exception {
+    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForFieldLevelGroup() {
         FeatureGroup result = AnnotationFeatureGroup.build(FieldLevelGroup.class);
 
         assertNotNull(result);
@@ -55,7 +55,7 @@ class AnnotationFeatureGroupTest {
     }
 
     @Test
-    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForClassLevelGroup() throws Exception {
+    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForClassLevelGroup() {
         FeatureGroup result = AnnotationFeatureGroup.build(ClassLevelGroup.class);
 
         assertNotNull(result);
