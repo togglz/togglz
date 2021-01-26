@@ -45,19 +45,25 @@ public class EnumFeatureMetaDataTest {
         @FieldLevelGroup
         FEATURE,
 
+        @org.togglz.core.annotation.FeatureGroup("hello")
+        FEATURE_WITHOUT_MANUALLY_CREATED_ANNOTATION,
+
+        @org.togglz.core.annotation.FeatureGroup
+        FEATURE_WITHOUT_MANUALLY_CREATED_ANNOTATION2,
+
         @EnabledByDefault
         @DefaultActivationStrategy(
-            id = "SomeActivationId",
-            parameters = {
-                @ActivationParameter(name = "SomeParameterName", value = "someValue1,someValue2"),
-                @ActivationParameter(name = "SomeParameterName2", value = "someValue3,someValue4")
-            }
+                id = "SomeActivationId",
+                parameters = {
+                        @ActivationParameter(name = "SomeParameterName", value = "someValue1,someValue2"),
+                        @ActivationParameter(name = "SomeParameterName2", value = "someValue3,someValue4")
+                }
         )
         FEATURE_WITH_DEFAULT_STATE;
     }
 
     @Test
-    public void constructorWillPopulateGroupsFromAnnotations() throws Exception {
+    void constructorWillPopulateGroupsFromAnnotations() {
         // act
         EnumFeatureMetaData metaData = new EnumFeatureMetaData(TestFeatures.FEATURE);
 
@@ -77,7 +83,7 @@ public class EnumFeatureMetaDataTest {
     }
 
     @Test
-    public void constructorWillPopulateDefaultActivationStrategyFromAnnotations() throws Exception {
+    void constructorWillPopulateDefaultActivationStrategyFromAnnotations() {
         // act
         EnumFeatureMetaData metaData = new EnumFeatureMetaData(TestFeatures.FEATURE_WITH_DEFAULT_STATE);
 
@@ -88,6 +94,32 @@ public class EnumFeatureMetaDataTest {
         assertEquals("SomeActivationId", featureState.getStrategyId());
         assertEquals("someValue1,someValue2", featureState.getParameter("SomeParameterName"));
         assertEquals("someValue3,someValue4", featureState.getParameter("SomeParameterName2"));
+    }
+
+    @Test
+    void shouldCreateFeatureGroupWhenGroupNameIsAddedAsAnnotationValue() {
+        EnumFeatureMetaData metaData = new EnumFeatureMetaData(TestFeatures.FEATURE_WITHOUT_MANUALLY_CREATED_ANNOTATION);
+
+        Set<FeatureGroup> groups = metaData.getGroups();
+
+        assertNotNull(groups);
+        assertEquals(2, groups.size());
+
+        List<FeatureGroup> group = groups.stream().filter(createFeatureGroupLabelPredicate("hello")).collect(Collectors.toList());
+        assertTrue(group.get(0).contains(TestFeatures.FEATURE_WITHOUT_MANUALLY_CREATED_ANNOTATION));
+    }
+
+    @Test
+    void shouldCreateFeatureGroupWhenGroupNameIsAddedAsAnnotationValue2() {
+        EnumFeatureMetaData metaData = new EnumFeatureMetaData(TestFeatures.FEATURE_WITHOUT_MANUALLY_CREATED_ANNOTATION2);
+
+        Set<FeatureGroup> groups = metaData.getGroups();
+
+        assertNotNull(groups);
+        assertEquals(2, groups.size());
+
+        List<FeatureGroup> group = groups.stream().filter(createFeatureGroupLabelPredicate("")).collect(Collectors.toList());
+        assertTrue(group.get(0).contains(TestFeatures.FEATURE_WITHOUT_MANUALLY_CREATED_ANNOTATION2));
     }
 
     private Predicate<FeatureGroup> createFeatureGroupLabelPredicate(final String label) {

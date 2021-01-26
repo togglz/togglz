@@ -18,12 +18,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.FeatureAnnotations;
 
 /**
- *
  * Implementation of {@link FeatureMetaData} that looks for annotations like {@link Label}, {@link EnabledByDefault} and
  * {@link DefaultActivationStrategy} on feature enums.
  *
  * @author Christian Kaltepoth
- *
  */
 public class EnumFeatureMetaData implements FeatureMetaData {
 
@@ -46,8 +44,8 @@ public class EnumFeatureMetaData implements FeatureMetaData {
 
         // lookup default activation strategy @DefaultActivationStrategy
         DefaultActivationStrategy defaultActivationStrategy = FeatureAnnotations
-            .getAnnotation(feature, DefaultActivationStrategy.class);
-        if (defaultActivationStrategy != null){
+                .getAnnotation(feature, DefaultActivationStrategy.class);
+        if (defaultActivationStrategy != null) {
             this.defaultFeatureState.setStrategyId(defaultActivationStrategy.id());
 
             for (ActivationParameter parameter : defaultActivationStrategy.parameters()) {
@@ -58,10 +56,20 @@ public class EnumFeatureMetaData implements FeatureMetaData {
         // process annotations on the feature
         for (Annotation annotation : FeatureAnnotations.getAnnotations(feature)) {
 
-            // lookup groups
-            FeatureGroup group = AnnotationFeatureGroup.build(annotation.annotationType());
-            if (group != null) {
-                groups.add(group);
+            FeatureGroup group1 = null;
+            if (annotation instanceof org.togglz.core.annotation.FeatureGroup) {
+                String annotationValue = ((org.togglz.core.annotation.FeatureGroup) annotation).value();
+                group1 = AnnotationFeatureGroup.build(annotation, annotationValue);
+                if (group1 != null) {
+                    groups.add(group1);
+                }
+            }
+            if(group1 == null) {
+                // lookup groups
+                FeatureGroup group = AnnotationFeatureGroup.build(annotation.annotationType());
+                if (group != null) {
+                    groups.add(group);
+                }
             }
 
             // check if this annotation is a feature attribute
@@ -69,9 +77,7 @@ public class EnumFeatureMetaData implements FeatureMetaData {
             if (attribute != null) {
                 attributes.put(attribute[0], attribute[1]);
             }
-
         }
-
     }
 
     @Override

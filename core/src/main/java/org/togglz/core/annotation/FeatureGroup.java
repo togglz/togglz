@@ -9,11 +9,17 @@ import java.lang.annotation.Target;
  * 
  * Identifies an annotation type as an feature group annotation
  * 
- * @author Christian Kaltepoth
+ * @author Bennet Schulz
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ ElementType.FIELD, ElementType.TYPE })
 public @interface FeatureGroup {
 
+    /**
+     * The human readable feature group of this feature
+     *
+     * @return The feature group
+     */
+    String value() default "";
 }
