@@ -1,6 +1,13 @@
 name: Java CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - '*'
 
 env:
   CONTAINER: wildfly-managed
