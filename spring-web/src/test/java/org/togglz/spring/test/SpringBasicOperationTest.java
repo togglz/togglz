@@ -38,12 +38,10 @@ public class SpringBasicOperationTest {
 
     @Test
     public void testSpringBasicFeatures() throws IOException {
-
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features");
         assertTrue(page.getContent().contains("FEATURE1 = false"));
         assertTrue(page.getContent().contains("FEATURE2 = true"));
-
     }
 
 }
