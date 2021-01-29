@@ -1,15 +1,15 @@
 name: Java CI
 
 on:
-  push:
+  - push
     branches:
       - master
-  pull_request:
+  - pull_request
     branches:
       - master
 
 env:
-  CONTAINER : wildfly-managed
+  CONTAINER: wildfly-managed
 
 jobs:
   build:
