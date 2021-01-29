@@ -1,9 +1,5 @@
 package org.togglz.spring.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -13,6 +9,8 @@ import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
+
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class SpringEarlyFeatureUsageTest {
@@ -32,14 +30,13 @@ public class SpringEarlyFeatureUsageTest {
     }
 
     @Test
-    public void testEarlyFeatureUsage() throws IOException {
-
+    public void testEarlyFeatureUsage() {
         WebApplicationContext applicationContext = ContextLoader.getCurrentWebApplicationContext();
+
+        assertNotNull(applicationContext);
         SpringEarlyFeatureUsageService service = applicationContext.getBean(SpringEarlyFeatureUsageService.class);
 
-        assertEquals(false, service.isFeature1Active());
-        assertEquals(false, service.isFeature2Active());
-
+        assertFalse(service.isFeature1Active());
+        assertFalse(service.isFeature2Active());
     }
-
 }

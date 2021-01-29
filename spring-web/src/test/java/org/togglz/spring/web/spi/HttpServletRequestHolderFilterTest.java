@@ -1,8 +1,9 @@
 package org.togglz.spring.web.spi;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 import javax.servlet.FilterChain;
@@ -13,12 +14,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.mockito.Mockito.*;
 
 public class HttpServletRequestHolderFilterTest {
 
@@ -27,13 +23,12 @@ public class HttpServletRequestHolderFilterTest {
   private HttpServletRequest request;
   private HttpServletResponse response;
 
-  @Before
+  @BeforeEach
   public void setup() {
     filter = new HttpServletRequestHolderFilter();
     request = mock(HttpServletRequest.class);
     filterChain = mock(FilterChain.class);
     response = mock(HttpServletResponse.class);
-    spy(HttpServletRequestHolder.class);
   }
 
   @Test
@@ -44,34 +39,40 @@ public class HttpServletRequestHolderFilterTest {
 
   @Test
   public void shouldBindCorrectRequest() throws ServletException, IOException {
-
-    filter.doFilter(request, response, filterChain);
-    verifyStatic(HttpServletRequestHolder.class, times(1));
-    HttpServletRequestHolder.bind(any());
+    try (MockedStatic<HttpServletRequestHolder> mb = Mockito.mockStatic(HttpServletRequestHolder.class)) {
+      filter.doFilter(request, response, filterChain);
+      verify(HttpServletRequestHolder.class, times(1));
+      HttpServletRequestHolder.bind(any());
+    }
   }
 
   @Test
   public void shouldReleaseRequest() throws ServletException, IOException {
-
-    filter.doFilter(request, response, filterChain);
-    verifyStatic(HttpServletRequestHolder.class, times(1));
-    HttpServletRequestHolder.release();
+    try (MockedStatic<HttpServletRequestHolder> mb = Mockito.mockStatic(HttpServletRequestHolder.class)) {
+      filter.doFilter(request, response, filterChain);
+      verify(HttpServletRequestHolder.class, times(1));
+      HttpServletRequestHolder.release();
+    }
   }
 
   @Test
   public void shouldReleaseRequestOnExceptionWhileBinding() {
-    PowerMockito.doThrow(new RuntimeException("boooom")).when(HttpServletRequestHolder.class);
-    HttpServletRequestHolder.bind(any());
-    assertThrows(RuntimeException.class, () -> filter.doFilter(request, response, filterChain));
-    verifyStatic(HttpServletRequestHolder.class, times(1));
-    HttpServletRequestHolder.release();
+    try (MockedStatic<HttpServletRequestHolder> mb = Mockito.mockStatic(HttpServletRequestHolder.class)) {
+      doThrow(new RuntimeException("boooom")).when(HttpServletRequestHolder.class);
+      HttpServletRequestHolder.bind(any());
+      assertThrows(RuntimeException.class, () -> filter.doFilter(request, response, filterChain));
+      verify(HttpServletRequestHolder.class, times(1));
+      HttpServletRequestHolder.release();
+    }
   }
 
   @Test
   public void shouldReleaseRequestOnExceptionWhileFiltering() throws ServletException, IOException {
-    doThrow(new RuntimeException("boooom")).when(filterChain).doFilter(any(), any());
-    assertThrows(RuntimeException.class, () -> filter.doFilter(request, response, filterChain));
-    verifyStatic(HttpServletRequestHolder.class, times(1));
-    HttpServletRequestHolder.release();
+    try (MockedStatic<HttpServletRequestHolder> mb = Mockito.mockStatic(HttpServletRequestHolder.class)) {
+      doThrow(new RuntimeException("boooom")).when(filterChain).doFilter(any(), any());
+      assertThrows(RuntimeException.class, () -> filter.doFilter(request, response, filterChain));
+      verify(HttpServletRequestHolder.class, times(1));
+      HttpServletRequestHolder.release();
+    }
   }
 }
