@@ -9,9 +9,6 @@ on:
     branches:
       - '*'
 
-env:
-  CONTAINER: wildfly-managed
-
 jobs:
   build:
 
@@ -24,4 +21,4 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Maven
-        run: mvn -P ${CONTAINER} -DJBOSS_REPO=true -B install --file pom.xml
+        run: mvn -P wildfly-managed -DJBOSS_REPO=true -B verify
