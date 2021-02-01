@@ -38,7 +38,7 @@ public class GuiceIntegrationTest {
     }
 
     @Test
-    public void testGuiceIntegration() throws IOException {
+    public void testGuiceIntegration() {
 
         FeatureManager featureManager = FeatureContext.getFeatureManagerOrNull();
 
