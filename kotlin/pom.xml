@@ -123,6 +123,14 @@
         <groupId>org.jetbrains.dokka</groupId>
         <artifactId>dokka-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
