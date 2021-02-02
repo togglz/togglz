@@ -25,6 +25,7 @@ public class TogglzConsoleServlet extends HttpServlet {
     protected FeatureManager featureManager;
 
     protected boolean secured = true;
+    protected boolean validateCSRFToken = true;
 
     @Override
     public void init(ServletConfig config) {
@@ -36,6 +37,11 @@ public class TogglzConsoleServlet extends HttpServlet {
             this.secured = toBool(secured);
         }
 
+        String validateCSRFToken = servletContext.getInitParameter("org.togglz.console.validateCSRFToken");
+        if (validateCSRFToken != null) {
+            this.validateCSRFToken = toBool(validateCSRFToken);
+        }
+
         // build list of request handlers
         for (RequestHandler requestHandler : ServiceLoader.load(RequestHandler.class)) {
             handlers.add(requestHandler);
@@ -45,7 +51,10 @@ public class TogglzConsoleServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         RequestEvent consoleRequest =
-            new RequestEvent(featureManager, servletContext, request, response);
+                new RequestEvent(featureManager, servletContext, request, response,
+                        RequestContext.newBuilder()
+                                .withValidateCSRFToken(validateCSRFToken)
+                                .build());
         String path = consoleRequest.getPath();
 
         RequestHandler handler = getHandlerFor(path);
@@ -81,6 +90,10 @@ public class TogglzConsoleServlet extends HttpServlet {
 
     public void setSecured(boolean secured) {
         this.secured = secured;
+    }
+
+    public void setValidateCSRFToken(boolean validateCSRFToken) {
+        this.validateCSRFToken = validateCSRFToken;
     }
 
     private static boolean toBool(String value) {

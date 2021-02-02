@@ -92,15 +92,18 @@ public class EditPageHandler extends RequestHandlerBase {
     }
 
     private boolean validateCSRFToken(RequestEvent event) {
-    	boolean isValid = true;
-		for (CSRFTokenValidator validator : Services.get(CSRFTokenValidator.class)) {
-			if(!validator.isTokenValid(event.getRequest())){
-				isValid = false;
-				break;
-			}
-		}
-		return isValid;
-	}
+        boolean isValid = true;
+        if (event.getRequestContext().isValidateCSRFToken()) {
+            for (CSRFTokenValidator validator : Services.get(CSRFTokenValidator.class)) {
+                if (!validator.isTokenValid(event.getRequest())) {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+
+        return isValid;
+    }
 
     private void renderErrorPage(RequestEvent event) throws IOException {
 		String template = getResourceAsString("error.html");

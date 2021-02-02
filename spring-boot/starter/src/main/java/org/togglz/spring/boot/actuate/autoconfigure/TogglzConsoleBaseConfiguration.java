@@ -46,6 +46,7 @@ public abstract class TogglzConsoleBaseConfiguration {
         String urlMapping = (path.endsWith("/") ? path + "*" : path + "/*");
         TogglzConsoleServlet servlet = new TogglzConsoleServlet();
         servlet.setSecured(properties.getConsole().isSecured());
+        servlet.setValidateCSRFToken(properties.getConsole().isValidateCSRFToken());
         return new ServletRegistrationBean(servlet, urlMapping);
     }
 

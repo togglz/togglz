@@ -322,9 +322,18 @@ public class TogglzProperties {
 		private boolean secured = true;
 
 		/**
+		 * Validates the csrf token during toggle update for a single instance.
+		 */
+		private boolean validateCSRFToken = true;
+
+		/**
 		 * Indicates if the admin console runs on the management port.
 		 */
 		private boolean useManagementPort = true;
+
+		public boolean isValidateCSRFToken() {
+			return validateCSRFToken;
+		}
 
 		public boolean isEnabled() {
 			return enabled;
