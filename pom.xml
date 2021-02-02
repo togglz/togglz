@@ -254,7 +254,7 @@
             <artifactId>dependency-check-maven</artifactId>
             <version>6.1.0</version>
             <configuration>
-              <failBuildOnCVSS>8</failBuildOnCVSS>
+              <failBuildOnCVSS>10</failBuildOnCVSS>
               <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
               <format>HTML</format>
               <skipProvidedScope>true</skipProvidedScope>
