@@ -252,8 +252,9 @@
           <plugin>
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>6.0.3</version>
+            <version>6.1.0</version>
             <configuration>
+              <failBuildOnCVSS>10</failBuildOnCVSS>
               <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
               <format>HTML</format>
               <skipProvidedScope>true</skipProvidedScope>
