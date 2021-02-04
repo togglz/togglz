@@ -15,8 +15,6 @@ import static org.togglz.core.util.Preconditions.checkArgument;
 
 public class NotificationComposer {
 
-    public static final String DEFAULT_MESSAGE_FORMAT = "$stateIcon *$feature* was $changed by $user $link";
-
     private static final String SENDER_SUFFIX = "feature toggles";
 
     private final NotificationConfiguration configuration;

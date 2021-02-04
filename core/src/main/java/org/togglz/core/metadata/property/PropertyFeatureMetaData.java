@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.manager.PropertyFeatureProvider;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.metadata.SimpleFeatureGroup;
@@ -14,7 +13,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
 /**
- * Metadata used by {@link PropertyFeatureProvider}.
+ * Feature Metadata.
  */
 public class PropertyFeatureMetaData implements FeatureMetaData {
 
