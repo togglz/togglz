@@ -43,14 +43,12 @@ import org.togglz.core.util.NamedFeature;
  */
 public class PropertyFeatureProvider implements FeatureProvider {
 
-    private final Set<Feature> features = new LinkedHashSet<Feature>();
-
-    private final Map<String, FeatureMetaData> metadata = new HashMap<String, FeatureMetaData>();
+    private final Set<Feature> features = new LinkedHashSet<>();
+    private final Map<String, FeatureMetaData> metadata = new HashMap<>();
 
     public PropertyFeatureProvider(Properties properties) {
 
         for (Entry<Object, Object> entry : properties.entrySet()) {
-
             String name = entry.getKey().toString();
             String spec = entry.getValue().toString();
 
@@ -58,7 +56,6 @@ public class PropertyFeatureProvider implements FeatureProvider {
 
             features.add(feature);
             metadata.put(name, new PropertyFeatureMetaData(feature, spec));
-
         }
 
     }
