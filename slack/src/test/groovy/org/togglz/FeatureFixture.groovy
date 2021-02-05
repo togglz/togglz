@@ -9,7 +9,7 @@ enum FeatureFixture implements Feature {
     F1,
     @Label("label2")F2;
 
-    public static final FeatureState ENABLE_F1 = new FeatureState(F1).enable();
-    public static final FeatureState DISABLE_F1 = new FeatureState(F1).disable();
-    public static final FeatureState ENABLE_F2 = new FeatureState(F2).enable();
+    public static final FeatureState ENABLE_F1 = new FeatureState(FeatureFixture.F1).enable();
+    public static final FeatureState DISABLE_F1 = new FeatureState(FeatureFixture.F1).disable();
+    public static final FeatureState ENABLE_F2 = new FeatureState(FeatureFixture.F2).enable();
 }
