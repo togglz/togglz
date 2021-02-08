@@ -7,7 +7,7 @@ import org.togglz.slack.config.NotificationConfiguration
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static NotificationConfigurationFixture.ADMIN_URL
+import static org.togglz.slack.NotificationConfigurationFixture.ADMIN_URL
 import static org.togglz.FeatureFixture.DISABLE_F1
 import static org.togglz.FeatureFixture.ENABLE_F1
 import static org.togglz.FeatureFixture.ENABLE_F2

@@ -1,16 +1,16 @@
 package org.togglz.slack.sender
 
 import org.junit.Rule
-import org.mockserver.client.server.MockServerClient
+import org.mockserver.client.MockServerClient
 import org.mockserver.junit.MockServerRule
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
 import org.togglz.slack.notification.NotificationFixture
 import spock.lang.Specification
+import static org.togglz.slack.notification.NotificationFixture.exampleNotification
 
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.awaitility.Awaitility.await
-import static NotificationFixture.exampleNotification
 
 class AsyncNotifierSpecIT extends Specification {
 

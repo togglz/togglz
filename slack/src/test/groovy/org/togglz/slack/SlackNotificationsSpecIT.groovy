@@ -1,7 +1,7 @@
 package org.togglz.slack
 
 import org.junit.Rule
-import org.mockserver.client.server.MockServerClient
+import org.mockserver.client.MockServerClient
 import org.mockserver.junit.MockServerRule
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
