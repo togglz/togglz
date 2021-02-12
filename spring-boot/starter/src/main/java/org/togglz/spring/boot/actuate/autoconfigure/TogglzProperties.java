@@ -335,6 +335,10 @@ public class TogglzProperties {
 			return validateCSRFToken;
 		}
 
+		public void setValidateCSRFToken(boolean validateCSRFToken) {
+			this.validateCSRFToken = validateCSRFToken;
+		}
+
 		public boolean isEnabled() {
 			return enabled;
 		}
