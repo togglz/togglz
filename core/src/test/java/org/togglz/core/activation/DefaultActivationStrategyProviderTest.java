@@ -22,6 +22,7 @@ public class DefaultActivationStrategyProviderTest {
             .extracting("id")
             .contains(UsernameActivationStrategy.ID)
             .contains(GradualActivationStrategy.ID)
+            .contains(ScriptEngineActivationStrategy.ID)
             .contains(ReleaseDateActivationStrategy.ID)
             .contains(ServerIpActivationStrategy.ID)
             .contains(UserRoleActivationStrategy.ID);
@@ -50,7 +51,8 @@ public class DefaultActivationStrategyProviderTest {
 
     @Test
     public void shouldContainCustomStrategyIfAddedMultipleBefore() {
-        List<ActivationStrategy> strategies = new ArrayList<>();
+
+        List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
         strategies.add(new CustomActivationStrategy());
         strategies.add(new AnotherCustomActivationStrategy());
 
