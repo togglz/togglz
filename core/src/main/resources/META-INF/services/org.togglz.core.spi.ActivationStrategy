@@ -1,5 +1,6 @@
 org.togglz.core.activation.UsernameActivationStrategy
 org.togglz.core.activation.GradualActivationStrategy
+org.togglz.core.activation.ScriptEngineActivationStrategy
 org.togglz.core.activation.ReleaseDateActivationStrategy
 org.togglz.core.activation.ServerIpActivationStrategy
 org.togglz.core.activation.UserRoleActivationStrategy
