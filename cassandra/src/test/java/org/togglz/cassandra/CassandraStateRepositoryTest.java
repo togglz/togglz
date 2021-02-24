@@ -3,7 +3,6 @@ package org.togglz.cassandra;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 import org.cassandraunit.AbstractCassandraUnit4TestCase;
 import org.cassandraunit.dataset.DataSet;
@@ -42,7 +41,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
     }
 
     @After
-    public void cleanUp() throws Exception {
+    public void cleanUp() {
         EmbeddedCassandraServerHelper.cleanEmbeddedCassandra();
     }
 
@@ -95,7 +94,7 @@ public class CassandraStateRepositoryTest extends AbstractCassandraUnit4TestCase
     }
 
 	@Test
-	public void testRemovingOfActivationStrategy() throws ConnectionException {
+	public void testRemovingOfActivationStrategy() {
 		final FeatureState savedFeatureState = new FeatureState(TestFeature.FEATURE);
 		savedFeatureState.setStrategyId(UsernameActivationStrategy.ID);
 		savedFeatureState.setParameter(UsernameActivationStrategy.PARAM_USERS, "user1, user2, user3");
