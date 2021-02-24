@@ -149,7 +149,6 @@
     <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
-    <module>distribution</module>
     <module>cassandra</module>
     <module>hazelcast</module>
     <module>zookeeper</module>
