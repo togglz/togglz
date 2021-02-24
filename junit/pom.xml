@@ -5,16 +5,12 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>2.9.3-SNAPSHOT</version>
+    <version>2.9.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-junit</artifactId>
   <name>Togglz - JUnit integration</name>
   <description>Togglz - JUnit integration</description>
-
-  <properties>
-    <junit.jupiter.version>5.6.2</junit.jupiter.version>
-  </properties>
 
   <dependencies>
     <dependency>
@@ -23,9 +19,17 @@
     </dependency>
 
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>provided</scope>
+      <version>5.7.0</version>
     </dependency>
   </dependencies>
 
