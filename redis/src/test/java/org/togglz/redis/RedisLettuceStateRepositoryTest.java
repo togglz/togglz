@@ -11,31 +11,31 @@ import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
-import redis.embedded.RedisServer;
 
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RedisLettuceStateRepositoryTest {
 
-    private RedisServer redisServer;
+    @Container
+    public GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:6-alpine"))
+            .withExposedPorts(6379)
+            .withReuse(true);
 
     @BeforeEach
-    public void before() throws IOException {
-        redisServer = new RedisServer();
-        redisServer.start();
+    public void before() {
+        redis.start();
     }
 
     @AfterEach
     public void after() {
-        redisServer.stop();
+        redis.stop();
     }
 
     @Test
@@ -112,8 +112,7 @@ public class RedisLettuceStateRepositoryTest {
     }
 
     private GenericObjectPool<StatefulConnection<String, String>> createPool() {
-        RedisClient client = RedisClient.create(RedisURI.create("localhost", 6379));
-
+        RedisClient client = RedisClient.create(RedisURI.create(redis.getContainerIpAddress(), redis.getMappedPort(6379)));
         return ConnectionPoolSupport
             .createGenericObjectPool(() -> client.connect(), new GenericObjectPoolConfig());
     }
