@@ -1,39 +1,40 @@
 package org.togglz.redis;
 
-
-import java.io.IOException;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.utility.DockerImageName;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.embedded.RedisServer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RedisStateRepositoryTest {
+class RedisStateRepositoryTest {
 
-    private RedisServer redisServer;
+    @Container
+    public GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:6-alpine"))
+            .withExposedPorts(6379)
+            .withReuse(true);
 
     @BeforeEach
-    public void before() throws IOException {
-        redisServer = new RedisServer();
-        redisServer.start();
+    void before() {
+        redis.start();
     }
 
     @AfterEach
-    public void after() {
-        redisServer.stop();
+    void after() {
+        redis.stop();
     }
 
     @Test
-    public void testGetFeatureStateNotExisting() {
+    void getFeatureStateNotExisting() {
         final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
 
@@ -44,7 +45,7 @@ public class RedisStateRepositoryTest {
     }
 
     @Test
-    public void testSetFeatureStateWithStrategyAndParameter() {
+    void setFeatureStateWithStrategyAndParameter() {
         final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
         final FeatureState featureState = new FeatureState(feature, true);
@@ -58,7 +59,7 @@ public class RedisStateRepositoryTest {
     }
 
     @Test
-    public void testSetFeatureStateExisting() {
+    void setFeatureStateExisting() {
         final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
         final FeatureState featureState = new FeatureState(feature, true);
@@ -78,10 +79,10 @@ public class RedisStateRepositoryTest {
     }
 
     @Test
-    public void testFormatOfExistingFeatureState() {
+    void formatOfExistingFeatureState() {
 
         // set contents in Redis directly, without using the RedisStateRepository API
-        final JedisPool jedisPool = new JedisPool();
+        final JedisPool jedisPool = new JedisPool(redis.getContainerIpAddress(), redis.getMappedPort(6379));
         try (final Jedis jedis = jedisPool.getResource()) {
             final String key = "feature-toggles:A_FEATURE";
             jedis.hset(key, "enabled", "true");
@@ -100,6 +101,6 @@ public class RedisStateRepositoryTest {
     }
 
     private RedisStateRepository aRedisStateRepository() {
-        return new RedisStateRepository.Builder().keyPrefix("feature-toggles:").build();
+        return new RedisStateRepository.Builder().jedisPool(new JedisPool(redis.getContainerIpAddress(), redis.getMappedPort(6379))).keyPrefix("feature-toggles:").build();
     }
 }

@@ -40,7 +40,7 @@ public class RedisStateRepository implements StateRepository {
                 return null;
             }
             final FeatureState featureState = new FeatureState(feature);
-            featureState.setEnabled(Boolean.valueOf(redisMap.get(ENABLED_FIELD)));
+            featureState.setEnabled(Boolean.parseBoolean(redisMap.get(ENABLED_FIELD)));
             featureState.setStrategyId(redisMap.get(STRATEGY_FIELD));
             for (final Map.Entry<String, String> entry : redisMap.entrySet()) {
                 final String key = entry.getKey();
