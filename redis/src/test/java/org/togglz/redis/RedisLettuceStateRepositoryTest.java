@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RedisLettuceStateRepositoryTest {
 
     @Container
-    public GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:6-alpine"))
+    public GenericContainer redis = new GenericContainer(DockerImageName.parse("redis:6.2.0-alpine"))
             .withExposedPorts(6379)
             .withReuse(true);
 
