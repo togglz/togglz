@@ -26,25 +26,25 @@ import org.togglz.core.repository.FeatureState;
 
 public class TogglzTestExecutionListener extends AbstractTestExecutionListener {
 
-	@Override
-	public int getOrder() {
-		return Ordered.HIGHEST_PRECEDENCE;
-	}
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
 
-	@Override
-	public void beforeTestMethod(TestContext testContext) {
-		ApplicationContext context = testContext.getApplicationContext();
-		if (context.getBeanNamesForType(FeatureManager.class).length!=1) {
-			return;
-		}
-		FeatureManager manager = context.getBean(FeatureManager.class);
-		for (Feature feature : manager.getFeatures()) {
-			FeatureState defaultFeatureState = manager.getMetaData(feature).getDefaultFeatureState();
-			FeatureState state = manager.getFeatureState(feature);
-			if (defaultFeatureState.isEnabled()) {
-				state.enable();
-			}
-			manager.setFeatureState(state);
-		}
-	}
+    @Override
+    public void beforeTestMethod(TestContext testContext) {
+        ApplicationContext context = testContext.getApplicationContext();
+        if (context.getBeanNamesForType(FeatureManager.class).length != 1) {
+            return;
+        }
+        FeatureManager manager = context.getBean(FeatureManager.class);
+        for (Feature feature : manager.getFeatures()) {
+            FeatureState defaultFeatureState = manager.getMetaData(feature).getDefaultFeatureState();
+            FeatureState state = manager.getFeatureState(feature);
+            if (defaultFeatureState.isEnabled()) {
+                state.enable();
+            }
+            manager.setFeatureState(state);
+        }
+    }
 }
