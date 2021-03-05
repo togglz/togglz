@@ -139,24 +139,12 @@ public class TogglzRule implements TestRule {
 
     }
 
-    public TestFeatureManager getFeatureManager() {
-        return featureManager;
-    }
-
     public void disable(Feature feature) {
         featureManager.disable(feature);
     }
 
     public void enable(Feature feature) {
         featureManager.enable(feature);
-    }
-
-    public void enableAll() {
-        featureManager.enableAll();
-    }
-
-    public void disableAll() {
-        featureManager.disableAll();
     }
 
     public static class Builder {
