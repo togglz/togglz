@@ -14,7 +14,7 @@ import org.togglz.core.spi.FeatureManagerProvider;
  */
 public class ContextClassLoaderFeatureManagerProvider implements FeatureManagerProvider {
 
-    private static final ConcurrentHashMap<ClassLoader, FeatureManager> managerMap = new ConcurrentHashMap<ClassLoader, FeatureManager>();
+    private static final ConcurrentHashMap<ClassLoader, FeatureManager> managerMap = new ConcurrentHashMap<>();
 
     @Override
     public int priority() {
