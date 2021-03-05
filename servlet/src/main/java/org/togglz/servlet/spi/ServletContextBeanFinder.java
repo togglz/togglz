@@ -1,6 +1,5 @@
 package org.togglz.servlet.spi;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -8,7 +7,6 @@ import javax.servlet.ServletContext;
 
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.core.spi.BeanFinder;
-import org.togglz.core.util.ClassUtils;
 
 /**
  * 
@@ -31,23 +29,31 @@ public class ServletContextBeanFinder implements BeanFinder {
     @Override
     @SuppressWarnings("unchecked")
     public <E> Collection<E> find(Class<E> clazz, Object context) {
-
         if (context instanceof ServletContext) {
-
             ServletContext servletContext = (ServletContext) context;
-
             String implClassName = servletContext.getInitParameter(clazz.getName());
-
             if (implClassName != null && implClassName.trim().length() > 0) {
-
-                return Arrays.asList(ClassUtils.createInstance(implClassName, clazz));
-
+                return Collections.singletonList(createInstance(implClassName, clazz));
             }
-
         }
-
         return Collections.emptyList();
-
     }
 
+    @SuppressWarnings("unchecked")
+    static <T> T createInstance(String classname, Class<T> interfaceClazz) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+        if (classLoader == null) {
+            classLoader = interfaceClazz.getClassLoader();
+        }
+
+        try {
+            Class<T> clazz = (Class<T>) Class.forName(classname, true, classLoader);
+            return clazz.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Unknown class: " + classname);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Could not create an instance of class: " + classname, e);
+        }
+    }
 }
