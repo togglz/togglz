@@ -68,7 +68,7 @@ class AnnotationBasedTogglzExtensionTest {
     }
 
     @AllEnabled(MyFeatures.class)
-    abstract class EnabledParentTest {
+    abstract static class EnabledParentTest {
 
         @Test
         void methodInParentClass() {
@@ -87,7 +87,7 @@ class AnnotationBasedTogglzExtensionTest {
     class EnabledChildTest extends EnabledParentTest {}
 
     @AllDisabled(MyFeatures.class)
-    abstract class DisabledParentTest {
+    abstract static class DisabledParentTest {
 
         @Test
         void methodInParentClass() {
