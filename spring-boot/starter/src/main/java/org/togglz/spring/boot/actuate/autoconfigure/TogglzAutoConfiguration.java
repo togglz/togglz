@@ -255,7 +255,7 @@ public class TogglzAutoConfiguration {
     @Configuration
     @ConditionalOnClass({OncePerRequestFilter.class})
     @ConditionalOnMissingBean(HttpServletRequestHolderFilter.class)
-    @ConditionalOnProperty(prefix = "togglz.web", name = "request-holder-filter", havingValue = "true", matchIfMissing = false)
+    @ConditionalOnProperty(prefix = "togglz.web", name = "request-holder-filter", havingValue = "true")
     protected static class RequestHolderFilterConfiguration {
 
         @Bean
