@@ -16,10 +16,10 @@ import org.togglz.core.user.FeatureUser;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FeatureManagerBuilderTest {
+class FeatureManagerBuilderTest {
 
     @Test
-    public void shouldAddStrategyIfUsingDefaultProvider() {
+    void shouldAddStrategyIfUsingDefaultProvider() {
 
         DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
 
@@ -36,7 +36,7 @@ public class FeatureManagerBuilderTest {
     }
 
     @Test
-    public void shouldFailIfAddingStrategyWithCustomProvider() {
+    void shouldFailIfAddingStrategyWithCustomProvider() {
 
         CustomStrategyProvider provider = new CustomStrategyProvider();
         assertThrows(IllegalStateException.class, () -> {

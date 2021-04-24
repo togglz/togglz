@@ -1,7 +1,5 @@
 package org.togglz.core.repository.mem;
 
-import java.sql.SQLException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
@@ -14,7 +12,7 @@ class InMemoryStateRepositoryTest {
     private InMemoryStateRepository repository;
 
     @BeforeEach
-    void before() throws SQLException {
+    void before() {
         repository = new InMemoryStateRepository();
     }
 

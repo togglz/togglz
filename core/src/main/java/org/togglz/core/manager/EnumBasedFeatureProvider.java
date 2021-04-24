@@ -47,7 +47,7 @@ public class EnumBasedFeatureProvider implements FeatureProvider {
                 throw new IllegalStateException("The feature " + newFeature + " has already been added");
             }
             if (features == null){
-                features = new LinkedHashSet();
+                features = new LinkedHashSet<>();
             }
             features.add(newFeature);
         }

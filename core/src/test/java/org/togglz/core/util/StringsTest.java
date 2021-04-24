@@ -1,6 +1,5 @@
 package org.togglz.core.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,7 +10,6 @@ class StringsTest {
 
     @Test
     void testIsEmpty() {
-        assertTrue(Strings.isEmpty(null));
         assertTrue(Strings.isEmpty(""));
         assertFalse(Strings.isEmpty("   "));
         assertFalse(Strings.isEmpty("foo"));
@@ -19,7 +17,6 @@ class StringsTest {
 
     @Test
     void testIsNotEmpty() {
-        assertFalse(Strings.isNotEmpty(null));
         assertFalse(Strings.isNotEmpty(""));
         assertTrue(Strings.isNotEmpty("   "));
         assertTrue(Strings.isNotEmpty("foo"));
@@ -43,7 +40,6 @@ class StringsTest {
 
     @Test
     void testTrim() {
-        assertNull(Strings.trim(null));
         assertEquals("", Strings.trim(""));
         assertEquals("", Strings.trim("   "));
         assertEquals("foo", Strings.trim("   foo   "));

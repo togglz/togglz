@@ -16,7 +16,6 @@ public class SystemPropertyActivationStrategy extends AbstractPropertyDrivenActi
     public static final String ID = "property";
     public static final String PARAM_PROPERTY_NAME = "system-property";
 
-
     @Override
     public String getId() {
         return ID;

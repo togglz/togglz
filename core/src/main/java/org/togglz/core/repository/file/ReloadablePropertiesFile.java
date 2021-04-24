@@ -26,10 +26,6 @@ class ReloadablePropertiesFile implements PropertySource {
 
     private long lastCheck = 0;
 
-    public ReloadablePropertiesFile(File file) {
-        this(file, 1000);
-    }
-
     public ReloadablePropertiesFile(File file, int minCheckInterval) {
         this.file = file;
         this.minCheckInterval = minCheckInterval;

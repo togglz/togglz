@@ -11,13 +11,12 @@ import org.togglz.core.user.FeatureUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultActivationStrategyProviderTest {
+class DefaultActivationStrategyProviderTest {
 
     private final DefaultActivationStrategyProvider provider = new DefaultActivationStrategyProvider();
 
     @Test
-    public void shouldLoadDefaultStrategies() {
-
+    void shouldLoadDefaultStrategies() {
         assertThat(provider.getActivationStrategies())
             .extracting("id")
             .contains(UsernameActivationStrategy.ID)
@@ -30,7 +29,7 @@ public class DefaultActivationStrategyProviderTest {
     }
 
     @Test
-    public void shouldNotContainCustomStrategyIfNotAdded() {
+    void shouldNotContainCustomStrategyIfNotAdded() {
         assertThat(provider.getActivationStrategies())
             .extracting("id")
             .doesNotContain(CustomActivationStrategy.class.getSimpleName())
@@ -39,8 +38,7 @@ public class DefaultActivationStrategyProviderTest {
     }
 
     @Test
-    public void shouldContainCustomStrategyIfAddedBefore() {
-
+    void shouldContainCustomStrategyIfAddedBefore() {
         provider.addActivationStrategy(new CustomActivationStrategy());
 
         assertThat(provider.getActivationStrategies())
@@ -50,9 +48,8 @@ public class DefaultActivationStrategyProviderTest {
     }
 
     @Test
-    public void shouldContainCustomStrategyIfAddedMultipleBefore() {
-
-        List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
+    void shouldContainCustomStrategyIfAddedMultipleBefore() {
+        List<ActivationStrategy> strategies = new ArrayList<>();
         strategies.add(new CustomActivationStrategy());
         strategies.add(new AnotherCustomActivationStrategy());
 

@@ -24,7 +24,7 @@ public class FeatureAnnotationsTest {
     }
 
     @ClassLevelGroup
-    private static enum MyFeature implements Feature {
+    private enum MyFeature implements Feature {
 
         @Label("Some feature with a label")
         FEATURE_WITH_LABEL,
@@ -33,7 +33,7 @@ public class FeatureAnnotationsTest {
         FEATURE_WITHOUT_LABEL,
 
         @EnabledByDefault
-        FEATURE_ENABLED_BY_DEFAULT;
+        FEATURE_ENABLED_BY_DEFAULT
     }
 
     private enum MyFeature2 implements Feature {

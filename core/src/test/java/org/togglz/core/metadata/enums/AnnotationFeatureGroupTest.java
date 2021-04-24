@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AnnotationFeatureGroupTest {
 
-    static final String FIELD_LEVEL_GROUP_LABEL = "Field Level Group Label";
-    static final String CLASS_LEVEL_GROUP_LABEL = "Class Level Group Label";
+    private static final String FIELD_LEVEL_GROUP_LABEL = "Field Level Group Label";
+    private static final String CLASS_LEVEL_GROUP_LABEL = "Class Level Group Label";
 
     @org.togglz.core.annotation.FeatureGroup
     @Label(FIELD_LEVEL_GROUP_LABEL)

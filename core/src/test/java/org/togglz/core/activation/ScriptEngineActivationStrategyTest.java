@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ScriptEngineActivationStrategyTest {
+class ScriptEngineActivationStrategyTest {
 
     private static final String JAVASCRIPT = "ECMAScript";
     private static final String UNKNOWN_LANGUAGE = "some language that doesn't exist";
@@ -19,7 +19,7 @@ public class ScriptEngineActivationStrategyTest {
     private static final String INVALID_JAVASCRIPT = " = ,;";
 
     @Test
-    public void shouldReturnFalseForUnsupportedLanguage() {
+    void shouldReturnFalseForUnsupportedLanguage() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState state = aScriptState(UNKNOWN_LANGUAGE, SOME_SCRIPT);
@@ -29,7 +29,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void shouldReturnFalseForInvalidJavaScript() {
+    void shouldReturnFalseForInvalidJavaScript() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState state = aScriptState(JAVASCRIPT, INVALID_JAVASCRIPT);
@@ -39,7 +39,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void shouldReturnSameResultAsScriptForLiterals() {
+    void shouldReturnSameResultAsScriptForLiterals() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState stateAlwaysTrue = aScriptState(JAVASCRIPT, "1 == 1");
@@ -50,8 +50,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void scriptCanAccessCurrentUser() {
-
+    void scriptCanAccessCurrentUser() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState state = aScriptState(JAVASCRIPT, "user.name == 'john'");
@@ -61,8 +60,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void scriptCanAccessUserAttributes() {
-
+    void scriptCanAccessUserAttributes() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState ageCheck = aScriptState(JAVASCRIPT, "user.getAttribute('age') >= 21");
@@ -77,8 +75,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void scriptCanAccessCurrentDate() {
-
+    void scriptCanAccessCurrentDate() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         // date.getYear() is a two-digit year
@@ -92,8 +89,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void shouldSupportMultilineScripts() {
-
+    void shouldSupportMultilineScripts() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState state = aScriptState(JAVASCRIPT,
@@ -104,7 +100,7 @@ public class ScriptEngineActivationStrategyTest {
     }
 
     @Test
-    public void shouldSupportScriptWithFunction() {
+    void shouldSupportScriptWithFunction() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
         FeatureState state = aScriptState(JAVASCRIPT,

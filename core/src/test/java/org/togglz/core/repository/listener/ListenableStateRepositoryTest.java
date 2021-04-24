@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class ListenableStateRepositoryTest {
+class ListenableStateRepositoryTest {
 
     private StateRepository delegate;
 
@@ -22,13 +22,13 @@ public class ListenableStateRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNullForUnknownFeature() {
+    void shouldReturnNullForUnknownFeature() {
         final ListenableStateRepository repo = new ListenableStateRepository(delegate);
         assertNull(repo.getFeatureState(TestFeature.F1));
     }
 
     @Test
-    public void shouldGetFeatureFromDelegate() {
+    void shouldGetFeatureFromDelegate() {
         final ListenableStateRepository repo = new ListenableStateRepository(delegate);
         delegate.setFeatureState(new FeatureState(TestFeature.F1, true));
         
@@ -36,7 +36,7 @@ public class ListenableStateRepositoryTest {
     }
 
     @Test
-    public void shouldSetFeatureInDelegate() {
+    void shouldSetFeatureInDelegate() {
         final ListenableStateRepository repo = new ListenableStateRepository(delegate);
         repo.setFeatureState(new FeatureState(TestFeature.F1, true));
 
@@ -44,7 +44,7 @@ public class ListenableStateRepositoryTest {
     }
 
     @Test
-    public void shouldNotifyListenersAfterSet() {
+    void shouldNotifyListenersAfterSet() {
         FeatureStateChangedListener firstListener = mock(FeatureStateChangedListener.class);
         FeatureStateChangedListener secondListener = mock(FeatureStateChangedListener.class);
         final ListenableStateRepository repo = new ListenableStateRepository(delegate);
@@ -59,7 +59,7 @@ public class ListenableStateRepositoryTest {
     }
 
     @Test
-    public void shouldNotifyListenersInWeightedOrder() {
+    void shouldNotifyListenersInWeightedOrder() {
         FeatureStateChangedListener higherPrio = mock(FeatureStateChangedListener.class);
         when(higherPrio.priority()).thenReturn(42);
         FeatureStateChangedListener lowerPrio = mock(FeatureStateChangedListener.class);

@@ -58,7 +58,7 @@ public class ReleaseDateActivationStrategy implements ActivationStrategy {
         try {
             return dateFormat.parse(fullDate.toString());
         } catch (ParseException e) {
-            log.error("Invalid date and/or time: " + fullDate.toString());
+            log.error("Invalid date and/or time: " + fullDate);
 
         }
         return null;

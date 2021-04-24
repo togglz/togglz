@@ -1,7 +1,6 @@
 package org.togglz.core.context;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -32,7 +31,7 @@ public class FeatureContext {
      * Cache for the {@link FeatureManager} instances looked up using the SPI
      */
     private static final ConcurrentReferenceHashMap<ClassLoader, FeatureManager> cache
-            = new ConcurrentReferenceHashMap<ClassLoader, FeatureManager>(WEAK, STRONG);
+            = new ConcurrentReferenceHashMap<>(WEAK, STRONG);
 
     /**
      * 
@@ -89,7 +88,7 @@ public class FeatureContext {
 
         // build a sorted list of all SPI implementations
         Iterator<FeatureManagerProvider> providerIterator = ServiceLoader.load(FeatureManagerProvider.class).iterator();
-        List<FeatureManagerProvider> providerList = new ArrayList<FeatureManagerProvider>();
+        List<FeatureManagerProvider> providerList = new ArrayList<>();
         while (providerIterator.hasNext()) {
             providerList.add(providerIterator.next());
         }

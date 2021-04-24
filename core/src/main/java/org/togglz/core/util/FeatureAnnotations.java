@@ -38,7 +38,7 @@ public class FeatureAnnotations {
     }
 
     public static Set<Annotation> getAnnotations(Feature feature) {
-        Set<Annotation> annotations = new HashSet<Annotation>();
+        Set<Annotation> annotations = new HashSet<>();
         try {
             Class<? extends Feature> featureClass = feature.getClass();
             Annotation[] fieldAnnotations = featureClass.getField(feature.name()).getAnnotations();

@@ -1,6 +1,5 @@
 package org.togglz.core.activation;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -120,7 +119,7 @@ class UserRoleActivationStrategyTest {
 
     @Test
     void doesntFailForOtherCollectionTypes() {
-        Collection<String> userRoles = new ArrayList<String>();
+        Collection<String> userRoles = new ArrayList<>();
         userRoles.add("SOME_ROLE");
 
         when(user.getAttribute(USER_ATTRIBUTE_ROLES)).thenReturn(userRoles);

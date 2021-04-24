@@ -55,17 +55,14 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
         engine.put("user", user);
         engine.put("date", new Date());
         try {
-
             Object result = engine.eval(script);
             if (result instanceof Boolean) {
-                return ((Boolean) result).booleanValue();
+                return (Boolean) result;
             }
-
         } catch (ScriptException e) {
             log.error("Could not evaluate script for feature " + featureState.getFeature().name() + ": " + e.getMessage());
         }
         return false;
-
     }
 
     @Override
@@ -82,7 +79,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     private static class ScriptLanguageParameter implements Parameter {
 
-        private List<String> languages = new ArrayList<String>();
+        private final List<String> languages = new ArrayList<>();
 
         public ScriptLanguageParameter(ScriptEngineManager engineManager) {
             for (ScriptEngineFactory factory : engineManager.getEngineFactories()) {

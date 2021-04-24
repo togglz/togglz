@@ -1,6 +1,5 @@
 package org.togglz.core.manager;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.InfoLink;
@@ -8,46 +7,42 @@ import org.togglz.core.annotation.Label;
 import org.togglz.core.annotation.Owner;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
-import org.togglz.core.util.Strings;
-
-import java.util.Arrays;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EnumBasedFeatureProviderTest {
 
     @Test
-    public void shouldFailForNull() {
+    void shouldFailForNull() {
         assertThrows(IllegalArgumentException.class, () -> new EnumBasedFeatureProvider(null));
     }
 
     @Test
-    public void shouldFailForArrayWithNull() {
+    void shouldFailForArrayWithNull() {
         assertThrows(IllegalArgumentException.class, () -> new EnumBasedFeatureProvider(ValidFeatureEnum.class, null));
     }
 
     @Test
-    public void shouldFailForNonEnumType() {
+    void shouldFailForNonEnumType() {
         assertThrows(IllegalArgumentException.class, () -> new EnumBasedFeatureProvider(NotAnEnum.class));
     }
 
     @Test
-    public void shouldFailForDuplicateFeatureName() {
+    void shouldFailForDuplicateFeatureName() {
         EnumBasedFeatureProvider provider = new EnumBasedFeatureProvider();
         provider.addFeatureEnum(ValidFeatureEnum.class);
         assertThrows(IllegalStateException.class, () -> provider.addFeatureEnum(DuplicateNameFeatureEnum.class));
     }
 
     @Test
-    public void shouldReturnCorrectListOfFeaturesForEnum() {
+    void shouldReturnCorrectListOfFeaturesForEnum() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         assertEquals(provider.getFeatures().toArray()[0], ValidFeatureEnum.FEATURE1);
         assertEquals(provider.getFeatures().toArray()[1], ValidFeatureEnum.FEATURE2);
     }
 
     @Test
-    public void shouldReturnMetaDataWithCorrectLabel() {
+    void shouldReturnMetaDataWithCorrectLabel() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
 
@@ -55,7 +50,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnMetaDataWhenRequestedWithOtherFeatureImplementation() {
+    void shouldReturnMetaDataWhenRequestedWithOtherFeatureImplementation() {
 
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData =
@@ -64,7 +59,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnOwnerNameIfAnnotationPresent() {
+    void shouldReturnOwnerNameIfAnnotationPresent() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_OWNER);
 
@@ -72,7 +67,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnNullForOwnerNameByDefault() {
+    void shouldReturnNullForOwnerNameByDefault() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
 
@@ -80,7 +75,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnInfoLinkIfAnnotationPresent() {
+    void shouldReturnInfoLinkIfAnnotationPresent() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.WITH_LINK);
 
@@ -88,7 +83,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnNullForInfoLinkByDefault() {
+    void shouldReturnNullForInfoLinkByDefault() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class);
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
 
@@ -96,7 +91,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnCombinedFeatureListForMultipleEnums() {
+    void shouldReturnCombinedFeatureListForMultipleEnums() {
 
         FeatureProvider provider = new EnumBasedFeatureProvider()
                 .addFeatureEnum(ValidFeatureEnum.class)
@@ -109,7 +104,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldBuildMetadataForMultipleEnums() {
+    void shouldBuildMetadataForMultipleEnums() {
 
         FeatureProvider provider = new EnumBasedFeatureProvider()
                 .addFeatureEnum(ValidFeatureEnum.class)
@@ -120,7 +115,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldReturnCombinedFeatureListForMultipleEnumsViaConstructor() {
+    void shouldReturnCombinedFeatureListForMultipleEnumsViaConstructor() {
 
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
 
@@ -131,7 +126,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldBuildMetadataForMultipleEnumsViaConstructor() {
+    void shouldBuildMetadataForMultipleEnumsViaConstructor() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
 
         assertEquals("First feature", provider.getMetaData(ValidFeatureEnum.FEATURE1).getLabel());
@@ -139,7 +134,7 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
+    void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
         FeatureProvider provider = new EnumBasedFeatureProvider(ValidFeatureEnum.class, OtherFeatureEnum.class);
 
         FeatureMetaData metaData = provider.getMetaData(ValidFeatureEnum.FEATURE1);
@@ -150,13 +145,13 @@ public class EnumBasedFeatureProviderTest {
     }
 
     @Test
-    public void providerShouldNotEagerlyCreateFeaturesSet() {
+    void providerShouldNotEagerlyCreateFeaturesSet() {
         FeatureProvider provider = new EnumBasedFeatureProvider();
         assertEquals(0, provider.getFeatures().size());
     }
 
     @Test
-    public void providerShouldThrowIllegalStateExceptionIfGetMetaDataIsCalledonEmptyProviderInstance() {
+    void providerShouldThrowIllegalStateExceptionIfGetMetaDataIsCalledonEmptyProviderInstance() {
         FeatureProvider provider = new EnumBasedFeatureProvider();
         assertThrows(IllegalStateException.class, () -> {
             provider.getMetaData(ValidFeatureEnum.FEATURE1).getDefaultFeatureState().isEnabled();
