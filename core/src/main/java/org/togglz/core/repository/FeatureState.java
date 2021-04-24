@@ -1,7 +1,6 @@
 package org.togglz.core.repository;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -145,7 +144,7 @@ public class FeatureState implements Serializable {
      */
     @Deprecated
     public FeatureState addUser(String user) {
-        return this.addUsers(Arrays.asList(user));
+        return this.addUsers(Collections.singletonList(user));
     }
 
     /**

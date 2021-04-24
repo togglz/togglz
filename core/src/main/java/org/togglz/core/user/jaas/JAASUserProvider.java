@@ -36,7 +36,6 @@ public class JAASUserProvider implements UserProvider {
                 }
             }
         }
-
         return null;
     }
 

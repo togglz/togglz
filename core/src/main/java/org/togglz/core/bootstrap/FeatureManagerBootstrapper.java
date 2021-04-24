@@ -2,7 +2,6 @@ package org.togglz.core.bootstrap;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -77,8 +76,7 @@ public class FeatureManagerBootstrapper {
     }
 
     private <T> T lookupBean(Class<T> clazz, Object context) {
-
-        Set<T> impls = new HashSet<T>();
+        Set<T> impls = new HashSet<>();
 
         for (BeanFinder beanFinder : ServiceLoader.load(BeanFinder.class)) {
             Collection<T> result = beanFinder.find(clazz, context);
