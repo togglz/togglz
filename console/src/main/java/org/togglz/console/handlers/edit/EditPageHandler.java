@@ -101,7 +101,6 @@ public class EditPageHandler extends RequestHandlerBase {
                 }
             }
         }
-
         return isValid;
     }
 
