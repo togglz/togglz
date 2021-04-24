@@ -33,10 +33,6 @@ class CachingStateRepositoryTest {
             .thenReturn(new FeatureState(DummyFeature.TEST, true));
     }
 
-    void tearDown() {
-        delegate = null;
-    }
-
     @Test
     void testCachingOfReadOperationsWithTimeToLife() throws InterruptedException {
         StateRepository repository = new CachingStateRepository(delegate, 10000);

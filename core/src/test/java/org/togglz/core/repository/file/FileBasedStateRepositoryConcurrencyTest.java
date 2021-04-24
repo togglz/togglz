@@ -45,13 +45,7 @@ public class FileBasedStateRepositoryConcurrencyTest {
                 .setParameter("param-of-" + name, "some-value-of-" + name);
 
             // queue a thread writing that state
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    repo.setFeatureState(state);
-                }
-            });
-
+            executor.submit(() -> repo.setFeatureState(state));
         }
 
         // Step 2: Wait for all threads to finish
@@ -83,7 +77,7 @@ public class FileBasedStateRepositoryConcurrencyTest {
         testFile.delete();
     }
 
-    private class TestFeature implements Feature {
+    private static class TestFeature implements Feature {
 
         private final String name;
 

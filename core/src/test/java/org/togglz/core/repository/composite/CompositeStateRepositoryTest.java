@@ -1,6 +1,5 @@
 package org.togglz.core.repository.composite;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
@@ -79,7 +78,6 @@ class CompositeStateRepositoryTest {
     }
 
     enum TestFeature implements Feature {
-        F1,
-        ;
+        F1
     }
 }

@@ -15,7 +15,7 @@ class WeightedTest {
         Weighted prio10 = () -> 10;
         Weighted prio20 = () -> 20;
 
-        List<Weighted> list = new ArrayList<Weighted>();
+        List<Weighted> list = new ArrayList<>();
         list.add(prio20);
         list.add(prio10);
         list.sort(new WeightedComparator());
@@ -29,7 +29,7 @@ class WeightedTest {
         Weighted prioMinInt = () -> Integer.MIN_VALUE;
         Weighted prio50 = () -> 50;
 
-        List<Weighted> list = new ArrayList<Weighted>();
+        List<Weighted> list = new ArrayList<>();
         list.add(prio50);
         list.add(prioMinInt);
         list.sort(new WeightedComparator());
@@ -43,7 +43,7 @@ class WeightedTest {
         Weighted prioMaxInt = () -> Integer.MAX_VALUE;
         Weighted prio50 = () -> 50;
 
-        List<Weighted> list = new ArrayList<Weighted>();
+        List<Weighted> list = new ArrayList<>();
         list.add(prioMaxInt);
         list.add(prio50);
         list.sort(new WeightedComparator());

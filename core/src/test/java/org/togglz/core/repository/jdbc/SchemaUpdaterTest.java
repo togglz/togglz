@@ -15,14 +15,12 @@ import org.togglz.core.util.DbUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SchemaUpdaterTest {
+class SchemaUpdaterTest {
 
     @Test
-    public void shouldDetectMissingTable() throws SQLException {
-
+    void shouldDetectMissingTable() throws SQLException {
         Connection connection = createConnection();
         try {
-
             SchemaUpdater updater = new SchemaUpdater(connection, "TOGGLZ", DefaultMapSerializer.multiline());
             assertFalse(updater.doesTableExist());
 
@@ -33,8 +31,7 @@ public class SchemaUpdaterTest {
     }
 
     @Test
-    public void shouldMigrateToVersion1() throws SQLException {
-
+    void shouldMigrateToVersion1() throws SQLException {
         Connection connection = createConnection();
         try {
 
@@ -49,12 +46,10 @@ public class SchemaUpdaterTest {
         } finally {
             DbUtils.closeQuietly(connection);
         }
-
     }
 
     @Test
-    public void shouldDetectVersion1() throws SQLException {
-
+    void shouldDetectVersion1() throws SQLException {
         Connection connection = createConnection();
         try {
 
@@ -70,12 +65,10 @@ public class SchemaUpdaterTest {
         } finally {
             DbUtils.closeQuietly(connection);
         }
-
     }
 
     @Test
-    public void shouldMigrateToVersion2() throws SQLException {
-
+    void shouldMigrateToVersion2() throws SQLException {
         Connection connection = createConnection();
         try {
 
@@ -128,7 +121,6 @@ public class SchemaUpdaterTest {
         } finally {
             DbUtils.closeQuietly(connection);
         }
-
     }
 
     private void update(Connection connection, String sql) throws SQLException {
@@ -139,7 +131,6 @@ public class SchemaUpdaterTest {
         } finally {
             DbUtils.closeQuietly(statement);
         }
-
     }
 
     private List<Object[]> query(Connection connection, String sql) throws SQLException {

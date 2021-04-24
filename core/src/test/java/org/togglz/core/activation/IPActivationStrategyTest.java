@@ -56,9 +56,7 @@ class IPActivationStrategyTest {
      * Returns the first IP of the current machine
      */
     private String getMachineIP() {
-
         try {
-
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             if (interfaces != null) {
                 while (interfaces.hasMoreElements()) {
@@ -71,13 +69,10 @@ class IPActivationStrategyTest {
                     }
                 }
             }
-
             return null;
-
         } catch (SocketException e) {
             return "<no-ip>";
         }
-
     }
 
     private enum MyFeature implements Feature {

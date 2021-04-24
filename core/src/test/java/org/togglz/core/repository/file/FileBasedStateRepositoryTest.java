@@ -304,7 +304,7 @@ public class FileBasedStateRepositoryTest {
         }
     }
 
-    private static Properties readPropertiesFile(File file) throws FileNotFoundException, IOException {
+    private static Properties readPropertiesFile(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
         Properties p = new Properties();
         p.load(fis);
@@ -323,6 +323,6 @@ public class FileBasedStateRepositoryTest {
         FEATURE1,
         FEATURE2,
         FEATURE3,
-        FEATURE4;
+        FEATURE4
     }
 }

@@ -14,10 +14,10 @@ import org.togglz.core.util.NamedFeature;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PropertyFeatureProviderTest {
+class PropertyFeatureProviderTest {
 
     @Test
-    public void shouldSupportDefinitionWithoutLabel() {
+    void shouldSupportDefinitionWithoutLabel() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "");
@@ -39,7 +39,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithOnlyLabel() {
+    void shouldSupportDefinitionWithOnlyLabel() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature");
@@ -61,7 +61,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithLabelAndDefault() {
+    void shouldSupportDefinitionWithLabelAndDefault() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature;true");
@@ -83,7 +83,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithLabelAndDefaultAndTrailingSemicolon() {
+    void shouldSupportDefinitionWithLabelAndDefaultAndTrailingSemicolon() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature;true;");
@@ -105,7 +105,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithSingleGroup() {
+    void shouldSupportDefinitionWithSingleGroup() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature;true;Group1");
@@ -129,7 +129,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void canInitializeFromProperties() {
+    void canInitializeFromProperties() {
 
         Properties properties = new Properties();
         properties.setProperty("ID_1", "ID 1;true;Group 1,Group Other");
@@ -166,7 +166,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
+    void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
         Properties properties = new Properties();
         properties.setProperty("F1", "");
 

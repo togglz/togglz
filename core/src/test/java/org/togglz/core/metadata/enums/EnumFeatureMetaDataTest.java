@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EnumFeatureMetaDataTest {
+class EnumFeatureMetaDataTest {
 
-    public static final String FIELD_LEVEL_GROUP_LABEL = "Field Level Group Label";
-    public static final String CLASS_LEVEL_GROUP_LABEL = "Class Level Group Label";
+    private static final String FIELD_LEVEL_GROUP_LABEL = "Field Level Group Label";
+    private static final String CLASS_LEVEL_GROUP_LABEL = "Class Level Group Label";
 
     @org.togglz.core.annotation.FeatureGroup
     @Label(FIELD_LEVEL_GROUP_LABEL)

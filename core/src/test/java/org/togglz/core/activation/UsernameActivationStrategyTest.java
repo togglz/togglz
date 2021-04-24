@@ -1,6 +1,5 @@
 package org.togglz.core.activation;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;

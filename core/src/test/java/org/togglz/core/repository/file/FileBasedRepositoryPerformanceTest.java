@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
-public class FileBasedRepositoryPerformanceTest {
+class FileBasedRepositoryPerformanceTest {
 
     private File file;
     private FileBasedStateRepository repository;
 
     @BeforeEach
-    public void before() throws Exception {
+    void before() throws Exception {
 
         // create repository
         file = File.createTempFile(this.getClass().getSimpleName(), null);
@@ -29,17 +29,17 @@ public class FileBasedRepositoryPerformanceTest {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() {
         file.delete();
     }
 
     @Test
-    public void readingExistingFeature() {
+    void readingExistingFeature() {
         runPerformanceTest(PerformanceFeatures.EXISTING);
     }
 
     @Test
-    public void readingMissingFeature() {
+    void readingMissingFeature() {
         runPerformanceTest(PerformanceFeatures.MISSING);
     }
 
