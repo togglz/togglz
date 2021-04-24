@@ -51,10 +51,7 @@ public class TogglzConsoleServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         RequestEvent consoleRequest =
-                new RequestEvent(featureManager, servletContext, request, response,
-                        RequestContext.newBuilder()
-                                .withValidateCSRFToken(validateCSRFToken)
-                                .build());
+                new RequestEvent(featureManager, servletContext, request, response, new RequestContext(validateCSRFToken));
         String path = consoleRequest.getPath();
 
         RequestHandler handler = getHandlerFor(path);
