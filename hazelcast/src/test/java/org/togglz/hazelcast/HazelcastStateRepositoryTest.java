@@ -14,10 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HazelcastStateRepositoryTest {
 
-	private final StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
-
 	@Test
 	void testSetFeatureStateNotExistingInMap() {
+		final StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
 		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
@@ -29,6 +28,7 @@ class HazelcastStateRepositoryTest {
 
 	@Test
 	void testSetFeatureStateExistingInMap() {
+		final StateRepository stateRepository = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
 		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
 		final FeatureState featureState = new FeatureState(feature, true);
 		stateRepository.setFeatureState(featureState);
@@ -43,6 +43,24 @@ class HazelcastStateRepositoryTest {
 		assertFalse(storedFeatureState.isEnabled());
 
 		assertTrue(EqualsBuilder.reflectionEquals(featureState, storedFeatureState, true));
+	}
+
+	@Test
+	void test2nodeSetup(){
+		final StateRepository stateRepository1 = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
+		final StateRepository stateRepository2 = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
+		final Feature feature = new NamedFeature("SAMPLE_FEATURE");
+		final FeatureState featureState = new FeatureState(feature, false);
+		stateRepository1.setFeatureState(featureState);
+
+		assertFalse(stateRepository1.getFeatureState(feature).isEnabled());
+		assertFalse(stateRepository2.getFeatureState(feature).isEnabled());
+
+		featureState.setEnabled(true);
+		stateRepository1.setFeatureState(featureState);
+
+		assertTrue(stateRepository1.getFeatureState(feature).isEnabled());
+		assertTrue(stateRepository2.getFeatureState(feature).isEnabled());
 	}
 
 	@Test

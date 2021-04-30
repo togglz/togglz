@@ -13,7 +13,7 @@
 	<description>Togglz - Hazelcast integration</description>
 
 	<properties>
-		<hazelcast.version>3.12.9</hazelcast.version>
+		<hazelcast.version>4.2</hazelcast.version>
 	</properties>
 
 	<dependencies>
@@ -25,11 +25,6 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
-			<version>${hazelcast.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.hazelcast</groupId>
-			<artifactId>hazelcast-client</artifactId>
 			<version>${hazelcast.version}</version>
 		</dependency>
 
