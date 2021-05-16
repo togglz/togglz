@@ -35,6 +35,17 @@ class ByteBuddyProxyFactoryTest {
   }
 
   @Test
+  void byteBuddyProxyHasNiceName() {
+    // Given:
+    Class<Speaker> interfaceClass = Speaker.class;
+    // When:
+    Supplier<String> proxy = ByteBuddyProxyFactory.proxyFor(Features.F1, interfaceClass, sayHello, sayWorld, featureManager);
+    // Then:
+    assertTrue(proxy.getClass().getName().startsWith("org.togglz.core.proxy.ByteBuddyProxyFactoryTest$Speaker$togglz$"));
+  }
+
+
+  @Test
   void byteBuddyProxyListensToFeature() {
     // Given:
     Supplier<String> proxy = ByteBuddyProxyFactory.proxyFor(Features.F1, Supplier.class, sayHello, sayWorld, featureManager);

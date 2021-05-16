@@ -1,6 +1,8 @@
 package org.togglz.core.proxy;
 
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.NamingStrategy;
+import net.bytebuddy.NamingStrategy.SuffixingRandom.BaseNameResolver.ForGivenType;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -9,6 +11,7 @@ import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.LazyResolvingFeatureManager;
+import static net.bytebuddy.description.type.TypeDescription.ForLoadedType.of;
 import static net.bytebuddy.description.type.TypeDescription.Generic.Builder.parameterizedType;
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 import static net.bytebuddy.matcher.ElementMatchers.isDefaultMethod;
@@ -55,7 +58,7 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
  */
 public class ByteBuddyProxyFactory {
 
-  // TODO Nice naming for classes
+  // TODO delegate toString()
   // TODO where is the type-caching?
 
   private static final Log log = LogFactory.getLog(ByteBuddyProxyFactory.class);
@@ -110,6 +113,7 @@ public class ByteBuddyProxyFactory {
     Implementation.Composable passiveProxyImpl = MethodDelegation.toField("delegate");
 
     Class<?> clazz = new ByteBuddy()
+      .with(new NamingStrategy.SuffixingRandom("togglz", new ForGivenType(of(interfaceClass))))
       .subclass(parameterizedType(TogglzSwitchable.class, interfaceClass).build())
       .implement(interfaceClass)
 
