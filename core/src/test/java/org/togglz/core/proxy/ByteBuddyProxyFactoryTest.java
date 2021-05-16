@@ -38,11 +38,22 @@ class ByteBuddyProxyFactoryTest {
   void byteBuddyProxyListensToFeature() {
     // Given:
     Supplier<String> proxy = ByteBuddyProxyFactory.proxyFor(Features.F1, Supplier.class, sayHello, sayWorld, featureManager);
-    // When:
-    featureManager.setFeatureState(new FeatureState(Features.F1, true));
     // Then:
+    featureManager.setFeatureState(new FeatureState(Features.F1, true));
     assertEquals("Hello", proxy.get());
     featureManager.setFeatureState(new FeatureState(Features.F1, false));
+    assertEquals("World", proxy.get());
+  }
+
+  @Test
+  void byteBuddyPassiveProxyListensToFeatureOnlyWhenUpdated() {
+    // Given:
+    Supplier<String> proxy = ByteBuddyProxyFactory.passiveProxyFor(Features.F1, Supplier.class, sayHello, sayWorld, featureManager);
+    featureManager.setFeatureState(new FeatureState(Features.F1, false));
+    assertEquals("Hello", proxy.get()); // inactive state is ignored
+    // When:
+    TogglzSwitchable.update(proxy);
+    // Then:
     assertEquals("World", proxy.get());
   }
 

@@ -40,6 +40,7 @@ public class ByteBuddyProxyBenchmark {
   private static final Supplier<String> sayHello = () -> "Hello";
   private static final Supplier<String> sayWorld = () -> "World";
 
+  Supplier<String> passiveProxy;
   Supplier<String> proxy;
   Supplier<String> handCoded;
   Supplier<String> handCoded2;
@@ -95,6 +96,9 @@ public class ByteBuddyProxyBenchmark {
     // Create switching proxies for different tests
     proxy = ByteBuddyProxyFactory.proxyFor(
       ProxyFeature.ENABLED, Supplier.class, sayHello, sayWorld, featureManager);
+    passiveProxy = ByteBuddyProxyFactory.passiveProxyFor(
+      ProxyFeature.ENABLED, Supplier.class, sayHello, sayWorld, featureManager);
+
     handCoded = new HandCodedSwitchable(
       featureManager, ProxyFeature.ENABLED, sayHello, sayWorld);
     handCoded2 = new HandCodedSwitchable2(featureManager, ProxyFeature.ENABLED, sayHello, sayWorld);
@@ -104,8 +108,14 @@ public class ByteBuddyProxyBenchmark {
 
   @Benchmark
   // Full auto-generated proxy
-  public String generatedProxy() {
+  public String activeProxy() {
     return proxy.get();
+  }
+
+  @Benchmark
+  // Full auto-generated passive proxy
+  public String passiveProxy() {
+    return passiveProxy.get();
   }
 
   @Benchmark

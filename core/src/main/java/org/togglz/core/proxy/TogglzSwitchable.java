@@ -23,11 +23,25 @@ public abstract class TogglzSwitchable<T> {
     delegate = featureManager.isActive(feature) ? active : inactive;
   }
 
+  /**
+   * Updates the internal delegate selection against the {@link Feature} state.
+   */
   protected final void checkTogglzState() {
     boolean configured = featureManager.isActive(feature);
     boolean operational = delegate == active;
     if (configured ^ operational) { // Less field writes -> more JIT optimisations
       delegate = configured ? active : inactive;
+    }
+  }
+
+  /**
+   * Manually update the internal delegation of a {@link TogglzSwitchable} against its
+   * {@link Feature} state. This is intended for use with passive switching.
+   * @param o The object to update. If null or not a {@link TogglzSwitchable}, no action is taken.
+   */
+  public static void update(Object o) {
+    if ( o instanceof TogglzSwitchable) {
+      ((TogglzSwitchable<?>)o).checkTogglzState();
     }
   }
 }
