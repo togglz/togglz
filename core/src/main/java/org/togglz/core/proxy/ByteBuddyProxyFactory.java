@@ -5,7 +5,6 @@ import net.bytebuddy.NamingStrategy;
 import net.bytebuddy.NamingStrategy.SuffixingRandom.BaseNameResolver.ForGivenType;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.MethodCall;
-import net.bytebuddy.implementation.MethodDelegation;
 import org.togglz.core.Feature;
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
@@ -35,6 +34,10 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
  *     super.checkTogglzState();
  *     return delegate.findById(id);
  *   }
+ *   public String toString() {
+ *     super.checkTogglzState();
+ *     return delegate.toString();
+ *   }
  * } </pre>
  *
  * <h2>Active and Passive mode</h2>
@@ -58,7 +61,6 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
  */
 public class ByteBuddyProxyFactory {
 
-  // TODO delegate toString()
   // TODO where is the type-caching?
 
   private static final Log log = LogFactory.getLog(ByteBuddyProxyFactory.class);
@@ -109,8 +111,9 @@ public class ByteBuddyProxyFactory {
   }
 
   private static Class<?> generateProxyClass(Class<?> interfaceClass, boolean passiveProxy) {
-    Implementation.Composable activeProxyImpl = MethodCall.invoke(named("checkTogglzState")).onSuper().andThen(MethodDelegation.toField("delegate"));
-    Implementation.Composable passiveProxyImpl = MethodDelegation.toField("delegate");
+    Implementation.Composable activeProxyImpl = MethodCall.invoke(named("checkTogglzState")).onSuper().andThen(MethodCall.invokeSelf().onField("delegate"));
+    Implementation.Composable passiveProxyImpl = MethodCall.invokeSelf().onField("delegate");
+
 
     Class<?> clazz = new ByteBuddy()
       .with(new NamingStrategy.SuffixingRandom("togglz", new ForGivenType(of(interfaceClass))))
@@ -118,7 +121,8 @@ public class ByteBuddyProxyFactory {
       .implement(interfaceClass)
 
       // Define the interface methods excluding any that have default impls.
-      .method(isDeclaredBy(interfaceClass).and(not(isDefaultMethod())))
+      .method(isDeclaredBy(interfaceClass).and(not(isDefaultMethod()))
+                .or(named("toString")))
       .intercept(passiveProxy ? passiveProxyImpl : activeProxyImpl)
 
       .make()

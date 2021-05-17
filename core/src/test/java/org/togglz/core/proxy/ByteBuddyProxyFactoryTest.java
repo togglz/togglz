@@ -14,13 +14,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ByteBuddyProxyFactoryTest {
 
-  private static final Speaker sayHello = () -> "Hello";
-  private static final Speaker sayWorld = () -> "World";
+  private static final Speaker sayHello = new Speaker() { // As an anonymous class
+    @Override
+    public String getName() {
+      return "Hello";
+    }
+
+    @Override
+    public String toString() {
+      return "Active delegate";
+    }
+  };
+  private static final Speaker sayWorld = () -> "World"; // As a lambda
+
   private FeatureManager featureManager;
 
   public interface Speaker extends Supplier<String> {
     default String get() { return getName(); }
     String getName();
+  }
+  public interface Counter extends Supplier<Integer> {
+    default Integer get() { return getCount(); }
+    int getCount();
   }
 
   @BeforeEach
@@ -44,6 +59,15 @@ class ByteBuddyProxyFactoryTest {
     assertTrue(proxy.getClass().getName().startsWith("org.togglz.core.proxy.ByteBuddyProxyFactoryTest$Speaker$togglz$"));
   }
 
+  @Test
+  void byteBuddyProxyDelegatesToString() {
+    // Given:
+    Class<Speaker> interfaceClass = Speaker.class;
+    // When:
+    Supplier<String> proxy = ByteBuddyProxyFactory.proxyFor(Features.F1, interfaceClass, sayHello, sayWorld, featureManager);
+    // Then:
+    assertEquals("Active delegate", proxy.toString());
+  }
 
   @Test
   void byteBuddyProxyListensToFeature() {
@@ -54,6 +78,18 @@ class ByteBuddyProxyFactoryTest {
     assertEquals("Hello", proxy.get());
     featureManager.setFeatureState(new FeatureState(Features.F1, false));
     assertEquals("World", proxy.get());
+  }
+
+  @Test
+  void byteBuddyPassiveProxyDelegatesToString() {
+    // Given:
+    Supplier<String> proxy = ByteBuddyProxyFactory.passiveProxyFor(Features.F1, Speaker.class, sayHello, sayWorld, featureManager);
+    featureManager.setFeatureState(new FeatureState(Features.F1, false));
+    assertEquals("Active delegate", proxy.toString());
+    // When:
+    TogglzSwitchable.update(proxy);
+    // Then:
+    assertNotEquals("Active delegate", proxy.toString());
   }
 
   @Test
