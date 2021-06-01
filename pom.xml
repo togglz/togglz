@@ -400,6 +400,12 @@
         <scope>provided</scope>
       </dependency>
 
+      <dependency>
+        <!-- Used by proxy generation -->
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>1.11.0</version>
+      </dependency>
 
       <dependency>
         <groupId>org.junit.jupiter</groupId>
