@@ -47,6 +47,7 @@
 
     <spring.version>5.3.7</spring.version>
     <junit.version>5.7.2</junit.version>
+    <spockframework.version>2.0-groovy-3.0</spockframework.version>
   </properties>
 
   <build>
@@ -149,6 +150,7 @@
     <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
+    <module>spock</module>
     <module>cassandra</module>
     <module>hazelcast</module>
     <module>zookeeper</module>
@@ -394,6 +396,13 @@
       </dependency>
 
       <dependency>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-spock</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
         <version>4.0.1</version>
@@ -419,10 +428,24 @@
         <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <scope>test</scope>
+        <version>${junit.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-junit-jupiter</artifactId>
         <version>3.8.0</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.spockframework</groupId>
+        <artifactId>spock-core</artifactId>
+        <version>${spockframework.version}</version>
         <scope>test</scope>
       </dependency>
 
