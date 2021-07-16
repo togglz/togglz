@@ -146,7 +146,6 @@ public class S3StateRepository implements StateRepository {
         private String sseCustomerKey;
         private String sseCustomerKeyMD5;
 
-
         /**
          * Creates a new builder for a {@link S3StateRepository}.
          *
