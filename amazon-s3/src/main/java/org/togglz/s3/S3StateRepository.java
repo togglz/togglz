@@ -39,10 +39,13 @@ public class S3StateRepository implements StateRepository {
     private final String bucketName;
     private final String keyPrefix;
 
+    private final String sseCustomerAlgorithm;
+
     private S3StateRepository(Builder builder) {
         this.client = builder.client;
         this.bucketName = builder.bucketName;
         this.keyPrefix = builder.keyPrefix;
+        this.sseCustomerAlgorithm = builder.sseCustomerAlgorithm;
     }
 
     @Override
@@ -51,6 +54,10 @@ public class S3StateRepository implements StateRepository {
             GetObjectRequest.Builder requestBuilder = GetObjectRequest.builder()
                     .bucket(bucketName)
                     .key(keyPrefix + feature.name());
+
+            if (sseCustomerAlgorithm != null) {
+                requestBuilder = requestBuilder.sseCustomerAlgorithm(sseCustomerAlgorithm);
+            }
 
             GetObjectRequest getObjectRequest = requestBuilder.build();
 
@@ -82,6 +89,10 @@ public class S3StateRepository implements StateRepository {
                     .bucket(bucketName)
                     .key(keyPrefix + featureState.getFeature().name());
 
+            if (sseCustomerAlgorithm != null) {
+                requestBuilder = requestBuilder.sseCustomerAlgorithm(sseCustomerAlgorithm);
+            }
+
             PutObjectRequest putObjectRequest = requestBuilder.build();
 
             RequestBody requestBody = RequestBody.fromString(json);
@@ -111,6 +122,8 @@ public class S3StateRepository implements StateRepository {
         private final String bucketName;
         private String keyPrefix = "togglz/";
 
+        private String sseCustomerAlgorithm;
+
         /**
          * Creates a new builder for a {@link S3StateRepository}.
          *
@@ -130,6 +143,17 @@ public class S3StateRepository implements StateRepository {
          */
         public Builder prefix(String keyPrefix) {
             this.keyPrefix = keyPrefix == null ? "" : keyPrefix;
+            return this;
+        }
+
+        /**
+         * Specifies the algorithm to use to when encrypting the object (for example, AES256).
+         *
+         * @param sseCustomerAlgorithm – Specifies the algorithm to use to when encrypting the object (for example, AES256).
+         * @return this
+         */
+        public Builder sseCustomerAlgorithm(String sseCustomerAlgorithm) {
+            this.sseCustomerAlgorithm = sseCustomerAlgorithm;
             return this;
         }
 
