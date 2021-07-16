@@ -41,6 +41,7 @@ public class S3StateRepository implements StateRepository {
 
     private final String sseCustomerAlgorithm;
     private final String sseCustomerKey;
+    private final String sseCustomerKeyMD5;
 
     private S3StateRepository(Builder builder) {
         this.client = builder.client;
@@ -48,6 +49,7 @@ public class S3StateRepository implements StateRepository {
         this.keyPrefix = builder.keyPrefix;
         this.sseCustomerAlgorithm = builder.sseCustomerAlgorithm;
         this.sseCustomerKey = builder.sseCustomerKey;
+        this.sseCustomerKeyMD5 = builder.sseCustomerKeyMD5;
     }
 
     @Override
@@ -63,6 +65,10 @@ public class S3StateRepository implements StateRepository {
 
             if (sseCustomerKey != null) {
                 requestBuilder = requestBuilder.sseCustomerKey(sseCustomerKey);
+            }
+
+            if (sseCustomerKeyMD5 != null) {
+                requestBuilder = requestBuilder.sseCustomerKeyMD5(sseCustomerKeyMD5);
             }
 
             GetObjectRequest getObjectRequest = requestBuilder.build();
@@ -103,6 +109,10 @@ public class S3StateRepository implements StateRepository {
                 requestBuilder = requestBuilder.sseCustomerKey(sseCustomerKey);
             }
 
+            if (sseCustomerKeyMD5 != null) {
+                requestBuilder = requestBuilder.sseCustomerKeyMD5(sseCustomerKeyMD5);
+            }
+
             PutObjectRequest putObjectRequest = requestBuilder.build();
 
             RequestBody requestBody = RequestBody.fromString(json);
@@ -134,6 +144,8 @@ public class S3StateRepository implements StateRepository {
 
         private String sseCustomerAlgorithm;
         private String sseCustomerKey;
+        private String sseCustomerKeyMD5;
+
 
         /**
          * Creates a new builder for a {@link S3StateRepository}.
@@ -176,6 +188,18 @@ public class S3StateRepository implements StateRepository {
          */
         public Builder sseCustomerKey(String sseCustomerKey) {
             this.sseCustomerKey = sseCustomerKey;
+            return this;
+        }
+
+        /**
+         * Specifies the 128-bit MD5 digest of the encryption key according to RFC 1321.
+         * Amazon S3 uses this header for a message integrity check to ensure that the encryption key was transmitted without error.
+         *
+         * @param sseCustomerKeyMD5 – Specifies the 128-bit MD5 digest of the encryption key according to RFC 1321.
+         * @return this
+         */
+        public Builder sseCustomerKeyMD5(String sseCustomerKeyMD5) {
+            this.sseCustomerKeyMD5 = sseCustomerKeyMD5;
             return this;
         }
 
