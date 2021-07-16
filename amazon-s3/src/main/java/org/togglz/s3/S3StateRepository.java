@@ -48,7 +48,12 @@ public class S3StateRepository implements StateRepository {
     @Override
     public FeatureState getFeatureState(Feature feature) {
         try {
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(keyPrefix + feature.name()).build();
+            GetObjectRequest.Builder requestBuilder = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyPrefix + feature.name());
+
+            GetObjectRequest getObjectRequest = requestBuilder.build();
+
             InputStream object = client.getObject(getObjectRequest);
             if (object != null) {
                 String content = IoUtils.toUtf8String(object);
@@ -72,7 +77,13 @@ public class S3StateRepository implements StateRepository {
         try {
             FeatureStateStorageWrapper storageWrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
             String json = objectMapper.writeValueAsString(storageWrapper);
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(keyPrefix + featureState.getFeature().name()).build();
+
+            PutObjectRequest.Builder requestBuilder = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyPrefix + featureState.getFeature().name());
+
+            PutObjectRequest putObjectRequest = requestBuilder.build();
+
             RequestBody requestBody = RequestBody.fromString(json);
             client.putObject(putObjectRequest, requestBody);
         } catch (AwsServiceException | SdkClientException | JsonProcessingException e) {
