@@ -40,12 +40,14 @@ public class S3StateRepository implements StateRepository {
     private final String keyPrefix;
 
     private final String sseCustomerAlgorithm;
+    private final String sseCustomerKey;
 
     private S3StateRepository(Builder builder) {
         this.client = builder.client;
         this.bucketName = builder.bucketName;
         this.keyPrefix = builder.keyPrefix;
         this.sseCustomerAlgorithm = builder.sseCustomerAlgorithm;
+        this.sseCustomerKey = builder.sseCustomerKey;
     }
 
     @Override
@@ -57,6 +59,10 @@ public class S3StateRepository implements StateRepository {
 
             if (sseCustomerAlgorithm != null) {
                 requestBuilder = requestBuilder.sseCustomerAlgorithm(sseCustomerAlgorithm);
+            }
+
+            if (sseCustomerKey != null) {
+                requestBuilder = requestBuilder.sseCustomerKey(sseCustomerKey);
             }
 
             GetObjectRequest getObjectRequest = requestBuilder.build();
@@ -93,6 +99,10 @@ public class S3StateRepository implements StateRepository {
                 requestBuilder = requestBuilder.sseCustomerAlgorithm(sseCustomerAlgorithm);
             }
 
+            if (sseCustomerKey != null) {
+                requestBuilder = requestBuilder.sseCustomerKey(sseCustomerKey);
+            }
+
             PutObjectRequest putObjectRequest = requestBuilder.build();
 
             RequestBody requestBody = RequestBody.fromString(json);
@@ -123,6 +133,7 @@ public class S3StateRepository implements StateRepository {
         private String keyPrefix = "togglz/";
 
         private String sseCustomerAlgorithm;
+        private String sseCustomerKey;
 
         /**
          * Creates a new builder for a {@link S3StateRepository}.
@@ -154,6 +165,17 @@ public class S3StateRepository implements StateRepository {
          */
         public Builder sseCustomerAlgorithm(String sseCustomerAlgorithm) {
             this.sseCustomerAlgorithm = sseCustomerAlgorithm;
+            return this;
+        }
+
+        /**
+         * Specifies the customer-provided encryption key for Amazon S3 to use in encrypting data.
+         *
+         * @param sseCustomerKey – Specifies the customer-provided encryption key for Amazon S3 to use in encrypting data.
+         * @return this
+         */
+        public Builder sseCustomerKey(String sseCustomerKey) {
+            this.sseCustomerKey = sseCustomerKey;
             return this;
         }
 
