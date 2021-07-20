@@ -39,16 +39,40 @@ public class S3StateRepository implements StateRepository {
     private final String bucketName;
     private final String keyPrefix;
 
+    private final String sseCustomerAlgorithm;
+    private final String sseCustomerKey;
+    private final String sseCustomerKeyMD5;
+
     private S3StateRepository(Builder builder) {
         this.client = builder.client;
         this.bucketName = builder.bucketName;
         this.keyPrefix = builder.keyPrefix;
+        this.sseCustomerAlgorithm = builder.sseCustomerAlgorithm;
+        this.sseCustomerKey = builder.sseCustomerKey;
+        this.sseCustomerKeyMD5 = builder.sseCustomerKeyMD5;
     }
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
         try {
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder().bucket(bucketName).key(keyPrefix + feature.name()).build();
+            GetObjectRequest.Builder requestBuilder = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyPrefix + feature.name());
+
+            if (sseCustomerAlgorithm != null) {
+                requestBuilder = requestBuilder.sseCustomerAlgorithm(sseCustomerAlgorithm);
+            }
+
+            if (sseCustomerKey != null) {
+                requestBuilder = requestBuilder.sseCustomerKey(sseCustomerKey);
+            }
+
+            if (sseCustomerKeyMD5 != null) {
+                requestBuilder = requestBuilder.sseCustomerKeyMD5(sseCustomerKeyMD5);
+            }
+
+            GetObjectRequest getObjectRequest = requestBuilder.build();
+
             InputStream object = client.getObject(getObjectRequest);
             if (object != null) {
                 String content = IoUtils.toUtf8String(object);
@@ -72,7 +96,25 @@ public class S3StateRepository implements StateRepository {
         try {
             FeatureStateStorageWrapper storageWrapper = FeatureStateStorageWrapper.wrapperForFeatureState(featureState);
             String json = objectMapper.writeValueAsString(storageWrapper);
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder().bucket(bucketName).key(keyPrefix + featureState.getFeature().name()).build();
+
+            PutObjectRequest.Builder requestBuilder = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(keyPrefix + featureState.getFeature().name());
+
+            if (sseCustomerAlgorithm != null) {
+                requestBuilder = requestBuilder.sseCustomerAlgorithm(sseCustomerAlgorithm);
+            }
+
+            if (sseCustomerKey != null) {
+                requestBuilder = requestBuilder.sseCustomerKey(sseCustomerKey);
+            }
+
+            if (sseCustomerKeyMD5 != null) {
+                requestBuilder = requestBuilder.sseCustomerKeyMD5(sseCustomerKeyMD5);
+            }
+
+            PutObjectRequest putObjectRequest = requestBuilder.build();
+
             RequestBody requestBody = RequestBody.fromString(json);
             client.putObject(putObjectRequest, requestBody);
         } catch (AwsServiceException | SdkClientException | JsonProcessingException e) {
@@ -100,6 +142,10 @@ public class S3StateRepository implements StateRepository {
         private final String bucketName;
         private String keyPrefix = "togglz/";
 
+        private String sseCustomerAlgorithm;
+        private String sseCustomerKey;
+        private String sseCustomerKeyMD5;
+
         /**
          * Creates a new builder for a {@link S3StateRepository}.
          *
@@ -119,6 +165,40 @@ public class S3StateRepository implements StateRepository {
          */
         public Builder prefix(String keyPrefix) {
             this.keyPrefix = keyPrefix == null ? "" : keyPrefix;
+            return this;
+        }
+
+        /**
+         * Specifies the algorithm to use to when encrypting the object (for example, AES256).
+         *
+         * @param sseCustomerAlgorithm – Specifies the algorithm to use to when encrypting the object (for example, AES256).
+         * @return this
+         */
+        public Builder sseCustomerAlgorithm(String sseCustomerAlgorithm) {
+            this.sseCustomerAlgorithm = sseCustomerAlgorithm;
+            return this;
+        }
+
+        /**
+         * Specifies the customer-provided encryption key for Amazon S3 to use in encrypting data.
+         *
+         * @param sseCustomerKey – Specifies the customer-provided encryption key for Amazon S3 to use in encrypting data.
+         * @return this
+         */
+        public Builder sseCustomerKey(String sseCustomerKey) {
+            this.sseCustomerKey = sseCustomerKey;
+            return this;
+        }
+
+        /**
+         * Specifies the 128-bit MD5 digest of the encryption key according to RFC 1321.
+         * Amazon S3 uses this header for a message integrity check to ensure that the encryption key was transmitted without error.
+         *
+         * @param sseCustomerKeyMD5 – Specifies the 128-bit MD5 digest of the encryption key according to RFC 1321.
+         * @return this
+         */
+        public Builder sseCustomerKeyMD5(String sseCustomerKeyMD5) {
+            this.sseCustomerKeyMD5 = sseCustomerKeyMD5;
             return this;
         }
 
