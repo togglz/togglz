@@ -7,6 +7,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.util.Pool;
 
 /**
  * A state repository which stores the feature state in Redis.
@@ -24,7 +25,7 @@ public class RedisStateRepository implements StateRepository {
     public static final String PARAMETER_PREFIX = "parameter:";
     public static final int PARAMETER_PREFIX_LENGTH = PARAMETER_PREFIX.length();
 
-    protected final JedisPool jedisPool;
+    protected final Pool<Jedis> jedisPool;
     protected final String keyPrefix;
 
     private RedisStateRepository(final Builder builder) {
@@ -85,7 +86,7 @@ public class RedisStateRepository implements StateRepository {
      */
     public static class Builder {
 
-        private JedisPool jedisPool = null;
+        private Pool<Jedis> jedisPool = null;
         private String keyPrefix = "togglz:";
 
         /**
@@ -100,7 +101,7 @@ public class RedisStateRepository implements StateRepository {
          *
          * @param jedisPool the Jedis Pool {@link JedisPool}
          */
-        public Builder jedisPool(final JedisPool jedisPool) {
+        public Builder jedisPool(final Pool<Jedis> jedisPool) {
             this.jedisPool = jedisPool;
             return this;
         }
