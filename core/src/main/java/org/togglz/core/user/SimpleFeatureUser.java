@@ -3,6 +3,7 @@ package org.togglz.core.user;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.graalvm.polyglot.proxy.ProxyObject;
 import org.togglz.core.manager.DefaultFeatureManager;
 
 /**
@@ -50,7 +51,7 @@ public class SimpleFeatureUser implements FeatureUser {
 
     @Override
     public Object getAttribute(String name) {
-        return attributes.get(name);
+        return ProxyObject.fromMap((Map<String, Object>) attributes.get(name));
     }
 
     /**

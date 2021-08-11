@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 
 import org.togglz.core.logging.Log;
 import org.togglz.core.logging.LogFactory;
@@ -28,6 +25,9 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     public ScriptEngineActivationStrategy() {
         engineManager = new ScriptEngineManager();
+        Bindings bindings = engineManager.getBindings();
+//        bindings.put("polyglot.js.allowAllAccess", true);
+        engineManager.setBindings(bindings);
     }
 
     @Override
@@ -51,9 +51,12 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
             log.error("Could not find script engine for: " + lang);
             return false;
         }
+        Bindings bindings = engineManager.getBindings();
+        bindings.put("polyglot.js.allowAllAccess", true);
+        bindings.put("user", user);
+        bindings.put("date", new Date());
+        engineManager.setBindings(bindings);
 
-        engine.put("user", user);
-        engine.put("date", new Date());
         try {
             Object result = engine.eval(script);
             if (result instanceof Boolean) {
