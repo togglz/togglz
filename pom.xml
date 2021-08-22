@@ -147,6 +147,7 @@
     <module>shiro</module>
     <module>appengine</module>
     <module>cloud-datastore</module>
+    <module>cloud-storage</module>
     <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
