@@ -13,7 +13,7 @@
     <description>Togglz - Google Cloud Datastore Integration</description>
 
     <properties>
-        <gcloud.version>0.8.0-beta</gcloud.version>
+        <gcloud.version>2.1.0</gcloud.version>
     </properties>
 
     <dependencies>
