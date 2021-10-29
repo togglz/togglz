@@ -39,46 +39,46 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void getAllFeatures() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
-                        TogglzAutoConfiguration.class,
-                        TogglzEndpointAutoConfiguration.class))
-                .withPropertyValues(
-                        "management.endpoints.web.exposure.include=*",
-                        "togglz.features.FEATURE_ONE.enabled: true",
-                        "togglz.features.FEATURE_TWO.enabled: false",
-                        "togglz.features.FEATURE_TWO.strategy: release-date",
-                        "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
-                        "togglz.features.FEATURE_TWO.param.time: 08:30:00")
-                .run((context) -> {
-                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
-                    List<TogglzFeature> features = endpoint.getAllFeatures();
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+            .withPropertyValues(
+                    "management.endpoints.web.exposure.include=*",
+                    "togglz.features.FEATURE_ONE.enabled: true",
+                    "togglz.features.FEATURE_TWO.enabled: false",
+                    "togglz.features.FEATURE_TWO.strategy: release-date",
+                    "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
+                    "togglz.features.FEATURE_TWO.param.time: 08:30:00")
+            .run((context) -> {
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                List<TogglzFeature> features = endpoint.getAllFeatures();
 
-                    // Assert we have 2 features
-                    assertEquals(2, features.size());
+                // Assert we have 2 features
+                assertEquals(2, features.size());
 
-                    // Assert feature one
-                    assertEquals("FEATURE_ONE", features.get(0).getName());
-                    assertTrue(features.get(0).isEnabled());
-                    assertNull(features.get(0).getStrategy());
-                    assertEquals(0, features.get(0).getParams().size());
-                    assertEquals(Collections.emptyMap(), features.get(0).getParams());
+                // Assert feature one
+                assertEquals("FEATURE_ONE", features.get(0).getName());
+                assertTrue(features.get(0).isEnabled());
+                assertNull(features.get(0).getStrategy());
+                assertEquals(0, features.get(0).getParams().size());
+                assertEquals(Collections.emptyMap(), features.get(0).getParams());
 
-                    // Assert feature two
-                    assertEquals("FEATURE_TWO", features.get(1).getName());
-                    assertFalse(features.get(1).isEnabled());
-                    assertEquals("release-date", features.get(1).getStrategy());
-                    assertEquals(2, features.get(1).getParams().size());
-                    assertEquals("2016-07-01", features.get(1).getParams().get("date"));
-                    assertEquals("08:30:00", features.get(1).getParams().get("time"));
-                });
+                // Assert feature two
+                assertEquals("FEATURE_TWO", features.get(1).getName());
+                assertFalse(features.get(1).isEnabled());
+                assertEquals("release-date", features.get(1).getStrategy());
+                assertEquals(2, features.get(1).getParams().size());
+                assertEquals("2016-07-01", features.get(1).getParams().get("date"));
+                assertEquals("08:30:00", features.get(1).getParams().get("time"));
+            });
     }
 
     @Test
     public void shouldEnableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
-                        TogglzAutoConfiguration.class,
-                        TogglzEndpointAutoConfiguration.class))
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
                         "management.endpoints.web.exposure.include=*",
                         "togglz.features.FEATURE_ONE.enabled: false")
@@ -88,7 +88,7 @@ public class TogglzEndpointTest extends BaseTest {
 
                     // When
                     final TogglzFeature togglzFeature = endpoint.setFeatureState(
-                            "FEATURE_ONE", true, null, null);
+                        "FEATURE_ONE", true, null, null);
 
                     // Then
                     assertTrue(togglzFeature.isEnabled());
@@ -98,24 +98,24 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldChangeStrategy() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
-                        TogglzAutoConfiguration.class,
-                        TogglzEndpointAutoConfiguration.class))
-                .withPropertyValues(
-                        "management.endpoints.web.exposure.include=*",
-                        "togglz.features.FEATURE_ONE.enabled: false")
-                .run((context) -> {
-                    // Given
-                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
-                    String newStrategy = "aStrategy";
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+            .withPropertyValues(
+                    "management.endpoints.web.exposure.include=*",
+                    "togglz.features.FEATURE_ONE.enabled: false")
+            .run((context) -> {
+                // Given
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                String newStrategy = "aStrategy";
 
-                    // When
-                    final TogglzFeature togglzFeature = endpoint.setFeatureState(
-                            "FEATURE_ONE", null, newStrategy, null);
+                // When
+                final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                        "FEATURE_ONE", null, newStrategy, null);
 
-                    // Then
-                    assertEquals(newStrategy, togglzFeature.getStrategy());
-                });
+                // Then
+                assertEquals(newStrategy, togglzFeature.getStrategy());
+            });
     }
 
     @Test
@@ -147,9 +147,9 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldDisableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
-                        TogglzAutoConfiguration.class,
-                        TogglzEndpointAutoConfiguration.class))
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
                         "management.endpoints.web.exposure.include=*",
                         "togglz.features.FEATURE_ONE.enabled: true")
@@ -159,7 +159,7 @@ public class TogglzEndpointTest extends BaseTest {
 
                     // When
                     final TogglzFeature togglzFeature = endpoint.setFeatureState(
-                            "FEATURE_ONE", false, null, null);
+                        "FEATURE_ONE", false, null, null);
 
                     // Then
                     assertFalse(togglzFeature.isEnabled());
@@ -169,9 +169,9 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldThrowAnIllegalArgumentExceptionIfTheFeatureDoesNotExist() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
-                        TogglzAutoConfiguration.class,
-                        TogglzEndpointAutoConfiguration.class))
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues("management.endpoints.web.exposure.include=*")
                 .run((context) -> {
                     // Given
@@ -180,7 +180,7 @@ public class TogglzEndpointTest extends BaseTest {
                     // When
                     assertThrows(IllegalArgumentException.class, () -> {
                         final TogglzFeature togglzFeature = endpoint.setFeatureState(
-                                "FEATURE_ONE", false, null, null);
+                            "FEATURE_ONE", false, null, null);
                     });
                 });
     }
@@ -188,9 +188,9 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldThrowAnIllegalArgumentExceptionIfFormatOfParameterIsIncorrect() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
-                        TogglzAutoConfiguration.class,
-                        TogglzEndpointAutoConfiguration.class))
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
                         "management.endpoints.web.exposure.include=*",
                         "togglz.features.FEATURE_ONE.strategy: strategy",
@@ -211,11 +211,11 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void endpointDisabled() {
         contextRunnerWithFeatureProviderConfig()
-                .withPropertyValues(
-                        "management.endpoint.togglz.enabled: true")
-                .run((context) -> {
-                    assertEquals(1, context.getBeansOfType(TogglzEndpoint.class).size());
-                });
+            .withPropertyValues(
+                    "management.endpoint.togglz.enabled: true")
+            .run((context) -> {
+                assertEquals(1, context.getBeansOfType(TogglzEndpoint.class).size());
+            });
     }
 
 }
