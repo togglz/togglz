@@ -43,7 +43,7 @@ public class SpringSecurityUserProvider implements UserProvider {
         return user;
     }
 
-    private boolean isFeatureAdmin(Set<String> authorities) {
+    protected boolean isFeatureAdmin(Set<String> authorities) {
         return featureAdminAuthority != null && authorities.contains(featureAdminAuthority);
     }
 
