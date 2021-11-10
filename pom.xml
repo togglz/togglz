@@ -45,8 +45,9 @@
     <!-- Wildfly version used for integration tests -->
     <wildfly.version>22.0.1.Final</wildfly.version>
 
-    <spring.version>5.3.7</spring.version>
+    <spring.version>5.3.12</spring.version>
     <junit.version>5.8.1</junit.version>
+
     <spockframework.version>2.0-groovy-3.0</spockframework.version>
   </properties>
 

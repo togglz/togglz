@@ -20,16 +20,23 @@ import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.FeatureState;
+import org.togglz.core.util.Preconditions;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.StringUtils.commaDelimitedListToSet;
+import static org.springframework.util.StringUtils.trimAllWhitespace;
 
 /**
  * Spring Boot 2+ {@link Endpoint} to expose Togglz info as an actuator endpoint.
@@ -41,7 +48,9 @@ import java.util.List;
  */
 @Component
 @Endpoint(id = "togglz")
-public class TogglzEndpoint  {
+public class TogglzEndpoint {
+
+    private static final String PARAMETER_VALUE_SEPARATOR = "=";
 
     private final FeatureManager featureManager;
 
@@ -64,25 +73,56 @@ public class TogglzEndpoint  {
     /**
      * Allows to change the state of toggles via http post.
      *
-     * @param name the name of the toggle/feature
+     * @param name    the name of the toggle/feature
      * @param enabled the name of the field containing the toggle/feature status
+     * @param strategy the ID of the activation strategy to use
+     * @param parameters activation strategy parameters as comma separated list of key=value pairs
      */
     @WriteOperation
-    public TogglzFeature setFeatureState(@Selector String name, boolean enabled) {
+    public TogglzFeature setFeatureState(@Selector String name, @Nullable Boolean enabled,
+                                         @Nullable String strategy, @Nullable String parameters) {
         final Feature feature = featureManager.getFeatures().stream()
                 .filter(f -> f.name().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Could not find feature with name " + name));
 
-        FeatureState featureState = changeFeatureStatus(feature, enabled);
+        Map<String, String> parametersMap = parameters != null ?
+                commaDelimitedListToSet(parameters).stream()
+                        .map(this::toParameterKeyValue)
+                        .collect(Collectors.toMap(
+                                parameterKeyValue -> parameterKeyValue[0],
+                                parameterKeyValue -> parameterKeyValue[1]))
+                : Collections.emptyMap();
+
+        FeatureState featureState = changeFeatureStatus(feature, enabled, strategy, parametersMap);
 
         return new TogglzFeature(feature, featureState);
     }
 
-    private FeatureState changeFeatureStatus(Feature feature, boolean enabled) {
+    private FeatureState changeFeatureStatus(
+            Feature feature, Boolean enabled, String strategy, Map<String, String> parameters) {
         FeatureState featureState = featureManager.getFeatureState(feature);
-        featureState.setEnabled(enabled);
+
+        if (enabled != null) {
+            featureState.setEnabled(enabled);
+        }
+        if (strategy != null) {
+            featureState.setStrategyId(strategy);
+        }
+        parameters.forEach(featureState::setParameter);
+
         featureManager.setFeatureState(featureState);
+
         return featureState;
+    }
+
+    private String[] toParameterKeyValue(String parameterString) {
+        String[] parameterKeyValue = trimAllWhitespace(parameterString).split(PARAMETER_VALUE_SEPARATOR);
+
+        Preconditions.checkArgument(
+                parameterKeyValue.length == 2,
+                "Illegal parameter key/value format: %s", parameterString);
+
+        return parameterKeyValue;
     }
 }
