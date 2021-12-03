@@ -23,7 +23,7 @@ public class AnnotationFeatureGroup implements FeatureGroup {
         if (labelAnnotation != null) {
             label = labelAnnotation.value();
         } else {
-            label = groupAnnotation.getClass().getSimpleName();
+            label = groupAnnotation.getSimpleName();
         }
     }
 

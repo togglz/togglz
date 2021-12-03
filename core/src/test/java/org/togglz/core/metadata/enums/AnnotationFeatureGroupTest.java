@@ -31,7 +31,14 @@ class AnnotationFeatureGroupTest {
     private @interface ClassLevelGroup {
     }
 
+    @org.togglz.core.annotation.FeatureGroup
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    private @interface ClassLevelUnlabeledGroup {
+    }
+
     @ClassLevelGroup
+    @ClassLevelUnlabeledGroup
     private enum TestFeatures implements Feature {
 
         @FieldLevelGroup
@@ -60,6 +67,15 @@ class AnnotationFeatureGroupTest {
 
         assertNotNull(result);
         assertEquals(CLASS_LEVEL_GROUP_LABEL, result.getLabel());
+        assertTrue(result.contains(TestFeatures.FEATURE));
+    }
+
+    @Test
+    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsMissingLabelAnnotation() {
+        FeatureGroup result = AnnotationFeatureGroup.build(ClassLevelUnlabeledGroup.class);
+
+        assertNotNull(result);
+        assertEquals("ClassLevelUnlabeledGroup", result.getLabel());
         assertTrue(result.contains(TestFeatures.FEATURE));
     }
 }
