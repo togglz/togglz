@@ -65,7 +65,7 @@ class MyTogglzConfiguration {
 
 for unit tests:
 ```
-val featureManager = FeatureManagerSupport.createFeatureManagerForTest(CordatFeature::class)
+val featureManager = FeatureManagerSupport.createFeatureManagerForTest(KotlinTestFeatures::class)
 FeatureManagerSupport.enableAllFeatures(featureManager)
 ```
 
