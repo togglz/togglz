@@ -5,7 +5,7 @@
   <parent>
     <artifactId>togglz-project</artifactId>
     <groupId>org.togglz</groupId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.0</version>
   </parent>
 
   <artifactId>togglz-guice</artifactId>
