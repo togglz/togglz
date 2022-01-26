@@ -74,6 +74,33 @@ public class TogglzEndpointTest extends BaseTest {
     }
 
     @Test
+    public void getFeature() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+            .withPropertyValues(
+                "management.endpoints.web.exposure.include=*",
+                "togglz.features.FEATURE_ONE.enabled: true",
+                "togglz.features.FEATURE_TWO.enabled: false",
+                "togglz.features.FEATURE_TWO.strategy: release-date",
+                "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
+                "togglz.features.FEATURE_TWO.param.time: 08:30:00")
+            .run((context) -> {
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                TogglzFeature feature = endpoint.getFeature("FEATURE_TWO");
+
+                // Assert feature two
+                assertEquals("FEATURE_TWO", feature.getName());
+                assertFalse(feature.isEnabled());
+                assertEquals("release-date", feature.getStrategy());
+                assertEquals(2, feature.getParams().size());
+                assertEquals("2016-07-01", feature.getParams().get("date"));
+                assertEquals("08:30:00", feature.getParams().get("time"));
+            });
+    }
+
+    @Test
     public void shouldEnableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
                 DispatcherServletPathConfig.class,

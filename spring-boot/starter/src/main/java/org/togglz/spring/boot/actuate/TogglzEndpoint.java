@@ -70,6 +70,15 @@ public class TogglzEndpoint {
         return features;
     }
 
+    @ReadOperation
+    public TogglzFeature getFeature(@Selector String name) {
+        return this.featureManager.getFeatures().stream()
+            .filter(it -> name.equals(it.name()))
+            .findFirst()
+            .map(it -> new TogglzFeature(it, this.featureManager.getFeatureState(it)))
+            .orElse(null);
+    }
+
     /**
      * Allows to change the state of toggles via http post.
      *
