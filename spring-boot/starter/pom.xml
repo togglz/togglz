@@ -13,7 +13,7 @@
   <description>Togglz - Spring Boot Starter</description>
 
   <properties>
-    <spring-boot.version>2.4.1</spring-boot.version>
+    <spring-boot.version>2.6.2</spring-boot.version>
   </properties>
 
   <dependencyManagement>
@@ -141,13 +141,11 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-commons</artifactId>
-      <version>1.7.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.8.1</version>
       <scope>test</scope>
     </dependency>
 
