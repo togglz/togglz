@@ -4,7 +4,7 @@
     <parent>
         <artifactId>togglz-project</artifactId>
         <groupId>org.togglz</groupId>
-        <version>3.1.1</version>
+        <version>3.1.2-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
