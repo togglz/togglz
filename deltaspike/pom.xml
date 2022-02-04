@@ -13,7 +13,7 @@
   <description>Togglz - DeltaSpike integration</description>
 
   <properties>
-    <deltaspike.version>1.8.2</deltaspike.version>
+    <deltaspike.version>1.9.5</deltaspike.version>
   </properties>
 
   <dependencies>
