@@ -178,6 +178,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
+              <!-- some mudules don't find the existing tests, we should break the build in that case -->
+              <failIfNoTests>true</failIfNoTests>
               <systemPropertyVariables>
                 <arquillian.launch>wildfly-managed</arquillian.launch>
               </systemPropertyVariables>
