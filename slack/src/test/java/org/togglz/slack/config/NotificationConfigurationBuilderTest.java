@@ -1,13 +1,13 @@
 package org.togglz.slack.config;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.togglz.FeatureFixture.DISABLE_F1;
 import static org.togglz.FeatureFixture.ENABLE_F1;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class NotificationConfigurationBuilderTest {
 
@@ -18,7 +18,7 @@ public class NotificationConfigurationBuilderTest {
         try {
             NotificationConfiguration.builder().build();
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("slackHookUrl is required", e.getMessage());
+            Assertions.assertEquals("slackHookUrl is required", e.getMessage());
         }
     }
 
@@ -28,9 +28,9 @@ public class NotificationConfigurationBuilderTest {
                 .withSlackHookUrl(HOOK_URL)
                 .build();
 
-        Assert.assertEquals(HOOK_URL, config.getSlackHookUrl());
-        Assert.assertFalse(config.isAsyncSenderDisabled());
-        Assert.assertFalse(config.isLabelingEnabled());
+        Assertions.assertEquals(HOOK_URL, config.getSlackHookUrl());
+        Assertions.assertFalse(config.isAsyncSenderDisabled());
+        Assertions.assertFalse(config.isLabelingEnabled());
     }
 
     @Test
@@ -48,19 +48,19 @@ public class NotificationConfigurationBuilderTest {
                 .enableLabeling()
                 .build();
 
-        Assert.assertEquals(HOOK_URL, config.getSlackHookUrl());
+        Assertions.assertEquals(HOOK_URL, config.getSlackHookUrl());
         List<String> channel = new LinkedList<>();
         channel.add("channel");
-        Assert.assertEquals(channel, config.getChannels());
-        Assert.assertEquals("console", config.getTogglzAdminConsoleUrl());
-        Assert.assertEquals("app", config.getAppName());
-        Assert.assertEquals("icon", config.getAppIcon());
-        Assert.assertTrue(config.isLabelingEnabled());
-        Assert.assertTrue(config.isAsyncSenderDisabled());
-        Assert.assertEquals("format", config.getMessageFormat());
-        Assert.assertEquals("OFF", config.getChangeVerb(DISABLE_F1));
-        Assert.assertEquals("ON", config.getChangeVerb(ENABLE_F1));
-        Assert.assertEquals("-1", config.getStateIcon(DISABLE_F1));
-        Assert.assertEquals("+1", config.getStateIcon(ENABLE_F1));
+        Assertions.assertEquals(channel, config.getChannels());
+        Assertions.assertEquals("console", config.getTogglzAdminConsoleUrl());
+        Assertions.assertEquals("app", config.getAppName());
+        Assertions.assertEquals("icon", config.getAppIcon());
+        Assertions.assertTrue(config.isLabelingEnabled());
+        Assertions.assertTrue(config.isAsyncSenderDisabled());
+        Assertions.assertEquals("format", config.getMessageFormat());
+        Assertions.assertEquals("OFF", config.getChangeVerb(DISABLE_F1));
+        Assertions.assertEquals("ON", config.getChangeVerb(ENABLE_F1));
+        Assertions.assertEquals("-1", config.getStateIcon(DISABLE_F1));
+        Assertions.assertEquals("+1", config.getStateIcon(ENABLE_F1));
     }
 }

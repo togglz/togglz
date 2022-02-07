@@ -1,6 +1,6 @@
 package org.togglz.slack;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.user.SingleUserProvider;
 import org.togglz.core.user.UserProvider;
 import org.togglz.slack.notification.Notification;

@@ -1,8 +1,10 @@
 package org.togglz.slack.notification;
 
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MarkdownTest {
 
@@ -24,7 +26,7 @@ public class MarkdownTest {
 
     @Test
     public void shouldFormatLinkFromUrlAndName() {
-        assertNull(Markdown.link(null, null));
+        Assertions.assertNull(Markdown.link(null, null));
         assertEquals("<http|abc>", Markdown.link("http", "abc"));
     }
 
