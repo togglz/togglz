@@ -23,7 +23,6 @@ public class SlackNotificationsIntegrationTest {
                 .respond(HttpResponse.response().withStatusCode(200));
 
         NotificationConfiguration config = NotificationConfigurationFixture.configureNonAsync("http://localhost:" + serverRule.getPort() + "/slack");
-        // Stub statt mock
         SlackNotifications slackStateRepository = new SlackNotifications(config, new SingleUserProvider("someName"));
 
         slackStateRepository.notify(ENABLE_F1);
