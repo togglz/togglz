@@ -30,8 +30,4 @@ public class AsyncNotifierIntegrationTest {
         server.verify(HttpRequest.request("/slack")
                 .withBody(NotificationFixture.exampleNotificationAsJson()));
     }
-
-    private boolean isAnyRequestRetrieved() {
-        return server.retrieveRecordedRequests(null).length > 0;
-    }
 }
