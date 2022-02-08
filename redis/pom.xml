@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>io.lettuce</groupId>
 			<artifactId>lettuce-core</artifactId>
-			<version>6.1.5.RELEASE</version>
+			<version>6.1.6.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.10</version>
+			<version>3.12.0</version>
 			<scope>test</scope>
 		</dependency>
 
