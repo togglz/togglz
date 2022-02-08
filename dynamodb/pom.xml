@@ -53,42 +53,7 @@
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <configuration>
-                        <systemPropertyVariables>
-                            <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
-                        </systemPropertyVariables>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
-            <!-- we need to use maven 3.1 or later - or else the integration test will fail -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.1,)</version>
-                                    <message>You must use maven 3.1 or later in order to build this module.</message>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- download the dynamo local version -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -121,7 +86,7 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <id>reserver-dynamodb-port</id>
+                        <id>reserve-dynamodb-port</id>
                         <goals>
                             <goal>reserve-network-port</goal>
                         </goals>
@@ -172,6 +137,11 @@
 
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
+                    </systemPropertyVariables>
+                </configuration>
                 <version>2.22.2</version>
                 <executions>
                     <execution>
@@ -182,11 +152,7 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
-        <!-- expose the random dynamo port to the integration tests -->
-
     </build>
 
 </project>
