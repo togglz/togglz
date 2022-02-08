@@ -36,6 +36,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-netty</artifactId>
             <version>${mockserver.version}</version>
@@ -43,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-junit-rule</artifactId>
+            <artifactId>mockserver-junit-jupiter</artifactId>
             <version>${mockserver.version}</version>
         </dependency>
     </dependencies>

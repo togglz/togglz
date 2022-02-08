@@ -1,6 +1,6 @@
 package org.togglz.slack;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.user.SingleUserProvider;
 import org.togglz.core.user.UserProvider;
 import org.togglz.slack.notification.Notification;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 import static org.togglz.slack.NotificationConfigurationFixture.configureChannels;
 
-public class SlackNotificationsTest {
+class SlackNotificationsTest {
 
     List<String> developers;
     List<String> developersQaEngineers;
@@ -30,7 +30,7 @@ public class SlackNotificationsTest {
     }
 
     @Test
-    public void shouldSendNotificationToChannels() {
+    void shouldSendNotificationToChannels() {
         UserProvider userProvider = new SingleUserProvider("someName");
         NotificationComposer composer = new NotificationComposer(configureChannels(new LinkedList<>()), userProvider);
         NotificationSender notificationSenderMock = mock(NotificationSender.class);
@@ -42,7 +42,7 @@ public class SlackNotificationsTest {
     }
 
     @Test
-    public void shouldSendOneNotificationToChannels() {
+    void shouldSendOneNotificationToChannels() {
         UserProvider userProvider = new SingleUserProvider("someName");
         NotificationComposer composer = new NotificationComposer(configureChannels(developers), userProvider);
         NotificationSender notificationSenderMock = mock(NotificationSender.class);
@@ -55,7 +55,7 @@ public class SlackNotificationsTest {
     }
 
     @Test
-    public void shouldSendTwoMessagesNotificationToChannels() {
+    void shouldSendTwoMessagesNotificationToChannels() {
         UserProvider userProvider = new SingleUserProvider("someName");
         NotificationComposer composer = new NotificationComposer(configureChannels(developersQaEngineers), userProvider);
         NotificationSender notificationSenderMock = mock(NotificationSender.class);

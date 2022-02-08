@@ -1,24 +1,24 @@
 package org.togglz.slack.notification;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.togglz.FeatureFixture.DISABLE_F1;
+import static org.togglz.FeatureFixture.ENABLE_F1;
+import static org.togglz.FeatureFixture.ENABLE_F2;
+
+import org.junit.jupiter.api.Test;
 import org.togglz.core.user.SingleUserProvider;
 import org.togglz.core.user.UserProvider;
 import org.togglz.slack.NotificationConfigurationFixture;
 import org.togglz.slack.config.NotificationConfiguration;
 
-import static org.junit.Assert.*;
-import static org.togglz.FeatureFixture.DISABLE_F1;
-import static org.togglz.FeatureFixture.ENABLE_F1;
-import static org.togglz.FeatureFixture.ENABLE_F2;
-
-public class NotificationComposerTest {
+class NotificationComposerTest {
 
     static final NotificationConfiguration MINIMUM = NotificationConfigurationFixture.configureMinimum();
     static final NotificationConfiguration CUSTOM = NotificationConfigurationFixture.configureEverything();
     static final UserProvider USER_PROVIDER = new SingleUserProvider("John");
 
     @Test
-    public void shouldComposeNotificationAccordingToJoystickAndToggles() {
+    void shouldComposeNotificationAccordingToJoystickAndToggles() {
         NotificationComposer composer = new NotificationComposer(MINIMUM, USER_PROVIDER);
         Notification notification = composer.compose(ENABLE_F1, MINIMUM.getChannels()).get(0);
 
@@ -29,7 +29,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void shouldComposeNotificationAccordingToFlagPlAndDevelopers() {
+    void shouldComposeNotificationAccordingToFlagPlAndDevelopers() {
         NotificationComposer composer = new NotificationComposer(CUSTOM, USER_PROVIDER);
         Notification notification = composer.compose(ENABLE_F1, CUSTOM.getChannels()).get(0);
 
@@ -40,7 +40,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void shouldComposeMessageForEnabled() {
+    void shouldComposeMessageForEnabled() {
         NotificationComposer composer = new NotificationComposer(MINIMUM, USER_PROVIDER);
         Notification notification = composer.compose(ENABLE_F1, MINIMUM.getChannels()).get(0);
 
@@ -48,7 +48,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void shouldComposeMessageForDisabled() {
+    void shouldComposeMessageForDisabled() {
         NotificationComposer composer = new NotificationComposer(MINIMUM, USER_PROVIDER);
         Notification notification = composer.compose(DISABLE_F1, MINIMUM.getChannels()).get(0);
 
@@ -56,7 +56,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void name() {
+    void shouldContainJohnAndEnabledF1() {
         NotificationConfiguration configuration = CUSTOM;
         UserProvider userProvider = new SingleUserProvider("John");
         NotificationComposer composer = new NotificationComposer(configuration, userProvider);
@@ -67,7 +67,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void name1() {
+    void shouldContainJohnAndDisabledF1() {
         NotificationConfiguration configuration = CUSTOM;
         UserProvider userProvider = new SingleUserProvider("John");
         NotificationComposer composer = new NotificationComposer(configuration, userProvider);
@@ -78,7 +78,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void name2() {
+    void shouldContainJohnAndF1() {
         NotificationConfiguration configuration = CUSTOM;
         UserProvider userProvider = new SingleUserProvider("John.D");
         NotificationComposer composer = new NotificationComposer(configuration, userProvider);
@@ -89,7 +89,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void name3() {
+    void shouldContainSystemAndEnabledF1() {
         NotificationConfiguration configuration = CUSTOM;
         UserProvider userProvider = new SingleUserProvider("system");
         NotificationComposer composer = new NotificationComposer(configuration, userProvider);
@@ -100,7 +100,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void name4() {
+    void shouldContainNullAndEnabledF1() {
         NotificationConfiguration configuration = CUSTOM;
         UserProvider userProvider = new SingleUserProvider("null");
         NotificationComposer composer = new NotificationComposer(configuration, userProvider);
@@ -111,7 +111,7 @@ public class NotificationComposerTest {
     }
 
     @Test
-    public void name5() {
+    void shouldContainJohnAndEnabledF2() {
         NotificationConfiguration configuration = CUSTOM;
         UserProvider userProvider = new SingleUserProvider("John");
         NotificationComposer composer = new NotificationComposer(configuration, userProvider);
