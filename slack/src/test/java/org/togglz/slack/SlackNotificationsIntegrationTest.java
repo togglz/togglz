@@ -12,10 +12,10 @@ import org.togglz.slack.config.NotificationConfiguration;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 
 @ExtendWith(MockServerExtension.class)
-public class SlackNotificationsIntegrationTest {
+class SlackNotificationsIntegrationTest {
 
     @Test
-    public void shouldSendJsonToSlack(MockServerClient server) {
+    void shouldSendJsonToSlack(MockServerClient server) {
         server.when(HttpRequest.request("/slack"))
                 .respond(HttpResponse.response().withStatusCode(200));
 

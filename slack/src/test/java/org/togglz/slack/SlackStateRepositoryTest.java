@@ -16,13 +16,14 @@ import static org.mockito.Mockito.*;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 import static org.togglz.FeatureFixture.F1;
 
-public class SlackStateRepositoryTest {
+class SlackStateRepositoryTest {
 
     private static final Notification NOTIFICATION = new Notification();
+
     private final StateRepository stateRepositoryMock = mock(StateRepository.class);
 
     @Test
-    public void shouldReadStateFromWrapped() {
+    void shouldReadStateFromWrapped() {
         SlackStateRepository slackStateRepository = new SlackStateRepository(stateRepositoryMock, mock(NotificationConfiguration.class));
         Notifier notifierMock = mock(Notifier.class);
 
@@ -33,7 +34,7 @@ public class SlackStateRepositoryTest {
     }
 
     @Test
-    public void shouldWriteStateToWrappedAndSendNotification() {
+    void shouldWriteStateToWrappedAndSendNotification() {
         NotificationComposer composer = new NotificationComposer(NotificationConfiguration.builder().withSlackHookUrl("http://localhost:8080").build(), new SingleUserProvider("someName"));
         NotificationSender notificationSender = mock(NotificationSender.class);
         List<String> channel = new LinkedList<>();

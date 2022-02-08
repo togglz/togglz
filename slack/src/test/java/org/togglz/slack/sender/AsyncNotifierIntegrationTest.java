@@ -11,10 +11,10 @@ import org.togglz.slack.notification.NotificationFixture;
 import static org.togglz.slack.notification.NotificationFixture.exampleNotification;
 
 @ExtendWith(MockServerExtension.class)
-public class AsyncNotifierIntegrationTest {
+class AsyncNotifierIntegrationTest {
 
     @Test
-    public void shouldSendNotificationToSlack(MockServerClient server) {
+    void shouldSendNotificationToSlack(MockServerClient server) {
         server.when(HttpRequest.request("/slack")
                 .withMethod("POST")
                 .withHeader("Content-Type", "application/json")
