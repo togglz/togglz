@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.StringUtils;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -25,29 +24,29 @@ import com.netflix.astyanax.serializers.StringSerializer;
  * <p>
  * This repository implementation can be used to store the feature state in Cassandra using Astyanax client.
  * </p>
- * 
+ *
  * <p>
  * {@link org.togglz.cassandra.CassandraStateRepository} stores the feature state in a column family called <code>Togglz</code> by default.
  * You can choose the name of this column family using a builder provided by this class.
- * 
+ *
  * If the repository doesn't find the column family, it will automatically create it.
  * </p>
- * 
+ *
  * <p>
  * The column family has the following format:
  * </p>
- * 
+ *
  * <pre>
  * create column family Togglz
  *    with comparator = 'UTF8Type'
  *    and default_validation_class = UTF8Type
  *    and key_validation_class = UTF8Type;
  * </pre>
- * 
+ *
  * <p>
  * The class provides a builder which can be used to configure the repository:
  * </p>
- * 
+ *
  * <pre>
  * StateRepository repository = CassandraStateRepository.newBuilder(keyspace)
  *     .columnFamily(&quot;Togglz&quot;)
@@ -55,12 +54,12 @@ import com.netflix.astyanax.serializers.StringSerializer;
  *     .mapSerializer(DefaultMapSerializer.singleline())
  *     .build();
  * </pre>
- * 
+ *
  * <p>
  * You need to provide a {@link Keyspace} to use {@link org.togglz.cassandra.CassandraStateRepository}.
- * It can be created using {@link KeyspaceBuilder} or any other way. 
+ * It can be created using {@link KeyspaceBuilder} or any other way.
  * </p>
- *  
+ *
  * @author artur@callfire.com
  */
 public class CassandraStateRepository implements StateRepository {
@@ -143,7 +142,7 @@ public class CassandraStateRepository implements StateRepository {
     }
 
     private void putOrDelete(final ColumnListMutation<String> mutation, final String column, final String value) {
-        if (StringUtils.isBlank(value)) {
+        if (value == null || value.trim().isEmpty()) {
             mutation.deleteColumn(column);
         } else {
             mutation.putColumn(column, value);
