@@ -12,19 +12,6 @@
   <name>Togglz - CDI integration</name>
   <description>Togglz - CDI integration</description>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <!-- FIXME There are actually tests that should run but just don't ATM -->
-          <failIfNoTests>false</failIfNoTests>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
   <dependencies>
 
     <dependency>
