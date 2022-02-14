@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         jdk: [8, 11]
     env:
