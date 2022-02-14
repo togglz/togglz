@@ -1,6 +1,11 @@
 name: GitHub CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request: # build PRs
+  workflow_dispatch: # allow for manual triggering
 
 jobs:
   build:
