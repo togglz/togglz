@@ -59,7 +59,7 @@ public class TogglzManagementContextConfiguration {
 
         @Override
         protected String getContextPath() {
-            return managementServerProperties.getServlet().getContextPath();
+            return managementServerProperties.getBasePath();
         }
     }
 

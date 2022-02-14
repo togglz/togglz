@@ -24,6 +24,7 @@ import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,6 +74,33 @@ public class TogglzEndpointTest extends BaseTest {
     }
 
     @Test
+    public void getFeature() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+            .withPropertyValues(
+                "management.endpoints.web.exposure.include=*",
+                "togglz.features.FEATURE_ONE.enabled: true",
+                "togglz.features.FEATURE_TWO.enabled: false",
+                "togglz.features.FEATURE_TWO.strategy: release-date",
+                "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
+                "togglz.features.FEATURE_TWO.param.time: 08:30:00")
+            .run((context) -> {
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                TogglzFeature feature = endpoint.getFeature("FEATURE_TWO");
+
+                // Assert feature two
+                assertEquals("FEATURE_TWO", feature.getName());
+                assertFalse(feature.isEnabled());
+                assertEquals("release-date", feature.getStrategy());
+                assertEquals(2, feature.getParams().size());
+                assertEquals("2016-07-01", feature.getParams().get("date"));
+                assertEquals("08:30:00", feature.getParams().get("time"));
+            });
+    }
+
+    @Test
     public void shouldEnableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
                 DispatcherServletPathConfig.class,
@@ -86,10 +114,60 @@ public class TogglzEndpointTest extends BaseTest {
                     TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
 
                     // When
-                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", true);
+                    final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                        "FEATURE_ONE", true, null, null);
 
                     // Then
                     assertTrue(togglzFeature.isEnabled());
+                });
+    }
+
+    @Test
+    public void shouldChangeStrategy() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+            .withPropertyValues(
+                    "management.endpoints.web.exposure.include=*",
+                    "togglz.features.FEATURE_ONE.enabled: false")
+            .run((context) -> {
+                // Given
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                String newStrategy = "aStrategy";
+
+                // When
+                final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                        "FEATURE_ONE", null, newStrategy, null);
+
+                // Then
+                assertEquals(newStrategy, togglzFeature.getStrategy());
+            });
+    }
+
+    @Test
+    public void shouldChangeStrategyParameters() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                        DispatcherServletPathConfig.class,
+                        TogglzAutoConfiguration.class,
+                        TogglzEndpointAutoConfiguration.class))
+                .withPropertyValues(
+                        "management.endpoints.web.exposure.include=*",
+                        "togglz.features.FEATURE_ONE.enabled: false",
+                        "togglz.features.FEATURE_ONE.parameters: {param1: 0, param2: 100}")
+                .run((context) -> {
+                    // Given
+                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                    String parametersString = "param1 = 10, param2 = 20";
+
+                    // When
+                    final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                            "FEATURE_ONE", null, null, parametersString);
+
+                    // Then
+                    Map<String, String> params = togglzFeature.getParams();
+                    assertEquals("10", params.get("param1"));
+                    assertEquals("20", params.get("param2"));
                 });
     }
 
@@ -107,7 +185,8 @@ public class TogglzEndpointTest extends BaseTest {
                     TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
 
                     // When
-                    final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
+                    final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                        "FEATURE_ONE", false, null, null);
 
                     // Then
                     assertFalse(togglzFeature.isEnabled());
@@ -127,7 +206,31 @@ public class TogglzEndpointTest extends BaseTest {
 
                     // When
                     assertThrows(IllegalArgumentException.class, () -> {
-                        final TogglzFeature togglzFeature = endpoint.setFeatureState("FEATURE_ONE", false);
+                        final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                            "FEATURE_ONE", false, null, null);
+                    });
+                });
+    }
+
+    @Test
+    public void shouldThrowAnIllegalArgumentExceptionIfFormatOfParameterIsIncorrect() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+                .withPropertyValues(
+                        "management.endpoints.web.exposure.include=*",
+                        "togglz.features.FEATURE_ONE.strategy: strategy",
+                        "togglz.features.FEATURE_ONE.parameters: {param1: 0, param2: 100}")
+                .run((context) -> {
+                    // Given
+                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                    String parametersString = "param1: 10";
+
+                    // When
+                    assertThrows(IllegalArgumentException.class, () -> {
+                        final TogglzFeature togglzFeature = endpoint.setFeatureState(
+                                "FEATURE_ONE", false, null, parametersString);
                     });
                 });
     }

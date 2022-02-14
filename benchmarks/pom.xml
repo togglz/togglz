@@ -4,7 +4,7 @@
     <parent>
         <artifactId>togglz-project</artifactId>
         <groupId>org.togglz</groupId>
-        <version>2.9.9-SNAPSHOT</version>
+        <version>3.1.2-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -49,24 +49,34 @@
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-test</artifactId>
-            <version>3.1.0</version>
+            <version>5.2.0</version>
         </dependency>
+        <!--        brauchen wir hier hier nur die api? nur -simple? nur logback?  nur provided? -->
+        <!--        https://repo1.maven.org/maven2/org/slf4j/ -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.28</version>
+            <version>1.7.35</version>
         </dependency>
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmh.version>1.31</jmh.version>
+        <jmh.version>1.33</jmh.version>
         <javac.target>1.8</javac.target>
         <uberjar.name>togglz-benchmarks-uberjar</uberjar.name>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- No unit tests in this module so far. You should drop this plugin section when you add some :) -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -111,13 +121,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
-                </configuration>
             </plugin>
         </plugins>
     </build>

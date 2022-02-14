@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-spring-boot</artifactId>
-    <version>2.9.9-SNAPSHOT</version>
+    <version>3.1.2-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-spring-boot-starter</artifactId>
@@ -13,7 +13,7 @@
   <description>Togglz - Spring Boot Starter</description>
 
   <properties>
-    <spring-boot.version>2.4.1</spring-boot.version>
+    <spring-boot.version>2.6.2</spring-boot.version>
   </properties>
 
   <dependencyManagement>
@@ -52,19 +52,18 @@
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf</artifactId>
-      <version>3.0.11.RELEASE</version>
+      <version>3.0.14.RELEASE</version>
     </dependency>
 
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf-spring5</artifactId>
-      <version>3.0.11.RELEASE</version>
+      <version>3.0.14.RELEASE</version>
     </dependency>
 
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.1.5.Final</version>
       <optional>true</optional>
     </dependency>
 
@@ -141,13 +140,11 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-commons</artifactId>
-      <version>1.7.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.7.1</version>
       <scope>test</scope>
     </dependency>
 

@@ -1,10 +1,10 @@
-package org.togglz
+package org.togglz;
 
-import org.togglz.core.Feature
-import org.togglz.core.annotation.Label
-import org.togglz.core.repository.FeatureState
+import org.togglz.core.Feature;
+import org.togglz.core.annotation.Label;
+import org.togglz.core.repository.FeatureState;
 
-enum FeatureFixture implements Feature {
+public enum FeatureFixture implements Feature {
 
     F1,
     @Label("label2")F2;

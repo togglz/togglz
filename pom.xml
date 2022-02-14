@@ -10,7 +10,7 @@
 
   <groupId>org.togglz</groupId>
   <artifactId>togglz-project</artifactId>
-  <version>2.9.9-SNAPSHOT</version>
+  <version>3.1.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Togglz</name>
@@ -45,8 +45,9 @@
     <!-- Wildfly version used for integration tests -->
     <wildfly.version>22.0.1.Final</wildfly.version>
 
-    <spring.version>5.3.7</spring.version>
-    <junit.version>5.7.2</junit.version>
+    <spring.version>5.3.15</spring.version>
+    <junit.version>5.8.2</junit.version>
+
     <spockframework.version>2.0-groovy-3.0</spockframework.version>
   </properties>
 
@@ -88,16 +89,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <!-- JAR -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <useDefaultManifestFile>true</useDefaultManifestFile>
-        </configuration>
       </plugin>
 
       <plugin>
@@ -147,6 +138,7 @@
     <module>shiro</module>
     <module>appengine</module>
     <module>cloud-datastore</module>
+    <module>cloud-storage</module>
     <module>mongodb</module>
     <module>testing</module>
     <module>junit</module>
@@ -186,6 +178,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
+              <!-- some mudules don't find the existing tests, we should break the build in that case -->
+              <failIfNoTests>true</failIfNoTests>
               <systemPropertyVariables>
                 <arquillian.launch>wildfly-managed</arquillian.launch>
               </systemPropertyVariables>
@@ -194,7 +188,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.8</version>
+            <version>3.2.0</version>
             <executions>
               <execution>
                 <id>unpack-wildfly</id>
@@ -413,7 +407,7 @@
         <!-- Used by proxy generation -->
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
-        <version>1.11.0</version>
+        <version>1.12.1</version>
       </dependency>
 
       <dependency>

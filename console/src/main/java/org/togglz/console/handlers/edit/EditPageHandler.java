@@ -92,14 +92,16 @@ public class EditPageHandler extends RequestHandlerBase {
     }
 
     private boolean validateCSRFToken(RequestEvent event) {
-        boolean isValid = true;
+        boolean isValid = false;
         if (event.getRequestContext().isValidateCSRFToken()) {
             for (CSRFTokenValidator validator : Services.get(CSRFTokenValidator.class)) {
-                if (!validator.isTokenValid(event.getRequest())) {
-                    isValid = false;
+                if (validator.isTokenValid(event.getRequest())) {
+                    isValid = true;
                     break;
                 }
             }
+        } else {
+            isValid = true;
         }
         return isValid;
     }

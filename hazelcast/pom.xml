@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.togglz</groupId>
 		<artifactId>togglz-project</artifactId>
-		<version>2.9.9-SNAPSHOT</version>
+		<version>3.1.2-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>togglz-hazelcast</artifactId>
@@ -13,7 +13,7 @@
 	<description>Togglz - Hazelcast integration</description>
 
 	<properties>
-		<hazelcast.version>4.2</hazelcast.version>
+		<hazelcast.version>4.2.4</hazelcast.version>
 	</properties>
 
 	<dependencies>
@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.11</version>
+			<version>3.12.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
