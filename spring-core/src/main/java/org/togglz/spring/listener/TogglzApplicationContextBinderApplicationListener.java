@@ -16,16 +16,16 @@
 
 package org.togglz.spring.listener;
 
+import java.util.function.Predicate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
-
-import java.util.function.Predicate;
 
 /**
  * {@link ApplicationListener} that binds the {@link ApplicationContext}
@@ -35,7 +35,7 @@ import java.util.function.Predicate;
  */
 public class TogglzApplicationContextBinderApplicationListener implements ApplicationListener {
 
-    private static final Log log = LogFactory.getLog(TogglzApplicationContextBinderApplicationListener.class);
+    private static final Logger log = LoggerFactory.getLogger(TogglzApplicationContextBinderApplicationListener.class);
 
     private static final ContextRefreshedEventFilter ACCEPT_ALL = t -> true;
 

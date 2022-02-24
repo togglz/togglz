@@ -1,8 +1,6 @@
 package org.togglz.slack.sender;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
-import org.togglz.core.util.IOUtils;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,11 +10,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.togglz.core.util.IOUtils;
 
 class HttpPostRequest {
 
-    private static final Log log = LogFactory.getLog(HttpPostRequest.class);
+    private static final Logger log = LoggerFactory.getLogger(HttpPostRequest.class);
 
     private static final Long TIMEOUT = TimeUnit.SECONDS.toMillis(5);
 

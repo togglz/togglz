@@ -51,12 +51,10 @@
             <artifactId>curator-test</artifactId>
             <version>5.2.0</version>
         </dependency>
-        <!--        brauchen wir hier hier nur die api? nur -simple? nur logback?  nur provided? -->
-        <!--        https://repo1.maven.org/maven2/org/slf4j/ -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.35</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
