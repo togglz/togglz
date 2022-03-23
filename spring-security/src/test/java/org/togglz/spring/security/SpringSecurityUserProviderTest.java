@@ -1,11 +1,18 @@
 package org.togglz.spring.security;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -15,15 +22,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.togglz.core.user.FeatureUser;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ SecurityContextHolder.class })
@@ -63,7 +61,7 @@ public class SpringSecurityUserProviderTest {
         FeatureUser user = userProvider.getCurrentUser();
 
         // assert
-        assertTrue(user.isFeatureAdmin());
+        assertThat(user.isFeatureAdmin()).isTrue();
     }
 
     @Test
@@ -78,7 +76,7 @@ public class SpringSecurityUserProviderTest {
         FeatureUser user = userProvider.getCurrentUser();
 
         // assert
-        assertFalse(user.isFeatureAdmin());
+        assertThat(user.isFeatureAdmin()).isFalse();
     }
 
     @Test
@@ -94,14 +92,14 @@ public class SpringSecurityUserProviderTest {
 
         // assert
         Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_ROLES);
-        assertTrue(authoritiesAttr instanceof Set);
+        assertThat(authoritiesAttr instanceof Set).isTrue();
         Set authSet = (Set) authoritiesAttr;
 
-        assertNotNull(authSet);
+        assertThat(authSet).isNotNull();
 
         Set<String> authoritySet = (Set<String>) authSet;
-        assertEquals(2, authoritySet.size());
-        assertTrue(authoritySet.contains("ROLE_1"));
-        assertTrue(authoritySet.contains("ROLE_2"));
+        assertThat(authoritySet.size()).isEqualTo(2);
+        assertThat(authoritySet.contains("ROLE_1")).isTrue();
+        assertThat(authoritySet.contains("ROLE_2")).isTrue();
     }
 }
