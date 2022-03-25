@@ -1,0 +1,18 @@
+logging:
+  level:
+    org.togglz: DEBUG
+togglz:
+  console:
+    feature-admin-authority: ROLE_ADMIN
+  feature-manager-name: My Feature Manager
+  features:
+    HELLO_WORLD:
+      enabled: true
+    REVERSE_GREETING:
+      enabled: true
+      strategy: username
+      param:
+        users: user2,user3
+  cache:
+    enable: true
+    time-to-live: 10000

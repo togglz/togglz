@@ -1,0 +1,19 @@
+spring.thymeleaf.cache: false
+logging:
+  level:
+    org.togglz: DEBUG
+togglz:
+  features:
+    HELLO_WORLD:
+      enabled: true
+    REVERSE_GREETING:
+      enabled: false
+  console:
+    secured: false
+    use-management-port: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

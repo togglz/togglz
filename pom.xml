@@ -152,6 +152,7 @@
     <module>slack</module>
     <module>redis</module>
     <module>kotlin</module>
+    <module>samples/spring-boot</module>
   </modules>
 
   <developers>
