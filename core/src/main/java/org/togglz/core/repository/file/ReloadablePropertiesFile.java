@@ -1,20 +1,26 @@
 package org.togglz.core.repository.file;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.property.PropertySource;
 import org.togglz.core.util.IOUtils;
-
-import java.io.*;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Please note that this class is NOT thread-safe.
  */
 class ReloadablePropertiesFile implements PropertySource {
 
-    private static final Log log = LogFactory.getLog(ReloadablePropertiesFile.class);
+    private final Logger log = LoggerFactory.getLogger(ReloadablePropertiesFile.class);
 
     private final File file;
 

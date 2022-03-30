@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+
+        <encoder>
+            <pattern>%highlight(%.-1level) %date{HH:mm:ss.SSS} [%30.30logger] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- cassandra seems quite noisy -->
+    <root level="WARN">
+        <appender-ref ref="console"/>
+    </root>
+</configuration>

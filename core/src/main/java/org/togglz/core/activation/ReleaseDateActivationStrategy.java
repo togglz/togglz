@@ -4,8 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -13,7 +13,7 @@ import org.togglz.core.util.Strings;
 
 public class ReleaseDateActivationStrategy implements ActivationStrategy {
 
-    private final Log log = LogFactory.getLog(ReleaseDateActivationStrategy.class);
+    private final Logger log = LoggerFactory.getLogger(ReleaseDateActivationStrategy.class);
 
     public static final String ID = "release-date";
     public static final String PARAM_DATE = "date";

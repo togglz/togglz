@@ -1,18 +1,19 @@
 package org.togglz.slack.sender;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.util.Strings;
 import org.togglz.slack.notification.Notification;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * For documentation see https://api.slack.com/incoming-webhooks
  */
 public class Notifier implements NotificationSender {
 
-    private static final Log log = LogFactory.getLog(Notifier.class);
+    private static final Logger log = LoggerFactory.getLogger(Notifier.class);
 
     private final HttpPostRequest httpPostRequest;
 

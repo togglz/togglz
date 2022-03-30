@@ -1,9 +1,9 @@
 package org.togglz.servlet.activation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.activation.ParameterBuilder;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class QueryParameterActivationStrategy implements ActivationStrategy {
 
-    private static final Log log = LogFactory.getLog(QueryParameterActivationStrategy.class);
+    private static final Logger log = LoggerFactory.getLogger(QueryParameterActivationStrategy.class);
 
     public static final String PARAM_URL_PARAMS = "params";
 

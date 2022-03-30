@@ -1,21 +1,23 @@
 package org.togglz.core.proxy;
 
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.NamingStrategy;
-import net.bytebuddy.NamingStrategy.SuffixingRandom.BaseNameResolver.ForGivenType;
-import net.bytebuddy.implementation.Implementation;
-import net.bytebuddy.implementation.MethodCall;
-import org.togglz.core.Feature;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
-import org.togglz.core.manager.FeatureManager;
-import org.togglz.core.manager.LazyResolvingFeatureManager;
 import static net.bytebuddy.description.type.TypeDescription.ForLoadedType.of;
 import static net.bytebuddy.description.type.TypeDescription.Generic.Builder.parameterizedType;
 import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 import static net.bytebuddy.matcher.ElementMatchers.isDefaultMethod;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.not;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.togglz.core.Feature;
+import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.manager.LazyResolvingFeatureManager;
+
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.NamingStrategy;
+import net.bytebuddy.NamingStrategy.SuffixingRandom.BaseNameResolver.ForGivenType;
+import net.bytebuddy.implementation.Implementation;
+import net.bytebuddy.implementation.MethodCall;
 
 /**
  * Produces switching proxy implementations which delegate invocation to one of two objects depending on the state of the specified {@link Feature}.
@@ -63,7 +65,7 @@ public class ByteBuddyProxyFactory {
 
   // TODO where is the type-caching?
 
-  private static final Log log = LogFactory.getLog(ByteBuddyProxyFactory.class);
+  private static final Logger log = LoggerFactory.getLogger(ByteBuddyProxyFactory.class);
 
   /**
    * Generate a passive {@link Feature} proxy.

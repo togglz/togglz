@@ -5,10 +5,10 @@ import java.util.Set;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
 import org.togglz.testing.TestFeatureManager;
@@ -46,7 +46,7 @@ import org.togglz.testing.vary.VariationSetBuilder;
  */
 public class TogglzRule implements TestRule {
 
-    private static final Log log = LogFactory.getLog(TogglzRule.class);
+    private static final Logger log = LoggerFactory.getLogger(TogglzRule.class);
 
     private final Class<? extends Feature> featureClass;
 

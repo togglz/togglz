@@ -13,7 +13,6 @@
 	<description>Togglz - Redis integration</description>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.togglz</groupId>
 			<artifactId>togglz-core</artifactId>
@@ -45,7 +44,11 @@
 			<version>3.12.0</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 </project>

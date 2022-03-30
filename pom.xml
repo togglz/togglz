@@ -15,12 +15,12 @@
 
   <name>Togglz</name>
   <description>Implementation of the feature toggles pattern for Java</description>
-  <url>http://www.togglz.org/</url>
+  <url>https://www.togglz.org/</url>
 
   <licenses>
     <license>
       <name>Apache License 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
 
@@ -33,7 +33,7 @@
 
   <issueManagement>
     <system>github</system>
-    <url>http://github.com/togglz/togglz/issues</url>
+    <url>https://github.com/togglz/togglz/issues</url>
   </issueManagement>
 
   <properties>
@@ -125,7 +125,6 @@
   <modules>
     <module>core</module>
     <module>test-harness</module>
-    <module>slf4j</module>
     <module>servlet</module>
     <module>console</module>
     <module>cdi</module>
@@ -247,12 +246,6 @@
       <dependency>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-slf4j</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -461,6 +454,22 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>3.5.13</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- togglz uses slf4j as the logging API / facade so users can use logback or other slf4j compliant frameworks -->
+      <!-- if there is no slf4j implementation (binding) provided at runtime, slf4j will fallback to a no-op provider -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.36</version>
+      </dependency>
+
+      <!-- provide an slf4j binding to have logs for togglz's tests -->
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.2.10</version>
         <scope>test</scope>
       </dependency>
 
