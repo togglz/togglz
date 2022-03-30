@@ -21,12 +21,12 @@
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>3.6.0</version>
+			<version>4.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.lettuce</groupId>
 			<artifactId>lettuce-core</artifactId>
-			<version>6.1.6.RELEASE</version>
+			<version>6.1.8.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
