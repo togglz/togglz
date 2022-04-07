@@ -158,7 +158,7 @@ public class TogglzEndpointTest extends BaseTest {
                 .run((context) -> {
                     // Given
                     TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
-                    String parametersString = "param1 = 10, param2 = 20";
+                    String parametersString = "param1 = 10, param2 = 20 30";
 
                     // When
                     final TogglzFeature togglzFeature = endpoint.setFeatureState(
@@ -167,7 +167,7 @@ public class TogglzEndpointTest extends BaseTest {
                     // Then
                     Map<String, String> params = togglzFeature.getParams();
                     assertEquals("10", params.get("param1"));
-                    assertEquals("20", params.get("param2"));
+                    assertEquals("20 30", params.get("param2"));
                 });
     }
 

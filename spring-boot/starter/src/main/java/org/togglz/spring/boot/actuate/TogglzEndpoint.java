@@ -29,14 +29,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Preconditions;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.commaDelimitedListToSet;
-import static org.springframework.util.StringUtils.trimAllWhitespace;
 
 /**
  * Spring Boot 2+ {@link Endpoint} to expose Togglz info as an actuator endpoint.
@@ -126,12 +122,12 @@ public class TogglzEndpoint {
     }
 
     private String[] toParameterKeyValue(String parameterString) {
-        String[] parameterKeyValue = trimAllWhitespace(parameterString).split(PARAMETER_VALUE_SEPARATOR);
+        String[] parameterKeyValue = parameterString.split(PARAMETER_VALUE_SEPARATOR);
 
         Preconditions.checkArgument(
                 parameterKeyValue.length == 2,
                 "Illegal parameter key/value format: %s", parameterString);
 
-        return parameterKeyValue;
+        return Arrays.stream(parameterKeyValue).map(String::trim).toArray(String[]::new);
     }
 }
