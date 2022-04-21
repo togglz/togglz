@@ -26,5 +26,5 @@ jobs:
           java-version: ${{ matrix.jdk }}
       - name: Build with Maven
         run: mvn -P wildfly-managed --batch-mode verify
-      - uses: codecov/codecov-action@v2
       - name: upload code coverage to codecov.io
+        uses: codecov/codecov-action@v2
