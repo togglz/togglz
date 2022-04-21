@@ -1,6 +1,7 @@
 ![togglz logo](https://www.togglz.org/images/togglz-logo.png)
 
 [![GitHub CI](https://github.com/togglz/togglz/actions/workflows/maven.yml/badge.svg)](https://github.com/togglz/togglz/actions/workflows/maven.yml)
+[![codecov](https://codecov.io/gh/togglz/togglz/branch/master/graph/badge.svg?token=9o5olkwtxF)](https://codecov.io/gh/togglz/togglz)
 [![Maven Central](https://img.shields.io/maven-central/v/org.togglz/togglz-core.svg)](https://maven-badges.herokuapp.com/maven-central/org.togglz/togglz-core)
 ![License](https://img.shields.io/github/license/togglz/togglz)
 
