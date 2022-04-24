@@ -74,10 +74,6 @@ public class CachingStateRepository implements StateRepository {
     }
 
     private synchronized FeatureState reloadFeatureState(Feature feature) {
-        CacheEntry cachedState = cache.get(feature.name());
-        if (isValidEntry(cachedState)) {
-            return cachedState.getState();
-        }
         FeatureState featureState = delegate.getFeatureState(feature);
         storeFeatureState(feature, featureState);
         return featureState;
