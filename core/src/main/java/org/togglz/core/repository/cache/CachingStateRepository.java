@@ -18,9 +18,9 @@ public class CachingStateRepository implements StateRepository {
 
     private final StateRepository delegate;
 
-    private final Map<String, CacheEntry> cache = new ConcurrentHashMap<String, CacheEntry>();
+    private final Map<String, CacheEntry> cache = new ConcurrentHashMap<>();
 
-    private long ttl;
+    private final long ttl;
 
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
@@ -80,11 +80,11 @@ public class CachingStateRepository implements StateRepository {
     }
 
     private void storeFeatureState(Feature feature, FeatureState featureState) {
-        cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
+        cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null, ttl));
     }
 
     private boolean isValidEntry(CacheEntry entry) {
-        return entry != null && !isExpired(entry);
+        return entry != null && !entry.isExpired();
     }
 
     @Override
@@ -101,17 +101,6 @@ public class CachingStateRepository implements StateRepository {
     }
 
     /**
-     * Checks whether this supplied {@link CacheEntry} should be ignored.
-     */
-    private boolean isExpired(CacheEntry entry) {
-        if (ttl == 0) {
-            return false;
-        }
-
-        return entry.getTimestamp() + ttl < System.currentTimeMillis();
-    }
-
-    /**
      * This class represents a cached repository lookup
      */
     private static class CacheEntry {
@@ -120,19 +109,24 @@ public class CachingStateRepository implements StateRepository {
 
         private final long timestamp;
 
-        public CacheEntry(FeatureState state) {
+        private final long ttl;
+
+        public CacheEntry(FeatureState state, final long ttl) {
             this.state = state;
             this.timestamp = System.currentTimeMillis();
+            this.ttl = ttl;
         }
 
         public FeatureState getState() {
             return state;
         }
 
-        public long getTimestamp() {
-            return timestamp;
+        public boolean isExpired() {
+            if (ttl == 0) {
+                return false;
+            }
+            return timestamp + ttl < System.currentTimeMillis();
         }
-
     }
 
 }
