@@ -1,20 +1,18 @@
 package org.togglz.core.repository.cache;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
-
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
 /**
- * 
  * Simple implementation of {@link StateRepository} which adds caching capabilities to an existing repository. You should
  * consider using this class if lookups in your {@link StateRepository} are expensive (like database queries).
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class CachingStateRepository implements StateRepository {
 
@@ -28,7 +26,7 @@ public class CachingStateRepository implements StateRepository {
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
      * {@link #setFeatureState(FeatureState)} is invoked. You should therefore never use this constructor if the feature state
      * is modified directly (for example by modifying the database table or the properties file).
-     * 
+     *
      * @param delegate The repository to delegate invocations to
      */
     public CachingStateRepository(StateRepository delegate) {
@@ -38,9 +36,9 @@ public class CachingStateRepository implements StateRepository {
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
      * supplied TTL or if {@link #setFeatureState(FeatureState)} is invoked.
-     * 
+     *
      * @param delegate The repository to delegate invocations to
-     * @param ttl The time in milliseconds after which a cache entry will expire
+     * @param ttl      The time in milliseconds after which a cache entry will expire
      * @throws IllegalArgumentException if the specified ttl is negative
      */
     public CachingStateRepository(StateRepository delegate, long ttl) {
@@ -56,8 +54,8 @@ public class CachingStateRepository implements StateRepository {
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
      * supplied TTL rounded down to milliseconds or if {@link #setFeatureState(FeatureState)} is invoked.
      *
-     * @param delegate The repository to delegate invocations to
-     * @param ttl The time in a given {@code ttlTimeUnit} after which a cache entry will expire
+     * @param delegate    The repository to delegate invocations to
+     * @param ttl         The time in a given {@code ttlTimeUnit} after which a cache entry will expire
      * @param ttlTimeUnit The unit that {@code ttl} is expressed in
      */
     public CachingStateRepository(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit) {
@@ -66,22 +64,27 @@ public class CachingStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(Feature feature) {
-
         // first try to find it from the cache
         CacheEntry entry = cache.get(feature.name());
-        if (entry != null && !isExpired(entry)) {
-            return entry.getState() != null ? entry.getState().copy() : null;
+        if (isValidEntry(entry)) {
+            return entry.getState();
         }
-
         // no cache hit
+        return reloadFeatureState(feature);
+    }
+
+    private synchronized FeatureState reloadFeatureState(Feature feature) {
         FeatureState featureState = delegate.getFeatureState(feature);
-
-        // cache the result (may be null)
-        cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
-
-        // return the result
+        storeFeatureState(feature, featureState);
         return featureState;
+    }
 
+    private void storeFeatureState(Feature feature, FeatureState featureState) {
+        cache.put(feature.name(), new CacheEntry(featureState != null ? featureState.copy() : null));
+    }
+
+    private boolean isValidEntry(CacheEntry entry) {
+        return entry != null && !isExpired(entry);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class CachingStateRepository implements StateRepository {
     public void clear() {
         cache.clear();
     }
-    
+
     /**
      * Checks whether this supplied {@link CacheEntry} should be ignored.
      */
