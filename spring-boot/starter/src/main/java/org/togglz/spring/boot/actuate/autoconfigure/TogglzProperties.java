@@ -260,6 +260,7 @@ public class TogglzProperties {
 
 		/**
 		 * The time after which a cache entry will expire.
+		 * 0 means it will not expire as long as the feature state does not get modified.
 		 */
 		private long timeToLive = 0;
 
@@ -282,6 +283,11 @@ public class TogglzProperties {
 			return timeToLive;
 		}
 
+		/**
+		 * @param timeToLive time in milliseconds after which the cache will expire and the value will get reloaded.
+		 *                   Setting this to 0 will never expire the cache unless the feature state gets modified.
+		 *                   Negative values are not allowed.
+		 */
 		public void setTimeToLive(long timeToLive) {
 			this.timeToLive = timeToLive;
 		}
