@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - '**.md' # no CI builds for docs
   pull_request: # build PRs
   workflow_dispatch: # allow for manual triggering
 
