@@ -6,6 +6,7 @@ on:
       - master
     paths-ignore:
       - '**.md' # no CI builds for docs
+      - '.github/workflows/maven-central-release.yml'
   pull_request: # build PRs
   workflow_dispatch: # allow for manual triggering
 
