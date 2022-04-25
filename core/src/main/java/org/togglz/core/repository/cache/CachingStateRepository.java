@@ -1,12 +1,12 @@
 package org.togglz.core.repository.cache;
 
-import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureState;
-import org.togglz.core.repository.StateRepository;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
+import org.togglz.core.repository.StateRepository;
 
 /**
  * Simple implementation of {@link StateRepository} which adds caching capabilities to an existing repository. You should
@@ -74,6 +74,10 @@ public class CachingStateRepository implements StateRepository {
     }
 
     private synchronized FeatureState reloadFeatureState(Feature feature) {
+        CacheEntry cachedState = cache.get(feature.name());
+        if (isValidEntry(cachedState)) {
+            return cachedState.getState();
+        }
         FeatureState featureState = delegate.getFeatureState(feature);
         storeFeatureState(feature, featureState);
         return featureState;
