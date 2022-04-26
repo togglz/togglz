@@ -47,6 +47,7 @@
 
     <spring.version>5.3.19</spring.version>
     <junit.version>5.8.2</junit.version>
+    <mockito.version>3.5.13</mockito.version>
 
     <spockframework.version>2.0-groovy-3.0</spockframework.version>
   </properties>
@@ -98,6 +99,26 @@
         <configuration>
           <parameters>true</parameters>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.8</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
@@ -453,8 +474,15 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>4.5.1</version>
+        <version>${mockito.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-inline</artifactId>
+          <version>${mockito.version}</version>
+          <scope>test</scope>
       </dependency>
 
       <!-- togglz uses slf4j as the logging API / facade so users can use logback or other slf4j compliant frameworks -->
