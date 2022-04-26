@@ -13,7 +13,7 @@
     <description>Togglz - Apache Zookeeper Integration</description>
 
     <properties>
-        <curator.version>5.2.0</curator.version>
+        <curator.version>5.2.1</curator.version>
     </properties>
 
     <dependencies>
