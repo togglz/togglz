@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
-import static org.wildfly.common.Assert.*;
 
 public class SpringSecurityUserProviderTest {
 
@@ -40,6 +40,7 @@ public class SpringSecurityUserProviderTest {
             when(mock.getCurrentUser()).thenReturn(new SimpleFeatureUser("bennetelli"));
 
             FeatureUser user = admin.getCurrentUser();
+
             // assert
             assertTrue(user.isFeatureAdmin());
         }
@@ -76,6 +77,7 @@ public class SpringSecurityUserProviderTest {
             when(mock.getCurrentUser()).thenReturn(new SimpleFeatureUser("bennetelli"));
 
             FeatureUser user = admin.getCurrentUser();
+
             // assert
             Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_ROLES);
             assertTrue(authoritiesAttr instanceof Set);
@@ -84,7 +86,7 @@ public class SpringSecurityUserProviderTest {
             assertNotNull(authSet);
 
             Set<String> authoritySet = (Set<String>) authSet;
-            assertTrue(authoritySet.size() == 2);
+            assertEquals(authoritySet.size(), 2);
             assertTrue(authoritySet.contains("ROLE_1"));
             assertTrue(authoritySet.contains("ROLE_2"));
         }
