@@ -1,0 +1,86 @@
+name: dependabot auto merge
+
+on:
+  workflow_run:
+    types:
+      - "completed"
+    workflows:
+      - "PR Build Check"
+      - "PR Build Check Jackson"
+      - "PR Build Check Native"
+      - "PR Integrations Tests"
+
+jobs:
+  merge:
+    name: "dependabot auto merge"
+    runs-on: ubuntu-latest
+
+    # Note: the check `github.actor == 'dependabot[bot]'` ensures that auto-approve-and-merge
+    # only happens when dependabot triggers the workflow runs - but not when another user pushes.
+
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.actor == 'dependabot[bot]' && (
+        contains(github.event.workflow_run.head_commit.message, 'ump ')
+      ) &&
+      github.repository == 'togglz/togglz'
+
+    steps:
+      - name: Information
+        uses: "actions/github-script@v6"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            const pullRequest = context.payload.workflow_run.pull_requests[0]
+            const repository = context.repo
+            const pullRequestDetails = await github.rest.pulls.get({
+              owner: repository.owner,
+              repo: repository.repo,
+              pull_number: pullRequest.number,
+            })
+
+            console.log("PR Number: " + pullRequest.number)
+            console.log("PR Title: " + pullRequestDetails.data.title)
+            console.log("PR head SHA: " + pullRequest.head.sha)
+            console.log("PR head ref: " + pullRequest.head.ref)
+            console.log("PR URL: " + pullRequestDetails.data.html_url)
+            console.log(pullRequestDetails)
+
+      - name: Check commit status
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          gh api repos/togglz/togglz/commits/${{ github.event.workflow_run.head_commit.id }}/check-runs --jq 'if ([.check_runs[] | select(.name | endswith(" release") or startswith("codecov/") or startswith("Report ") | not ) | select(.conclusion != "skipped") | .conclusion // "pending" ] | unique == ["success"]) then "OK" else error("Commit checks are not OK") end'
+
+      - name: "Approve pull request"
+        uses: "actions/github-script@v6"
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            const pullRequest = context.payload.workflow_run.pull_requests[0]
+            const repository = context.repo
+
+            await github.rest.pulls.createReview({
+              event: "APPROVE",
+              owner: repository.owner,
+              repo: repository.repo,
+              pull_number: pullRequest.number,
+              commit_id: pullRequest.head.sha,
+            })
+
+      - name: "merge pull request"
+        uses: "actions/github-script@v6"
+        with:
+          # Use the NESSIE_BUILDER secret to tigger CI on main branch
+          github-token: "${{ secrets.NESSIE_BUILDER }}"
+          script: |
+            const pullRequest = context.payload.workflow_run.pull_requests[0]
+            const repository = context.repo
+
+            await github.rest.pulls.merge({
+              merge_method: "squash",
+              owner: repository.owner,
+              pull_number: pullRequest.number,
+              repo: repository.repo,
+              commit_id: pullRequest.head.sha,
+            })
