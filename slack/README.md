@@ -2,21 +2,21 @@
 
 [Slack](https://slack.com) is real-time messaging, archiving and search for teams.
  This togglz-slack module allows to notify your team about feature toggles changes.
- 
+
 1. Set up an [incoming webhook integration](https://my.slack.com/services/new/incoming-webhook/) in your Slack team.
 2. Copy your own webhook URL from Slack website.
 3. Add `togglz-slack` artifact to your project dependencies and configure it.
- 
-## SlackStateRepository 
 
-`SlackStateRepository` wrap your existing `StateRepository`adding notifications on `setFeatureState`. 
+## SlackStateRepository
+
+`SlackStateRepository` wrap your existing `StateRepository`adding notifications on `setFeatureState`.
 
 ### Example Spring configuration
- 
+
 ```
 @Configuration
-public class TogglzSlackConfig {  
-    
+public class TogglzSlackConfig {
+
     @Bean
     public NotificationConfiguration notificationConfiguration(@Value("${togglz.slack.hookUrl}" hookUrl){
         return NotificationConfiguration.builder()
