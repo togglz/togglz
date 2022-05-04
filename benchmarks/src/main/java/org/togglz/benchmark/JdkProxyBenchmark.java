@@ -19,7 +19,6 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.context.StaticFeatureManagerProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -45,11 +44,7 @@ public class JdkProxyBenchmark {
   FeatureManager featureManager;
 
   private enum ProxyFeature implements Feature {
-    ENABLED;
-
-    public boolean isActive() {
-      return FeatureContext.getFeatureManager().isActive(this);
-    }
+    ENABLED
   }
 
   @SuppressWarnings("unchecked")
