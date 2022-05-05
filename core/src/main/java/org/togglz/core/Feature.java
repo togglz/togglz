@@ -8,7 +8,6 @@ import org.togglz.core.context.FeatureContext;
  * </p>
  *
  * @author Christian Kaltepoth
- * @author Michał Rowicki
  */
 public interface Feature {
 
