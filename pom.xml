@@ -154,7 +154,6 @@
     <module>spring-web</module>
     <module>spring-security</module>
     <module>spring-boot</module>
-    <module>samples</module>
     <module>deltaspike</module>
     <module>shiro</module>
     <module>appengine</module>
@@ -173,6 +172,7 @@
     <module>slack</module>
     <module>redis</module>
     <module>kotlin</module>
+    <module>samples</module>
   </modules>
 
   <developers>
