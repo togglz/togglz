@@ -27,8 +27,8 @@
     </properties>
 
     <modules>
-<!--        <module>spring-boot-hello-world</module>-->
-<!--        <module>spring-boot-hello-world-feature-enum</module>-->
+        <module>spring-boot-hello-world</module>
+        <module>spring-boot-hello-world-feature-enum</module>
         <module>spring-boot-no-feature-provider-or-feature-enums</module>
         <module>spring-boot-security</module>
         <module>spring-boot-thymeleaf</module>
