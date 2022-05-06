@@ -35,7 +35,7 @@
 
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-console</artifactId>
+            <artifactId>togglz-spring-web</artifactId>
         </dependency>
 
         <dependency>
@@ -45,7 +45,7 @@
 
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-spring-web</artifactId>
+            <artifactId>togglz-console</artifactId>
         </dependency>
 
     </dependencies>
