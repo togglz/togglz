@@ -154,6 +154,7 @@
     <module>spring-web</module>
     <module>spring-security</module>
     <module>spring-boot</module>
+    <module>samples</module>
     <module>deltaspike</module>
     <module>shiro</module>
     <module>appengine</module>

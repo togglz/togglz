@@ -1,0 +1,12 @@
+logging:
+  level:
+    org.togglz: DEBUG
+togglz:
+  console:
+    secured: false
+    use-management-port: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
