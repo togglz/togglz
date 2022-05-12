@@ -17,8 +17,6 @@
     <packaging>war</packaging>
 
     <properties>
-        <java.version>11</java.version>
-
         <failOnMissingWebXml>false</failOnMissingWebXml>
     </properties>
 
