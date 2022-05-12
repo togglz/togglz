@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class HelloWorldControllerIntegrationTests {
-	
+
 	@Autowired
 	private StateRepository state;
 
@@ -30,6 +30,8 @@ class HelloWorldControllerIntegrationTests {
 
     @Test
     void testHelloWorldFeatureEnabled() throws Exception {
+        state.setFeatureState(new FeatureState(Features.HELLO_WORLD, true));
+        state.setFeatureState(new FeatureState(Features.REVERSE_GREETING, false));
         mockMvc.perform(get("/")).andExpect(status().isOk())
                 .andExpect(content().string("Greetings from Spring Boot!"));
     }

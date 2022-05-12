@@ -38,6 +38,8 @@ public class HelloWorldControllerIntegrationTests {
 
 	@Test
 	public void testHelloWorldFeatureEnabled() throws Exception {
+        state.setFeatureState(new FeatureState(HELLO_WORLD, true));
+        state.setFeatureState(new FeatureState(REVERSE_GREETING, false));
 		mockMvc.perform(get("/")).andExpect(status().isOk())
 				.andExpect(content().string(containsString("Greetings from Spring Boot!")));
 	}
