@@ -24,18 +24,6 @@
     </license>
   </licenses>
 
-  <scm>
-    <connection>scm:git:git@github.com:togglz/togglz.git</connection>
-    <developerConnection>scm:git:git@github.com:togglz/togglz.git</developerConnection>
-    <url>https://github.com/togglz/togglz</url>
-    <tag>2.9.2</tag>
-  </scm>
-
-  <issueManagement>
-    <system>github</system>
-    <url>https://github.com/togglz/togglz/issues</url>
-  </issueManagement>
-
   <properties>
 
     <!-- Minimal Java version -->
