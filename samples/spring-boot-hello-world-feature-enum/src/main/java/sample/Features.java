@@ -16,9 +16,5 @@ public enum Features implements Feature {
     @Label("another description")
     @FeatureGroup("eins")
     REVERSE_GREETING;
-
-    public boolean isActive() {
-        return FeatureContext.getFeatureManager().isActive(this);
-    }
 }
 
