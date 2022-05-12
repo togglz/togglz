@@ -39,11 +39,7 @@ public class TogglzRuleWithAnnotationTest {
     private enum MyFeatures implements Feature {
 
         ONE,
-        TWO;
-
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
+        TWO
 
     }
 

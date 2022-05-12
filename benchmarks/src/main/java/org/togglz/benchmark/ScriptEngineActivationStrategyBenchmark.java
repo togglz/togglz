@@ -17,7 +17,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ScriptEngineActivationStrategy;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.context.StaticFeatureManagerProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -46,12 +45,8 @@ public class ScriptEngineActivationStrategyBenchmark {
     private enum ScriptEngineActivationStrategyFeatures implements Feature {
         ALWAYS_TRUE_SCRIPT_ENGINE_ACTIVATION_STRATEGY,
         DISABLED_FEATURE,
-        DYNAMIC_SCRIPT_ENGINE_STRATEGY;
+        DYNAMIC_SCRIPT_ENGINE_STRATEGY
 
-
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
     }
 
     // create an in-memory state repository for our feature
