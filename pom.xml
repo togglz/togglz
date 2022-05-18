@@ -45,7 +45,7 @@
     <!-- Wildfly version used for integration tests -->
     <wildfly.version>22.0.1.Final</wildfly.version>
 
-    <spring.version>5.3.19</spring.version>
+    <spring.version>5.3.20</spring.version>
     <junit.version>5.8.2</junit.version>
     <mockito.version>4.5.1</mockito.version>
 
@@ -446,7 +446,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-junit-jupiter</artifactId>
-        <version>4.4.0</version>
+        <version>4.5.1</version>
         <scope>test</scope>
       </dependency>
 
