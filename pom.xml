@@ -208,7 +208,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
             <executions>
               <execution>
                 <id>unpack-wildfly</id>
@@ -446,7 +446,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-junit-jupiter</artifactId>
-        <version>4.4.0</version>
+        <version>4.5.1</version>
         <scope>test</scope>
       </dependency>
 
