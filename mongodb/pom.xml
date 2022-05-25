@@ -14,7 +14,7 @@
 
   <properties>
     <mongo.version>4.5.1</mongo.version>
-    <testcontainers.version>1.17.1</testcontainers.version>
+    <testcontainers.version>1.17.2</testcontainers.version>
   </properties>
 
 
