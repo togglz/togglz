@@ -53,7 +53,6 @@ class MyTogglzConfiguration {
                 .build()
 
         StaticFeatureManagerProvider.setFeatureManager(featureManager)
-        FeatureManagerProvider.featureMgr = featureManager
         return featureManager
     }
 
