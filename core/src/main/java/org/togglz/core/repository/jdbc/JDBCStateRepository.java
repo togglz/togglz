@@ -168,6 +168,9 @@ public class JDBCStateRepository implements StateRepository {
                 if (updater.isSchemaVersion1()) {
                     updater.migrateToVersion2();
                 }
+                if (updater.isPostgres()) {
+                    updater.migrateToTextColumns();
+                }
 
                 afterSchemaMigration(connection);
 
