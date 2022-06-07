@@ -18,9 +18,6 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-
         <togglz.version>3.2.1-SNAPSHOT</togglz.version>
         <spring-boot.version>2.7.0</spring-boot.version>
     </properties>
@@ -89,7 +86,7 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.7.2</version>
+                <version>${junit.version}</version>
             </dependency>
 
             <dependency>
