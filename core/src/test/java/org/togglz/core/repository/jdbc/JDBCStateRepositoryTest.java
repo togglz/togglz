@@ -21,18 +21,29 @@ abstract class JDBCStateRepositoryTest {
 
     private static final AtomicInteger COUNTER = new AtomicInteger();
 
-    private DataSource dataSource;
-    private String tableName;
-    private JDBCStateRepository repository;
+    protected DataSource dataSource;
+    protected String tableName;
+    protected JDBCStateRepository repository;
 
     @BeforeEach
     void before() throws SQLException {
         dataSource = createDataSource();
-        tableName = "TOGGLZ" + COUNTER.getAndIncrement();
-        repository = JDBCStateRepository.newBuilder(dataSource).tableName(tableName).createTable(true).serializer(DefaultMapSerializer.multiline()).build();
+        tableName = "togglz" + COUNTER.getAndIncrement();
+        repository = createRepository(dataSource);
     }
 
     protected abstract DataSource createDataSource() throws SQLException;
+
+    protected JDBCStateRepository.Builder defaultBuilder(DataSource dataSource) {
+        return JDBCStateRepository.newBuilder(dataSource)
+                .tableName(tableName)
+                .createTable(true)
+                .serializer(DefaultMapSerializer.multiline());
+    }
+
+    protected JDBCStateRepository createRepository(DataSource dataSource) {
+        return defaultBuilder(dataSource).build();
+    }
 
     @Test
     void testShouldSaveStateWithoutStrategyOrParameters() {
@@ -165,7 +176,7 @@ abstract class JDBCStateRepositoryTest {
 		 * connection
 		 */
 		DataSource spyedDataSource = Mockito.spy(dataSource);
-        repository = JDBCStateRepository.newBuilder(spyedDataSource).tableName(tableName).createTable(true).serializer(DefaultMapSerializer.multiline()).build();
+        repository = createRepository(spyedDataSource);
 		Mockito.when(spyedDataSource.getConnection()).thenThrow(new SQLException("Failed to get a connection"));
 
 		/*
@@ -191,7 +202,7 @@ abstract class JDBCStateRepositoryTest {
 		 * connection
 		 */
 		DataSource spyedDataSource = Mockito.spy(dataSource);
-		repository = JDBCStateRepository.newBuilder(spyedDataSource).tableName(tableName).createTable(true).serializer(DefaultMapSerializer.multiline()).build();
+		repository = createRepository(spyedDataSource);
 		Mockito.when(spyedDataSource.getConnection()).thenThrow(new SQLException("Failed to get a connection"));
 
 		/*
@@ -203,7 +214,7 @@ abstract class JDBCStateRepositoryTest {
 		 */
     }
 
-    private Object query(DataSource dataSource, String sql) {
+    protected Object query(DataSource dataSource, String sql) {
         try {
             Connection connection = dataSource.getConnection();
             try {
@@ -230,7 +241,7 @@ abstract class JDBCStateRepositoryTest {
 
     }
 
-    private void update(DataSource dataSource, String sql) {
+    protected void update(DataSource dataSource, String sql) {
         try {
             Connection connection = dataSource.getConnection();
             try {
@@ -249,7 +260,7 @@ abstract class JDBCStateRepositoryTest {
         }
     }
 
-    private String substitute(String s) {
+    protected String substitute(String s) {
         return s.replace("%TABLE%", tableName);
     }
 
