@@ -1,0 +1,18 @@
+logging:
+  level:
+    org.togglz: DEBUG
+togglz:
+  web:
+    request-holder-filter: false
+  features:
+    HELLO_WORLD:
+      enabled: true
+    REVERSE_GREETING:
+      enabled: false
+  console:
+    secured: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

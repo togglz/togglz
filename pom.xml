@@ -1,606 +1,496 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
-  </parent>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
-  <groupId>org.togglz</groupId>
-  <artifactId>togglz-project</artifactId>
-  <version>3.2.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
+    <groupId>org.togglz</groupId>
+    <artifactId>togglz-project</artifactId>
+    <version>3.2.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-  <name>Togglz</name>
-  <description>Implementation of the feature toggles pattern for Java</description>
-  <url>https://www.togglz.org/</url>
+    <name>Togglz</name>
+    <description>Implementation of the feature toggles pattern for Java</description>
+    <url>https://www.togglz.org/</url>
 
-  <licenses>
-    <license>
-      <name>Apache License 2.0</name>
-      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-  <scm>
-    <connection>scm:git:git@github.com:togglz/togglz.git</connection>
-    <developerConnection>scm:git:git@github.com:togglz/togglz.git</developerConnection>
-    <url>https://github.com/togglz/togglz</url>
-    <tag>2.9.2</tag>
-  </scm>
+    <properties>
+        <!-- Minimal Java version -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
-  <issueManagement>
-    <system>github</system>
-    <url>https://github.com/togglz/togglz/issues</url>
-  </issueManagement>
+        <!-- Wildfly version used for integration tests -->
+        <wildfly.version>22.0.1.Final</wildfly.version>
 
-  <properties>
+        <spring.version>5.3.20</spring.version>
+        <junit.version>5.8.2</junit.version>
+        <mockito.version>4.5.1</mockito.version>
 
-    <!-- Minimal Java version -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+        <spockframework.version>2.1-groovy-3.0</spockframework.version>
+    </properties>
 
-    <!-- Wildfly version used for integration tests -->
-    <wildfly.version>22.0.1.Final</wildfly.version>
-
-    <spring.version>5.3.20</spring.version>
-    <junit.version>5.8.2</junit.version>
-    <mockito.version>4.5.1</mockito.version>
-
-    <spockframework.version>2.1-groovy-3.0</spockframework.version>
-  </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>oss.sonatype.org</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-        <snapshotRepository>
-            <id>oss.sonatype.org</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-  <build>
-    <plugins>
-
-      <!-- Release -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.3</version>
-        <configuration>
-          <pushChanges>false</pushChanges>
-          <localCheckout>true</localCheckout>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-          <tagNameFormat>@{project.version}</tagNameFormat>
-        </configuration>
-      </plugin>
-
-      <!-- Javadocs -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>3.12.0</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.4.0</version>
-        <configuration>
-          <doclint>none</doclint>
-        </configuration>
-        <executions>
-          <execution>
-            <id>aggregate</id>
-            <phase>site</phase>
-            <goals>
-              <goal>aggregate</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
-        <configuration>
-          <parameters>true</parameters>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.8</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-    </plugins>
-
-    <pluginManagement>
-      <plugins>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
-        </plugin>
-
-      </plugins>
-    </pluginManagement>
-
-  </build>
-
-  <modules>
-    <module>core</module>
-    <module>test-harness</module>
-    <module>servlet</module>
-    <module>console</module>
-    <module>cdi</module>
-    <module>guice</module>
-    <module>spring-core</module>
-    <module>spring-web</module>
-    <module>spring-security</module>
-    <module>spring-boot</module>
-    <module>deltaspike</module>
-    <module>shiro</module>
-    <module>appengine</module>
-    <module>cloud-datastore</module>
-    <module>cloud-storage</module>
-    <module>mongodb</module>
-    <module>testing</module>
-    <module>junit</module>
-    <module>spock</module>
-    <module>cassandra</module>
-    <module>hazelcast</module>
-    <module>zookeeper</module>
-    <module>dynamodb</module>
-    <module>amazon-s3</module>
-    <module>benchmarks</module>
-    <module>slack</module>
-    <module>redis</module>
-    <module>kotlin</module>
-  </modules>
-
-  <developers>
-    <developer>
-      <id>bennetelli</id>
-      <email>mail@bennet-schulz.de</email>
-      <name>Bennet Schulz</name>
-      <timezone>CET</timezone>
-    </developer>
-  </developers>
-
-  <profiles>
-  <!-- plugins needed to deploy to Maven Central -->
-  <profile>
-      <id>central-deploy</id>
-      <build>
-          <plugins>
-              <plugin>
-                  <artifactId>maven-gpg-plugin</artifactId>
-                  <version>3.0.1</version>
-                  <executions>
-                      <execution>
-                          <id>sign-artifacts</id>
-                          <phase>verify</phase>
-                          <goals>
-                              <goal>sign</goal>
-                          </goals>
-                          <configuration>
-                              <!-- This is necessary for gpg to not try to use the pinentry programs -->
-                              <gpgArguments>
-                                  <arg>--pinentry-mode</arg>
-                                  <arg>loopback</arg>
-                              </gpgArguments>
-                          </configuration>
-                      </execution>
-                  </executions>
-              </plugin>
-              <plugin>
-                  <groupId>org.codehaus.mojo</groupId>
-                  <artifactId>versions-maven-plugin</artifactId>
-                  <version>2.11.0</version>
-                  <configuration>
-                      <generateBackupPoms>false</generateBackupPoms>
-                  </configuration>
-              </plugin>
-              <plugin>
-                  <artifactId>maven-deploy-plugin</artifactId>
-                  <configuration>
-                      <skip>true</skip>
-                  </configuration>
-              </plugin>
-              <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-source-plugin</artifactId>
-                  <version>3.2.1</version>
-                  <executions>
-                      <execution>
-                          <id>attach-sources</id>
-                          <goals>
-                              <goal>jar</goal>
-                          </goals>
-                      </execution>
-                  </executions>
-              </plugin>
-              <plugin>
-                  <groupId>org.apache.maven.plugins</groupId>
-                  <artifactId>maven-javadoc-plugin</artifactId>
-                  <version>3.4.0</version>
-                  <executions>
-                      <execution>
-                          <id>attach-javadocs</id>
-                          <goals>
-                              <goal>jar</goal>
-                          </goals>
-                      </execution>
-                  </executions>
-              </plugin>
-              <plugin>
-                  <groupId>org.sonatype.plugins</groupId>
-                  <artifactId>nexus-staging-maven-plugin</artifactId>
-                  <version>1.6.13</version>
-                  <extensions>true</extensions>
-                  <configuration>
-                      <serverId>oss.sonatype.org</serverId>
-                      <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                      <description>${project.version}</description>
-                  </configuration>
-                  <executions>
-                      <execution>
-                          <id>deploy-to-sonatype</id>
-                          <phase>deploy</phase>
-                          <goals>
-                              <goal>deploy</goal>
-                              <goal>release</goal>
-                          </goals>
-                      </execution>
-                  </executions>
-              </plugin>
-          </plugins>
-      </build>
-  </profile>
-    <profile>
-      <id>wildfly-managed</id>
-      <activation>
-        <property>
-          <name>!wildfly-remote</name>
-        </property>
-      </activation>
-      <build>
+    <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <!-- some mudules don't find the existing tests, we should break the build in that case -->
-              <failIfNoTests>true</failIfNoTests>
-              <systemPropertyVariables>
-                <arquillian.launch>wildfly-managed</arquillian.launch>
-              </systemPropertyVariables>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.3.0</version>
-            <executions>
-              <execution>
-                <id>unpack-wildfly</id>
-                <phase>process-test-classes</phase>
-                <inherited>false</inherited>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
+
+            <!-- Release -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
                 <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>org.wildfly</groupId>
-                      <artifactId>wildfly-dist</artifactId>
-                      <version>${wildfly.version}</version>
-                      <type>zip</type>
-                      <overWrite>false</overWrite>
-                      <outputDirectory>target/container</outputDirectory>
-                    </artifactItem>
-                  </artifactItems>
+                    <pushChanges>false</pushChanges>
+                    <localCheckout>true</localCheckout>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
+            </plugin>
+
+            <!-- Javadocs -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.12.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <doclint>none</doclint>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>aggregate</id>
+                        <phase>site</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.8</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
-      </build>
-      <dependencies>
-        <dependency>
-          <groupId>org.wildfly.arquillian</groupId>
-          <artifactId>wildfly-arquillian-container-managed</artifactId>
-          <version>3.0.1.Final</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
 
-    <profile>
-      <id>wildfly-remote</id>
-      <activation>
-        <property>
-          <name>wildfly-remote</name>
-        </property>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.wildfly.arquillian</groupId>
-          <artifactId>wildfly-arquillian-container-remote</artifactId>
-          <version>2.2.0.Final</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
+        <pluginManagement>
+            <plugins>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
+                </plugin>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-web</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            </plugins>
+        </pluginManagement>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-webmvc</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+    </build>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-security</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+    <modules>
+        <module>core</module>
+        <module>test-harness</module>
+        <module>servlet</module>
+        <module>console</module>
+        <module>cdi</module>
+        <module>guice</module>
+        <module>spring-core</module>
+        <module>spring-web</module>
+        <module>spring-security</module>
+        <module>spring-boot</module>
+        <module>deltaspike</module>
+        <module>shiro</module>
+        <module>appengine</module>
+        <module>cloud-datastore</module>
+        <module>cloud-storage</module>
+        <module>mongodb</module>
+        <module>testing</module>
+        <module>junit</module>
+        <module>spock</module>
+        <module>cassandra</module>
+        <module>hazelcast</module>
+        <module>zookeeper</module>
+        <module>dynamodb</module>
+        <module>amazon-s3</module>
+        <module>benchmarks</module>
+        <module>slack</module>
+        <module>redis</module>
+        <module>kotlin</module>
+        <module>samples</module>
+    </modules>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+    <developers>
+        <developer>
+            <id>bennetelli</id>
+            <email>mail@bennet-schulz.de</email>
+            <name>Bennet Schulz</name>
+            <timezone>CET</timezone>
+        </developer>
+    </developers>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+    <profiles>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-deltaspike</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+        <profile>
+            <id>wildfly-managed</id>
+            <activation>
+                <property>
+                    <name>!wildfly-remote</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <!-- some mudules don't find the existing tests, we should break the build in that case -->
+                            <failIfNoTests>true</failIfNoTests>
+                            <systemPropertyVariables>
+                                <arquillian.launch>wildfly-managed</arquillian.launch>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>unpack-wildfly</id>
+                                <phase>process-test-classes</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${wildfly.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>target/container</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>3.0.1.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-shiro</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+        <profile>
+            <id>wildfly-remote</id>
+            <activation>
+                <property>
+                    <name>wildfly-remote</name>
+                </property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                    <version>2.2.0.Final</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-appengine</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-mongodb</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-testing</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-servlet</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-webmvc</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-junit</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-cassandra</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-boot-autoconfigure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-hazelcast</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-redis</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-deltaspike</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-zookeeper</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-shiro</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-benchmarks</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-appengine</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-console</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-mongodb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-cdi</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-testing</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-guice</artifactId>
-        <version>${project.version}</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-servlet</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-test-harness</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-junit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.togglz</groupId>
-        <artifactId>togglz-spock</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-cassandra</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>4.0.1</version>
-        <scope>provided</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-hazelcast</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <!-- Used by proxy generation -->
-        <groupId>net.bytebuddy</groupId>
-        <artifactId>byte-buddy</artifactId>
-        <version>1.12.1</version>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-params</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-zookeeper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <scope>test</scope>
-        <version>${junit.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-junit-jupiter</artifactId>
-        <version>4.5.1</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-benchmarks</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.spockframework</groupId>
-        <artifactId>spock-core</artifactId>
-        <version>${spockframework.version}</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-console</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>javax.enterprise</groupId>
-        <artifactId>cdi-api</artifactId>
-        <version>2.0</version>
-        <scope>provided</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-cdi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.assertj</groupId>
-        <artifactId>assertj-core</artifactId>
-        <version>3.22.0</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-guice</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-test-harness</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
 
-      <dependency>
-          <groupId>org.mockito</groupId>
-          <artifactId>mockito-inline</artifactId>
-          <version>${mockito.version}</version>
-          <scope>test</scope>
-      </dependency>
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spock</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
 
-      <!-- togglz uses slf4j as the logging API / facade so users can use logback or other slf4j compliant frameworks -->
-      <!-- if there is no slf4j implementation (binding) provided at runtime, slf4j will fallback to a no-op provider -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.7.36</version>
-      </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>4.0.1</version>
+                <scope>provided</scope>
+            </dependency>
 
-      <!-- provide an slf4j binding to have logs for togglz's tests -->
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.2.10</version>
-        <scope>test</scope>
-      </dependency>
+            <dependency>
+                <!-- Used by proxy generation -->
+                <groupId>net.bytebuddy</groupId>
+                <artifactId>byte-buddy</artifactId>
+                <version>1.12.1</version>
+            </dependency>
 
-    </dependencies>
-  </dependencyManagement>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <scope>test</scope>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>4.5.1</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.spockframework</groupId>
+                <artifactId>spock-core</artifactId>
+                <version>${spockframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>2.0</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>3.22.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- togglz uses slf4j as the logging API / facade so users can use logback or other slf4j compliant frameworks -->
+            <!-- if there is no slf4j implementation (binding) provided at runtime, slf4j will fallback to a no-op provider -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.36</version>
+            </dependency>
+
+            <!-- provide an slf4j binding to have logs for togglz's tests -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.10</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
 </project>
