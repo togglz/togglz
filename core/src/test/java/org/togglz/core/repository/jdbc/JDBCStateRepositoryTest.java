@@ -21,9 +21,9 @@ abstract class JDBCStateRepositoryTest {
 
     private static final AtomicInteger COUNTER = new AtomicInteger();
 
-    protected DataSource dataSource;
-    protected String tableName;
-    protected JDBCStateRepository repository;
+    DataSource dataSource;
+    String tableName;
+    JDBCStateRepository repository;
 
     @BeforeEach
     void before() throws SQLException {
@@ -32,16 +32,16 @@ abstract class JDBCStateRepositoryTest {
         repository = createRepository(dataSource);
     }
 
-    protected abstract DataSource createDataSource() throws SQLException;
+    abstract DataSource createDataSource() throws SQLException;
 
-    protected JDBCStateRepository.Builder defaultBuilder(DataSource dataSource) {
+    JDBCStateRepository.Builder defaultBuilder(DataSource dataSource) {
         return JDBCStateRepository.newBuilder(dataSource)
                 .tableName(tableName)
                 .createTable(true)
                 .serializer(DefaultMapSerializer.multiline());
     }
 
-    protected JDBCStateRepository createRepository(DataSource dataSource) {
+    JDBCStateRepository createRepository(DataSource dataSource) {
         return defaultBuilder(dataSource).build();
     }
 
@@ -214,7 +214,7 @@ abstract class JDBCStateRepositoryTest {
 		 */
     }
 
-    protected Object query(DataSource dataSource, String sql) {
+    Object query(DataSource dataSource, String sql) {
         try {
             Connection connection = dataSource.getConnection();
             try {
@@ -241,7 +241,7 @@ abstract class JDBCStateRepositoryTest {
 
     }
 
-    protected void update(DataSource dataSource, String sql) {
+    void update(DataSource dataSource, String sql) {
         try {
             Connection connection = dataSource.getConnection();
             try {
@@ -260,7 +260,7 @@ abstract class JDBCStateRepositoryTest {
         }
     }
 
-    protected String substitute(String s) {
+    String substitute(String s) {
         return s.replace("%TABLE%", tableName);
     }
 

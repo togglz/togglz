@@ -16,9 +16,8 @@ abstract class PostgresJDBCStateRepositoryTest extends JDBCStateRepositoryTest {
     @Container
     private static final PostgreSQLContainer<?> POSTGRES_CONTAINER = new PostgreSQLContainer<>("postgres:latest");
 
-
     @Override
-    protected DataSource createDataSource() {
+    DataSource createDataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[]{POSTGRES_CONTAINER.getHost()});
         dataSource.setDatabaseName(POSTGRES_CONTAINER.getDatabaseName());
@@ -28,7 +27,7 @@ abstract class PostgresJDBCStateRepositoryTest extends JDBCStateRepositoryTest {
         return dataSource;
     }
 
-    protected String substituteColumn(String s, String columnName) {
+    String substituteColumn(String s, String columnName) {
         return s.replace("%COLUMN%", columnName);
     }
 
@@ -54,7 +53,7 @@ class DefaultPostgresJDBCStateRepositoryTest extends PostgresJDBCStateRepository
 class TextPostgresJDBCStateRepositoryTest extends PostgresJDBCStateRepositoryTest {
 
     @Override
-    protected JDBCStateRepository createRepository(DataSource dataSource) {
+    JDBCStateRepository createRepository(DataSource dataSource) {
         return defaultBuilder(dataSource)
                 .usePostgresTextColumns(true)
                 .build();
