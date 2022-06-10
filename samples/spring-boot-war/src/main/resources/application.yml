@@ -1,9 +1,6 @@
 logging:
   level:
     org.togglz: DEBUG
-togglz:
-  web:
-    request-holder-filter: false
   features:
     HELLO_WORLD:
       enabled: true
