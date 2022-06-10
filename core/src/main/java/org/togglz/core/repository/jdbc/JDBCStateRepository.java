@@ -71,6 +71,8 @@ public class JDBCStateRepository implements StateRepository {
 
     protected final boolean noCommit;
 
+    protected final boolean usePostgresTextColumns;
+
     /**
      * Constructor of {@link JDBCStateRepository}. A database table called <code>TOGGLZ</code> will be created automatically for
      * you.
@@ -144,6 +146,7 @@ public class JDBCStateRepository implements StateRepository {
         this.tableName = builder.tableName;
         this.serializer = builder.serializer;
         this.noCommit = builder.noCommit;
+        this.usePostgresTextColumns = builder.usePostgresTextColumns;
         if (builder.createTable) {
             migrateSchema();
         }
@@ -167,6 +170,9 @@ public class JDBCStateRepository implements StateRepository {
                 }
                 if (updater.isSchemaVersion1()) {
                     updater.migrateToVersion2();
+                }
+                if (usePostgresTextColumns && updater.isPostgres()) {
+                    updater.migrateToTextColumns();
                 }
 
                 afterSchemaMigration(connection);
@@ -347,6 +353,7 @@ public class JDBCStateRepository implements StateRepository {
         private MapSerializer serializer = DefaultMapSerializer.multiline();
         private boolean noCommit = false;
         private boolean createTable = true;
+        private boolean usePostgresTextColumns = false;
 
         /**
          * Creates a new builder for creating a {@link JDBCStateRepository}.
@@ -397,6 +404,17 @@ public class JDBCStateRepository implements StateRepository {
          */
         public Builder createTable(boolean createTable) {
             this.createTable = createTable;
+            return this;
+        }
+
+        /**
+         * If set to <code>true</code>, createTable being <code>true</code>, and running on PostgreSQL,
+         * the table will use the TEXT column type where possible. The default is <code>false</code>.
+         *
+         * @param usePostgresTextColumns <code>true</code> if PostgreSQL's TEXT column type should be used
+         */
+        public Builder usePostgresTextColumns(boolean usePostgresTextColumns) {
+            this.usePostgresTextColumns = usePostgresTextColumns;
             return this;
         }
 
