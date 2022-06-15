@@ -26,12 +26,8 @@ import java.io.InputStream;
  * You must already have a bucket provisioned before you create this repository.
  *
  * @author Mark Richardson
- * @date 12/27/16
  */
 public class S3StateRepository implements StateRepository {
-
-    // http://docs.aws.amazon.com/AmazonS3/latest/API/ErrorResponses.html
-    private static final String ERR_NO_SUCH_KEY = "NoSuchKey";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -161,7 +157,7 @@ public class S3StateRepository implements StateRepository {
          * Optional prefixes to prepend on to each key
          *
          * @param keyPrefix The prefix to use
-         * @return
+         * @return this
          */
         public Builder prefix(String keyPrefix) {
             this.keyPrefix = keyPrefix == null ? "" : keyPrefix;
