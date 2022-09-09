@@ -3,11 +3,14 @@ package org.togglz.core.activation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
+import javax.script.Bindings;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngineFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +45,6 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-
         String lang = featureState.getParameter(PARAM_LANG);
         String script = featureState.getParameter(PARAM_SCRIPT);
 
@@ -51,9 +53,14 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
             log.error("Could not find script engine for: " + lang);
             return false;
         }
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("polyglot.js.allowHostAccess", true);
+        bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
+        bindings.put("polyglot.js.nashorn-compat", true);
 
         engine.put("user", user);
         engine.put("date", new Date());
+
         try {
             Object result = engine.eval(script);
             if (result instanceof Boolean) {
