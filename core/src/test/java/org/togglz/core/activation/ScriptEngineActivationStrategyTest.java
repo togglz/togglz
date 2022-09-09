@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ScriptEngineActivationStrategyTest {
 
-    private static final String JAVASCRIPT = "graal.js";
+    private static final String JAVASCRIPT = "ECMAScript";
     private static final String UNKNOWN_LANGUAGE = "some language that doesn't exist";
     private static final String SOME_SCRIPT = "some content";
     private static final String INVALID_JAVASCRIPT = " = ,;";

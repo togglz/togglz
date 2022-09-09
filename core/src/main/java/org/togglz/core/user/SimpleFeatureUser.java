@@ -7,11 +7,11 @@ import org.graalvm.polyglot.proxy.ProxyObject;
 import org.togglz.core.manager.DefaultFeatureManager;
 
 /**
- * 
+ *
  * Default implementation of {@link FeatureUser}.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class SimpleFeatureUser implements FeatureUser {
 
@@ -21,7 +21,7 @@ public class SimpleFeatureUser implements FeatureUser {
 
     /**
      * Constructor of {@link DefaultFeatureManager}. The <code>featureAdmin</code> flag will be set to <code>false</code>.
-     * 
+     *
      * @param name The name of the user
      */
     public SimpleFeatureUser(String name) {
@@ -30,7 +30,7 @@ public class SimpleFeatureUser implements FeatureUser {
 
     /**
      * Constructor of {@link DefaultFeatureManager}.
-     * 
+     *
      * @param name The name of the user
      * @param featureAdmin <code>true</code> if the user is a feature admin
      */
@@ -51,12 +51,12 @@ public class SimpleFeatureUser implements FeatureUser {
 
     @Override
     public Object getAttribute(String name) {
-        return ProxyObject.fromMap((Map<String, Object>) attributes.get(name));
+        return attributes.get(name);
     }
 
     /**
      * This method can be used to set attributes of the user.
-     * 
+     *
      * @param name The name of the attribute
      * @param value The value of the attribute
      * @return <code>this</code> for fluent object creation

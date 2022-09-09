@@ -3,6 +3,7 @@ package org.togglz.core.activation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.script.*;
 
@@ -25,9 +26,6 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     public ScriptEngineActivationStrategy() {
         engineManager = new ScriptEngineManager();
-        Bindings bindings = engineManager.getBindings();
-//        bindings.put("polyglot.js.allowAllAccess", true);
-        engineManager.setBindings(bindings);
     }
 
     @Override
@@ -42,7 +40,6 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-
         String lang = featureState.getParameter(PARAM_LANG);
         String script = featureState.getParameter(PARAM_SCRIPT);
 
@@ -51,11 +48,13 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
             log.error("Could not find script engine for: " + lang);
             return false;
         }
-        Bindings bindings = engineManager.getBindings();
-        bindings.put("polyglot.js.allowAllAccess", true);
-        bindings.put("user", user);
-        bindings.put("date", new Date());
-        engineManager.setBindings(bindings);
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("polyglot.js.allowHostAccess", true);
+        bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
+        bindings.put("polyglot.js.nashorn-compat", true);
+
+        engine.put("user", user);
+        engine.put("date", new Date());
 
         try {
             Object result = engine.eval(script);
