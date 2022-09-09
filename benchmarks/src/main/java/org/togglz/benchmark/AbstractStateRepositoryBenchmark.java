@@ -13,7 +13,6 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.core.repository.FeatureState;
@@ -38,11 +37,7 @@ public abstract class AbstractStateRepositoryBenchmark {
     // a simple feature for this benchmark
     private enum Features implements Feature {
         FEATURE_STATE_SET,
-        FEATURE_STATE_NOT_SET;
-
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
+        FEATURE_STATE_NOT_SET
     }
 
     FeatureManager manager;

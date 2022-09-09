@@ -1,0 +1,14 @@
+logging:
+  level:
+    org.togglz: DEBUG
+togglz:
+  features:
+    HELLO_WORLD:
+      enabled: true
+    REVERSE_GREETING:
+      enabled: false
+  console:
+    secured: false
+management:
+  security:
+    enabled: false

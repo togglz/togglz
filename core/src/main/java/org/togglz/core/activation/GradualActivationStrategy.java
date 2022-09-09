@@ -2,9 +2,9 @@ package org.togglz.core.activation;
 
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -20,7 +20,7 @@ import org.togglz.core.util.Validate;
  */
 public class GradualActivationStrategy implements ActivationStrategy {
 
-    private final Log log = LogFactory.getLog(GradualActivationStrategy.class);
+    private final Logger log = LoggerFactory.getLogger(GradualActivationStrategy.class);
 
     public static final String ID = "gradual";
     public static final String PARAM_PERCENTAGE = "percentage";

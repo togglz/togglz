@@ -17,7 +17,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ReleaseDateActivationStrategy;
 import org.togglz.core.annotation.EnabledByDefault;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.context.StaticFeatureManagerProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -49,12 +48,8 @@ public class FeatureStateBenchmarks {
         NO_STATE_CONFIGURED,
         @EnabledByDefault
         ENABLED_BY_DEFAULT,
-        DISABLED_BY_FEATURE_STATE;
+        DISABLED_BY_FEATURE_STATE
 
-
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
     }
 
     // create an in-memory state repository for our feature

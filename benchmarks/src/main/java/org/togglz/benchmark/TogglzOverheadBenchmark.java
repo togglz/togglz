@@ -15,7 +15,6 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.context.StaticFeatureManagerProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -39,11 +38,7 @@ public class TogglzOverheadBenchmark {
 
     // a simple feature for this benchmark
     private enum OverheadFeature implements Feature {
-        FEATURE;
-
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
+        FEATURE
     }
 
     // create an in-memory state repository for our feature

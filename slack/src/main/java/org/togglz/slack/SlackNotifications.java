@@ -1,7 +1,9 @@
 package org.togglz.slack;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.UserProvider;
 import org.togglz.slack.config.NotificationConfiguration;
@@ -11,15 +13,13 @@ import org.togglz.slack.sender.AsyncNotifier;
 import org.togglz.slack.sender.NotificationSender;
 import org.togglz.slack.sender.Notifier;
 
-import java.util.List;
-
 /**
  * @author Tomasz Skowroński
  * @since 2.4.0
  */
 class SlackNotifications {
 
-    private static final Log log = LogFactory.getLog(SlackNotifications.class);
+    private static final Logger log = LoggerFactory.getLogger(SlackNotifications.class);
 
     private final NotificationComposer composer;
 

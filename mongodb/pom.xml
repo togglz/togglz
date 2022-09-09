@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>2.9.9-SNAPSHOT</version>
+    <version>3.2.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-mongodb</artifactId>
@@ -13,8 +13,7 @@
   <description>Togglz - MongoDB integration</description>
 
   <properties>
-    <mongo.version>4.1.0</mongo.version>
-    <testcontainers.version>1.15.1</testcontainers.version>
+    <mongo.version>4.7.1</mongo.version>
   </properties>
 
 
@@ -58,10 +57,8 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.11</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
-
 </project>

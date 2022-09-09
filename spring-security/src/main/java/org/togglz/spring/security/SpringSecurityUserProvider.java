@@ -23,8 +23,7 @@ public class SpringSecurityUserProvider implements UserProvider {
 
     @Override
     public FeatureUser getCurrentUser() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication authentication = context.getAuthentication();
+        Authentication authentication = createAuthentication();
 
         // null if no authentication data is available for the current thread
         if (authentication == null) {
@@ -43,7 +42,12 @@ public class SpringSecurityUserProvider implements UserProvider {
         return user;
     }
 
-    private boolean isFeatureAdmin(Set<String> authorities) {
+    public static Authentication createAuthentication() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        return context.getAuthentication();
+    }
+
+    protected boolean isFeatureAdmin(Set<String> authorities) {
         return featureAdminAuthority != null && authorities.contains(featureAdminAuthority);
     }
 
