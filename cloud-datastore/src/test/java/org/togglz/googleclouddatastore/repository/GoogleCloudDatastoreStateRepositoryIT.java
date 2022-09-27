@@ -8,8 +8,8 @@ import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Transaction;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
-import org.joda.time.Duration;
 import org.junit.jupiter.api.*;
+import org.threeten.bp.Duration;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
@@ -45,7 +45,7 @@ public class GoogleCloudDatastoreStateRepositoryIT {
 
     @AfterAll
     public static void afterClass() throws IOException, InterruptedException, TimeoutException {
-        HELPER.stop(Duration.standardMinutes(1));
+        HELPER.stop(Duration.ofMinutes(1));
     }
 
     @AfterEach
