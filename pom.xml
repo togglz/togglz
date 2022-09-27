@@ -143,7 +143,6 @@
         <module>spring-web</module>
         <module>spring-security</module>
         <module>spring-boot</module>
-        <module>deltaspike</module>
         <module>shiro</module>
         <module>appengine</module>
         <module>cloud-datastore</module>
@@ -293,12 +292,6 @@
             <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-spring-boot-starter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.togglz</groupId>
-                <artifactId>togglz-deltaspike</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
