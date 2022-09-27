@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [8, 11]
+        jdk: [11]
     env:
       JDK_VERSION:  ${{ matrix.jdk }}
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: ${{ matrix.jdk }}
       - name: Build with Maven
         run: mvn -P wildfly-managed --batch-mode verify
