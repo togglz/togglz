@@ -36,12 +36,6 @@ public class Deployments {
             .as(JavaArchive.class);
     }
 
-    public static JavaArchive getTogglzGuiceArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-guice.jar")
-            .importDirectory("../guice/target/classes")
-            .as(JavaArchive.class);
-    }
-
     public static JavaArchive getTogglzCDIArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-cdi.jar")
             .importDirectory("../cdi/target/classes")

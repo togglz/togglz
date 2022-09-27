@@ -138,7 +138,6 @@
         <module>servlet</module>
         <module>console</module>
         <module>cdi</module>
-        <module>guice</module>
         <module>spring-core</module>
         <module>spring-web</module>
         <module>spring-security</module>
@@ -370,12 +369,6 @@
             <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-cdi</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.togglz</groupId>
-                <artifactId>togglz-guice</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
