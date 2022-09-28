@@ -151,7 +151,6 @@
         <module>junit</module>
         <module>spock</module>
         <module>cassandra</module>
-        <module>hazelcast</module>
         <module>zookeeper</module>
         <module>dynamodb</module>
         <module>amazon-s3</module>
@@ -333,12 +332,6 @@
             <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-cassandra</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.togglz</groupId>
-                <artifactId>togglz-hazelcast</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
