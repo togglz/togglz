@@ -151,7 +151,6 @@
         <module>junit</module>
         <module>spock</module>
         <module>cassandra</module>
-        <module>zookeeper</module>
         <module>dynamodb</module>
         <module>amazon-s3</module>
         <module>benchmarks</module>
@@ -338,12 +337,6 @@
             <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-redis</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.togglz</groupId>
-                <artifactId>togglz-zookeeper</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
