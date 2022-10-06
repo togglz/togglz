@@ -28,7 +28,7 @@ public class ParameterModel {
     }
 
     public void readValueFrom(HttpServletRequest request) {
-        this.value = request.getParameter(getInputId());
+        this.value = Encode.forHtml(request.getParameter(getInputId()));
     }
 
     public String getValidationError() {
@@ -58,7 +58,7 @@ public class ParameterModel {
     }
 
     public String getValue() {
-        return value == null ? "" : Encode.forHtml(value);
+        return value == null ? "" : value;
     }
 
     public void setValue(String value) {
