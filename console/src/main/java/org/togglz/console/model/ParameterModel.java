@@ -2,7 +2,6 @@ package org.togglz.console.model;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.owasp.encoder.Encode;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
@@ -28,7 +27,8 @@ public class ParameterModel {
     }
 
     public void readValueFrom(HttpServletRequest request) {
-        this.value = Encode.forHtml(request.getParameter(getInputId()));
+        this.value = request.getParameter(getInputId());
+
     }
 
     public String getValidationError() {
