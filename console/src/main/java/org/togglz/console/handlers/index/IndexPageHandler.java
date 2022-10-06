@@ -59,7 +59,9 @@ public class IndexPageHandler extends RequestHandlerBase {
         model.put("tabView", tabView);
 
         String template = getResourceAsString("index.html");
-        String content = new Engine().transform(template, model);
+        Engine engine = new Engine();
+        engine.registerNamedRenderer(new SanitizeHtmlRenderer());
+        String content = engine.transform(template, model);
         writeResponse(event, content);
     }
 }
