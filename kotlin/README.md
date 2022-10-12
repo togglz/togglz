@@ -82,8 +82,3 @@ FeatureManagerSupport.allEnabledFeatureConfig(featureManager)
 ```
 FeatureManagerSupport.enable(Feature { KotlinTestFeatures.BAR.name })
 ```
-
-
-# Credentials
-
-Inspired by and copied from <https://github.com/e-breuninger/spring-boot-starter-breuninger/tree/master/togglz>
