@@ -41,4 +41,10 @@ public class Deployments {
             .importDirectory("../cdi/target/classes")
             .as(JavaArchive.class);
     }
+
+    public static JavaArchive getTogglzShiroArchive() {
+        return ShrinkWrap.create(ExplodedImporter.class, "togglz-shiro.jar")
+            .importDirectory("../shiro/target/classes")
+            .as(JavaArchive.class);
+    }
 }
