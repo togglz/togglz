@@ -66,14 +66,16 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
             return null;
         }
 
-        final Boolean enabled = featureEntity.getBoolean(ENABLED);
+        final boolean enabled = featureEntity.getBoolean(ENABLED);
         final FeatureState state = new FeatureState(feature, enabled);
 
-        state.setStrategyId(getStrategyId(featureEntity));
+        String strategyId = getStrategyId(featureEntity);
+        state.setStrategyId(strategyId);
 
         List<Value<String>> names = valuesList(featureEntity, STRATEGY_PARAMS_NAMES);
         List<Value<String>> values = valuesList(featureEntity, STRATEGY_PARAMS_VALUES);
         Preconditions.checkState(names.size() == values.size());
+
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i).get();
             String value = values.get(i).get();
