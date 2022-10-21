@@ -18,9 +18,9 @@ import org.togglz.core.util.Validate;
 
 /**
  * Default implementation of {@link FeatureManager}
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class DefaultFeatureManager implements FeatureManager {
 
@@ -114,6 +114,15 @@ public class DefaultFeatureManager implements FeatureManager {
         return strategyProvider.getActivationStrategies();
     }
 
+    @Override
+    public void enable(Feature feature) {
+        stateRepository.setFeatureState(new FeatureState(feature, true));
+    }
+
+    @Override
+    public void disable(Feature feature) {
+        stateRepository.setFeatureState(new FeatureState(feature, false));
+    }
 
     @Override
     public FeatureUser getCurrentFeatureUser() {
