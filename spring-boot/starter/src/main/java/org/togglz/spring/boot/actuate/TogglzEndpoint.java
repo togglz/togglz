@@ -25,9 +25,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Preconditions;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeatureMetaData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,30 +63,33 @@ public class TogglzEndpoint {
 
     @ReadOperation
     public List<TogglzFeature> getAllFeatures() {
-        List<TogglzFeature> features = new ArrayList<>();
-        for (Feature feature : this.featureManager.getFeatures()) {
-            FeatureState featureState = this.featureManager.getFeatureState(feature);
-            features.add(new TogglzFeature(feature, featureState));
-        }
-        Collections.sort(features);
-        return features;
+        return this.featureManager.getFeatures().stream()
+                .map(this::generateTogglzFeature)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @ReadOperation
     public TogglzFeature getFeature(@Selector String name) {
         return this.featureManager.getFeatures().stream()
-            .filter(it -> name.equals(it.name()))
-            .findFirst()
-            .map(it -> new TogglzFeature(it, this.featureManager.getFeatureState(it)))
-            .orElse(null);
+                .filter(it -> name.equals(it.name()))
+                .findFirst()
+                .map(this::generateTogglzFeature)
+                .orElse(null);
+    }
+
+    private TogglzFeature generateTogglzFeature(Feature feature) {
+        FeatureState featureState = this.featureManager.getFeatureState(feature);
+        FeatureMetaData featureMetaData = this.featureManager.getMetaData(feature);
+        return new TogglzFeature(feature, featureState, new TogglzFeatureMetaData(featureMetaData));
     }
 
     /**
      * Allows to change the state of toggles via http post.
      *
-     * @param name    the name of the toggle/feature
-     * @param enabled the name of the field containing the toggle/feature status
-     * @param strategy the ID of the activation strategy to use
+     * @param name       the name of the toggle/feature
+     * @param enabled    the name of the field containing the toggle/feature status
+     * @param strategy   the ID of the activation strategy to use
      * @param parameters activation strategy parameters as comma separated list of key=value pairs
      */
     @WriteOperation
@@ -104,8 +109,8 @@ public class TogglzEndpoint {
                 : Collections.emptyMap();
 
         FeatureState featureState = changeFeatureStatus(feature, enabled, strategy, parametersMap);
-
-        return new TogglzFeature(feature, featureState);
+        FeatureMetaData metaData = this.featureManager.getMetaData(feature);
+        return new TogglzFeature(feature, featureState, new TogglzFeatureMetaData(metaData));
     }
 
     private FeatureState changeFeatureStatus(

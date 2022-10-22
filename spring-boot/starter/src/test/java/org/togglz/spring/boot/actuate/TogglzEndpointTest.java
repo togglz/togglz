@@ -18,13 +18,13 @@ package org.togglz.spring.boot.actuate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.togglz.core.Feature;
+import org.togglz.core.annotation.*;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -40,6 +40,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TogglzEndpointTest extends BaseTest {
 
+    public enum TestFeatures implements Feature {
+
+        @FeatureGroup("GROUP1")
+        @Label("Feature one")
+        @InfoLink("http://togglz.org/")
+        FEATURE_ONE,
+
+        @FeatureGroup("GROUP2")
+        @Owner("someguy")
+        @Label("Feature two")
+        @EnabledByDefault
+        FEATURE_TWO,
+
+        FEATURE_THREE
+
+    }
+
     @Test
     public void getAllFeatures() {
         contextRunner.withConfiguration(AutoConfigurations.of(
@@ -50,6 +67,8 @@ public class TogglzEndpointTest extends BaseTest {
                     "management.endpoints.web.exposure.include=*",
                     "togglz.features.FEATURE_ONE.enabled: true",
                     "togglz.features.FEATURE_TWO.enabled: false",
+                    "togglz.features.FEATURE_TWO.label: Feature Two",
+                    "togglz.features.FEATURE_TWO.groups: GROUP1,GROUP2",
                     "togglz.features.FEATURE_TWO.strategy: release-date",
                     "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
                     "togglz.features.FEATURE_TWO.param.time: 08:30:00")
@@ -74,6 +93,54 @@ public class TogglzEndpointTest extends BaseTest {
                 assertEquals(2, features.get(1).getParams().size());
                 assertEquals("2016-07-01", features.get(1).getParams().get("date"));
                 assertEquals("08:30:00", features.get(1).getParams().get("time"));
+                Set<String> expected = new HashSet<>();
+                expected.add("GROUP1");
+                expected.add("GROUP2");
+                assertEquals(expected, features.get(1).getMetadata().getGroups());
+                assertFalse(features.get(1).getMetadata().isEnabledByDefault());
+            });
+    }
+
+    @Test
+    public void getEnumFeatureMetaData() {
+        contextRunner.withConfiguration(AutoConfigurations.of(
+                DispatcherServletPathConfig.class,
+                TogglzAutoConfiguration.class,
+                TogglzEndpointAutoConfiguration.class))
+            .withPropertyValues(
+                "management.endpoints.web.exposure.include=*",
+                "togglz.feature-enums: org.togglz.spring.boot.actuate.TogglzEndpointTest.TestFeatures")
+            .run((context) -> {
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                TogglzFeature feature = endpoint.getFeature("FEATURE_ONE");
+                assertEquals("FEATURE_ONE", feature.getName());
+                assertFalse( feature.isEnabled());
+                assertEquals(Collections.singleton("GROUP1"), feature.getMetadata().getGroups());
+                assertEquals("Feature one", feature.getMetadata().getLabel());
+                assertEquals("http://togglz.org/", feature.getMetadata().getAttributes().get("InfoLink"));
+                assertFalse( feature.getMetadata().isEnabledByDefault());
+                endpoint.setFeatureState("FEATURE_ONE", true, null, null);
+                feature = endpoint.getFeature("FEATURE_ONE");
+                assertTrue( feature.isEnabled());
+                assertFalse( feature.getMetadata().isEnabledByDefault());
+            }).run((context) -> {
+                TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                TogglzFeature feature = endpoint.getFeature("FEATURE_TWO");
+                assertEquals("FEATURE_TWO", feature.getName());
+                assertTrue( feature.isEnabled());
+                assertEquals(Collections.singleton("GROUP2"), feature.getMetadata().getGroups());
+                assertEquals("Feature two", feature.getMetadata().getLabel());
+                assertEquals("someguy", feature.getMetadata().getAttributes().get("Owner"));
+                assertTrue( feature.getMetadata().isEnabledByDefault());
+            }).run((context) -> {
+                    TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
+                    TogglzFeature feature = endpoint.getFeature("FEATURE_THREE");
+                    assertEquals("FEATURE_THREE", feature.getName());
+                    assertFalse( feature.isEnabled());
+                    assertEquals(Collections.emptySet(), feature.getMetadata().getGroups());
+                    assertEquals("FEATURE_THREE", feature.getMetadata().getLabel());
+                    assertEquals(Collections.emptyMap(), feature.getMetadata().getAttributes());
+                    assertFalse( feature.getMetadata().isEnabledByDefault());
             });
     }
 
@@ -87,6 +154,8 @@ public class TogglzEndpointTest extends BaseTest {
                 "management.endpoints.web.exposure.include=*",
                 "togglz.features.FEATURE_ONE.enabled: true",
                 "togglz.features.FEATURE_TWO.enabled: false",
+                "togglz.features.FEATURE_TWO.label: Feature Two",
+                "togglz.features.FEATURE_TWO.groups: GROUP1,GROUP2",
                 "togglz.features.FEATURE_TWO.strategy: release-date",
                 "togglz.features.FEATURE_TWO.param.date: 2016-07-01",
                 "togglz.features.FEATURE_TWO.param.time: 08:30:00")
@@ -101,6 +170,11 @@ public class TogglzEndpointTest extends BaseTest {
                 assertEquals(2, feature.getParams().size());
                 assertEquals("2016-07-01", feature.getParams().get("date"));
                 assertEquals("08:30:00", feature.getParams().get("time"));
+                Set<String> expected = new HashSet<>();
+                expected.add("GROUP1");
+                expected.add("GROUP2");
+                assertEquals(expected, feature.getMetadata().getGroups());
+                assertFalse(feature.getMetadata().isEnabledByDefault());
             });
     }
 
@@ -112,7 +186,9 @@ public class TogglzEndpointTest extends BaseTest {
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
                         "management.endpoints.web.exposure.include=*",
-                        "togglz.features.FEATURE_ONE.enabled: false")
+                        "togglz.features.FEATURE_ONE.enabled: false",
+                        "togglz.features.FEATURE_ONE.label: Feature One",
+                        "togglz.features.FEATURE_ONE.groups: GROUP1,GROUP2")
                 .run((context) -> {
                     // Given
                     TogglzEndpoint endpoint = context.getBean(TogglzEndpoint.class);
@@ -123,6 +199,11 @@ public class TogglzEndpointTest extends BaseTest {
 
                     // Then
                     assertTrue(togglzFeature.isEnabled());
+                    Set<String> expected = new HashSet<>();
+                    expected.add("GROUP1");
+                    expected.add("GROUP2");
+                    assertEquals(expected, togglzFeature.getMetadata().getGroups());
+                    assertFalse(togglzFeature.getMetadata().isEnabledByDefault());
                 });
     }
 
