@@ -26,6 +26,7 @@ import java.util.Map;
  *
  * @author Marcel Overdijk
  * @author Rui Figueira
+ * @author Peter Triller
  */
 public class TogglzFeature implements Comparable<TogglzFeature> {
 
@@ -33,12 +34,14 @@ public class TogglzFeature implements Comparable<TogglzFeature> {
     private boolean enabled;
     private String strategy;
     private Map<String, String> params;
+    private TogglzFeatureMetaData metadata;
 
-    public TogglzFeature(Feature feature, FeatureState featureState) {
+    public TogglzFeature(Feature feature, FeatureState featureState, TogglzFeatureMetaData metadata) {
         this.name = feature.name();
         this.enabled = featureState.isEnabled();
         this.strategy = featureState.getStrategyId();
         this.params = featureState.getParameterMap();
+        this.metadata = metadata;
     }
 
     public String getName() {
@@ -55,6 +58,10 @@ public class TogglzFeature implements Comparable<TogglzFeature> {
 
     public Map<String, String> getParams() {
         return params;
+    }
+
+    public TogglzFeatureMetaData getMetadata() {
+        return metadata;
     }
 
     @Override
