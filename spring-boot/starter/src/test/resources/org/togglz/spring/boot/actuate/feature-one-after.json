@@ -1,0 +1,17 @@
+{
+  "name": "FEATURE_ONE",
+  "enabled": true,
+  "strategy": null,
+  "params": {},
+  "metadata": {
+    "label": "Feature one",
+    "groups": [
+      "group1"
+    ],
+    "enabledByDefault": false,
+    "attributes": {
+      "InfoLink": "http://togglz.org/",
+      "Owner": "someguy"
+    }
+  }
+}
