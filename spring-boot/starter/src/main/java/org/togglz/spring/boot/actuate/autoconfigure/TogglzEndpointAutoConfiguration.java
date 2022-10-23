@@ -16,6 +16,8 @@
 
 package org.togglz.spring.boot.actuate.autoconfigure;
 
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
+import org.springframework.boot.actuate.autoconfigure.endpoint.expose.EndpointExposure;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -28,6 +30,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.spring.boot.actuate.TogglzEndpoint;
+import org.togglz.spring.boot.actuate.TogglzEndpointWebExtension;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener;
 import org.togglz.spring.listener.TogglzApplicationContextBinderApplicationListener.ContextRefreshedEventFilter;
 
@@ -59,5 +62,13 @@ public class TogglzEndpointAutoConfiguration {
     @ConditionalOnMissingBean
     public TogglzEndpoint togglzEndpoint(FeatureManager featureManager) {
         return new TogglzEndpoint(featureManager);
+    }
+
+    @Bean
+    @ConditionalOnBean(TogglzEndpoint.class)
+    @ConditionalOnMissingBean
+    @ConditionalOnAvailableEndpoint(exposure = {EndpointExposure.WEB, EndpointExposure.CLOUD_FOUNDRY})
+    public TogglzEndpointWebExtension togglzEndpointWebExtension(FeatureManager featureManager) {
+        return new TogglzEndpointWebExtension(featureManager);
     }
 }
