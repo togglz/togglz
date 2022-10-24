@@ -142,6 +142,7 @@
         <module>spring-web</module>
         <module>spring-security</module>
         <module>spring-boot</module>
+        <module>shiro</module>
         <module>appengine</module>
         <module>cloud-datastore</module>
         <module>cloud-storage</module>
@@ -288,6 +289,12 @@
             <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-shiro</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
