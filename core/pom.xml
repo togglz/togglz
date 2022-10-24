@@ -34,7 +34,7 @@
     <dependency>
       <groupId>org.graalvm.js</groupId>
       <artifactId>js</artifactId>
-      <version>22.0.0</version>
+      <version>22.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.graalvm.js</groupId>
