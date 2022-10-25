@@ -13,11 +13,11 @@ import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 
 /**
- * 
+ *
  * Simple {@link FeatureManager} for unit tests that enables all features.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class FallbackTestFeatureManager implements FeatureManager {
 
@@ -59,6 +59,16 @@ public class FallbackTestFeatureManager implements FeatureManager {
     @Override
     public List<ActivationStrategy> getActivationStrategies() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public void enable(Feature feature) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void disable(Feature feature) {
+        throw new UnsupportedOperationException();
     }
 
 }

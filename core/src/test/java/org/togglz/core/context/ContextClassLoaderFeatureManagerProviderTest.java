@@ -64,5 +64,15 @@ class ContextClassLoaderFeatureManagerProviderTest {
         public List<ActivationStrategy> getActivationStrategies() {
             return null;
         }
+
+        @Override
+        public void enable(Feature feature) {
+
+        }
+
+        @Override
+        public void disable(Feature feature) {
+
+        }
     }
 }

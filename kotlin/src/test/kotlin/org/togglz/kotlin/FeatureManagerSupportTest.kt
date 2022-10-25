@@ -3,7 +3,6 @@ package org.togglz.kotlin
 import io.kotlintest.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
-import org.togglz.core.Feature
 import org.togglz.core.context.StaticFeatureManagerProvider
 import org.togglz.kotlin.FeatureManagerSupport.createFeatureManagerForTest
 
@@ -16,22 +15,22 @@ internal class FeatureManagerSupportTest {
         KotlinTestFeatures.BAR.isActive() shouldBe true
         KotlinTestFeatures.FOO.isActive() shouldBe true
 
-        FeatureManagerSupport.disable(Feature { KotlinTestFeatures.BAR.name })
+        FeatureManagerSupport.disable({ KotlinTestFeatures.BAR.name })
 
         KotlinTestFeatures.BAR.isActive() shouldBe false
 
-        FeatureManagerSupport.enable(Feature { KotlinTestFeatures.BAR.name })
+        FeatureManagerSupport.enable({ KotlinTestFeatures.BAR.name })
         KotlinTestFeatures.BAR.isActive() shouldBe true
     }
 
     @Test
     internal fun `should change toggle state after disable`() {
         createFeatureManagerForTest(KotlinTestFeatures::class)
-        FeatureManagerSupport.disable(Feature { KotlinTestFeatures.BAR.name })
+        FeatureManagerSupport.disable({ KotlinTestFeatures.BAR.name })
 
         KotlinTestFeatures.BAR.isActive() shouldBe false
 
-        FeatureManagerSupport.enable(Feature { KotlinTestFeatures.BAR.name })
+        FeatureManagerSupport.enable({ KotlinTestFeatures.BAR.name })
         KotlinTestFeatures.BAR.isActive() shouldBe true
     }
 
@@ -39,7 +38,7 @@ internal class FeatureManagerSupportTest {
     internal fun `should enable all toggles`() {
         //given
         val featureManager = createFeatureManagerForTest(KotlinTestFeatures::class)
-        FeatureManagerSupport.disable(Feature { KotlinTestFeatures.FOO.name })
+        FeatureManagerSupport.disable({ KotlinTestFeatures.FOO.name })
         KotlinTestFeatures.FOO.isActive() shouldBe false
 
         //when
@@ -54,7 +53,7 @@ internal class FeatureManagerSupportTest {
         //given
         val featureManager = createFeatureManagerForTest(KotlinTestFeatures::class)
 
-        FeatureManagerSupport.enable(Feature { KotlinTestFeatures.FOO.name })
+        FeatureManagerSupport.enable({ KotlinTestFeatures.FOO.name })
         KotlinTestFeatures.FOO.isActive() shouldBe true
 
         //when
