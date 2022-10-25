@@ -24,11 +24,9 @@ public class TogglzEndpointWebExtension extends AbstractTogglzEndpoint {
 
     private final Logger log = LoggerFactory.getLogger(TogglzEndpointWebExtension.class);
 
-
     public TogglzEndpointWebExtension(FeatureManager featureManager) {
         super(featureManager);
     }
-
 
     @WriteOperation
     public WebEndpointResponse<TogglzFeature> setFeatureState(@Selector String name, @Nullable Boolean enabled,
