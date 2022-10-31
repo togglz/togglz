@@ -14,9 +14,24 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>autoconfigure</module>
     <module>starter</module>
+    <module>starter-actuator</module>
+    <module>starter-console</module>
+    <module>starter-core</module>
+    <module>starter-security</module>
+    <module>starter-thymeleaf</module>
+    <module>starter-webmvc</module>
   </modules>
-  
+
+  <properties>
+    <spring-boot.version>2.7.4</spring-boot.version>
+    <thymeleaf.version>3.0.15.RELEASE</thymeleaf.version>
+
+    <!-- We skip tests here since all starters do not have any tests -->
+    <skipTests>true</skipTests>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>

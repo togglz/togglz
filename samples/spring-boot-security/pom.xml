@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.togglz</groupId>
         <artifactId>samples</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>3.2.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>togglz-sample-spring-boot-security</artifactId>
@@ -51,17 +51,12 @@
 
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-console</artifactId>
+            <artifactId>togglz-console-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-spring-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.togglz</groupId>
-            <artifactId>togglz-spring-boot-starter</artifactId>
+            <artifactId>togglz-security-spring-boot-starter</artifactId>
         </dependency>
 
     </dependencies>

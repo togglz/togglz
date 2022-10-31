@@ -15,3 +15,8 @@ max_line_length = 160
 [*.{yml, js,ts,tsx,scss,json}]
 indent_size = 2
 ij_continuation_indent_size = 2
+
+[pom.xml]
+indent_size = 2
+ij_continuation_indent_size = 2
+max_line_length = 500

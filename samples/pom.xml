@@ -79,8 +79,50 @@
 
             <dependency>
                 <groupId>org.togglz</groupId>
-                <artifactId>togglz-spring-boot-starter</artifactId>
+                <artifactId>togglz-spring-boot-autoconfigure</artifactId>
                 <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-actuator-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-console-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-core-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-security-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-thymeleaf-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-webmvc-spring-boot-starter</artifactId>
+              <version>${togglz.version}</version>
             </dependency>
 
             <dependency>
