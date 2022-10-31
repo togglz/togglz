@@ -381,6 +381,12 @@
             </dependency>
 
             <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-core-spring-boot-starter</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-shiro</artifactId>
                 <version>${project.version}</version>
@@ -547,7 +553,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.10</version>
+                <version>1.2.11</version>
                 <scope>test</scope>
             </dependency>
 

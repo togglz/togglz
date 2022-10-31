@@ -39,12 +39,17 @@
 
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-console</artifactId>
+            <artifactId>togglz-console-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.togglz</groupId>
-            <artifactId>togglz-spring-boot-starter</artifactId>
+            <artifactId>togglz-thymeleaf-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-webmvc-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
