@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Rule;
 import org.junit.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.context.FeatureContext;
 
 public class TogglzRuleWithAnnotationTest {
 

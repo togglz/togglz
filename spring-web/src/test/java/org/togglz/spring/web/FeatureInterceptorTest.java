@@ -16,10 +16,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ractive
@@ -209,7 +209,7 @@ class FeatureInterceptorTest {
         assertTrue(this.manager.isActive(feature));
     }
 
-    private void assertPreHandle(final String methodName, final boolean expectedReturnValue, final HttpStatus expectedStatus) throws NoSuchMethodException, Exception {
+    private void assertPreHandle(final String methodName, final boolean expectedReturnValue, final HttpStatus expectedStatus) throws Exception {
         final FeatureInterceptor featureInterceptor = new FeatureInterceptor();
 
         final MockHttpServletRequest request = new MockHttpServletRequest();

@@ -3,7 +3,6 @@ package org.togglz.core.manager;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ActivationStrategyProvider;

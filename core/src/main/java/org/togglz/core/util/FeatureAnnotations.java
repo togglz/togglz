@@ -1,17 +1,16 @@
 package org.togglz.core.util;
 
+import org.togglz.core.Feature;
+import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.FeatureAttribute;
+import org.togglz.core.annotation.Label;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.togglz.core.Feature;
-import org.togglz.core.annotation.EnabledByDefault;
-import org.togglz.core.annotation.FeatureAttribute;
-import org.togglz.core.annotation.InfoLink;
-import org.togglz.core.annotation.Label;
-import org.togglz.core.annotation.Owner;
 
 /**
  * Utility class to read annotation on feature enums.

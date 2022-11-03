@@ -4,7 +4,6 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.file.FileBasedStateRepository;
 
@@ -24,8 +23,7 @@ public class PropertyBasedStateRepositoryBenchmark extends AbstractStateReposito
     @Override
     public StateRepository initializeStateRepository() throws IOException {
         tempFile = File.createTempFile(this.getClass().getSimpleName(), null);
-        StateRepository stateRepository = new FileBasedStateRepository(tempFile);
-        return stateRepository;
+        return new FileBasedStateRepository(tempFile);
     }
 
     @Override
