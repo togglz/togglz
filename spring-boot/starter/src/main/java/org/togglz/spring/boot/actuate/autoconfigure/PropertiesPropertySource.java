@@ -18,7 +18,12 @@ package org.togglz.spring.boot.actuate.autoconfigure;
 
 import org.togglz.core.repository.property.PropertySource;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * {@link PropertySource} implementation for use with {@link Properties}.

@@ -14,9 +14,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.togglz.core.activation.UserRoleActivationStrategy.*;
+import static org.togglz.core.activation.UserRoleActivationStrategy.ID;
+import static org.togglz.core.activation.UserRoleActivationStrategy.NAME;
+import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_DESC;
+import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_LABEL;
+import static org.togglz.core.activation.UserRoleActivationStrategy.PARAM_ROLES_NAME;
+import static org.togglz.core.activation.UserRoleActivationStrategy.USER_ATTRIBUTE_ROLES;
 
 @ExtendWith(MockitoExtension.class)
 class UserRoleActivationStrategyTest {

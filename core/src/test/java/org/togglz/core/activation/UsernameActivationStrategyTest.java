@@ -6,7 +6,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UsernameActivationStrategyTest {
 
@@ -22,7 +25,6 @@ class UsernameActivationStrategyTest {
         boolean active = strategy.isActive(state, user);
 
         assertFalse(active);
-
     }
 
     @Test
@@ -63,7 +65,6 @@ class UsernameActivationStrategyTest {
         boolean active = strategy.isActive(state, user);
 
         assertTrue(active);
-
     }
 
     @Test

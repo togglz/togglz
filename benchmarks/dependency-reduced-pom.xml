@@ -9,9 +9,6 @@
   <groupId>org.togglz.benchmark</groupId>
   <artifactId>togglz-benchmarks</artifactId>
   <name>Togglz - JMH benchmarks</name>
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
   <build>
     <plugins>
       <plugin>
@@ -31,7 +28,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.0</version>
         <executions>
           <execution>
             <phase>package</phase>

@@ -12,7 +12,8 @@ import org.togglz.spring.boot.actuate.thymeleaf.processor.FeatureInactiveAttrPro
 import java.util.ArrayList;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TogglzDialectTest {
 

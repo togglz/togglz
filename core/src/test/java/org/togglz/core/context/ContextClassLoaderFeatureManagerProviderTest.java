@@ -11,7 +11,7 @@ import org.togglz.core.user.FeatureUser;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ContextClassLoaderFeatureManagerProviderTest {
 

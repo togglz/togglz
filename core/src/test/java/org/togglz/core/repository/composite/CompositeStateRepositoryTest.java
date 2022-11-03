@@ -9,7 +9,9 @@ import org.togglz.core.repository.composite.CompositeStateRepository.IterationOr
 import org.togglz.core.repository.composite.CompositeStateRepository.SetterSelection;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CompositeStateRepositoryTest {
 
@@ -32,14 +34,14 @@ class CompositeStateRepositoryTest {
     @Test
     void testGetFeatureInFirstBackingRepo() {
         repo1.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(crepo.getFeatureState(TestFeature.F1).isEnabled());
     }
 
     @Test
     void testGetFeatureInSecondBackingRepo() {
         repo2.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(crepo.getFeatureState(TestFeature.F1).isEnabled());
     }
 

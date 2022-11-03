@@ -27,14 +27,18 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 /**
- * 
+ *
  * Unit test for {@link ApplicationEventPublisherRepository}.
- * 
+ *
  * @author Igor Khudoshin
- * 
+ *
  */
 class ApplicationEventPublisherRepositoryTest {
 

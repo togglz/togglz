@@ -12,8 +12,6 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.microprofile.TestConfigSourceProvider;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * <p>
  * Tests for the {@link MicroProfileConfigActivationStrategy} class.

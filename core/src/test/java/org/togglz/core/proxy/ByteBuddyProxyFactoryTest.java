@@ -10,7 +10,10 @@ import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.NoOpUserProvider;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ByteBuddyProxyFactoryTest {
 

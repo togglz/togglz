@@ -12,7 +12,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class PropertyFeatureProviderTest {
 

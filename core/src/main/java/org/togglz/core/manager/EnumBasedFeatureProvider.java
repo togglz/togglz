@@ -5,7 +5,13 @@ import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.metadata.enums.EnumFeatureMetaData;
 import org.togglz.core.spi.FeatureProvider;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link FeatureProvider} that uses an Java enum to represent features.
