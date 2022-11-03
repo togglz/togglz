@@ -1,8 +1,5 @@
 package org.togglz.core.activation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
@@ -10,6 +7,8 @@ import org.togglz.core.user.FeatureUser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DefaultActivationStrategyProviderTest {
 

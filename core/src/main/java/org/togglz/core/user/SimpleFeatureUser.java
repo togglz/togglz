@@ -3,7 +3,6 @@ package org.togglz.core.user;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.graalvm.polyglot.proxy.ProxyObject;
 import org.togglz.core.manager.DefaultFeatureManager;
 
 /**

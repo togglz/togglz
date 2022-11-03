@@ -2,7 +2,6 @@ package org.togglz.appengine.activation;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
