@@ -13,7 +13,10 @@ import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.DbUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SchemaUpdaterTest {
 

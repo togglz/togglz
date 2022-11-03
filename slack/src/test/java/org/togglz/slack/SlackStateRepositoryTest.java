@@ -12,7 +12,10 @@ import org.togglz.slack.sender.Notifier;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 import static org.togglz.FeatureFixture.F1;
 

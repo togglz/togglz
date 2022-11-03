@@ -16,7 +16,9 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**

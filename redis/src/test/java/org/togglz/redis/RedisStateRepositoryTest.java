@@ -14,7 +14,9 @@ import org.togglz.core.util.NamedFeature;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RedisStateRepositoryTest {
 

@@ -10,7 +10,11 @@ import org.togglz.core.repository.mem.InMemoryStateRepository;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class ListenableStateRepositoryTest {
 
@@ -31,7 +35,7 @@ class ListenableStateRepositoryTest {
     void shouldGetFeatureFromDelegate() {
         final ListenableStateRepository repo = new ListenableStateRepository(delegate);
         delegate.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(repo.getFeatureState(TestFeature.F1).isEnabled());
     }
 

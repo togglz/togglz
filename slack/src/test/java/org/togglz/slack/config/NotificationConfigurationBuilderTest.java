@@ -3,7 +3,9 @@ package org.togglz.slack.config;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.togglz.FeatureFixture.DISABLE_F1;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 

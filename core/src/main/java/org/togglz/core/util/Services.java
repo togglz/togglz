@@ -2,14 +2,18 @@ package org.togglz.core.util;
 
 import org.togglz.core.util.Weighted.WeightedComparator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
 
 /**
- * 
+ *
  * Helper class to lookup SPI implementations using the {@link ServiceLoader}.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class Services {
 

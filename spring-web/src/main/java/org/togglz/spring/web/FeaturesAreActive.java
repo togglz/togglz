@@ -3,7 +3,11 @@ package org.togglz.spring.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotate a {@link Controller} or a controller method to only activate it when

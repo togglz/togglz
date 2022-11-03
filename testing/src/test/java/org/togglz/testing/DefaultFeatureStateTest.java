@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.repository.FeatureState;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DefaultFeatureStateTest {

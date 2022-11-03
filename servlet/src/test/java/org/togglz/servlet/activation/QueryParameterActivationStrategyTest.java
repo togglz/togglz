@@ -1,7 +1,6 @@
 package org.togglz.servlet.activation;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,13 +11,12 @@ import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
 import javax.servlet.http.HttpServletRequest;
-
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class QueryParameterActivationStrategyTest {

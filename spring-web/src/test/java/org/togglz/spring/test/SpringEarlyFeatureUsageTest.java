@@ -10,7 +10,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
 public class SpringEarlyFeatureUsageTest {

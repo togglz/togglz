@@ -1,6 +1,6 @@
 package org.togglz.slack.notification;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.togglz.FeatureFixture.DISABLE_F1;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 import static org.togglz.FeatureFixture.ENABLE_F2;

@@ -1,6 +1,16 @@
 package org.togglz.appengine.repository;
 
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.DatastoreAttributes;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Index;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyRange;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.datastore.TransactionOptions;
 
 import java.util.Collection;
 import java.util.List;
