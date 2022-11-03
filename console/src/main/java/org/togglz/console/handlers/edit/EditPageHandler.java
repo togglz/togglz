@@ -3,6 +3,7 @@ package org.togglz.console.handlers.edit;
 import java.io.IOException;
 import java.util.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -79,6 +80,9 @@ public class EditPageHandler extends RequestHandlerBase {
 
                 FeatureState state = featureModel.toFeatureState();
                 featureManager.setFeatureState(state);
+
+                String tabIndexAsString = request.getParameter("t");
+                response.addCookie(new Cookie("t", tabIndexAsString));
                 response.sendRedirect("index");
 
             }
