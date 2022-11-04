@@ -14,10 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * @author Ryan Gardner
- * @date 8/29/16
- */
 public class DynamoDBStateRepositoryIT {
     private static final String PORT = System.getProperty("dynamodb.port");
 
