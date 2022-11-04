@@ -38,6 +38,7 @@
         <mockito.version>4.8.1</mockito.version>
         <testcontainers.version>1.17.5</testcontainers.version>
 
+        <togglz.logback.version>1.3.4</togglz.logback.version>
         <spockframework.version>2.1-groovy-3.0</spockframework.version>
     </properties>
 
@@ -547,7 +548,7 @@
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.10</version>
+                <version>${togglz.logback.version}</version>
                 <scope>test</scope>
             </dependency>
 
