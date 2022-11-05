@@ -61,14 +61,6 @@ public class GradualActivationStrategy implements ActivationStrategy {
 
     }
 
-    /**
-     * @deprecated Use {@link #calculateHashCode(FeatureUser, Feature)} instead
-     */
-    @Deprecated
-    protected int calculateHashCode(FeatureUser user) {
-        return calculateHashCode(user, null);
-    }
-
     protected int calculateHashCode(FeatureUser user, Feature feature) {
         Validate.notNull(user, "user is required");
 

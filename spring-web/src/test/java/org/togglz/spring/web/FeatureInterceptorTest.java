@@ -73,22 +73,6 @@ class FeatureInterceptorTest {
         @FeaturesAreActive(features = {"METHOD_FEATURE", "NO_FEATURE", "METHOD_FEATURE_TWO"})
         public void methodFeatureAtLeastOneIsNoFeature() {
         }
-
-        @FeaturesAreActive(features = "METHOD_FEATURE", responseStatus = 402)
-        public void methodFeatureDeprecatedResponseStatusNotDefault() {
-        }
-
-        @FeaturesAreActive(features = "METHOD_FEATURE", errorResponseStatus = HttpStatus.FORBIDDEN)
-        public void methodFeatureErrorResponseStatusNotDefault() {
-        }
-
-        @FeaturesAreActive(features = "METHOD_FEATURE", responseStatus = 403, errorResponseStatus = HttpStatus.FORBIDDEN)
-        public void methodFeatureDeprecatedResponseAndErrorResponseEqualValue() {
-        }
-
-        @FeaturesAreActive(features = "METHOD_FEATURE", responseStatus = 402, errorResponseStatus = HttpStatus.FORBIDDEN)
-        public void methodFeatureDeprecatedResponseAndErrorResponseDifferentValues() {
-        }
     }
 
     private static class NonAnnotatedTestController {
@@ -157,30 +141,6 @@ class FeatureInterceptorTest {
             enableFeature(TestFeatures.METHOD_FEATURE);
             enableFeature(TestFeatures.METHOD_FEATURE_TWO);
             assertPreHandle("methodFeatureAtLeastOneIsNoFeature", false, DEFAULT_ERROR_RESPONSE_STATUS);
-        });
-    }
-
-    @Test
-    void preHandle_MethodFeature_preferDeprecatedResponseIfNotDefault() throws Exception {
-        assertPreHandle("methodFeatureDeprecatedResponseStatusNotDefault", false, HttpStatus.valueOf(402));
-    }
-
-    @Test
-    void preHandle_MethodFeature_preferErrorResponseStatusIfNotDefault() throws Exception {
-        assertPreHandle("methodFeatureErrorResponseStatusNotDefault", false, HttpStatus.FORBIDDEN);
-    }
-
-    @Test
-    void preHandle_MethodFeature_useAnyIfDeprecatedResponseStatusAndErrorResponseStatusAreEqual() throws Exception {
-        assertPreHandle("methodFeatureDeprecatedResponseAndErrorResponseEqualValue", false, HttpStatus.FORBIDDEN);
-    }
-
-    @Test
-    void preHandle_MethodFeature_throwISEIfDeprecatedResponseStatusAndErrorResponseStatusAreDifferent() throws Exception {
-        assertThrows(IllegalArgumentException.class, () -> {
-            // just to compile. the actual value is irrelevant, as there should be an exception because of ambiguous configuration
-            final HttpStatus any = HttpStatus.valueOf(200);
-            assertPreHandle("methodFeatureDeprecatedResponseAndErrorResponseDifferentValues", false, any);
         });
     }
 

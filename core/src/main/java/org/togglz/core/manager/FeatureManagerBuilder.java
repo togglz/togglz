@@ -15,7 +15,7 @@ import org.togglz.core.util.Validate;
 
 /**
  * Builder of {@link DefaultFeatureManager}.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class FeatureManagerBuilder {
@@ -39,14 +39,6 @@ public class FeatureManagerBuilder {
     public FeatureManagerBuilder stateRepository(StateRepository stateRepository) {
         this.stateRepository = stateRepository;
         return this;
-    }
-
-    /**
-     * Use {@link #featureEnum(Class)} instead.
-     */
-    @Deprecated
-    public FeatureManagerBuilder featureClass(Class<? extends Feature> featureClass) {
-        return this.featureEnum(featureClass);
     }
 
     /**

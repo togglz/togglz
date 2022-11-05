@@ -17,12 +17,6 @@ public @interface WithFeature
 {
 
     /**
-     * @deprecated Removed without replacement
-     */
-    @Deprecated
-    Class<? extends Feature> type() default Feature.class;
-
-    /**
      * The features to enable
      */
     String[] value();
@@ -31,5 +25,4 @@ public @interface WithFeature
      * disable the features instead of enabling them
      */
     boolean disable() default false;
-
 }

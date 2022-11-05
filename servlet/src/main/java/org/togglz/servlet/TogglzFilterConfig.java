@@ -4,7 +4,7 @@ import javax.servlet.ServletContext;
 
 /**
  * Encapsulates the configuration provided by the various web context parameters.
- * 
+ *
  * @author Christian Kaltepoth
  */
 class TogglzFilterConfig {
@@ -26,15 +26,7 @@ class TogglzFilterConfig {
         if (managerProvided != null) {
             return !toBool(managerProvided);
         }
-
-        // deprecated configuration
-        String localManager = servletContext.getInitParameter("org.togglz.LOCAL_FEATURE_MANAGER");
-        if (localManager != null) {
-            return toBool(localManager);
-        }
-
         return null;
-
     }
 
     private static boolean toBool(String value) {

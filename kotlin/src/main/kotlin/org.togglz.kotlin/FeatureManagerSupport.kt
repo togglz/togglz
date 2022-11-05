@@ -35,16 +35,6 @@ object FeatureManagerSupport {
         clearCache()
     }
 
-    @Deprecated("will be removed soon. Please use FeatureManager.enable(feature) instead")
-    fun enable(feature: Feature) {
-        getFeatureManager().enable(feature)
-    }
-
-    @Deprecated("will be removed soon. Please use FeatureManager.disable(feature) instead")
-    fun disable(feature: Feature) {
-        getFeatureManager().disable(feature)
-    }
-
     private fun shouldRunInTests(feature: Feature, featureManager: FeatureManager): Boolean {
         val label = featureManager.getMetaData(feature).label
         return !label.contains("[inactiveInTests]")
