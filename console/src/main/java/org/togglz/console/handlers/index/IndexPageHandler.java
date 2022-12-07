@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
@@ -36,6 +38,16 @@ public class IndexPageHandler extends RequestHandlerBase {
 
         FeatureManager featureManager = event.getFeatureManager();
 
+        Integer activeTabIndex = null;
+        if(event.getRequest().getCookies() != null ){
+            for(Cookie cookie : event.getRequest().getCookies()) {
+                if(cookie.getName().compareTo("t") == 0 && cookie.getValue() != null && cookie.getValue().length() != 0) {
+                    activeTabIndex = Integer.parseInt(cookie.getValue());
+                }
+            }
+        }
+        event.getResponse().addCookie(new Cookie("t", null));
+
         List<ActivationStrategy> strategies = featureManager.getActivationStrategies();
 
         IndexPageTabView tabView = new IndexPageTabView(strategies);
@@ -44,6 +56,22 @@ public class IndexPageHandler extends RequestHandlerBase {
             FeatureMetaData metadata = featureManager.getMetaData(feature);
             FeatureState featureState = featureManager.getFeatureState(feature);
             tabView.add(feature, metadata, featureState);
+        }
+
+        for (IndexPageTab tab : tabView.getTabs()) {
+            if(activeTabIndex != null){
+                if(tab.getIndex() == activeTabIndex){
+                    tab.setIsActive(true);
+                } else {
+                    tab.setIsActive(false);
+                }
+            } else {
+                if(tab.isAllTab()) {
+                    tab.setIsActive(true);
+                } else {
+                    tab.setIsActive(false);
+                }
+            }
         }
 
         List<CSRFToken> tokens = new ArrayList<>();
