@@ -10,10 +10,12 @@ public class IndexPageTab implements Comparable<IndexPageTab> {
     private final int index;
     private final List<FeatureModel> rows = new ArrayList<>();
     private final String label;
+    public boolean isActive;
 
     private IndexPageTab(int index, String label) {
         this.index = index;
         this.label = label;
+        this.isActive = false;
     }
 
     static IndexPageTab allTab(int index) {
@@ -47,6 +49,14 @@ public class IndexPageTab implements Comparable<IndexPageTab> {
 
     public boolean isAllTab() {
         return index == 0;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
 }

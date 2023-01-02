@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" role="tablist">
   ${foreach tabView.tabs tab}
-    <li role="presentation" class="${if tab.allTab}active${end}">
+    <li role="presentation" class="${if tab.isActive}active${end}">
       <a href="#tab${tab.index}" role="tab" data-toggle="tab">
         ${if tab.allTab}
           All Features
@@ -15,7 +15,7 @@
 <div class="tab-content">
 
   ${foreach tabView.tabs tab}
-    <div class="tab-pane fade ${if tab.allTab}active in${end}" id="tab${tab.index}" role="tabpanel">
+    <div class="tab-pane fade ${if tab.isActive}active in${end}" id="tab${tab.index}" role="tabpanel">
       <table class="table table-striped feature-overview">
         <thead>
           <tr>
@@ -49,6 +49,7 @@
                     ${foreach tokens token}
                     <input type="hidden" name="${token.name}" value="${token.value}"/>
                     ${end}
+                    <input type="hidden" name="t" value="${tab.index}">
                     <input type="hidden" name="f" value="${feature.name}">
                     <input type="hidden" name="enabled" value="${if feature.enabled}${else}enabled${end}">
                     <input type="submit" class="btn btn-sm btn-${if feature.enabled}success${else}danger${end}" value="${if feature.enabled}Enabled${else}Disabled${end}">
