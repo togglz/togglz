@@ -17,11 +17,11 @@ import org.togglz.core.util.Validate;
  * Implementation of {@link FactoryBean} that creates a proxy that delegates invocation to one of two target beans depending on
  * that state of a given feature.
  * </p>
- * 
+ *
  * <p>
  * You can use the factory like this:
  * </p>
- * 
+ *
  * <pre>
  * &lt;bean id="someService" class="org.togglz.spring.proxy.FeatureProxyFactoryBean"&gt;
  *   &lt;property name="feature" value=FEATURE_ONE /&gt;
@@ -29,7 +29,7 @@ import org.togglz.core.util.Validate;
  *   &lt;property name="inactive" ref="oldServiceImpl" /&gt;
  * &lt;/bean&gt;
  * </pre>
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class FeatureProxyFactoryBean implements FactoryBean<Object>, InitializingBean {
@@ -124,6 +124,10 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
         return feature.name();
     }
 
+    /**
+     * @deprecated use {@link org.togglz.spring.proxy.FeatureProxyFactoryBean#setFeature(Feature)} instead
+     */
+    @Deprecated
     public void setFeature(String feature) {
         this.feature = new NamedFeature(feature);
     }
