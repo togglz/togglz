@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FeatureStateTest {
@@ -52,7 +53,33 @@ class FeatureStateTest {
         assertEquals(state.getUsers().get(2), "tester");
     }
 
+    @Test
+    void testEquals() {
+
+        FeatureState state = new FeatureState(Features.FEATURE1);
+        FeatureState copy = state.copy();
+        assertEquals(state, copy);
+
+        // Different feature
+        assertNotEquals(state, new FeatureState(Features.FEATURE2));
+
+        // Different enabled state
+        state.setEnabled(true);
+        assertNotEquals(state, copy);
+
+        // Different strategy
+        copy = state.copy();
+        state.setStrategyId("Strategy");
+        assertNotEquals(state, copy);
+
+        // Different parameters
+        copy = state.copy();
+        state.setParameter("key", "value");
+        assertNotEquals(state, copy);
+    }
+
     private enum Features implements Feature {
-        FEATURE1
+        FEATURE1,
+        FEATURE2
     }
 }

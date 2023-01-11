@@ -41,6 +41,9 @@ public class TogglzTestExecutionListener extends AbstractTestExecutionListener {
 		for (Feature feature : manager.getFeatures()) {
 			FeatureState defaultFeatureState = manager.getMetaData(feature).getDefaultFeatureState();
 			FeatureState state = manager.getFeatureState(feature);
+			if (defaultFeatureState.equals(state)) {
+				continue;
+			}
 			if (defaultFeatureState.isEnabled()) {
 				state.enable();
 			}
