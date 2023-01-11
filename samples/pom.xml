@@ -29,7 +29,7 @@
         <module>spring-boot-no-feature-provider-or-feature-enums</module>
         <module>spring-boot-security</module>
         <module>spring-boot-thymeleaf</module>
-        <module>spring-boot-war</module>
+        <!--<module>spring-boot-war</module> TODO: Fix war sample -->
     </modules>
 
     <dependencyManagement>
