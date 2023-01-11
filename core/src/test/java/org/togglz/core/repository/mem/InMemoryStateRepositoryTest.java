@@ -6,7 +6,7 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 class InMemoryStateRepositoryTest {
 
@@ -22,7 +22,7 @@ class InMemoryStateRepositoryTest {
         FeatureState featureState = createDisabledFeatureState();
         repository.setFeatureState(featureState);
         FeatureState featureStateFromRepo = repository.getFeatureState(MyFeature.FEATURE1);
-        assertNotEquals(featureState, featureStateFromRepo);
+        assertNotSame(featureState, featureStateFromRepo);
     }
 
     @Test
