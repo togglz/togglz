@@ -16,12 +16,12 @@ import org.togglz.core.spi.BeanFinder;
 
 public class CDIBeanFinder implements BeanFinder {
 
-    public final static String BEAN_MANAGER_JNDI = "java:comp/BeanManager";
+    public static final String BEAN_MANAGER_JNDI = "java:comp/BeanManager";
 
-    public final static String BEAN_MANAGER_JNDI_TOMCAT = "java:comp/env/BeanManager";
+    public static final String BEAN_MANAGER_JNDI_TOMCAT = "java:comp/env/BeanManager";
 
-    public final static String SERVLET_CONTEXT_ATTR_WELD_1_1 = "org.jboss.weld.environment.servlet.javax.enterprise.inject.spi.BeanManager";
-    public final static String SERVLET_CONTEXT_ATTR_WELD_5_1 = "org.jboss.weld.environment.servlet.jakarta.enterprise.inject.spi.BeanManager";
+    public static final String SERVLET_CONTEXT_ATTR_WELD_1_1 = "org.jboss.weld.environment.servlet.javax.enterprise.inject.spi.BeanManager";
+    public static final String SERVLET_CONTEXT_ATTR_WELD_4_0 = "org.jboss.weld.environment.servlet.jakarta.enterprise.inject.spi.BeanManager";
 
     @Override
     @SuppressWarnings("unchecked")
@@ -70,17 +70,7 @@ public class CDIBeanFinder implements BeanFinder {
 
         // try Weld 5.1.x servlet context attribute
         if (beanManager == null && servletContext != null) {
-            beanManager = (BeanManager) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_WELD_5_1);
-        }
-
-        // try jakarta servlet context attribute
-        if (beanManager == null && servletContext != null) {
-            beanManager = (BeanManager) servletContext.getAttribute("jakarta.enterprise.inject.spi.BeanManager");
-        }
-
-        // try jakarta servlet context attribute
-        if (beanManager == null && servletContext != null) {
-            beanManager = (BeanManager) servletContext.getAttribute("org.jboss.weld.manager.BeanManagerImpl");
+            beanManager = (BeanManager) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_WELD_4_0);
         }
 
         // try standard JNDI name
