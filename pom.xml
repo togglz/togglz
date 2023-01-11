@@ -11,7 +11,7 @@
 
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Togglz</name>
@@ -27,24 +27,35 @@
 
     <properties>
         <!-- Minimal Java version -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Wildfly version used for integration tests -->
-        <wildfly.version>22.0.1.Final</wildfly.version>
+        <wildfly.version>27.0.1.Final</wildfly.version>
 
-        <spring.version>5.3.23</spring.version>
-        <junit.version>5.8.2</junit.version>
+        <spring.version>6.0.3</spring.version>
+        <junit.version>5.9.0</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <testcontainers.version>1.17.6</testcontainers.version>
 
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
         <!-- togglz uses logback for test logging only and does NOT bring it as a dependency to the users -->
-        <togglz.slf4j.version>1.7.36</togglz.slf4j.version>
-        <togglz.logback.version>1.2.11</togglz.logback.version>
+        <togglz.slf4j.version>2.0.6</togglz.slf4j.version>
+        <togglz.logback.version>1.4.5</togglz.logback.version>
 
         <spockframework.version>2.1-groovy-3.0</spockframework.version>
     </properties>
+
+    <repositories>
+        <!-- JBoss repo needed for test-harness dependencies -->
+        <repository>
+            <id>jboss</id>
+            <name>JBoss public</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -95,7 +106,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.8</version>
@@ -113,7 +124,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
         </plugins>
 
@@ -142,12 +153,12 @@
         <module>test-harness</module>
         <module>servlet</module>
         <module>console</module>
-        <module>cdi</module>
+        <!-- <module>cdi</module> @TODO: Fix CDI -->
         <module>spring-core</module>
         <module>spring-web</module>
         <module>spring-security</module>
         <module>spring-boot</module>
-        <module>shiro</module>
+        <!-- <module>shiro</module> @TODO: Re-enable when Shiro supports Jakarta - https://shiro.apache.org/blog/2022/06/30/jakarta-work.html - As of version 1.10.1 this is still not available. -->
         <module>appengine</module>
         <module>cloud-datastore</module>
         <module>cloud-storage</module>
@@ -155,7 +166,7 @@
         <module>testing</module>
         <module>junit</module>
         <module>spock</module>
-        <module>cassandra</module>
+        <!--<module>cassandra</module> @TODO: Rewrite cassandra support using DataStax Java Driver, astyanax and thrift are no longer supported by recent cassandra versions: https://github.com/Netflix/astyanax-->
         <module>dynamodb</module>
         <module>amazon-s3</module>
         <module>benchmarks</module>
@@ -317,7 +328,7 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>3.0.1.Final</version>
+                    <version>5.0.0.Alpha6</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -334,7 +345,7 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-remote</artifactId>
-                    <version>2.2.0.Final</version>
+                    <version>5.0.0.Alpha6</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -466,9 +477,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>4.0.1</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>6.0.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -513,9 +524,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>2.0</version>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>4.0.1</version>
                 <scope>provided</scope>
             </dependency>
 

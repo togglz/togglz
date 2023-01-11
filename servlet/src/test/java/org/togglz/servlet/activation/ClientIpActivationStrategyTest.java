@@ -16,7 +16,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.servlet.activation.ClientIpActivationStrategy.AddressParameter;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class ClientIpActivationStrategyTest {
 

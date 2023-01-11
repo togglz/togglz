@@ -35,12 +35,11 @@
       <version>${appengine.target.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
-      <version>1</version>
-      <scope>provided</scope>
-    </dependency>
+      <dependency>
+          <groupId>jakarta.enterprise</groupId>
+          <artifactId>jakarta.enterprise.cdi-api</artifactId>
+          <version>4.0.1</version>
+      </dependency>
 
     <!-- Appengine testing -->
     <dependency>

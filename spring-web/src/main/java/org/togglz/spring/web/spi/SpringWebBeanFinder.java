@@ -7,8 +7,8 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
 import org.togglz.spring.spi.AbstractSpringBeanFinder;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class SpringWebBeanFinder extends AbstractSpringBeanFinder {
 

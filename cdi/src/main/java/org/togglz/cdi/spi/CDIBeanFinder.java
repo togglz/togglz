@@ -7,11 +7,11 @@ import java.util.Set;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
 import org.togglz.core.spi.BeanFinder;
 
 public class CDIBeanFinder implements BeanFinder {
@@ -21,6 +21,7 @@ public class CDIBeanFinder implements BeanFinder {
     public final static String BEAN_MANAGER_JNDI_TOMCAT = "java:comp/env/BeanManager";
 
     public final static String SERVLET_CONTEXT_ATTR_WELD_1_1 = "org.jboss.weld.environment.servlet.javax.enterprise.inject.spi.BeanManager";
+    public final static String SERVLET_CONTEXT_ATTR_WELD_5_1 = "org.jboss.weld.environment.servlet.jakarta.enterprise.inject.spi.BeanManager";
 
     @Override
     @SuppressWarnings("unchecked")
@@ -65,6 +66,21 @@ public class CDIBeanFinder implements BeanFinder {
         // try Weld 1.1.x servlet context attribute
         if (beanManager == null && servletContext != null) {
             beanManager = (BeanManager) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_WELD_1_1);
+        }
+
+        // try Weld 5.1.x servlet context attribute
+        if (beanManager == null && servletContext != null) {
+            beanManager = (BeanManager) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_WELD_5_1);
+        }
+
+        // try jakarta servlet context attribute
+        if (beanManager == null && servletContext != null) {
+            beanManager = (BeanManager) servletContext.getAttribute("jakarta.enterprise.inject.spi.BeanManager");
+        }
+
+        // try jakarta servlet context attribute
+        if (beanManager == null && servletContext != null) {
+            beanManager = (BeanManager) servletContext.getAttribute("org.jboss.weld.manager.BeanManagerImpl");
         }
 
         // try standard JNDI name

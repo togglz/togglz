@@ -1,17 +1,17 @@
 package org.togglz.servlet.spi;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.core.util.Weighted;
 import org.togglz.servlet.TogglzFilter;
 
 /**
- * 
+ *
  * SPI for components that want to be notified about requests.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public interface RequestListener extends Weighted {
 
