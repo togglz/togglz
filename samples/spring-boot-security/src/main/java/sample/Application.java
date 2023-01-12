@@ -20,7 +20,7 @@ public class Application {
         protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             // @formatter:off
             http
-                    .authorizeRequests()
+                    .authorizeHttpRequests()
                     .anyRequest()
                     .authenticated()
                     .and()
@@ -35,11 +35,33 @@ public class Application {
 
         @Bean
         public InMemoryUserDetailsManager userDetailsService() {
-            UserDetails admin = User.withDefaultPasswordEncoder().username("admin").password("pwd").roles("ADMIN", "USER").build();
-            UserDetails user1 = User.withDefaultPasswordEncoder().username("user1").password("pwd").roles("USER").build();
-            UserDetails user2 = User.withDefaultPasswordEncoder().username("user2").password("pwd").roles("USER").build();
-            UserDetails user3 = User.withDefaultPasswordEncoder().username("user3").password("pwd").roles("USER").build();
-            UserDetails user4 = User.withDefaultPasswordEncoder().username("user4").password("pwd").roles("USER").build();
+            // @formatter:off
+            UserDetails admin = User.withDefaultPasswordEncoder()
+                                    .username("admin")
+                                    .password("pwd")
+                                    .roles("ADMIN", "USER")
+                                    .build();
+            UserDetails user1 = User.withDefaultPasswordEncoder()
+                                    .username("user1")
+                                    .password("pwd")
+                                    .roles("USER")
+                                    .build();
+            UserDetails user2 = User.withDefaultPasswordEncoder()
+                                    .username("user2")
+                                    .password("pwd")
+                                    .roles("USER")
+                                    .build();
+            UserDetails user3 = User.withDefaultPasswordEncoder()
+                                    .username("user3")
+                                    .password("pwd")
+                                    .roles("USER")
+                                    .build();
+            UserDetails user4 = User.withDefaultPasswordEncoder()
+                                    .username("user4")
+                                    .password("pwd")
+                                    .roles("USER")
+                                    .build();
+            // @formatter:on
             return new InMemoryUserDetailsManager(admin, user1, user2, user3, user4);
         }
     }
