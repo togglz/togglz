@@ -21,13 +21,13 @@ public class Application {
             // @formatter:off
             http
                     .authorizeHttpRequests()
-                    .anyRequest()
-                    .authenticated()
-                    .and()
+                        .anyRequest()
+                        .authenticated()
+                        .and()
                     .csrf()
-                    .disable()
+                        .disable()
                     .formLogin()
-                    .and()
+                        .and()
                     .logout();
             // @@formatter:on
             return http.build();
