@@ -33,9 +33,9 @@
         <!-- Wildfly version used for integration tests -->
         <wildfly.version>27.0.1.Final</wildfly.version>
 
-        <spring.version>6.0.3</spring.version>
-        <junit.version>5.9.0</junit.version>
-        <mockito.version>4.8.1</mockito.version>
+        <spring.version>6.0.4</spring.version>
+        <junit.version>5.9.2</junit.version>
+        <mockito.version>4.11.0</mockito.version>
         <testcontainers.version>1.17.6</testcontainers.version>
 
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
@@ -43,10 +43,16 @@
         <togglz.slf4j.version>2.0.6</togglz.slf4j.version>
         <togglz.logback.version>1.4.5</togglz.logback.version>
 
-        <spockframework.version>2.1-groovy-3.0</spockframework.version>
+        <spockframework.version>2.4-M1-groovy-4.0</spockframework.version>
     </properties>
 
     <repositories>
+        <repository>
+            <snapshots><enabled>false</enabled></snapshots>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
         <!-- JBoss repo needed for test-harness dependencies -->
         <repository>
             <id>jboss</id>
@@ -493,7 +499,7 @@
                 <!-- Used by proxy generation -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.12.20</version>
+                <version>1.12.21</version>
             </dependency>
 
             <dependency>
@@ -518,7 +524,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>4.8.1</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -539,7 +545,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.23.1</version>
+                <version>3.24.1</version>
                 <scope>test</scope>
             </dependency>
 

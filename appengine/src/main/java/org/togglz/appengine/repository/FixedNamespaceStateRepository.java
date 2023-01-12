@@ -1,7 +1,7 @@
 package org.togglz.appengine.repository;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -11,9 +11,9 @@ import com.google.appengine.api.NamespaceManager;
 import org.togglz.core.util.Preconditions;
 
 /**
- * Decorates the given StateRepository enforcing its operations to run within a given namespace. 
- * Uses GAE's {@link NamespaceManager} to enforce the given namespace.  
- * 
+ * Decorates the given StateRepository enforcing its operations to run within a given namespace.
+ * Uses GAE's {@link NamespaceManager} to enforce the given namespace.
+ *
  * @author Fábio Franco Uechi
  */
 public class FixedNamespaceStateRepository implements StateRepository {
@@ -46,7 +46,7 @@ public class FixedNamespaceStateRepository implements StateRepository {
     interface Work<T> {
         T run();
     }
-    
+
     static abstract class VoidWork implements Work<Void> {
         @Override
         public Void run() {
@@ -55,7 +55,7 @@ public class FixedNamespaceStateRepository implements StateRepository {
         }
         abstract void vrun();
     }
-    
+
     public static <R> R withinNamespace(String namespace, Work<R> work) {
         String oldNamespace = NamespaceManager.get();
         NamespaceManager.set(namespace);
@@ -65,5 +65,5 @@ public class FixedNamespaceStateRepository implements StateRepository {
             NamespaceManager.set(oldNamespace);
         }
     }
-    
+
 }

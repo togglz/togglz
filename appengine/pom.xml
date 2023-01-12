@@ -14,7 +14,7 @@
   <description>Togglz - Google App Engine Integration</description>
 
   <properties>
-    <appengine.target.version>1.9.88</appengine.target.version>
+    <appengine.target.version>2.0.10</appengine.target.version>
   </properties>
 
   <dependencies>
@@ -27,12 +27,6 @@
     <dependency>
       <groupId>com.google.appengine</groupId>
       <artifactId>appengine-api-1.0-sdk</artifactId>
-      <version>${appengine.target.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.appengine</groupId>
-      <artifactId>appengine-api-labs</artifactId>
       <version>${appengine.target.version}</version>
     </dependency>
 
