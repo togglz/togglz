@@ -29,7 +29,7 @@
         <module>spring-boot-no-feature-provider-or-feature-enums</module>
         <module>spring-boot-security</module>
         <module>spring-boot-thymeleaf</module>
-        <!--<module>spring-boot-war</module> TODO: Fix war sample -->
+        <module>spring-boot-war</module>
     </modules>
 
     <dependencyManagement>
@@ -124,6 +124,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                 </plugin>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+              </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
