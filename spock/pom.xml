@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>2.3-groovy-3.0</version>
+            <version>${spockframework.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
