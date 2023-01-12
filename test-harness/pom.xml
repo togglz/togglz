@@ -47,19 +47,6 @@
             <version>1.7.0.Alpha13</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.jboss.arquillian.junit5</groupId>-->
-<!--            <artifactId>arquillian-junit5-container</artifactId>-->
-<!--            <version>1.7.0.Alpha13</version>-->
-<!--        </dependency>-->
-
-        <!--
-        <dependency>
-            <groupId>org.jboss.arquillian.protocol</groupId>
-            <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
-            <version>1.7.0.Alpha13</version>
-        </dependency>-->
-
         <!-- JEE APIs -->
         <dependency>
             <groupId>org.wildfly</groupId>
