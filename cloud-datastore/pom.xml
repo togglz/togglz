@@ -14,7 +14,7 @@
   <description>Togglz - Google Cloud Datastore Integration</description>
 
   <properties>
-    <gcloud.version>2.11.5</gcloud.version>
+    <gcloud.version>2.13.0</gcloud.version>
   </properties>
 
   <build>

@@ -13,7 +13,8 @@
   <description>Togglz - Kotlin wrapper</description>
 
   <properties>
-    <kotlin.version>1.7.20</kotlin.version>
+    <kotlin.version>1.7.22</kotlin.version>
+    <kotlin.dokka.version>1.7.20</kotlin.dokka.version>
   </properties>
 
   <dependencies>
@@ -110,7 +111,7 @@
       <plugin>
         <groupId>org.jetbrains.dokka</groupId>
         <artifactId>dokka-maven-plugin</artifactId>
-        <version>${kotlin.version}</version>
+        <version>${kotlin.dokka.version}</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
