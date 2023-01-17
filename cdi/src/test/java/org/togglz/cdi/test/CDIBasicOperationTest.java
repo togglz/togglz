@@ -25,7 +25,6 @@ public class CDIBasicOperationTest {
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
                 .addAsLibrary(Deployments.getTogglzCDIArchive())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClass(CDIFeatureConfiguration.class)
                 .addClass(Features.class);
     }
