@@ -166,7 +166,7 @@
         <module>test-harness</module>
         <module>servlet</module>
         <module>console</module>
-<!--        <module>cdi</module>-->
+        <module>cdi</module>
         <module>spring-core</module>
         <module>spring-web</module>
         <module>spring-security</module>

@@ -8,10 +8,10 @@ import org.togglz.core.manager.FeatureManagerBuilder;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.core.user.NoOpUserProvider;
 
+@ApplicationScoped
 public class ManagedFeatureManagerProvider {
 
     @Produces
-    @ApplicationScoped
     public FeatureManager produce() {
         return new FeatureManagerBuilder()
             .featureEnum(Features.class)

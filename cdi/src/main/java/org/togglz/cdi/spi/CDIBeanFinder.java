@@ -68,7 +68,7 @@ public class CDIBeanFinder implements BeanFinder {
             beanManager = (BeanManager) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_WELD_1_1);
         }
 
-        // try Weld 5.1.x servlet context attribute
+        // try Weld 4.0.x servlet context attribute
         if (beanManager == null && servletContext != null) {
             beanManager = (BeanManager) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_WELD_4_0);
         }
