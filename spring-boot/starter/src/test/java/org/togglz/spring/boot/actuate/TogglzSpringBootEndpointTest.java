@@ -71,7 +71,6 @@ public class TogglzSpringBootEndpointTest {
 
 
     @Test
-    //@WithMockUser(username = "username", roles={"ADMIN"})
     void testWebActuatorEndpoint() throws Exception {
         mockMvc.perform(get("/actuator/togglz"))
                 .andExpect(status().isOk())
