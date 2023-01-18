@@ -171,7 +171,7 @@
         <module>spring-web</module>
         <module>spring-security</module>
         <module>spring-boot</module>
-        <!-- <module>shiro</module> @TODO: Re-enable when Shiro supports Jakarta - https://shiro.apache.org/blog/2022/06/30/jakarta-work.html - As of version 1.10.1 this is still not available. -->
+        <module>shiro</module>
         <module>appengine</module>
         <module>cloud-datastore</module>
         <module>cloud-storage</module>
