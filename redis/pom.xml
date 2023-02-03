@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.togglz</groupId>
 		<artifactId>togglz-project</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>togglz-redis</artifactId>
@@ -20,17 +20,17 @@
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>4.2.3</version>
+			<version>4.3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.lettuce</groupId>
 			<artifactId>lettuce-core</artifactId>
-			<version>6.2.0.RELEASE</version>
+			<version>6.2.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>1.17.6</version>
+			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

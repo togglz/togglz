@@ -12,7 +12,11 @@ import org.springframework.jmx.support.JmxUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StreamUtils;
 import org.togglz.core.Feature;
-import org.togglz.core.annotation.*;
+import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.FeatureGroup;
+import org.togglz.core.annotation.InfoLink;
+import org.togglz.core.annotation.Label;
+import org.togglz.core.annotation.Owner;
 
 import javax.management.MBeanException;
 import javax.management.MBeanServer;
@@ -24,7 +28,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

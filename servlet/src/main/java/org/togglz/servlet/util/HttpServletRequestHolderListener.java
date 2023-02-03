@@ -1,17 +1,17 @@
 package org.togglz.servlet.util;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.servlet.spi.RequestListener;
 
 /**
- * 
+ *
  * Implementation of {@link RequestListener} that is responsible for binding and releasing the current request for
  * {@link HttpServletRequestHolder}.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class HttpServletRequestHolderListener implements RequestListener {
 

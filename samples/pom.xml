@@ -8,7 +8,7 @@
     <parent>
         <artifactId>togglz-project</artifactId>
         <groupId>org.togglz</groupId>
-        <version>3.2.1-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>samples</artifactId>
@@ -18,8 +18,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <togglz.version>3.2.1-SNAPSHOT</togglz.version>
-        <spring-boot.version>2.7.5</spring-boot.version>
+        <togglz.version>4.0.0-SNAPSHOT</togglz.version>
+        <spring-boot.version>3.0.1</spring-boot.version>
         <logback.version>${togglz.logback.version}</logback.version>
     </properties>
 
@@ -124,6 +124,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                 </plugin>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+              </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>

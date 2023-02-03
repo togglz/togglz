@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;

@@ -1,6 +1,6 @@
 package org.togglz.cdi.test;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.togglz.cdi.Features;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.TogglzConfig;

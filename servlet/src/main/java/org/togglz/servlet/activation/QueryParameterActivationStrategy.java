@@ -10,7 +10,7 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;

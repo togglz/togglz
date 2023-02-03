@@ -1,6 +1,6 @@
 package org.togglz.servlet.spi;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * This SPI can be implemented by modules to provide CSRF tokens that will be included
