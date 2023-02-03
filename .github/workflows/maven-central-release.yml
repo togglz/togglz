@@ -5,7 +5,7 @@ on:
       releaseversion:
         description: 'Release version'
         required: true
-        default: '2.4.0'
+        default: '0.0.0-SNAPSHOT'
 jobs:
   publish:
     runs-on: ubuntu-latest
