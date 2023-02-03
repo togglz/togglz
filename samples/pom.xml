@@ -19,7 +19,7 @@
 
     <properties>
         <togglz.version>4.0.0-SNAPSHOT</togglz.version>
-        <spring-boot.version>3.0.1</spring-boot.version>
+        <spring-boot.version>3.0.2</spring-boot.version>
         <logback.version>${togglz.logback.version}</logback.version>
     </properties>
 
