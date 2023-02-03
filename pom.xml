@@ -274,6 +274,13 @@
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <description>${project.version}</description>
                         </configuration>
+                      <dependencies>
+                        <dependency>
+                          <groupId>com.thoughtworks.xstream</groupId>
+                          <artifactId>xstream</artifactId>
+                          <version>1.4.15</version> <!-- apparently this needs to be exactly this version -->
+                        </dependency>
+                      </dependencies>
                         <executions>
                             <execution>
                                 <id>deploy-to-sonatype</id>
