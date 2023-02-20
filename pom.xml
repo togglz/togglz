@@ -33,7 +33,7 @@
         <!-- Wildfly version used for integration tests -->
         <wildfly.version>27.0.1.Final</wildfly.version>
 
-        <spring.version>6.0.4</spring.version>
+        <spring.version>6.0.5</spring.version>
         <junit.version>5.9.2</junit.version>
         <mockito.version>4.11.0</mockito.version>
         <testcontainers.version>1.17.6</testcontainers.version>
