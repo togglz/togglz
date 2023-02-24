@@ -11,6 +11,7 @@ table.feature-overview td.feature-status, table.feature-overview th.feature-stat
 table.feature-overview td.feature-strategy, table.feature-overview th.feature-strategy {
     text-align: left;
     width: 30%;
+    max-width: 400px;
 }
 
 table.feature-overview td.feature-actions, table.feature-overview th.feature-actions {
@@ -24,6 +25,10 @@ table.feature-overview td.feature-label ul.attributes {
     font-size: small;
     color: gray;
     margin-left: -25px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .glyphicon-lg {
