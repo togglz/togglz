@@ -13,7 +13,7 @@
     <description>Togglz - Slack integration</description>
 
     <properties>
-        <mockserver.version>5.14.0</mockserver.version>
+        <mockserver.version>5.15.0</mockserver.version>
     </properties>
 
     <dependencies>
