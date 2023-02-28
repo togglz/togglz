@@ -1,6 +1,6 @@
 package org.togglz.console.model;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;

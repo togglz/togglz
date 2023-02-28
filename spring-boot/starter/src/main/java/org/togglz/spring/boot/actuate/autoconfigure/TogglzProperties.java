@@ -23,9 +23,9 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;

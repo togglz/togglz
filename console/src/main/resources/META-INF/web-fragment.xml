@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-fragment version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+<web-fragment version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee/"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
+  xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee/ https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_0.xsd">
 
   <name>togglz_console</name>
 

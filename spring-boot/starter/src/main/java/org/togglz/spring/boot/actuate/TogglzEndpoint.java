@@ -22,21 +22,16 @@ import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
-import org.togglz.core.util.Preconditions;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeatureMetaData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.springframework.util.StringUtils.commaDelimitedListToSet;
 
 /**
  * Spring Boot 2+ {@link Endpoint} to expose Togglz info as an actuator endpoint.
@@ -48,90 +43,51 @@ import static org.springframework.util.StringUtils.commaDelimitedListToSet;
  */
 @Component
 @Endpoint(id = "togglz")
-public class TogglzEndpoint {
+public class TogglzEndpoint extends AbstractTogglzEndpoint {
 
-    private static final String PARAMETER_VALUE_SEPARATOR = "=";
-
-    private final FeatureManager featureManager;
 
     public TogglzEndpoint(FeatureManager featureManager) {
-        Assert.notNull(featureManager, "FeatureManager must not be null");
-        this.featureManager = featureManager;
+        super(featureManager);
     }
 
     @ReadOperation
     public List<TogglzFeature> getAllFeatures() {
-        List<TogglzFeature> features = new ArrayList<>();
-        for (Feature feature : this.featureManager.getFeatures()) {
-            FeatureState featureState = this.featureManager.getFeatureState(feature);
-            features.add(new TogglzFeature(feature, featureState));
-        }
-        Collections.sort(features);
-        return features;
+        return this.featureManager.getFeatures().stream()
+                .map(this::generateTogglzFeature)
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     @ReadOperation
     public TogglzFeature getFeature(@Selector String name) {
         return this.featureManager.getFeatures().stream()
-            .filter(it -> name.equals(it.name()))
-            .findFirst()
-            .map(it -> new TogglzFeature(it, this.featureManager.getFeatureState(it)))
-            .orElse(null);
+                .filter(it -> name.equals(it.name()))
+                .findFirst()
+                .map(this::generateTogglzFeature)
+                .orElse(null);
     }
+
 
     /**
      * Allows to change the state of toggles via http post.
      *
-     * @param name    the name of the toggle/feature
-     * @param enabled the name of the field containing the toggle/feature status
-     * @param strategy the ID of the activation strategy to use
+     * @param name       the name of the toggle/feature
+     * @param enabled    the name of the field containing the toggle/feature status
+     * @param strategy   the ID of the activation strategy to use
      * @param parameters activation strategy parameters as comma separated list of key=value pairs
      */
     @WriteOperation
     public TogglzFeature setFeatureState(@Selector String name, @Nullable Boolean enabled,
                                          @Nullable String strategy, @Nullable String parameters) {
-        final Feature feature = featureManager.getFeatures().stream()
-                .filter(f -> f.name().equals(name))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Could not find feature with name " + name));
-
-        Map<String, String> parametersMap = parameters != null ?
-                commaDelimitedListToSet(parameters).stream()
-                        .map(this::toParameterKeyValue)
-                        .collect(Collectors.toMap(
-                                parameterKeyValue -> parameterKeyValue[0],
-                                parameterKeyValue -> parameterKeyValue[1]))
-                : Collections.emptyMap();
-
+        final Feature feature = findFeature(name);
+        if (feature == null) {
+            throw new IllegalArgumentException("Could not find feature with name " + name);
+        }
+        Map<String, String> parametersMap = parseParameterMap(parameters);
         FeatureState featureState = changeFeatureStatus(feature, enabled, strategy, parametersMap);
-
-        return new TogglzFeature(feature, featureState);
+        FeatureMetaData metaData = this.featureManager.getMetaData(feature);
+        return new TogglzFeature(feature, featureState, new TogglzFeatureMetaData(metaData));
     }
 
-    private FeatureState changeFeatureStatus(
-            Feature feature, Boolean enabled, String strategy, Map<String, String> parameters) {
-        FeatureState featureState = featureManager.getFeatureState(feature);
-
-        if (enabled != null) {
-            featureState.setEnabled(enabled);
-        }
-        if (strategy != null) {
-            featureState.setStrategyId(strategy);
-        }
-        parameters.forEach(featureState::setParameter);
-
-        featureManager.setFeatureState(featureState);
-
-        return featureState;
-    }
-
-    private String[] toParameterKeyValue(String parameterString) {
-        String[] parameterKeyValue = parameterString.split(PARAMETER_VALUE_SEPARATOR);
-
-        Preconditions.checkArgument(
-                parameterKeyValue.length == 2,
-                "Illegal parameter key/value format: %s", parameterString);
-
-        return Arrays.stream(parameterKeyValue).map(String::trim).toArray(String[]::new);
-    }
 }
+

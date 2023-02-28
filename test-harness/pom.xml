@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
     <artifactId>togglz-test-harness</artifactId>
@@ -19,7 +19,7 @@
         <dependency>
           <groupId>net.sourceforge.htmlunit</groupId>
           <artifactId>htmlunit</artifactId>
-          <version>2.62.0</version>
+          <version>2.69.0</version>
         </dependency>
 
         <!-- JUnit -->
@@ -44,16 +44,15 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.6.0.Final</version>
+            <version>1.7.0.Alpha13</version>
         </dependency>
 
         <!-- JEE APIs -->
         <dependency>
-            <groupId>org.jboss.spec</groupId>
-            <artifactId>jboss-javaee-6.0</artifactId>
-            <version>3.0.3.Final</version>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-spec-api</artifactId>
+            <version>27.0.1.Final</version>
             <type>pom</type>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -63,9 +62,22 @@
         </dependency>
 
         <dependency>
+            <groupId>org.wildfly.core</groupId>
+            <artifactId>wildfly-remoting</artifactId>
+            <version>19.0.1.Final</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jboss.shrinkwrap.descriptors</groupId>
-            <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
+            <artifactId>shrinkwrap-descriptors-impl-jboss</artifactId>
             <version>2.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

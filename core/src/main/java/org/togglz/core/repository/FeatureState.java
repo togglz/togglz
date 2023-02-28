@@ -8,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import org.togglz.core.Feature;
@@ -210,6 +211,41 @@ public class FeatureState implements Serializable {
      */
     public Map<String, String> getParameterMap() {
         return Collections.unmodifiableMap(this.parameters);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FeatureState that = (FeatureState) o;
+
+        if (this.enabled != that.enabled) {
+            return false;
+        }
+        if (!this.feature.equals(that.feature)) {
+            return false;
+        }
+        if (!Objects.equals(this.strategyId, that.strategyId)) {
+            return false;
+        }
+        if (this.parameters.size() != that.parameters.size()) {
+            return false;
+        }
+        return this.parameters.equals(that.parameters);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.feature.hashCode();
+        result = 31 * result + Boolean.hashCode(this.enabled);
+        result = 31 * result + (this.strategyId != null ? this.strategyId.hashCode() : 0);
+        result = 31 * result + this.parameters.hashCode();
+        return result;
     }
 
     /**

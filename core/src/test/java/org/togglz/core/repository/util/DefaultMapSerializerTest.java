@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DefaultMapSerializerTest {
@@ -141,4 +143,47 @@ public class DefaultMapSerializerTest {
 
         assertEquals("param1=value1%param2=value2", data);
     }
+
+    @Test
+    public void emptyMapSerializedToEmptyString() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline();
+
+        Map<String, String> input = new HashMap<>();
+
+        String data = serializer.serialize(input);
+
+        assertEquals("", data);
+    }
+
+    @Test
+    public void nullMapSerializeThrowsException() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline();
+
+        assertThrows(NullPointerException.class, () -> serializer.serialize(null));
+    }
+
+    @Test
+    public void emptyStringDeserializedToEmptyMap() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline();
+
+        Map<String, String> data = serializer.deserialize("");
+
+        assertNotNull(data);
+        assertTrue(data.isEmpty());
+    }
+
+    @Test
+    public void nullStringDeserializedToEmptyMap() {
+
+        DefaultMapSerializer serializer = DefaultMapSerializer.multiline();
+
+        Map<String, String> data = serializer.deserialize(null);
+
+        assertNotNull(data);
+        assertTrue(data.isEmpty());
+    }
+
 }
