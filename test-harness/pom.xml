@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.7.0.Alpha13</version>
+            <version>1.7.0.Alpha14</version>
         </dependency>
 
         <!-- JEE APIs -->
