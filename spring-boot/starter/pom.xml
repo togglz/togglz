@@ -14,7 +14,7 @@
     <description>Togglz - Spring Boot Starter</description>
 
     <properties>
-        <spring-boot.version>3.0.2</spring-boot.version>
+        <spring-boot.version>3.0.4</spring-boot.version>
     </properties>
 
     <dependencyManagement>
