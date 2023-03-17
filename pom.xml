@@ -180,7 +180,7 @@
         <module>junit</module>
         <module>spock</module>
         <!--<module>cassandra</module> @TODO: Rewrite cassandra support using DataStax Java Driver, astyanax and thrift are no longer supported by recent cassandra versions: https://github.com/Netflix/astyanax-->
-        <!--<module>dynamodb</module> TODO: Migrate to AWS SDK for Java 2.x, because the SDK v1 will support Java versions from 7 to 16 only: https://github.com/aws/aws-sdk-java/issues/2795 -->
+        <module>dynamodb</module>
         <module>amazon-s3</module>
         <module>benchmarks</module>
         <module>slack</module>
