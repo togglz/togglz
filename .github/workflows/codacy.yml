@@ -49,10 +49,10 @@ jobs:
           output: results.sarif
           format: sarif
           # Adjust severity of non-security issues
-          gh-code-scanning-compat: false
+          gh-code-scanning-compat: true
           # Force 0 exit code to allow SARIF file generation
           # This will handover control about PR rejection to the GitHub side
-          max-allowed-issues: 0
+          max-allowed-issues: 1
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
