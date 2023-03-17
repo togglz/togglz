@@ -179,7 +179,6 @@
         <module>testing</module>
         <module>junit</module>
         <module>spock</module>
-        <!--<module>cassandra</module> @TODO: Rewrite cassandra support using DataStax Java Driver, astyanax and thrift are no longer supported by recent cassandra versions: https://github.com/Netflix/astyanax-->
         <module>dynamodb</module>
         <module>amazon-s3</module>
         <module>benchmarks</module>
@@ -442,12 +441,6 @@
             <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-junit</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.togglz</groupId>
-                <artifactId>togglz-cassandra</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
