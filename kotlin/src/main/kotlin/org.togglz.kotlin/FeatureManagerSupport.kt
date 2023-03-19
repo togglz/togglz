@@ -35,12 +35,10 @@ object FeatureManagerSupport {
         clearCache()
     }
 
-    @Deprecated("will be removed soon. Please use FeatureManager.enable(feature) instead")
     fun enable(feature: Feature) {
         getFeatureManager().enable(feature)
     }
 
-    @Deprecated("will be removed soon. Please use FeatureManager.disable(feature) instead")
     fun disable(feature: Feature) {
         getFeatureManager().disable(feature)
     }
