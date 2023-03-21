@@ -7,6 +7,7 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.FeatureStateStorageWrapper;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeAction;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 import software.amazon.awssdk.services.dynamodb.model.DescribeTableRequest;
@@ -52,13 +53,13 @@ public class DynamoDBStateRepository implements StateRepository {
                 .build();
 
         Map<String, AttributeValue> documentItem = dynamoDbClient.getItem(request).item();
-        if (documentItem == null) {
+        if (documentItem.isEmpty()) {
             return null;
         }
         try {
             FeatureStateStorageWrapper wrapper = objectMapper.reader()
                     .forType(FeatureStateStorageWrapper.class)
-                    .readValue(documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).toString());
+                    .readValue(documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).s());
             return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
         } catch (IOException e) {
             throw new RuntimeException("Couldn't parse the feature state", e);
@@ -75,6 +76,7 @@ public class DynamoDBStateRepository implements StateRepository {
                             .s(featureState.getFeature().name())
                             .build()))
                     .attributeUpdates(Map.of(FEATURE_STATE_ATTRIBUTE_NAME, AttributeValueUpdate.builder()
+                            .action(AttributeAction.PUT)
                             .value(AttributeValue.builder()
                                     .s(json)
                                     .build())

@@ -36,6 +36,7 @@ class DynamoDBStateRepositoryIT {
     void testThatPreExistingStateIsUsedWhenItExists() {
         DynamoDbClient client = setupAmazonDbClient();
         new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
+        client.close();
     }
 
     private DynamoDbClient setupAmazonDbClient() {
