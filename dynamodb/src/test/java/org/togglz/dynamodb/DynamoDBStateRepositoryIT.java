@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
@@ -17,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DynamoDBStateRepositoryIT {
+class DynamoDBStateRepositoryIT {
     private static final String PORT = System.getProperty("dynamodb.port");
 
     private static final Logger log = LoggerFactory.getLogger(DynamoDBStateRepositoryIT.class);
 
     @Test
-    public void builderFailsIfTableDoesntExist() {
+    void builderFailsIfTableDoesntExist() {
         log.debug("PORT is {}", PORT);
 
         DynamoDbClient client = setupAmazonDbClient();
@@ -33,21 +36,21 @@ public class DynamoDBStateRepositoryIT {
     }
 
     @Test
-    public void testThatPreExistingStateIsUsedWhenItExists() {
+    void testThatPreExistingStateIsUsedWhenItExists() {
         DynamoDbClient client = setupAmazonDbClient();
         new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
     }
 
     private DynamoDbClient setupAmazonDbClient() {
         return DynamoDbClient.builder()
-                .credentialsProvider(DefaultCredentialsProvider.builder().build())
+                .credentialsProvider(() -> AwsBasicCredentials.create("", "not_really_used"))
                 .endpointOverride(URI.create(String.format("http://localhost:%s", PORT)))
                 .region(Region.US_EAST_1)
                 .build();
     }
 
     @Test
-    public void aFeatureStateCanBeSaved() {
+    void aFeatureStateCanBeSaved() {
         // save some feature state to the db
         DynamoDbClient client = setupAmazonDbClient();
         DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client)
@@ -70,7 +73,7 @@ public class DynamoDBStateRepositoryIT {
     }
 
     @Test
-    public void activationStrategiesCanBeSaved() {
+    void activationStrategiesCanBeSaved() {
         // save some feature state to the db
         DynamoDbClient client = setupAmazonDbClient();
         DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client)
