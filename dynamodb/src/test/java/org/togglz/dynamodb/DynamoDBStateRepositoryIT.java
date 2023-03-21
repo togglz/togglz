@@ -6,9 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
@@ -43,7 +40,7 @@ class DynamoDBStateRepositoryIT {
 
     private DynamoDbClient setupAmazonDbClient() {
         return DynamoDbClient.builder()
-                .credentialsProvider(() -> AwsBasicCredentials.create("", "not_really_used"))
+                .credentialsProvider(() -> AwsBasicCredentials.create("not_really_used", "not_really_used"))
                 .endpointOverride(URI.create(String.format("http://localhost:%s", PORT)))
                 .region(Region.US_EAST_1)
                 .build();

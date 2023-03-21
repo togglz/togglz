@@ -20,23 +20,17 @@ aws dynamodb create-table --table-name YOUR_TABLE_NAME \
  Then create a state repository with togglz:
 
  For example, using it in combination with the spring-boot autoconfiguration you only need to provide the
- `StateRepository` instance - which relies on being passed in a configured `AmazonDynamoDBClient` instance
+ `StateRepository` instance - which relies on being passed in a configured `DynamoDbClient` instance
 
  ```java
-
      @Bean
-     AWSCredentials awsCredentials() {
-         return new InstanceProfileCredentialsProvider().getCredentials();
+     public DynamoDbClient dynamoDBClient() {
+         return DynamoDbClient.create();
      }
 
      @Bean
-     public AmazonDynamoDBClient dynamoDBClient(AWSCredentials credentials) {
-         return new AmazonDynamoDBClient(credentials);
-     }
-
-     @Bean
-     public DynamoDBStateRepository dynamoDBStateRepository(AmazonDynamoDBClient amazonDynamoDBClient) {
-         return new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(amazonDynamoDBClient).withStateStoredInTable("togglz").build();
+     public DynamoDBStateRepository dynamoDBStateRepository(DynamoDbClient dynamoDbClient) {
+         return new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(dynamoDbClient).withStateStoredInTable("togglz").build();
      }
  ```
 
@@ -47,8 +41,8 @@ aws dynamodb create-table --table-name YOUR_TABLE_NAME \
 
  ```java
     @Bean
-    public StateRepository stateRepository(AmazonDynamoDBClient amazonDynamoDBClient) {
-        DynamoDBStateRepository dynamoDBStateRepository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(amazonDynamoDBClient).withStateStoredInTable("togglz").build();
+    public StateRepository stateRepository(DynamoDbClient dynamoDbClient) {
+        DynamoDBStateRepository dynamoDBStateRepository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(dynamoDbClient).withStateStoredInTable("togglz").build();
         return new CachingStateRepository(dynamoDBStateRepository, 30, TimeUnit.SECONDS);
     }
  ```
