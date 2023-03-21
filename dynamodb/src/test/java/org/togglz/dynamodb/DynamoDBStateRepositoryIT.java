@@ -1,12 +1,15 @@
 package org.togglz.dynamodb;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+
+import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -23,33 +26,33 @@ public class DynamoDBStateRepositoryIT {
     public void builderFailsIfTableDoesntExist() {
         log.debug("PORT is {}", PORT);
 
-        AmazonDynamoDBClient client = setupAmazonDbClient();
+        DynamoDbClient client = setupAmazonDbClient();
 
-        assertThrows(RuntimeException.class, () -> {
-            new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).build();
-        });
+        assertThrows(RuntimeException.class, () -> new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).build());
+        client.close();
     }
 
     @Test
     public void testThatPreExistingStateIsUsedWhenItExists() {
-        AmazonDynamoDBClient client = setupAmazonDbClient();
+        DynamoDbClient client = setupAmazonDbClient();
         new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
     }
 
-    private AmazonDynamoDBClient setupAmazonDbClient() {
-        AmazonDynamoDBClient client = new AmazonDynamoDBClient(
-                new BasicAWSCredentials("", "not_really_used")
-        );
-        client.withEndpoint(String.format("http://localhost:%s", PORT));
-        client.setSignerRegionOverride("us-east-1");
-        return client;
+    private DynamoDbClient setupAmazonDbClient() {
+        return DynamoDbClient.builder()
+                .credentialsProvider(DefaultCredentialsProvider.builder().build())
+                .endpointOverride(URI.create(String.format("http://localhost:%s", PORT)))
+                .region(Region.US_EAST_1)
+                .build();
     }
 
     @Test
     public void aFeatureStateCanBeSaved() {
         // save some feature state to the db
-        AmazonDynamoDBClient client = setupAmazonDbClient();
-        DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
+        DynamoDbClient client = setupAmazonDbClient();
+        DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client)
+                .withStateStoredInTable("preexistingTable")
+                .build();
 
         assertNull(repository.getFeatureState(TestFeature.FEATURE));
 
@@ -63,21 +66,25 @@ public class DynamoDBStateRepositoryIT {
 
         repository.setFeatureState(disabledState);
         assertFalse(repository.getFeatureState(TestFeature.FEATURE).isEnabled());
+        client.close();
     }
 
     @Test
     public void activationStrategiesCanBeSaved() {
         // save some feature state to the db
-        AmazonDynamoDBClient client = setupAmazonDbClient();
-        DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client).withStateStoredInTable("preexistingTable").build();
+        DynamoDbClient client = setupAmazonDbClient();
+        DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client)
+                .withStateStoredInTable("preexistingTable")
+                .build();
 
         assertNull(repository.getFeatureState(TestFeature.ANOTHER_FEATURE));
 
         FeatureState stateWithStrategy = new FeatureState(TestFeature.ANOTHER_FEATURE).enable().setStrategyId("SomeStrategyId").setParameter("SomeParameter", "SomeValue");
-        repository.setFeatureState(stateWithStrategy );
+        repository.setFeatureState(stateWithStrategy);
         assertTrue(repository.getFeatureState(TestFeature.ANOTHER_FEATURE).isEnabled());
         assertEquals("SomeStrategyId", repository.getFeatureState(TestFeature.ANOTHER_FEATURE).getStrategyId());
         assertEquals("SomeValue", repository.getFeatureState(TestFeature.ANOTHER_FEATURE).getParameter("SomeParameter"));
+        client.close();
     }
 
     private enum TestFeature implements Feature {
