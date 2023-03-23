@@ -12,3 +12,7 @@ generated-sources/
 *.versionsBackup
 *.orig
 test-output
+/kotlin/.kotlintest/
+/console/dependency-reduced-pom.xml
+/benchmarks/dependency-reduced-pom.xml
+

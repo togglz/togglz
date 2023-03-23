@@ -1,15 +1,15 @@
 package org.togglz.slack;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
-import org.togglz.core.util.Preconditions;
-
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.togglz.core.util.Preconditions;
+
 class ChannelsProvider {
 
-    private static final Log log = LogFactory.getLog(ChannelsProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(ChannelsProvider.class);
 
     private final List<String> channels;
 

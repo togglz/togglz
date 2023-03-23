@@ -1,9 +1,8 @@
 package org.togglz.servlet.activation;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -11,13 +10,13 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.Arrays;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class QueryParameterActivationStrategyTest {
@@ -26,7 +25,7 @@ public class QueryParameterActivationStrategyTest {
     private HttpServletRequest request;
     private final QueryParameterActivationStrategy strategy = new QueryParameterActivationStrategy();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         user = new SimpleFeatureUser("ea", false);
         state = new FeatureState(MyFeature.FEATURE).enable();
@@ -36,7 +35,7 @@ public class QueryParameterActivationStrategyTest {
         HttpServletRequestHolder.bind(request);
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         HttpServletRequestHolder.release();
     }
@@ -51,7 +50,7 @@ public class QueryParameterActivationStrategyTest {
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
     }
 
     @Test
@@ -60,31 +59,32 @@ public class QueryParameterActivationStrategyTest {
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
     }
 
     @Test
     public void shouldNotBeActiveWhenOnlyNonMatchingParametersArePresent() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("somethingThatDoesNotMatch", (String[]) Arrays.asList("true").toArray());
-        parameters.put("somethingElse", (String[]) Arrays.asList("aValue").toArray());
+        parameters.put("somethingThatDoesNotMatch", new String[]{"true"});
+        parameters.put("somethingElse", new String[]{"aValue"});
+
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
     }
 
     @Test
     public void shouldNotBeActiveWhenMatchingParameterHasANonMatchingValue() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("toggleFeatureX", (String[]) Arrays.asList("false").toArray());
-        parameters.put("toggleAll", (String[]) Arrays.asList("nope").toArray());
+        parameters.put("toggleFeatureX", new String[]{"false"});
+        parameters.put("toggleAll", new String[]{"nope"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
     }
 
     @Test
@@ -95,19 +95,19 @@ public class QueryParameterActivationStrategyTest {
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
     }
 
     @Test
     public void shouldBeActiveWhenAnAcceptedParameterAndValueArePresent() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("toggleFeatureX", (String[]) Arrays.asList("true").toArray());
-        parameters.put("toggleAll", (String[]) Arrays.asList("nope").toArray());
+        parameters.put("toggleFeatureX", new String[]{"true"});
+        parameters.put("toggleAll", new String[]{"nope"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -118,18 +118,18 @@ public class QueryParameterActivationStrategyTest {
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
     public void shouldBeActiveWhenAnAcceptedParameterWithoutRequiredValueIsPresentAndItHasAValue() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("parameterWithoutValue", (String[]) Arrays.asList("anyVal").toArray());
+        parameters.put("parameterWithoutValue", new String[]{"anyVal"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -142,7 +142,7 @@ public class QueryParameterActivationStrategyTest {
         state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS,
             " toggleFeatureX  = true, toggleAll= yes, parameterWithoutValue ");
         boolean isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -152,12 +152,12 @@ public class QueryParameterActivationStrategyTest {
         parameters.put("anotherParam", null);
         when(request.getParameterMap()).thenReturn(parameters);
 
-        parameters.put("test", (String[]) Arrays.asList("matches", "nomatch", "notanything").toArray());
+        parameters.put("test", new String[]{"matches", "nomatch", "notanything"});
         state.setParameter(QueryParameterActivationStrategy.PARAM_URL_PARAMS, "test=matches");
 
         boolean isActive = strategy.isActive(state, user);
 
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -167,30 +167,30 @@ public class QueryParameterActivationStrategyTest {
 
         when(request.getHeader("referer")).thenReturn("http://mysite.com/?parameterWithoutValue");
         boolean isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
 
         when(request.getHeader("referer")).thenReturn("http://mysite.com/?someOtherParameter");
         isActive = strategy.isActive(state, user);
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
 
         when(request.getHeader("referer")).thenReturn("http://mysite.com/?toggleFeatureX=true");
         isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
     public void refererParamsShouldNotOverrideRequestParamsButWillQualifyAsActiveIfSeparate() {
         Map<String, String[]> parameters = new HashMap<>();
-        parameters.put("toggleFeatureX", (String[]) Arrays.asList("false").toArray());
+        parameters.put("toggleFeatureX", new String[]{"false"});
         when(request.getParameterMap()).thenReturn(parameters);
 
         when(request.getHeader("referer")).thenReturn("http://mysite.com/?toggleFeatureX=true");
         boolean isActive = strategy.isActive(state, user);
-        Assert.assertFalse(isActive);
+        assertFalse(isActive);
 
         when(request.getHeader("referer")).thenReturn("http://mysite.com/?parameterWithoutValue");
         isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -201,7 +201,7 @@ public class QueryParameterActivationStrategyTest {
         when(request.getHeader("referer"))
             .thenReturn("http://mysite.com/?toggleFeatureX=false&toggleFeatureX=nope&toggleFeatureX=true");
         boolean isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -214,7 +214,7 @@ public class QueryParameterActivationStrategyTest {
         when(request.getHeader("referer"))
             .thenReturn("http://mysite.com/?toggleFeatureX=handles%20space&toggleFeatureX=a%22thing");
         boolean isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class QueryParameterActivationStrategyTest {
         when(request.getHeader("referer"))
             .thenReturn("http://mysite.com/");
         boolean isActive = strategy.isActive(state, user);
-        Assert.assertTrue(isActive);
+        assertTrue(isActive);
     }
 
 }

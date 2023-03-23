@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" role="tablist">
   ${foreach tabView.tabs tab}
-    <li role="presentation" class="${if tab.allTab}active${end}">
+    <li role="presentation" class="${if tab.isActive}active${end}">
       <a href="#tab${tab.index}" role="tab" data-toggle="tab">
         ${if tab.allTab}
           All Features
@@ -15,7 +15,7 @@
 <div class="tab-content">
 
   ${foreach tabView.tabs tab}
-    <div class="tab-pane fade ${if tab.allTab}active in${end}" id="tab${tab.index}" role="tabpanel">
+    <div class="tab-pane fade ${if tab.isActive}active in${end}" id="tab${tab.index}" role="tabpanel">
       <table class="table table-striped feature-overview">
         <thead>
           <tr>
@@ -49,6 +49,7 @@
                     ${foreach tokens token}
                     <input type="hidden" name="${token.name}" value="${token.value}"/>
                     ${end}
+                    <input type="hidden" name="t" value="${tab.index}">
                     <input type="hidden" name="f" value="${feature.name}">
                     <input type="hidden" name="enabled" value="${if feature.enabled}${else}enabled${end}">
                     <input type="submit" class="btn btn-sm btn-${if feature.enabled}success${else}danger${end}" value="${if feature.enabled}Enabled${else}Disabled${end}">
@@ -60,15 +61,14 @@
                   <ul class="params">
                   ${foreach feature.strategy.parameters param}
                     ${if param.hasValue}
-                      <li>${param.label}: ${param.valueEscaped}</li>
+                      <li>${param.label}: ${param.value;sanitizeHtml}</li>
                     ${end}
                   ${end}
                   </ul>
                 ${end}
               </td>
               <td class="feature-actions">
-                <a class="btn btn-sm btn-default" href="edit?f=${feature.name}" title="Edit ${feature.label} feature">
-                  <span class="glyphicon glyphicon-cog text-muted"></span>
+                  <a class="btn btn-sm btn-default" href="edit?f=${feature.name}${foreach tokens token}${if token.name = "togglz_csrf"}&${token.name}=${token.value}${end}${end}" title="Edit ${feature.label} feature">                  <span class="glyphicon glyphicon-cog text-muted"></span>
                 </a>
               </td>
             </tr>

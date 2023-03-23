@@ -1,94 +1,102 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>2.7.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>togglz-test-harness</artifactId>
-  <name>Togglz - Test Harness</name>
-  <description>Togglz - Test Harness</description>
+    <artifactId>togglz-test-harness</artifactId>
+    <name>Togglz - Test Harness</name>
+    <description>Togglz - Test Harness</description>
 
-  <dependencies>
+    <dependencies>
 
-    <!-- JUnit -->
-    <dependency>
-      <groupId>org.togglz</groupId>
-      <artifactId>togglz-core</artifactId>
-    </dependency>
+        <!-- HTMLUnit -->
+        <dependency>
+          <groupId>net.sourceforge.htmlunit</groupId>
+          <artifactId>htmlunit</artifactId>
+          <version>2.69.0</version>
+        </dependency>
 
-    <!-- JUnit -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <scope>compile</scope>
-    </dependency>
+        <!-- JUnit -->
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-core</artifactId>
+        </dependency>
 
-    <!-- Arquillian -->
-    <dependency>
-      <groupId>org.jboss.arquillian.junit</groupId>
-      <artifactId>arquillian-junit-container</artifactId>
-      <version>1.1.2.Final</version>
-    </dependency>
+        <!-- JUnit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-    <!-- JEE APIs -->
-    <dependency>
-      <groupId>org.jboss.spec</groupId>
-      <artifactId>jboss-javaee-6.0</artifactId>
-      <version>1.0.0.Final</version>
-      <type>pom</type>
-      <scope>provided</scope>
-    </dependency>
+        <!-- Arquillian -->
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <version>1.7.0.Alpha14</version>
+        </dependency>
 
-    <!-- HTMLUnit -->
-    <dependency>
-      <groupId>net.sourceforge.htmlunit</groupId>
-      <artifactId>htmlunit</artifactId>
-      <version>2.9</version>
-    </dependency>
+        <!-- JEE APIs -->
+        <dependency>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-spec-api</artifactId>
+            <version>27.0.1.Final</version>
+            <type>pom</type>
+        </dependency>
 
-    <dependency>
-      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-      <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-      <version>2.1.0</version>
-    </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+            <version>3.1.4</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.jboss.shrinkwrap.descriptors</groupId>
-      <artifactId>shrinkwrap-descriptors-impl-javaee</artifactId>
-      <version>2.0.0-alpha-6</version>
-    </dependency>
+        <dependency>
+            <groupId>org.wildfly.core</groupId>
+            <artifactId>wildfly-remoting</artifactId>
+            <version>19.0.1.Final</version>
+        </dependency>
 
-  </dependencies>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.descriptors</groupId>
+            <artifactId>shrinkwrap-descriptors-impl-jboss</artifactId>
+            <version>2.0.0</version>
+        </dependency>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <useDefaultManifestFile>true</useDefaultManifestFile>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.virgo.bundlor</groupId>
-        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-        <executions>
-          <execution>
-            <id>bundlor</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
 
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- No unit tests in this module so far. You should drop this plugin section when you add some :) -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

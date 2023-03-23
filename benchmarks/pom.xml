@@ -4,7 +4,7 @@
     <parent>
         <artifactId>togglz-project</artifactId>
         <groupId>org.togglz</groupId>
-        <version>2.7.0-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -13,10 +13,6 @@
     <packaging>jar</packaging>
 
     <name>Togglz - JMH benchmarks</name>
-
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
 
     <dependencies>
         <dependency>
@@ -39,25 +35,25 @@
             <artifactId>togglz-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.togglz</groupId>
-            <artifactId>togglz-zookeeper</artifactId>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-test</artifactId>
-            <version>3.1.0</version>
+            <version>5.4.0</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmh.version>1.12</jmh.version>
-        <javac.target>1.6</javac.target>
+        <jmh.version>1.36</jmh.version>
+        <javac.target>17</javac.target>
         <uberjar.name>togglz-benchmarks-uberjar</uberjar.name>
     </properties>
 
@@ -65,8 +61,16 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- No unit tests in this module so far. You should drop this plugin section when you add some :) -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <compilerVersion>${javac.target}</compilerVersion>
                     <source>${javac.target}</source>
@@ -76,7 +80,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.2</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -105,23 +109,6 @@
                                 </filter>
                             </filters>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.eclipse.virgo.bundlor</groupId>
-                <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-                <executions>
-                    <execution>
-                        <id>bundlor</id>
-                        <phase>none</phase>
                     </execution>
                 </executions>
             </plugin>

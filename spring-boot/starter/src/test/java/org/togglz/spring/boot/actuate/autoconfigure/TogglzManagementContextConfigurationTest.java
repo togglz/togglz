@@ -17,16 +17,15 @@
 package org.togglz.spring.boot.actuate.autoconfigure;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.togglz.spring.boot.actuate.BaseTest;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 
 /**
  * Tests for Spring Boot 2 compatible {@link TogglzAutoConfiguration}.
@@ -39,30 +38,24 @@ public class TogglzManagementContextConfigurationTest extends BaseTest {
     @Test
     public void consoleWithCustomManagementContextPath() {
         // With TogglzManagementContextConfiguration responsible for creating the admin console servlet registration bean,
-        // if a custom managememnt context path is provided it should be used as prefix.
+        // if a custom management context path is provided it should be used as prefix.
         contextRunnerWithFeatureProviderConfig()
-            .withPropertyValues("management.server.servlet.context-path: /manage")
-            .run((context) -> {
-                assertThat(getUrlMappings(context)).contains("/manage/togglz-console/*");
-            });
+            .withPropertyValues("management.server.base-path: /manage")
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/manage/togglz-console/*"));
     }
 
     @Test
     public void customConsolePath() {
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("togglz.console.path: /custom")
-            .run((context) -> {
-                assertThat(getUrlMappings(context)).contains("/custom/*");
-            });
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/custom/*"));
     }
 
     @Test
     public void customConsolePathWithTrailingSlash() {
         contextRunnerWithFeatureProviderConfig()
             .withPropertyValues("togglz.console.path: /custom/")
-            .run((context) -> {
-                assertThat(getUrlMappings(context)).contains("/custom/*");
-            });
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/custom/*"));
     }
 
     @SuppressWarnings("unchecked")

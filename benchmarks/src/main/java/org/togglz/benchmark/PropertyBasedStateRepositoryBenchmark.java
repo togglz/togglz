@@ -4,7 +4,6 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.repository.file.FileBasedStateRepository;
 
@@ -18,22 +17,19 @@ import java.io.IOException;
  * @date 5/26/16
  */
 public class PropertyBasedStateRepositoryBenchmark extends AbstractStateRepositoryBenchmark {
-    FeatureManager manager;
-    File tempFile;
 
+    private File tempFile;
 
     @Override
     public StateRepository initializeStateRepository() throws IOException {
         tempFile = File.createTempFile(this.getClass().getSimpleName(), null);
-        StateRepository stateRepository = new FileBasedStateRepository(tempFile);
-        return stateRepository;
+        return new FileBasedStateRepository(tempFile);
     }
 
     @Override
     public void cleanupStateRepository() {
         tempFile.delete();
     }
-
 
     // run this method to execute this test
     public static void main(String[] args) throws RunnerException {
@@ -44,5 +40,4 @@ public class PropertyBasedStateRepositoryBenchmark extends AbstractStateReposito
 
         new Runner(opt).run();
     }
-
 }

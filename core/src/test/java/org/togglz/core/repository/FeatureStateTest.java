@@ -1,60 +1,64 @@
 package org.togglz.core.repository;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.activation.UsernameActivationStrategy;
 
-public class FeatureStateTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class FeatureStateTest {
 
     @Test
-    public void testSimpleFeatureState() {
+    void testSimpleFeatureState() {
 
         // initial state
         FeatureState state = new FeatureState(Features.FEATURE1);
-        assertThat(state.isEnabled(), is(false));
-        assertThat(state.getParameterNames(), empty());
+        assertFalse(state.isEnabled());
+        assertEquals(0, state.getParameterNames().size());
 
         // enable a feature
         state.enable();
-        assertThat(state.isEnabled(), is(true));
+        assertTrue(state.isEnabled());
 
         // add a parameter
         state.setParameter("foo", "bar");
-        assertThat(state.getParameterNames().size(), is(1));
-        assertThat(state.getParameter("foo"), is("bar"));
+        assertEquals(1, state.getParameterNames().size());
+        assertEquals("bar", state.getParameter("foo"));
 
         // remove the parameter
         state.setParameter("foo", null);
-        assertThat(state.getParameterNames().size(), is(0));
-
+        assertEquals(0, state.getParameterNames().size());
     }
 
     @Test
-    public void testOldUsersApiHandling() {
+    void testEquals() {
 
-        // initial state
-        FeatureState state = new FeatureState(Features.FEATURE1, true, Arrays.asList("ck", "admin"));
-        assertThat(state.isEnabled(), is(true));
-        assertThat(state.getParameterNames(), contains(UsernameActivationStrategy.PARAM_USERS));
-        assertThat(state.getParameter(UsernameActivationStrategy.PARAM_USERS), is("ck,admin"));
-        assertThat(state.getUsers(), contains("ck", "admin"));
+        FeatureState state = new FeatureState(Features.FEATURE1);
+        FeatureState copy = state.copy();
+        assertEquals(state, copy);
 
-        // add some other user
-        state.addUser("tester");
-        assertThat(state.getParameter(UsernameActivationStrategy.PARAM_USERS), is("ck,admin,tester"));
-        assertThat(state.getUsers(), contains("ck", "admin", "tester"));
+        // Different feature
+        assertNotEquals(state, new FeatureState(Features.FEATURE2));
 
+        // Different enabled state
+        state.setEnabled(true);
+        assertNotEquals(state, copy);
+
+        // Different strategy
+        copy = state.copy();
+        state.setStrategyId("Strategy");
+        assertNotEquals(state, copy);
+
+        // Different parameters
+        copy = state.copy();
+        state.setParameter("key", "value");
+        assertNotEquals(state, copy);
     }
 
-    private static enum Features implements Feature {
-        FEATURE1;
+    private enum Features implements Feature {
+        FEATURE1,
+        FEATURE2
     }
-
 }

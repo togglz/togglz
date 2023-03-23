@@ -5,14 +5,14 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 
 public class ResourceHandler extends RequestHandlerBase {
 
-    private final Pattern PATTERN = Pattern.compile(".*/(\\w+)\\.(css|js|png|eot|svg|ttf|woff|woff2)$");
+    private final Pattern PATTERN = Pattern.compile(".*/(\\w+)\\.(css|css\\.map|js|png|eot|svg|ttf|woff|woff2)$");
 
     @Override
     public boolean handles(String path) {
@@ -50,10 +50,7 @@ public class ResourceHandler extends RequestHandlerBase {
             } else {
                 response.setContentType("image/" + type);
             }
-
             copy(stream, response.getOutputStream());
-
         }
-
     }
 }

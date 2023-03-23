@@ -8,30 +8,28 @@ import com.google.cloud.datastore.StringValue;
 import com.google.cloud.datastore.Transaction;
 import com.google.cloud.datastore.Value;
 import com.google.cloud.datastore.testing.LocalDatastoreHelper;
-import com.google.common.collect.ImmutableMap;
-import org.joda.time.Duration;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.threeten.bp.Duration;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.togglz.googleclouddatastore.repository.GoogleCloudDatastoreStateRepository.KIND_DEFAULT;
 
 public class GoogleCloudDatastoreStateRepositoryIT {
@@ -43,22 +41,22 @@ public class GoogleCloudDatastoreStateRepositoryIT {
 
     private GoogleCloudDatastoreStateRepository repository;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws IOException, InterruptedException {
         HELPER.start();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         repository = new GoogleCloudDatastoreStateRepository(DATASTORE);
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws IOException, InterruptedException, TimeoutException {
-        HELPER.stop(Duration.standardMinutes(1));
+        HELPER.stop(Duration.ofMinutes(1));
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         HELPER.reset();
     }
@@ -114,11 +112,9 @@ public class GoogleCloudDatastoreStateRepositoryIT {
         assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         final StringValue param = NonIndexed.valueOf("param");
-        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(singletonList(param)));
+        assertEquals(singletonList(param), featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES));
         final StringValue foo = NonIndexed.valueOf("foo");
-        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(singletonList(foo)));
+        assertEquals(singletonList(foo), featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES));
     }
 
     @Test
@@ -142,10 +138,9 @@ public class GoogleCloudDatastoreStateRepositoryIT {
         // THEN the properties should be set like expected
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(false, state.isEnabled());
-        assertEquals(null, state.getStrategyId());
+        assertFalse(state.isEnabled());
+        assertNull(state.getStrategyId());
         assertEquals(0, state.getParameterNames().size());
-
     }
 
     @Test
@@ -160,7 +155,7 @@ public class GoogleCloudDatastoreStateRepositoryIT {
         // THEN the properties should be set like expected
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(true, state.isEnabled());
+        assertTrue(state.isEnabled());
         assertEquals(STRATEGY_ID, state.getStrategyId());
         assertEquals(1, state.getParameterNames().size());
         assertEquals("foobar", state.getParameter("param23"));
@@ -179,11 +174,9 @@ public class GoogleCloudDatastoreStateRepositoryIT {
         assertTrue(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals(STRATEGY_ID, featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         StringValue param = NonIndexed.valueOf("param23");
-        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(singletonList(param)));
+        assertEquals(singletonList(param), featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES));
         StringValue foo = NonIndexed.valueOf("foobar");
-        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(singletonList(foo)));
+        assertEquals(singletonList(foo), featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES));
 
         // WHEN the repository writes new state
         final FeatureState state = new FeatureState(TestFeature.F1)
@@ -194,15 +187,12 @@ public class GoogleCloudDatastoreStateRepositoryIT {
 
         // THEN the properties should be set like expected
         featureEntity = DATASTORE.get(key);
-        assertEquals(false, featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
+        assertFalse(featureEntity.getBoolean(GoogleCloudDatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getString(GoogleCloudDatastoreStateRepository.STRATEGY_ID));
         param = NonIndexed.valueOf("param");
-        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-                is(singletonList(param)));
+        assertEquals(singletonList(param), featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_NAMES));
         foo = NonIndexed.valueOf("foo");
-        assertThat(featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-                is(singletonList(foo)));
-
+        assertEquals(singletonList(foo), featureEntity.<StringValue>getList(GoogleCloudDatastoreStateRepository.STRATEGY_PARAMS_VALUES));
     }
 
     @Test
@@ -235,7 +225,9 @@ public class GoogleCloudDatastoreStateRepositoryIT {
     }
 
     private void givenEnabledFeatureWithStrategy(String featureName) {
-        put(featureName, true, STRATEGY_ID, ImmutableMap.of("param23", "foobar"));
+        put(featureName, true, STRATEGY_ID, new HashMap<String, String>() {{
+            put("param23", "foobar");
+        }});
     }
 
     private void putWithinTransaction(final String name, final boolean enabled, final Transaction txn) {

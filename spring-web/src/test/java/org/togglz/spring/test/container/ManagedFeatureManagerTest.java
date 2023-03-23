@@ -21,6 +21,7 @@ public class ManagedFeatureManagerTest {
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
                     .artifact("org.springframework:spring-web")
+                    .artifact("org.springframework:spring-context")
                     .asFiles())
             .addClass(BasicFeatures.class)
             .addAsWebInfResource("applicationContext-container.xml")

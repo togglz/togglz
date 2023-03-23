@@ -109,14 +109,14 @@ public class CompositeStateRepository implements StateRepository {
         List<StateRepository> getSelected(List<StateRepository> from);
     }
     
-    public static enum IterationOrder implements RepositorySelector {
+    public enum IterationOrder implements RepositorySelector {
         
         /**
          * The iteration order is the same as what was specified when constructing this composite.
          */
         FIFO {
             public List<StateRepository> getSelected(List<StateRepository> from) {
-                return new ArrayList<StateRepository>(from);
+                return new ArrayList<>(from);
             }
         },
         
@@ -125,7 +125,7 @@ public class CompositeStateRepository implements StateRepository {
          */
         LIFO {
             public List<StateRepository> getSelected(List<StateRepository> from) {
-                List<StateRepository> result = new ArrayList<StateRepository>(from);
+                List<StateRepository> result = new ArrayList<>(from);
                 Collections.reverse(result);
                 return result;
             }
@@ -134,7 +134,7 @@ public class CompositeStateRepository implements StateRepository {
         ;
     }
     
-    public static enum SetterSelection implements RepositorySelector {
+    public enum SetterSelection implements RepositorySelector {
         
         /**
          * Use the first repository in this composite to set the state.
@@ -164,7 +164,7 @@ public class CompositeStateRepository implements StateRepository {
         };
         
         private static List<StateRepository> get(List<StateRepository> from, int index) {
-            List<StateRepository> result = new ArrayList<StateRepository>(1);
+            List<StateRepository> result = new ArrayList<>(1);
             result.add(from.get(index));
             return result;
         }

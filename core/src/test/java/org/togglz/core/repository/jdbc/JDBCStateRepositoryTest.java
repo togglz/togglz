@@ -1,39 +1,57 @@
 package org.togglz.core.repository.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import javax.sql.DataSource;
-
-import org.h2.jdbcx.JdbcConnectionPool;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.util.DefaultMapSerializer;
 import org.togglz.core.util.DbUtils;
 
-public class JDBCStateRepositoryTest {
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.concurrent.atomic.AtomicInteger;
 
-    private DataSource dataSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    private JDBCStateRepository repository;
+abstract class JDBCStateRepositoryTest {
 
-    @Before
-    public void before() throws SQLException {
+    private static final AtomicInteger COUNTER = new AtomicInteger();
+
+    DataSource dataSource;
+    String tableName;
+    JDBCStateRepository repository;
+
+    @BeforeEach
+    void before() throws SQLException {
         dataSource = createDataSource();
-        repository = new JDBCStateRepository(dataSource, "TOGGLZ", true,
-            DefaultMapSerializer.multiline());
+        tableName = "togglz" + COUNTER.getAndIncrement();
+        repository = createRepository(dataSource);
+    }
+
+    abstract DataSource createDataSource() throws SQLException;
+
+    JDBCStateRepository.Builder defaultBuilder(DataSource dataSource) {
+        return JDBCStateRepository.newBuilder(dataSource)
+                .tableName(tableName)
+                .createTable(true)
+                .serializer(DefaultMapSerializer.multiline());
+    }
+
+    JDBCStateRepository createRepository(DataSource dataSource) {
+        return defaultBuilder(dataSource).build();
     }
 
     @Test
-    public void testShouldSaveStateWithoutStrategyOrParameters() throws SQLException {
+    void testShouldSaveStateWithoutStrategyOrParameters() {
 
         /*
          * WHEN a feature without strategy is persisted
@@ -44,15 +62,14 @@ public class JDBCStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        assertEquals(1l, query(dataSource, "SELECT COUNT(*) FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals(0, query(dataSource, "SELECT FEATURE_ENABLED FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals(null, query(dataSource, "SELECT STRATEGY_ID FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals(null, query(dataSource, "SELECT STRATEGY_PARAMS FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-
+        assertEquals(1L, query(dataSource, substitute("SELECT COUNT(*) FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals(0, query(dataSource,  substitute("SELECT FEATURE_ENABLED FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertNull(query(dataSource, substitute("SELECT STRATEGY_ID FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertNull(query(dataSource, substitute("SELECT STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
     }
 
     @Test
-    public void testShouldSaveStateStrategyAndParameters() throws SQLException {
+    void testShouldSaveStateStrategyAndParameters() {
 
         /*
          * WHEN a feature without strategy is persisted
@@ -66,20 +83,18 @@ public class JDBCStateRepositoryTest {
         /*
          * THEN there should be a corresponding entry in the database
          */
-        assertEquals(1l, query(dataSource, "SELECT COUNT(*) FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals(1, query(dataSource, "SELECT FEATURE_ENABLED FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals("someId", query(dataSource, "SELECT STRATEGY_ID FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals("param=foo", query(dataSource, "SELECT STRATEGY_PARAMS FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-
+        assertEquals(1L, query(dataSource, substitute("SELECT COUNT(*) FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals(1, query(dataSource, substitute("SELECT FEATURE_ENABLED FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals("someId", query(dataSource, substitute("SELECT STRATEGY_ID FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals("param=foo", query(dataSource, substitute("SELECT STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
     }
 
     @Test
-    public void testShouldReadStateWithoutStrategyAndParameters() throws SQLException {
-
+    void testShouldReadStateWithoutStrategyAndParameters() {
         /*
          * GIVEN a database row containing a simple feature state
          */
-        update(dataSource, "INSERT INTO TOGGLZ VALUES ('F1', 0, NULL, NULL)");
+        update(dataSource, substitute("INSERT INTO %TABLE% VALUES ('F1', 0, NULL, NULL)"));
 
         /*
          * WHEN the repository reads the state
@@ -91,19 +106,17 @@ public class JDBCStateRepositoryTest {
          */
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(false, state.isEnabled());
-        assertEquals(null, state.getStrategyId());
+        assertFalse(state.isEnabled());
+        assertNull(state.getStrategyId());
         assertEquals(0, state.getParameterNames().size());
-
     }
 
     @Test
-    public void testShouldReadStateWithStrategyAndParameters() throws SQLException {
-
+    void testShouldReadStateWithStrategyAndParameters() {
         /*
          * GIVEN a database row containing a simple feature state
          */
-        update(dataSource, "INSERT INTO TOGGLZ VALUES ('F1', 1, 'myStrategy', 'param23=foobar')");
+        update(dataSource, substitute("INSERT INTO %TABLE% VALUES ('F1', 1, 'myStrategy', 'param23=foobar')"));
 
         /*
          * WHEN the repository reads the state
@@ -115,28 +128,26 @@ public class JDBCStateRepositoryTest {
          */
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(true, state.isEnabled());
+        assertTrue(state.isEnabled());
         assertEquals("myStrategy", state.getStrategyId());
         assertEquals(1, state.getParameterNames().size());
         assertEquals("foobar", state.getParameter("param23"));
-
     }
 
     @Test
-    public void testShouldUpdateExistingDatabaseEntry() throws SQLException {
-
+    void testShouldUpdateExistingDatabaseEntry() {
         /*
          * GIVEN a database row containing a simple feature state
          */
-        update(dataSource, "INSERT INTO TOGGLZ VALUES ('F1', 1, 'myStrategy', 'param23=foobar')");
+        update(dataSource, substitute("INSERT INTO %TABLE% VALUES ('F1', 1, 'myStrategy', 'param23=foobar')"));
 
         /*
          * AND the database entries are like expected
          */
-        assertEquals(1l, query(dataSource, "SELECT COUNT(*) FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals(1, query(dataSource, "SELECT FEATURE_ENABLED FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals("myStrategy", query(dataSource, "SELECT STRATEGY_ID FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals("param23=foobar", query(dataSource, "SELECT STRATEGY_PARAMS FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
+        assertEquals(1L, query(dataSource, substitute("SELECT COUNT(*) FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals(1, query(dataSource, substitute("SELECT FEATURE_ENABLED FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals("myStrategy", query(dataSource, substitute("SELECT STRATEGY_ID FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals("param23=foobar", query(dataSource, substitute("SELECT STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
 
         /*
          * WHEN the repository writes new state
@@ -150,133 +161,115 @@ public class JDBCStateRepositoryTest {
         /*
          * THEN the properties should be set like expected
          */
-        assertEquals(1l, query(dataSource, "SELECT COUNT(*) FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals(0, query(dataSource, "SELECT FEATURE_ENABLED FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals("someId", query(dataSource, "SELECT STRATEGY_ID FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
-        assertEquals("param=foo", query(dataSource, "SELECT STRATEGY_PARAMS FROM TOGGLZ WHERE FEATURE_NAME = 'F1'"));
+        assertEquals(1L, query(dataSource, substitute("SELECT COUNT(*) FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals(0, query(dataSource, substitute("SELECT FEATURE_ENABLED FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals("someId", query(dataSource, substitute("SELECT STRATEGY_ID FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
+        assertEquals("param=foo", query(dataSource, substitute("SELECT STRATEGY_PARAMS FROM %TABLE% WHERE FEATURE_NAME = 'F1'")));
 
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testShouldPropagateTheExceptionWhenReadFails() throws SQLException {
+	@Test
+	void testShouldPropagateTheExceptionWhenReadFails() throws SQLException {
 
 		/*
 		 * GIVEN a database row containing a simple feature state
 		 */
-		update(dataSource, "INSERT INTO TOGGLZ VALUES ('F1', 0, NULL, NULL)");
+		update(dataSource, substitute("INSERT INTO %TABLE% VALUES ('F1', 0, NULL, NULL)"));
 
-		/**
+		/*
 		 * AND the datasource throws an exception when we try to get a
 		 * connection
 		 */
 		DataSource spyedDataSource = Mockito.spy(dataSource);
-		repository = new JDBCStateRepository(spyedDataSource, "TOGGLZ", true, DefaultMapSerializer.multiline());
+        repository = createRepository(spyedDataSource);
 		Mockito.when(spyedDataSource.getConnection()).thenThrow(new SQLException("Failed to get a connection"));
 
 		/*
 		 * WHEN the repository reads the state
 		 */
-		repository.getFeatureState(TestFeature.F1);
+        assertThrows(IllegalStateException.class, () -> repository.getFeatureState(TestFeature.F1));
 
 		/*
 		 * THEN an IllegalStateException is thrown
 		 */
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void testShouldPropagateTheExceptionWhenWriteFails() throws SQLException {
+	@Test
+	void testShouldPropagateTheExceptionWhenWriteFails() throws SQLException {
 
 		/*
 		 * GIVEN a feature state to persist
 		 */
 		FeatureState state = new FeatureState(TestFeature.F1).enable();
 
-		/**
+		/*
 		 * AND the datasource throws an exception when we try to get a
 		 * connection
 		 */
 		DataSource spyedDataSource = Mockito.spy(dataSource);
-		repository = new JDBCStateRepository(spyedDataSource, "TOGGLZ", true, DefaultMapSerializer.multiline());
+		repository = createRepository(spyedDataSource);
 		Mockito.when(spyedDataSource.getConnection()).thenThrow(new SQLException("Failed to get a connection"));
 
 		/*
 		 * WHEN the feature state is persisted
 		 */
-		repository.setFeatureState(state);
-
+        assertThrows(IllegalStateException.class, () -> repository.setFeatureState(state));
 		/*
 		 * THEN an IllegalStateException is thrown
 		 */
     }
 
-    private Object query(DataSource dataSource, String sql) {
-
+    Object query(DataSource dataSource, String sql) {
         try {
-
             Connection connection = dataSource.getConnection();
             try {
-
                 Statement statement = connection.createStatement();
                 try {
-
                     ResultSet resultSet = statement.executeQuery(sql);
                     try {
-
                         if (resultSet.next()) {
                             return resultSet.getObject(1);
                         }
                         return null;
-
                     } finally {
                         DbUtils.closeQuietly(resultSet);
                     }
-
                 } finally {
                     DbUtils.closeQuietly(statement);
                 }
-
             } finally {
                 DbUtils.closeQuietly(connection);
             }
-
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
 
     }
 
-    private int update(DataSource dataSource, String sql) {
-
+    void update(DataSource dataSource, String sql) {
         try {
-
             Connection connection = dataSource.getConnection();
             try {
 
                 Statement statement = connection.createStatement();
                 try {
-
-                    return statement.executeUpdate(sql);
-
+                    statement.executeUpdate(sql);
                 } finally {
                     DbUtils.closeQuietly(statement);
                 }
-
             } finally {
                 DbUtils.closeQuietly(connection);
             }
-
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
-
     }
 
-    private DataSource createDataSource() throws SQLException {
-        return JdbcConnectionPool.create("jdbc:h2:mem:", "sa", "");
+    String substitute(String s) {
+        return s.replace("%TABLE%", tableName);
     }
 
-    private static enum TestFeature implements Feature {
-        F1;
+    private enum TestFeature implements Feature {
+        F1
     }
-
 }

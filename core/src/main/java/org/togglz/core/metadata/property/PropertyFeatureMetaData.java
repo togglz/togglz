@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.togglz.core.Feature;
-import org.togglz.core.manager.PropertyFeatureProvider;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.metadata.SimpleFeatureGroup;
@@ -14,13 +13,13 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 
 /**
- * Metadata used by {@link PropertyFeatureProvider}.
+ * Feature Metadata.
  */
 public class PropertyFeatureMetaData implements FeatureMetaData {
 
     private String label;
     private final FeatureState defaultFeatureState;
-    private final Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+    private final Set<FeatureGroup> groups = new HashSet<>();
 
     public PropertyFeatureMetaData(Feature feature, String specification) {
         boolean enabledByDefault = false;
@@ -51,7 +50,7 @@ public class PropertyFeatureMetaData implements FeatureMetaData {
     }
 
     private Set<FeatureGroup> parseFeatureGroups(String value) {
-        Set<FeatureGroup> groups = new HashSet<FeatureGroup>();
+        Set<FeatureGroup> groups = new HashSet<>();
         for (String label : value.split(",")) {
             if (Strings.isNotBlank(label)) {
                 groups.add(new SimpleFeatureGroup(label.trim()));

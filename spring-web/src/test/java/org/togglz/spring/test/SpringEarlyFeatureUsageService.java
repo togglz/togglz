@@ -1,6 +1,6 @@
 package org.togglz.spring.test;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;

@@ -3,14 +3,17 @@ package org.togglz.core.activation;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
+import javax.script.Bindings;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngineFactory;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -18,7 +21,7 @@ import org.togglz.core.util.Strings;
 
 public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
-    private final Log log = LogFactory.getLog(ScriptEngineActivationStrategy.class);
+    private final Logger log = LoggerFactory.getLogger(ScriptEngineActivationStrategy.class);
 
     public static final String ID = "script";
     public static final String PARAM_SCRIPT = "script";
@@ -42,7 +45,6 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState featureState, FeatureUser user) {
-
         String lang = featureState.getParameter(PARAM_LANG);
         String script = featureState.getParameter(PARAM_SCRIPT);
 
@@ -51,21 +53,23 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
             log.error("Could not find script engine for: " + lang);
             return false;
         }
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("polyglot.js.allowHostAccess", true);
+        bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
+        bindings.put("polyglot.js.nashorn-compat", true);
 
         engine.put("user", user);
         engine.put("date", new Date());
-        try {
 
+        try {
             Object result = engine.eval(script);
             if (result instanceof Boolean) {
-                return ((Boolean) result).booleanValue();
+                return (Boolean) result;
             }
-
         } catch (ScriptException e) {
             log.error("Could not evaluate script for feature " + featureState.getFeature().name() + ": " + e.getMessage());
         }
         return false;
-
     }
 
     @Override
@@ -82,7 +86,7 @@ public class ScriptEngineActivationStrategy implements ActivationStrategy {
 
     private static class ScriptLanguageParameter implements Parameter {
 
-        private List<String> languages = new ArrayList<String>();
+        private final List<String> languages = new ArrayList<>();
 
         public ScriptLanguageParameter(ScriptEngineManager engineManager) {
             for (ScriptEngineFactory factory : engineManager.getEngineFactories()) {

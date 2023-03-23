@@ -1,10 +1,10 @@
 package org.togglz.mongodb;
 
-import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -77,9 +77,7 @@ public class MongoStateRepository implements StateRepository {
             return state;
 
         }
-
         return null;
-
     }
 
     @Override
@@ -102,10 +100,9 @@ public class MongoStateRepository implements StateRepository {
         }
 
         Document query = queryFor(featureState.getFeature());
-        UpdateOptions updateOptions = new UpdateOptions().upsert(true);
+        ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
 
-        togglzCollection().replaceOne(query, featureStateDocument, updateOptions);
-
+        togglzCollection().replaceOne(query, featureStateDocument, replaceOptions);
     }
 
     protected Document queryFor(Feature feature) {
@@ -162,7 +159,6 @@ public class MongoStateRepository implements StateRepository {
          * The {@link WriteConcern} used when accessing the database. By default <code>ACKNOWLEDGED</code> will be used.
          *
          * @param writeConcern The {@link WriteConcern} to use
-         * @return
          */
         public Builder writeConcern(WriteConcern writeConcern) {
             this.writeConcern = writeConcern;
@@ -177,5 +173,4 @@ public class MongoStateRepository implements StateRepository {
         }
 
     }
-
 }

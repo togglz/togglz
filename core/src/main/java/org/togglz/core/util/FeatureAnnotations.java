@@ -1,17 +1,16 @@
 package org.togglz.core.util;
 
+import org.togglz.core.Feature;
+import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.FeatureAttribute;
+import org.togglz.core.annotation.Label;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.togglz.core.Feature;
-import org.togglz.core.annotation.EnabledByDefault;
-import org.togglz.core.annotation.FeatureAttribute;
-import org.togglz.core.annotation.InfoLink;
-import org.togglz.core.annotation.Label;
-import org.togglz.core.annotation.Owner;
 
 /**
  * Utility class to read annotation on feature enums.
@@ -29,22 +28,6 @@ public class FeatureAnnotations {
         return feature.name();
     }
 
-    public static String getOwner(Feature feature) {
-        Owner owner = getAnnotation(feature, Owner.class);
-        if (owner != null) {
-            return owner.value();
-        }
-        return null;
-    }
-
-    public static String getInfoLink(Feature feature) {
-        InfoLink infoLink = getAnnotation(feature, InfoLink.class);
-        if (infoLink != null) {
-            return infoLink.value();
-        }
-        return null;
-    }
-
     public static boolean isEnabledByDefault(Feature feature) {
         return isAnnotationPresent(feature, EnabledByDefault.class);
     }
@@ -54,7 +37,7 @@ public class FeatureAnnotations {
     }
 
     public static Set<Annotation> getAnnotations(Feature feature) {
-        Set<Annotation> annotations = new HashSet<Annotation>();
+        Set<Annotation> annotations = new HashSet<>();
         try {
             Class<? extends Feature> featureClass = feature.getClass();
             Annotation[] fieldAnnotations = featureClass.getField(feature.name()).getAnnotations();
@@ -64,9 +47,7 @@ public class FeatureAnnotations {
             annotations.addAll(Arrays.asList(classAnnotations));
 
             return annotations;
-        } catch (SecurityException e) {
-            // ignore
-        } catch (NoSuchFieldException e) {
+        } catch (SecurityException | NoSuchFieldException e) {
             // ignore
         }
         return annotations;
@@ -79,9 +60,7 @@ public class FeatureAnnotations {
             A classAnnotation = featureClass.getAnnotation(annotationType);
 
             return fieldAnnotation != null ? fieldAnnotation : classAnnotation;
-        } catch (SecurityException e) {
-            // ignore
-        } catch (NoSuchFieldException e) {
+        } catch (SecurityException | NoSuchFieldException e) {
             // ignore
         }
         return null;
@@ -93,9 +72,7 @@ public class FeatureAnnotations {
      * found.
      */
     public static String[] getFeatureAttribute(Annotation annotation) {
-
         try {
-
             // only annotations which are annotated with @FeatureAttribute are interesting
             FeatureAttribute details = annotation.annotationType().getAnnotation(FeatureAttribute.class);
             if (details != null) {
@@ -111,21 +88,9 @@ public class FeatureAnnotations {
                 }
 
             }
-
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException(e);
-        } catch (SecurityException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException(e);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException(e);
-        } catch (InvocationTargetException e) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new IllegalStateException(e);
         }
-
         return null;
-
     }
-
 }

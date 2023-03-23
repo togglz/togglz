@@ -27,7 +27,7 @@ import org.togglz.core.user.UserProvider;
  */
 public class ThreadLocalUserProvider implements UserProvider {
 
-    private static ThreadLocal<FeatureUser> threadLocal = new ThreadLocal<FeatureUser>();
+    private static final ThreadLocal<FeatureUser> threadLocal = new ThreadLocal<>();
 
     /**
      * Store the supplied FeatureUser in the thread context. After calling this method all calls of {@link #getCurrentUser()}

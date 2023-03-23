@@ -1,104 +1,177 @@
 package org.togglz.spring.security;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.togglz.core.user.FeatureUser;
+import org.togglz.core.user.SimpleFeatureUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.togglz.core.user.FeatureUser;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+import static org.togglz.spring.security.SpringSecurityUserProvider.USER_ATTRIBUTE_ROLES;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ SecurityContextHolder.class })
 public class SpringSecurityUserProviderTest {
 
-    private SpringSecurityUserProvider userProvider;
+    private SpringSecurityUserProvider admin;
 
-    @Mock
-    private SecurityContext securityContext;
-
-    @Mock
-    private Authentication authentication;
-
-    @Before
-    public void setUp() throws Exception {
-        mockStatic(SecurityContextHolder.class);
-
-        when(SecurityContextHolder.getContext()).thenReturn(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        when(authentication.getPrincipal()).thenReturn("principal");
-
-        userProvider = new SpringSecurityUserProvider("ROLE_ADMIN");
+    @BeforeEach
+    public void setUp() {
+        admin = new SpringSecurityUserProvider("ROLE_ADMIN");
     }
 
     @Test
-    public void getCurrentUserWillReturnFeatureAdminWhenAuthoritiesContainFeatureAdminAuthority() throws Exception {
-        // arrange
-        Collection authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_1"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_2"));
-        when(authentication.getAuthorities()).thenReturn(authorities);
+    public void getCurrentUserWillReturnFeatureAdminWhenAuthoritiesContainFeatureAdminAuthority() {
+        try (MockedStatic<SpringSecurityUserProvider> mockedStatic = mockStatic(SpringSecurityUserProvider.class)) {
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_1"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_2"));
 
-        // act
-        FeatureUser user = userProvider.getCurrentUser();
+            mockedStatic.when(SpringSecurityUserProvider::createAuthentication).thenReturn(new MyAuthentication(authorities));
+            final SpringSecurityUserProvider mock = mock(SpringSecurityUserProvider.class);
+            when(mock.getCurrentUser()).thenReturn(new SimpleFeatureUser("bennetelli"));
 
-        // assert
-        assertThat(user.isFeatureAdmin(), is(true));
+            FeatureUser user = admin.getCurrentUser();
+
+            // assert
+            assertTrue(user.isFeatureAdmin());
+        }
     }
 
     @Test
-    public void getCurrentUserWillReturnNormalUserWhenAuthoritiesDoNotContainFeatureAdminAuthority() throws Exception {
-        // arrange
-        Collection authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_1"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_2"));
-        when(authentication.getAuthorities()).thenReturn(authorities);
+    public void getCurrentUserWillReturnNormalUserWhenAuthoritiesDoNotContainFeatureAdminAuthority() {
+        try (MockedStatic<SpringSecurityUserProvider> mockedStatic = mockStatic(SpringSecurityUserProvider.class)) {
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_1"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_2"));
 
-        // act
-        FeatureUser user = userProvider.getCurrentUser();
+            mockedStatic.when(SpringSecurityUserProvider::createAuthentication).thenReturn(new MyAuthentication(authorities));
+            final SpringSecurityUserProvider mock = mock(SpringSecurityUserProvider.class);
+            when(mock.getCurrentUser()).thenReturn(new SimpleFeatureUser("bennetelli"));
 
-        // assert
-        assertThat(user.isFeatureAdmin(), is(false));
+            // act
+            FeatureUser user = admin.getCurrentUser();
+
+            // assert
+            assertFalse(user.isFeatureAdmin());
+        }
     }
 
     @Test
-    public void getCurrentUserWillCopyAuthoritiesFromAuthenticationIntoFeatureUser() throws Exception {
-        // arrange
-        Collection authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_1"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_2"));
-        when(authentication.getAuthorities()).thenReturn(authorities);
+    public void getCurrentUserWillCopyAuthoritiesFromAuthenticationIntoFeatureUser() {
+        try (MockedStatic<SpringSecurityUserProvider> mockedStatic = mockStatic(SpringSecurityUserProvider.class)) {
+            Collection<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_1"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_2"));
 
-        // act
-        FeatureUser user = userProvider.getCurrentUser();
+            mockedStatic.when(SpringSecurityUserProvider::createAuthentication).thenReturn(new MyAuthentication(authorities));
+            final SpringSecurityUserProvider mock = mock(SpringSecurityUserProvider.class);
+            when(mock.getCurrentUser()).thenReturn(new SimpleFeatureUser("bennetelli"));
 
-        // assert
-        Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_ROLES);
+            FeatureUser user = admin.getCurrentUser();
 
-        assertThat(authoritiesAttr, notNullValue());
-        assertThat(authoritiesAttr, is(Set.class));
+            // assert
+            Object authoritiesAttr = user.getAttribute(USER_ATTRIBUTE_ROLES);
+            assertTrue(authoritiesAttr instanceof Set);
+            Set authSet = (Set) authoritiesAttr;
 
-        Set<String> authoritySet = (Set<String>) authoritiesAttr;
-        assertThat(authoritySet.size(), is(2));
-        assertThat(authoritySet.contains("ROLE_1"), is(true));
-        assertThat(authoritySet.contains("ROLE_2"), is(true));
+            assertNotNull(authSet);
+
+            Set<String> authoritySet = (Set<String>) authSet;
+            assertEquals(authoritySet.size(), 2);
+            assertTrue(authoritySet.contains("ROLE_1"));
+            assertTrue(authoritySet.contains("ROLE_2"));
+        }
+    }
+
+    static class MyAuthentication implements Authentication {
+
+        private final Collection<GrantedAuthority> authorities;
+
+        public MyAuthentication(Collection<GrantedAuthority> authorities) {
+            this.authorities = authorities;
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return this.authorities;
+        }
+
+        @Override
+        public Object getCredentials() {
+            return null;
+        }
+
+        @Override
+        public Object getDetails() {
+            return null;
+        }
+
+        @Override
+        public Object getPrincipal() {
+            return new UserDetails() {
+                @Override
+                public Collection<? extends GrantedAuthority> getAuthorities() {
+                    return null;
+                }
+
+                @Override
+                public String getPassword() {
+                    return null;
+                }
+
+                @Override
+                public String getUsername() {
+                    return "my-name";
+                }
+
+                @Override
+                public boolean isAccountNonExpired() {
+                    return false;
+                }
+
+                @Override
+                public boolean isAccountNonLocked() {
+                    return false;
+                }
+
+                @Override
+                public boolean isCredentialsNonExpired() {
+                    return false;
+                }
+
+                @Override
+                public boolean isEnabled() {
+                    return false;
+                }
+            };
+        }
+
+        @Override
+        public boolean isAuthenticated() {
+            return false;
+        }
+
+        @Override
+        public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
     }
 }

@@ -1,19 +1,13 @@
 package org.togglz.spring.activation;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoint;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.togglz.core.Feature;
@@ -23,6 +17,14 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+
 /**
  * <p>
  * Tests for the {@link SpringProfileActivationStrategy} class.
@@ -30,65 +32,42 @@ import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
  *
  * @author Alasdair Mercer
  */
-@RunWith(Theories.class)
-public class SpringProfileActivationStrategyTest {
+class SpringProfileActivationStrategyTest {
 
-    @DataPoint
-    public static final IsActiveTestCase TC_1 = new IsActiveTestCase("profile is not active", false, "p1", "p2");
-    @DataPoint
-    public static final IsActiveTestCase TC_2 = new IsActiveTestCase("profile is not active but param is negated", true,
-        "!p1", "p2");
-    @DataPoint
-    public static final IsActiveTestCase TC_3 = new IsActiveTestCase("profile is active", true, "p1", "p1");
-    @DataPoint
-    public static final IsActiveTestCase TC_4 = new IsActiveTestCase("profile is active and param case is different",
-        true, "p1", "P1");
-    @DataPoint
-    public static final IsActiveTestCase TC_5 = new IsActiveTestCase(
-        "profile is active and param case is different (inverted)", true, "P1", "p1");
-    @DataPoint
-    public static final IsActiveTestCase TC_6 = new IsActiveTestCase("profile is active but param is negated", false,
-        "!p1", "p1");
-    @DataPoint
-    public static final IsActiveTestCase TC_7 = new IsActiveTestCase("none of profiles are active", false, "p1,p2,p3",
-        "p4");
-    @DataPoint
-    public static final IsActiveTestCase TC_8 = new IsActiveTestCase(
-        "none of profiles are active but at least one param is negated", true, "p1,p2,!p3", "p4");
-    @DataPoint
-    public static final IsActiveTestCase TC_9 = new IsActiveTestCase("at least one profile is active", true, "p1,p2,p3",
-        "p3", "p4");
-    @DataPoint
-    public static final IsActiveTestCase TC_10 = new IsActiveTestCase("all profiles are active", true, "p1,p2,p3", "p1",
-        "p2", "p3", "p4");
-    @DataPoint
-    public static final IsActiveTestCase TC_11 = new IsActiveTestCase(
-        "none of profiles are active but all params are negated", true, "!p1,!p2,!p3", "p4");
-    @DataPoint
-    public static final IsActiveTestCase TC_12 = new IsActiveTestCase("no profiles are active", false, "p1");
-    @DataPoint
-    public static final IsActiveTestCase TC_13 = new IsActiveTestCase("no profiles are active but param is negated",
-        true, "!p1");
+    private static Stream<Arguments> activeTestCases() {
+        return Stream.of(
+                Arguments.of(new IsActiveTestCase("profile is not active", false, "p1", "p2")),
+                Arguments.of(new IsActiveTestCase("profile is not active but param is negated", true, "!p1", "p2")),
+                Arguments.of(new IsActiveTestCase("profile is active", true, "p1", "p1")),
+                Arguments.of(new IsActiveTestCase("profile is active and param case is different", true, "p1", "P1")),
+                Arguments.of(new IsActiveTestCase("profile is active and param case is different (inverted)", true, "P1", "p1")),
+                Arguments.of(new IsActiveTestCase("profile is active but param is negated", false, "!p1", "p1")),
+                Arguments.of(new IsActiveTestCase("none of profiles are active", false, "p1,p2,p3", "p4")),
+                Arguments.of(new IsActiveTestCase("none of profiles are active but at least one param is negated", true, "p1,p2,!p3", "p4")),
+                Arguments.of(new IsActiveTestCase("at least one profile is active", true, "p1,p2,p3", "p3", "p4")),
+                Arguments.of(new IsActiveTestCase("all profiles are active", true, "p1,p2,p3", "p1", "p2", "p3", "p4")),
+                Arguments.of(new IsActiveTestCase("none of profiles are active but all params are negated", true, "!p1,!p2,!p3", "p4")),
+                Arguments.of(new IsActiveTestCase("no profiles are active", false, "p1")),
+                Arguments.of(new IsActiveTestCase("no profiles are active but param is negated", true, "!p1")));
+    }
 
     private String[] activeProfiles;
+
     @Mock
     private ApplicationContext mockApplicationContext;
+
     @Mock
     private Environment mockEnvironment;
 
     private SpringProfileActivationStrategy strategy;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.initMocks(this);
 
         activeProfiles = new String[0];
 
-        when(mockEnvironment.getActiveProfiles()).thenAnswer(new Answer<Object>() {
-            @Override public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return activeProfiles;
-            }
-        });
+        when(mockEnvironment.getActiveProfiles()).thenAnswer(invocationOnMock -> activeProfiles);
         when(mockApplicationContext.getEnvironment()).thenReturn(mockEnvironment);
 
         ContextClassLoaderApplicationContextHolder.bind(mockApplicationContext);
@@ -96,39 +75,40 @@ public class SpringProfileActivationStrategyTest {
         strategy = new SpringProfileActivationStrategy();
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         ContextClassLoaderApplicationContextHolder.release();
     }
 
     @Test
-    public void testGetId() {
+    void testGetId() {
         assertEquals(SpringProfileActivationStrategy.ID, strategy.getId());
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         assertTrue(Strings.isNotBlank(strategy.getName()));
     }
 
-    @Theory
-    public void testIsActive(IsActiveTestCase testCase) {
+    @ParameterizedTest
+    @MethodSource("activeTestCases")
+    void testIsActive(IsActiveTestCase testCase) {
         activeProfiles = testCase.activeProfiles;
 
         testCase.run(strategy);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testIsActiveThrowsWhenNoApplicationContext() {
+    @Test
+    void testIsActiveThrowsWhenNoApplicationContext() {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, true);
 
         ContextClassLoaderApplicationContextHolder.release();
 
-        strategy.isActive(featureState, null);
+        assertThrows(IllegalStateException.class, () -> strategy.isActive(featureState, null));
     }
 
     @Test
-    public void testGetParameters() {
+    void testGetParameters() {
         Parameter[] parameters = strategy.getParameters();
 
         assertEquals(1, parameters.length);
@@ -142,29 +122,29 @@ public class SpringProfileActivationStrategyTest {
     }
 
     @Test
-    public void testGetTokenParameterName() {
+    void testGetTokenParameterName() {
         assertEquals(SpringProfileActivationStrategy.PARAM_PROFILES, strategy.getTokenParameterName());
     }
 
     @Test
-    public void testGetTokenParameterTransformer() {
+    void testGetTokenParameterTransformer() {
         TokenTransformer transformer = strategy.getTokenParameterTransformer();
 
         assertNotNull(transformer);
         assertEquals("foo", transformer.transform("FOO"));
     }
 
-    public enum TestFeatures implements Feature {
+    enum TestFeatures implements Feature {
 
         FEATURE_ONE
     }
 
     private static class IsActiveTestCase {
 
-        private String[] activeProfiles;
-        private boolean expected;
-        private String message;
-        private String profilesParam;
+        private final String[] activeProfiles;
+        private final boolean expected;
+        private final String message;
+        private final String profilesParam;
 
         IsActiveTestCase(String message, boolean expected, String profilesParam, String... activeProfiles) {
             this.message = (expected ? "Active" : "Inactive") + " when " + message;
@@ -177,7 +157,7 @@ public class SpringProfileActivationStrategyTest {
             FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !expected);
             featureState.setParameter(SpringProfileActivationStrategy.PARAM_PROFILES, profilesParam);
 
-            assertEquals(message, expected, strategy.isActive(featureState, null));
+            assertEquals(expected, strategy.isActive(featureState, null), message);
         }
     }
 }

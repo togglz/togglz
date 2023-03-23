@@ -20,7 +20,6 @@ public class ManagedFeatureManagerTest {
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
             .addAsLibrary(Deployments.getTogglzCDIArchive())
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .addClass(Features.class)
             .addClass(ManagedFeatureManagerProvider.class)
             .setWebXML(Packaging.webAppDescriptor()

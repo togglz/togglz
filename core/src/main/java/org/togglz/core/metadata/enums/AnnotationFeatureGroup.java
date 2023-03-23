@@ -8,11 +8,9 @@ import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.util.FeatureAnnotations;
 
 /**
- * 
  * An implementation of {@link FeatureGroup} that based on annotations.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class AnnotationFeatureGroup implements FeatureGroup {
 
@@ -25,13 +23,31 @@ public class AnnotationFeatureGroup implements FeatureGroup {
         if (labelAnnotation != null) {
             label = labelAnnotation.value();
         } else {
-            label = groupAnnotation.getClass().getSimpleName();
+            label = groupAnnotation.getSimpleName();
+        }
+    }
+
+    private AnnotationFeatureGroup(Annotation annotation, String value) {
+        this.annotation = annotation.annotationType();
+        Label labelAnnotation = this.annotation.getAnnotation(Label.class);
+        if (labelAnnotation != null) {
+            label = labelAnnotation.value();
+        } else {
+            label = value;
         }
     }
 
     public static FeatureGroup build(Class<? extends Annotation> groupAnnotation) {
         if (groupAnnotation.isAnnotationPresent(org.togglz.core.annotation.FeatureGroup.class)) {
             return new AnnotationFeatureGroup(groupAnnotation);
+        }
+        return null;
+    }
+
+    static FeatureGroup build(Annotation annotation, String annotationValue) {
+        String annotationName = annotation.annotationType().getName();
+        if (annotationName.equals(org.togglz.core.annotation.FeatureGroup.class.getCanonicalName())) {
+            return new AnnotationFeatureGroup(annotation, annotationValue);
         }
         return null;
     }

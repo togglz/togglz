@@ -1,29 +1,22 @@
 package org.togglz.core.repository.cache;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
 
-/**
- * 
- * Unit test for {@link CachingStateRepository}.
- * 
- * @author Christian Kaltepoth
- * 
- */
-public class CachingStateRepositoryTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    private StateRepository delegate;
+class CachingStateRepositoryTest {
 
-    @Before
-    public void setup() {
-        delegate = Mockito.mock(StateRepository.class);
+    private final StateRepository delegate = Mockito.mock(StateRepository.class);
+
+    @BeforeEach
+    void setUp() {
         // the mock supports the ENUM
         Mockito.when(delegate.getFeatureState(DummyFeature.TEST))
             .thenReturn(new FeatureState(DummyFeature.TEST, true));
@@ -32,29 +25,22 @@ public class CachingStateRepositoryTest {
             .thenReturn(new FeatureState(DummyFeature.TEST, true));
     }
 
-    public void tearDown() {
-        delegate = null;
-    }
-
     @Test
-    public void testCachingOfReadOperationsWithTimeToLife() throws InterruptedException {
-
+    void cachingOfReadOperationsWithTimeToLive() throws InterruptedException {
+        // given
         StateRepository repository = new CachingStateRepository(delegate, 10000);
 
-        // do some lookups
+        // when
         for (int i = 0; i < 10; i++) {
             assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled());
             Thread.sleep(10);
         }
-
-        // delegate only called once
-        Mockito.verify(delegate).getFeatureState(DummyFeature.TEST);
-        Mockito.verifyNoMoreInteractions(delegate);
-
+        // then
+        Mockito.verify(delegate, Mockito.times(1)).getFeatureState(DummyFeature.TEST);
     }
 
     @Test
-    public void testCacheWithDifferentFeatureImplementations() throws InterruptedException {
+    void testCacheWithDifferentFeatureImplementations() throws InterruptedException {
 
         StateRepository repository = new CachingStateRepository(delegate, 0);
 
@@ -69,11 +55,10 @@ public class CachingStateRepositoryTest {
         // delegate only called once
         Mockito.verify(delegate).getFeatureState(DummyFeature.TEST);
         Mockito.verifyNoMoreInteractions(delegate);
-
     }
 
     @Test
-    public void testCachingOfReadOperationsWithoutTimeToLife() throws InterruptedException {
+    void usesTheCacheForTtlOfZero() throws InterruptedException {
 
         StateRepository repository = new CachingStateRepository(delegate, 0);
 
@@ -86,29 +71,27 @@ public class CachingStateRepositoryTest {
         // delegate only called once
         Mockito.verify(delegate).getFeatureState(DummyFeature.TEST);
         Mockito.verifyNoMoreInteractions(delegate);
-
     }
 
     @Test
-    public void testCacheExpiryBecauseOfTimeToLife() throws InterruptedException {
-
+    void delegateIsUsedWhenCacheExpires() throws InterruptedException {
+        // given
         long ttl = 5;
         StateRepository repository = new CachingStateRepository(delegate, ttl);
 
-        // do some lookups
+        // when
         for (int i = 0; i < 5; i++) {
             assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled());
             Thread.sleep(ttl + 30); // wait some small amount of time to let the cache expire
         }
 
-        // delegate called 5 times
+        // then
         Mockito.verify(delegate, Mockito.times(5)).getFeatureState(DummyFeature.TEST);
         Mockito.verifyNoMoreInteractions(delegate);
-
     }
 
     @Test
-    public void testStateModifyExpiresCache() throws InterruptedException {
+    void stateModifyExpiresCache() throws InterruptedException {
 
         StateRepository repository = new CachingStateRepository(delegate, 10000);
 
@@ -131,16 +114,14 @@ public class CachingStateRepositoryTest {
         Mockito.verify(delegate, Mockito.times(2)).getFeatureState(DummyFeature.TEST);
         Mockito.verify(delegate).setFeatureState(Mockito.any(FeatureState.class));
         Mockito.verifyNoMoreInteractions(delegate);
-
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void shouldFailForNegativeTtl() {
-        new CachingStateRepository(delegate, -1);
+    @Test
+    void shouldFailForNegativeTtl() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new CachingStateRepository(delegate, -1));
     }
 
     private enum DummyFeature implements Feature {
-        TEST;
+        TEST
     }
-
 }

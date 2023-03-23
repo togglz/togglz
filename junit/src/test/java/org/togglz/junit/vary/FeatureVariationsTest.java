@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.togglz.testing.vary.VariationSet;
+import org.togglz.testing.vary.VariationSetBuilder;
 
 @RunWith(FeatureVariations.class)
 public class FeatureVariationsTest {

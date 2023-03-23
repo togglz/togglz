@@ -2,7 +2,6 @@ package org.togglz.core.context;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ public class BeanFinderFeatureManagerProvider implements FeatureManagerProvider 
     public FeatureManager getFeatureManager() {
 
         // we _may_ find multiple managers, which will lead to an error
-        Set<FeatureManager> managers = new HashSet<FeatureManager>();
+        Set<FeatureManager> managers = new HashSet<>();
 
         // ask all providers for managed FeatureManager
         for (BeanFinder beanFinder : ServiceLoader.load(BeanFinder.class)) {

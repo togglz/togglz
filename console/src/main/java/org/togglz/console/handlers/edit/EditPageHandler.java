@@ -1,10 +1,14 @@
 package org.togglz.console.handlers.edit;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
@@ -19,6 +23,7 @@ import org.togglz.core.spi.ActivationStrategy;
 
 import com.floreysoft.jmte.Engine;
 import org.togglz.core.util.Services;
+import org.togglz.servlet.spi.CSRFTokenValidator;
 
 public class EditPageHandler extends RequestHandlerBase {
 
@@ -34,11 +39,13 @@ public class EditPageHandler extends RequestHandlerBase {
 
     @Override
     public void process(RequestEvent event) throws IOException {
-
         FeatureManager featureManager = event.getFeatureManager();
         HttpServletRequest request = event.getRequest();
         HttpServletResponse response = event.getResponse();
-
+		if(!validateCSRFToken(event)) {
+			renderErrorPage(event);
+			return;
+		}
         // identify the feature
         Feature feature = null;
         String featureAsString = request.getParameter("f");
@@ -48,7 +55,7 @@ public class EditPageHandler extends RequestHandlerBase {
             }
         }
         if (feature == null) {
-            response.sendError(403);
+            response.sendError(400);
             return;
         }
 
@@ -76,10 +83,12 @@ public class EditPageHandler extends RequestHandlerBase {
 
                 FeatureState state = featureModel.toFeatureState();
                 featureManager.setFeatureState(state);
+
+                String tabIndexAsString = request.getParameter("t");
+                response.addCookie(new Cookie("t", tabIndexAsString));
                 response.sendRedirect("index");
 
             }
-
             // got validation errors
             else {
                 renderEditPage(event, featureModel);
@@ -89,23 +98,42 @@ public class EditPageHandler extends RequestHandlerBase {
 
     }
 
-    private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
+    private boolean validateCSRFToken(RequestEvent event) {
+        boolean isValid = false;
+        if (event.getRequestContext().isValidateCSRFToken()) {
+            for (CSRFTokenValidator validator : Services.get(CSRFTokenValidator.class)) {
+                if (validator.isTokenValid(event.getRequest())) {
+                    isValid = true;
+                    break;
+                }
+            }
+        } else {
+            isValid = true;
+        }
+        return isValid;
+    }
 
-        List<CSRFToken> tokens = new ArrayList<CSRFToken>();
+    private void renderErrorPage(RequestEvent event) throws IOException {
+		String template = getResourceAsString("error.html");
+		String content = new Engine().transform(template, new HashMap<>());
+		event.getResponse().setStatus(401);
+		writeResponse(event, content);
+	}
+
+    private void renderEditPage(RequestEvent event, FeatureModel featureModel) throws IOException {
+        List<CSRFToken> tokens = new ArrayList<>();
         for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
             CSRFToken token = provider.getToken(event.getRequest());
             if (token != null) {
                 tokens.add(token);
             }
         }
-
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("model", featureModel);
         model.put("tokens", tokens);
 
         String template = getResourceAsString("edit.html");
         String content = new Engine().transform(template, model);
         writeResponse(event, content);
-
     }
 }

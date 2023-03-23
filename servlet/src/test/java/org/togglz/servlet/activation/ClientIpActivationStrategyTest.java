@@ -1,38 +1,38 @@
 package org.togglz.servlet.activation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequest.requestFrom;
 import static org.togglz.servlet.activation.ClientIpActivationStrategyTest.MockRequestAssert.assertThat;
 
-import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.servlet.activation.ClientIpActivationStrategy.AddressParameter;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class ClientIpActivationStrategyTest {
 
    protected static class MockRequest {
       private final HttpServletRequest request;
-      
+
       public static MockRequest requestFrom(String remoteAddr) {
          return new MockRequest(remoteAddr);
       }
-      
+
       private MockRequest(String remoteAddr) {
          request = mock(HttpServletRequest.class);
          when(request.getRemoteAddr()).thenReturn(remoteAddr);
          HttpServletRequestHolder.bind(request);
       }
-      
+
       public HttpServletRequest getRequest() {
          return request;
       }
@@ -42,29 +42,27 @@ public class ClientIpActivationStrategyTest {
       protected MockRequestAssert(MockRequest actual) {
          super(actual, MockRequestAssert.class);
       }
-      
+
       public static MockRequestAssert assertThat(MockRequest actual) {
          return new MockRequestAssert(actual);
       }
-      
-      public MockRequestAssert isActiveWithParams(String params) {
+
+      public void isActiveWithParams(String params) {
          if (!strategy().isActive(featureState(params), null)) {
             Assertions.fail("Expected the strategy to turn the feature active with params " + params);
          }
-         return this;
       }
 
-      public MockRequestAssert isInactiveWithParams(String params) {
+      public void isInactiveWithParams(String params) {
          if (strategy().isActive(featureState(params), null)) {
             Assertions.fail("Expected the strategy to turn the feature inactive with params " + params);
          }
-         return this;
       }
 
       private static ClientIpActivationStrategy strategy() {
           return new ClientIpActivationStrategy();
       }
-      
+
 
       private static FeatureState featureState(String ips) {
           return new FeatureState(TestFeature.TEST_FEATURE)
@@ -77,8 +75,8 @@ public class ClientIpActivationStrategyTest {
           TEST_FEATURE
       }
    }
-   
-    @After
+
+    @AfterEach
     public void cleanup() {
         HttpServletRequestHolder.release();
     }
@@ -87,7 +85,7 @@ public class ClientIpActivationStrategyTest {
     public void shouldBeInactiveForNullParams() throws Exception {
        assertThat(requestFrom("10.1.2.3")).isInactiveWithParams(null);
     }
-    
+
     @Test
     public void shouldBeInactiveForEmptyParams() throws Exception {
        assertThat(requestFrom("10.1.2.3")).isInactiveWithParams("");
@@ -132,7 +130,7 @@ public class ClientIpActivationStrategyTest {
     public void shouldBeInactiveForNonMatchingIpv6() throws Exception {
        assertThat(requestFrom("2001:db8:0:0:0:0:0:1")).isInactiveWithParams("2001:db8:0:0:0:0:0:2");
     }
-    
+
     @Test
     public void shouldBeActiveForMatchingIpv6() throws Exception {
        assertThat(requestFrom("2001:db8:0:0:0:0:0:1")).isActiveWithParams("2001:db8:0:0:0:0:0:1");
@@ -142,7 +140,7 @@ public class ClientIpActivationStrategyTest {
     public void shouldBeInactiveForNonMatchingIpv6ShortForm() throws Exception {
        assertThat(requestFrom("2001:db8:0:0:0:0:0:1")).isInactiveWithParams("2001:db8::2");
     }
-    
+
     @Test
     public void shouldBeActiveForMatchingIpv6ShortForm() throws Exception {
        assertThat(requestFrom("2001:db8:0:0:0:0:0:1")).isActiveWithParams("2001:db8::1");
@@ -152,7 +150,7 @@ public class ClientIpActivationStrategyTest {
     public void shouldBeActiveForMatchingIpv6Range() throws Exception {
        assertThat(requestFrom("2001:db8:0:0:0:0:0:1")).isActiveWithParams("2001:db8::/24");
     }
-    
+
     @Test
     public void addressParameterProperties() {
        AddressParameter param = addressParam();

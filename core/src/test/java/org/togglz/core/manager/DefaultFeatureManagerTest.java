@@ -1,14 +1,8 @@
 package org.togglz.core.manager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.StringWhitelistActivationStrategy;
 import org.togglz.core.activation.UsernameActivationStrategy;
@@ -22,7 +16,15 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
 
-public class DefaultFeatureManagerTest {
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+class DefaultFeatureManagerTest {
 
     private StateRepository repository;
     private FeatureManager manager;
@@ -30,9 +32,8 @@ public class DefaultFeatureManagerTest {
 
     private static final String WHITELIST_CONTEXT = "WHITELIST_CONTEXT";
 
-    @Before
-    public void before() {
-
+    @BeforeEach
+    void before() {
         repository = new InMemoryStateRepository();
         repository.setFeatureState(new FeatureState(MyFeatures.DELETE_USERS, true)
             .setStrategyId(UsernameActivationStrategy.ID)
@@ -58,37 +59,35 @@ public class DefaultFeatureManagerTest {
 
     }
 
-    @After
-    public void after() {
+    @AfterEach
+    void after() {
         repository = null;
         manager = null;
         featureUserProvider = null;
     }
 
     @Test
-    public void testGetFeatures() {
-        assertThat(manager.getFeatures())
-            .contains(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL, MyFeatures.MISSING_STRATEGY);
+    void testGetFeatures() {
+        assertTrue(manager.getFeatures().containsAll(Arrays.asList(MyFeatures.DELETE_USERS, MyFeatures.EXPERIMENTAL, MyFeatures.MISSING_STRATEGY)));
     }
 
     @Test
-    public void testIsActive() {
-
+    void testIsActive() {
         // DELETE_USERS disabled for unknown user
         featureUserProvider.setFeatureUser(null);
-        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS));
+        assertFalse(manager.isActive(MyFeatures.DELETE_USERS));
 
         // DELETE_USERS enabled for admin user
         featureUserProvider.setFeatureUser(new SimpleFeatureUser("admin", false));
-        assertEquals(true, manager.isActive(MyFeatures.DELETE_USERS));
+        assertTrue(manager.isActive(MyFeatures.DELETE_USERS));
 
         // DELETE_USERS enabled for other user
         featureUserProvider.setFeatureUser(new SimpleFeatureUser("somebody", false));
-        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS));
+        assertFalse(manager.isActive(MyFeatures.DELETE_USERS));
 
         // EXPERIMENTAL disabled for all
         featureUserProvider.setFeatureUser(null);
-        assertEquals(false, manager.isActive(MyFeatures.EXPERIMENTAL));
+        assertFalse(manager.isActive(MyFeatures.EXPERIMENTAL));
 
         // CONTEXT_AWARE_FEATURE disabled if no context provided
         assertEquals(false, manager.isActive(MyFeatures.CONTEXT_AWARE_FEATURE));
@@ -110,17 +109,14 @@ public class DefaultFeatureManagerTest {
         ));
 
         // MISSING_STRATEGY disabled for all
-        assertEquals(false, manager.isActive(MyFeatures.MISSING_STRATEGY));
+        assertFalse(manager.isActive(MyFeatures.MISSING_STRATEGY));
 
         // EMPTY_STRATEGY enabled for all
-        assertEquals(true, manager.isActive(MyFeatures.EMPTY_STRATEGY));
-
-        // EMPTY_STRATEGY enabled for all
-        assertEquals(true, manager.isActive(MyFeatures.EMPTY_STRATEGY));
+        assertTrue(manager.isActive(MyFeatures.EMPTY_STRATEGY));
     }
 
     @Test
-    public void testIsActiveUsingDefaultFeatureState() {
+    void testIsActiveUsingDefaultFeatureState() {
         FeatureProvider featureProvider = mock(FeatureProvider.class);
         FeatureMetaData featureMetaData = mock(FeatureMetaData.class);
         when(featureMetaData.getDefaultFeatureState()).thenReturn(new FeatureState(MyFeatures.NOT_STORED_FEATURE, true));
@@ -133,16 +129,15 @@ public class DefaultFeatureManagerTest {
             .userProvider(featureUserProvider)
             .build();
 
-        assertEquals(true, manager.isActive(MyFeatures.NOT_STORED_FEATURE));
+        assertTrue(manager.isActive(MyFeatures.NOT_STORED_FEATURE));
 
     }
 
     @Test
-    public void testShouldHandleEnabledFlagCorrectlyWithCustomStrategy() {
-
+    void testShouldHandleEnabledFlagCorrectlyWithCustomStrategy() {
         // enabled for admin
         featureUserProvider.setFeatureUser(new SimpleFeatureUser("admin", false));
-        assertEquals(true, manager.isActive(MyFeatures.DELETE_USERS));
+        assertTrue(manager.isActive(MyFeatures.DELETE_USERS));
 
         // disable feature, but keep configuration
         FeatureState state = repository.getFeatureState(MyFeatures.DELETE_USERS);
@@ -150,22 +145,21 @@ public class DefaultFeatureManagerTest {
         repository.setFeatureState(state);
 
         // enabled for admin
-        assertEquals(false, manager.isActive(MyFeatures.DELETE_USERS));
+        assertFalse(manager.isActive(MyFeatures.DELETE_USERS));
 
     }
 
     @Test
-    public void testGetFeatureState() {
-
+    void testGetFeatureState() {
         FeatureState state = manager.getFeatureState(MyFeatures.DELETE_USERS);
         assertEquals(MyFeatures.DELETE_USERS, state.getFeature());
-        assertEquals(true, state.isEnabled());
+        assertTrue(state.isEnabled());
         assertEquals("admin", state.getParameter(UsernameActivationStrategy.PARAM_USERS));
 
     }
 
     @Test
-    public void testGetFeatureStateUsingDefaultFeatureState() {
+    void testGetFeatureStateUsingDefaultFeatureState() {
         FeatureProvider featureProvider = mock(FeatureProvider.class);
         FeatureMetaData featureMetaData = mock(FeatureMetaData.class);
         when(featureMetaData.getDefaultFeatureState()).thenReturn(new FeatureState(MyFeatures.NOT_STORED_FEATURE, true));
@@ -180,18 +174,18 @@ public class DefaultFeatureManagerTest {
 
         FeatureState state = manager.getFeatureState(MyFeatures.NOT_STORED_FEATURE);
         assertEquals(MyFeatures.NOT_STORED_FEATURE, state.getFeature());
-        assertEquals(true, state.isEnabled());
+        assertTrue(state.isEnabled());
 
     }
 
     /**
      * {@link UserProvider} that allows to set the user directly
      */
-    private final class TestFeatureUserProvider implements UserProvider {
+    private static final class TestFeatureUserProvider implements UserProvider {
 
         private FeatureUser featureUser;
 
-        public void setFeatureUser(FeatureUser featureUser) {
+        void setFeatureUser(FeatureUser featureUser) {
             this.featureUser = featureUser;
         }
 
@@ -205,7 +199,7 @@ public class DefaultFeatureManagerTest {
     /**
      * Feature under test
      */
-    private static enum MyFeatures implements Feature {
+    private enum MyFeatures implements Feature {
         DELETE_USERS,
         EXPERIMENTAL,
         MISSING_STRATEGY,
@@ -213,5 +207,4 @@ public class DefaultFeatureManagerTest {
         NOT_STORED_FEATURE,
         CONTEXT_AWARE_FEATURE;
     }
-
 }

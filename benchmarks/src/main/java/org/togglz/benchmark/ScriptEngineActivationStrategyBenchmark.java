@@ -17,7 +17,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.ScriptEngineActivationStrategy;
-import org.togglz.core.context.FeatureContext;
 import org.togglz.core.context.StaticFeatureManagerProvider;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.manager.FeatureManagerBuilder;
@@ -46,12 +45,8 @@ public class ScriptEngineActivationStrategyBenchmark {
     private enum ScriptEngineActivationStrategyFeatures implements Feature {
         ALWAYS_TRUE_SCRIPT_ENGINE_ACTIVATION_STRATEGY,
         DISABLED_FEATURE,
-        DYNAMIC_SCRIPT_ENGINE_STRATEGY;
+        DYNAMIC_SCRIPT_ENGINE_STRATEGY
 
-
-        public boolean isActive() {
-            return FeatureContext.getFeatureManager().isActive(this);
-        }
     }
 
     // create an in-memory state repository for our feature
@@ -69,15 +64,14 @@ public class ScriptEngineActivationStrategyBenchmark {
         FeatureState alwaysTrueScriptEngineFeatureState = new FeatureState(ScriptEngineActivationStrategyFeatures.ALWAYS_TRUE_SCRIPT_ENGINE_ACTIVATION_STRATEGY);
         alwaysTrueScriptEngineFeatureState.setEnabled(true);
         alwaysTrueScriptEngineFeatureState.setStrategyId(ScriptEngineActivationStrategy.ID);
-        alwaysTrueScriptEngineFeatureState.setParameter(ScriptEngineActivationStrategy.PARAM_LANG, "nashorn");
+        alwaysTrueScriptEngineFeatureState.setParameter(ScriptEngineActivationStrategy.PARAM_LANG, "ECMAScript");
         alwaysTrueScriptEngineFeatureState.setParameter(ScriptEngineActivationStrategy.PARAM_SCRIPT, "true");
 
         FeatureState dynamicScriptEngineState = new FeatureState(ScriptEngineActivationStrategyFeatures.DYNAMIC_SCRIPT_ENGINE_STRATEGY);
         dynamicScriptEngineState.setEnabled(true);
         dynamicScriptEngineState.setStrategyId(ScriptEngineActivationStrategy.ID);
-        dynamicScriptEngineState.setParameter(ScriptEngineActivationStrategy.PARAM_LANG, "nashorn");
+        dynamicScriptEngineState.setParameter(ScriptEngineActivationStrategy.PARAM_LANG, "ECMAScript");
         dynamicScriptEngineState.setParameter(ScriptEngineActivationStrategy.PARAM_SCRIPT, "Math.random() < Math.pow(1 - (27 - date.getDate()) * 0.2, 3)");
-
 
         manager.setFeatureState(alwaysTrueScriptEngineFeatureState);
         manager.setFeatureState(dynamicScriptEngineState);

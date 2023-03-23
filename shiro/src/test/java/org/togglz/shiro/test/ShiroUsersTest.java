@@ -25,21 +25,22 @@ public class ShiroUsersTest {
     @Deployment(testable = false)
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
-            .addAsLibraries(Packaging.mavenDependencies()
-                .artifact("org.apache.shiro:shiro-web")
-                .asFiles())
-            .addAsLibraries(Deployments.getTogglzShiroArchive())
-            .addClass(ShiroUsersConfiguration.class)
-            .addClass(ShiroLoginServlet.class)
-            .addClass(ShiroLogoutServlet.class)
-            .addClass(TestFeature.class)
-            .addClass(ShiroTestRealm.class)
-            .addAsWebInfResource("shiro.ini")
-            .setWebXML(Packaging.webAppDescriptor()
-                .contextParam(TogglzConfig.class.getName(), ShiroUsersConfiguration.class.getName())
-                .listener(EnvironmentLoaderListener.class)
-                .filter(ShiroFilter.class, "/*")
-                .exportAsAsset());
+                .addAsLibraries(Packaging.mavenDependencies()
+                        //Shiro needs to be added with "jakarta" classifier to change javax.servlet to jakarta.servlet, the ? takes the version from the pom.xml
+                        .artifact("org.apache.shiro:shiro-web:jar:jakarta:?")
+                        .asFiles())
+                .addAsLibraries(Deployments.getTogglzShiroArchive())
+                .addClass(ShiroUsersConfiguration.class)
+                .addClass(ShiroLoginServlet.class)
+                .addClass(ShiroLogoutServlet.class)
+                .addClass(TestFeature.class)
+                .addClass(ShiroTestRealm.class)
+                .addAsWebInfResource("shiro.ini")
+                .setWebXML(Packaging.webAppDescriptor()
+                        .contextParam(TogglzConfig.class.getName(), ShiroUsersConfiguration.class.getName())
+                        .listener(EnvironmentLoaderListener.class)
+                        .filter(ShiroFilter.class, "/*")
+                        .exportAsAsset());
     }
 
     @ArquillianResource

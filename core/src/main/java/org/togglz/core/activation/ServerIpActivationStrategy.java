@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
@@ -17,19 +17,19 @@ import org.togglz.core.util.Strings;
 
 /**
  * Activation strategy that allows to activate features only for certain server IPs.
- * 
+ *
  * @author Eli Abramovitch
  * @author Christian Kaltepoth
  */
 public class ServerIpActivationStrategy implements ActivationStrategy {
 
-    private final Log log = LogFactory.getLog(ServerIpActivationStrategy.class);
+    private final Logger log = LoggerFactory.getLogger(ScriptEngineActivationStrategy.class);
 
     public static final String ID = "server-ip";
 
     public static final String PARAM_IPS = "ips";
 
-    private final Set<String> ipAddresses = new HashSet<String>();
+    private final Set<String> ipAddresses = new HashSet<>();
 
     public ServerIpActivationStrategy()
     {

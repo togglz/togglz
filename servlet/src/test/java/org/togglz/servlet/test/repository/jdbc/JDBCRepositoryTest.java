@@ -1,15 +1,11 @@
 package org.togglz.servlet.test.repository.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -25,6 +21,12 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.DbUtils;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class JDBCRepositoryTest {
@@ -48,7 +50,7 @@ public class JDBCRepositoryTest {
     }
 
     @Test
-    public void testGetFeatureStateFromJDBCRepository() throws IOException {
+    public void testGetFeatureStateFromJDBCRepository() {
 
         FeatureManager featureManager = FeatureContext.getFeatureManager();
 
@@ -56,8 +58,8 @@ public class JDBCRepositoryTest {
         assertNotNull(dataSource);
 
         FeatureState stateNoEntry = featureManager.getFeatureState(JDBCFeatures.F1);
-        assertEquals(false, stateNoEntry.isEnabled());
-        assertEquals(null, stateNoEntry.getStrategyId());
+        assertFalse(stateNoEntry.isEnabled());
+        assertNull(stateNoEntry.getStrategyId());
         assertEquals(0, stateNoEntry.getParameterNames().size());
 
         int inserted = executeUpdate("INSERT INTO MYTABLE " +
@@ -66,7 +68,7 @@ public class JDBCRepositoryTest {
         assertEquals(1, inserted);
 
         FeatureState stateEnabled = featureManager.getFeatureState(JDBCFeatures.F1);
-        assertEquals(true, stateEnabled.isEnabled());
+        assertTrue(stateEnabled.isEnabled());
         assertEquals("SomeStrategy", stateEnabled.getStrategyId());
         assertEquals(1, stateEnabled.getParameterNames().size());
         assertEquals("foobar", stateEnabled.getParameter("param"));
@@ -76,21 +78,21 @@ public class JDBCRepositoryTest {
             "WHERE FEATURE_NAME = 'F1'");
 
         FeatureState stateDisabled = featureManager.getFeatureState(JDBCFeatures.F1);
-        assertEquals(false, stateDisabled.isEnabled());
-        assertEquals(null, stateDisabled.getStrategyId());
+        assertFalse(stateDisabled.isEnabled());
+        assertNull(stateDisabled.getStrategyId());
         assertEquals(0, stateDisabled.getParameterNames().size());
 
     }
 
     @Test
-    public void testSetFeatureStateFromJDBCRepository() throws IOException {
+    public void testSetFeatureStateFromJDBCRepository() {
 
         FeatureManager featureManager = FeatureContext.getFeatureManager();
 
         assertNotNull(featureManager);
         assertNotNull(dataSource);
 
-        assertEquals(0l, executeQuery("SELECT COUNT(*) FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertEquals(0L, executeQuery("SELECT COUNT(*) FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
 
         FeatureState firstState = new FeatureState(JDBCFeatures.F2, true);
         firstState.setStrategyId("someId");
@@ -106,9 +108,8 @@ public class JDBCRepositoryTest {
         featureManager.setFeatureState(secondState);
 
         assertEquals(0, executeQuery("SELECT FEATURE_ENABLED FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
-        assertEquals(null, executeQuery("SELECT STRATEGY_ID FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
-        assertEquals(null, executeQuery("SELECT STRATEGY_PARAMS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
-
+        assertNull(executeQuery("SELECT STRATEGY_ID FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
+        assertNull(executeQuery("SELECT STRATEGY_PARAMS FROM MYTABLE WHERE FEATURE_NAME = 'F2'"));
     }
 
     private Object executeQuery(String sql) {

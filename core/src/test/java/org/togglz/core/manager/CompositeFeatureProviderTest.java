@@ -1,26 +1,28 @@
 package org.togglz.core.manager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.util.NamedFeature;
 
-public class CompositeFeatureProviderTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+class CompositeFeatureProviderTest {
 
 	@Test
-	public void empty() {
+	void empty() {
 		CompositeFeatureProvider provider = new CompositeFeatureProvider();
-		assertThat(provider.getFeatures()).isEmpty();
-		assertThat(provider.getMetaData(new NamedFeature("FOO"))).isNull();
+		assertEquals(0, provider.getFeatures().size());
+		assertNull(provider.getMetaData(new NamedFeature("FOO")));
 	}
 
 	@Test
-	public void oneProvider() {
+	void oneProvider() {
 		@SuppressWarnings("unchecked")
 		CompositeFeatureProvider provider = new CompositeFeatureProvider(new EnumBasedFeatureProvider(TestFeatures.class));
-		assertThat(provider.getFeatures()).hasSize(2);
-		assertThat(provider.getMetaData(new NamedFeature("FOO"))).isNotNull();
+		assertEquals(2, provider.getFeatures().size());
+		assertNotNull(provider.getMetaData(new NamedFeature("FOO")));
 	}
 
 	enum TestFeatures implements Feature {

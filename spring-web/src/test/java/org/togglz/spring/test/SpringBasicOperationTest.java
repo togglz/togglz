@@ -26,6 +26,7 @@ public class SpringBasicOperationTest {
             .addAsLibrary(Deployments.getTogglzSpringArchive())
             .addAsLibraries(Packaging.mavenDependencies()
                 .artifact("org.springframework:spring-web")
+                .artifact("org.springframework:spring-context")
                 .asFiles())
             .addAsWebInfResource("applicationContext.xml")
             .setWebXML("spring-web.xml")
@@ -38,12 +39,10 @@ public class SpringBasicOperationTest {
 
     @Test
     public void testSpringBasicFeatures() throws IOException {
-
         WebClient client = new WebClient();
         TextPage page = client.getPage(url + "features");
         assertTrue(page.getContent().contains("FEATURE1 = false"));
         assertTrue(page.getContent().contains("FEATURE2 = true"));
-
     }
 
 }

@@ -1,27 +1,35 @@
 package org.togglz.appengine.repository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.appengine.api.datastore.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Transaction;
+import com.google.appengine.api.datastore.TransactionOptions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DatastoreStateRepositoryTest {
 
@@ -32,20 +40,20 @@ public class DatastoreStateRepositoryTest {
     private DatastoreStateRepository repository;
     private DatastoreService datastoreService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         helper.setUp();
         datastoreService = DatastoreServiceFactory.getDatastoreService();
         repository = new DatastoreStateRepository(datastoreService);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         helper.tearDown();
     }
 
     @Test
-    public void customKindName() throws EntityNotFoundException {
+    public void customKindName() {
         final String kind = "CustomKind";
         repository = new DatastoreStateRepository(kind, datastoreService);
         assertEquals(kind, repository.kind());
@@ -123,10 +131,8 @@ public class DatastoreStateRepositoryTest {
 
         assertEquals(true, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getProperty(DatastoreStateRepository.STRATEGY_ID));
-        assertThat((List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-            is(Arrays.asList("param")));
-        assertThat((List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-            is(Arrays.asList("foo")));
+        assertEquals(Arrays.asList("param"), (List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_NAMES));
+        assertEquals(Arrays.asList("foo"), (List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES));
     }
 
     @Test
@@ -160,10 +166,9 @@ public class DatastoreStateRepositoryTest {
          */
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(false, state.isEnabled());
-        assertEquals(null, state.getStrategyId());
+        assertFalse(state.isEnabled());
+        assertNull(state.getStrategyId());
         assertEquals(0, state.getParameterNames().size());
-
     }
 
     @SuppressWarnings("serial")
@@ -191,7 +196,7 @@ public class DatastoreStateRepositoryTest {
          */
         assertNotNull(state);
         assertEquals(TestFeature.F1, state.getFeature());
-        assertEquals(true, state.isEnabled());
+        assertTrue(state.isEnabled());
         assertEquals("myStrategy", state.getStrategyId());
         assertEquals(1, state.getParameterNames().size());
         assertEquals("foobar", state.getParameter("param23"));
@@ -223,10 +228,8 @@ public class DatastoreStateRepositoryTest {
 
         assertEquals(true, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
         assertEquals("myStrategy", featureEntity.getProperty(DatastoreStateRepository.STRATEGY_ID));
-        assertThat((List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-            is(Arrays.asList("param23")));
-        assertThat((List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-            is(Arrays.asList("foobar")));
+        assertEquals(Arrays.asList("param23"), (List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_NAMES));
+        assertEquals(Arrays.asList("foobar"), (List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES));
 
         /*
          * WHEN the repository writes new state
@@ -244,10 +247,8 @@ public class DatastoreStateRepositoryTest {
 
         assertEquals(false, featureEntity.getProperty(DatastoreStateRepository.ENABLED));
         assertEquals("someId", featureEntity.getProperty(DatastoreStateRepository.STRATEGY_ID));
-        assertThat((List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_NAMES),
-            is(Arrays.asList("param")));
-        assertThat((List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES),
-            is(Arrays.asList("foo")));
+        assertEquals(Collections.singletonList("param"), (List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_NAMES));
+        assertEquals(Collections.singletonList("foo"), (List<String>) featureEntity.getProperty(DatastoreStateRepository.STRATEGY_PARAMS_VALUES));
     }
 
     private void update(final String name, final boolean enabled, final String strategyId, final Map<String, String> params,

@@ -1,13 +1,24 @@
-
+/*
+ * Copyright 2016 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.togglz.spring.repository;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,39 +26,49 @@ import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+
 /**
- * 
+ *
  * Unit test for {@link ApplicationEventPublisherRepository}.
- * 
+ *
  * @author Igor Khudoshin
- * 
+ *
  */
-public class ApplicationEventPublisherRepositoryTest {
+class ApplicationEventPublisherRepositoryTest {
+
     @Mock
     private ApplicationEventPublisher mockApplicationEventPublisher;
+
     @Mock
     private ApplicationEvent mockEvent;
 
     private StateRepository delegate;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         MockitoAnnotations.initMocks(this);
 
         doNothing().when(mockApplicationEventPublisher).publishEvent(mockEvent);
 
-        delegate = Mockito.mock(StateRepository.class);
+        delegate = mock(StateRepository.class);
         // the mock supports the ENUM
-        Mockito.when(delegate.getFeatureState(DummyFeature.TEST))
+        when(delegate.getFeatureState(DummyFeature.TEST))
             .thenReturn(new FeatureState(DummyFeature.TEST, true));
     }
 
+    @AfterEach
     public void tearDown() {
         delegate = null;
     }
 
     @Test
-    public void testSaveFeatureStatePublishesEvent() {
+    void saveFeatureStatePublishesEvent() {
 
         StateRepository repository = new ApplicationEventPublisherRepository(delegate, mockApplicationEventPublisher);
 
@@ -55,15 +76,14 @@ public class ApplicationEventPublisherRepositoryTest {
         repository.setFeatureState(newFeatureState);
 
         // delegate only called once
-        Mockito.verify(delegate).getFeatureState(DummyFeature.TEST);
-        Mockito.verify(delegate).setFeatureState(newFeatureState);
-        Mockito.verify(mockApplicationEventPublisher).publishEvent(any(FeatureStateChangedEvent.class));
-        Mockito.verifyNoMoreInteractions(delegate);
+        verify(delegate).getFeatureState(DummyFeature.TEST);
+        verify(delegate).setFeatureState(newFeatureState);
+        verify(mockApplicationEventPublisher).publishEvent(any(FeatureStateChangedEvent.class));
+        verifyNoMoreInteractions(delegate);
 
     }
 
     private enum DummyFeature implements Feature {
-        TEST;
+        TEST
     }
-
 }

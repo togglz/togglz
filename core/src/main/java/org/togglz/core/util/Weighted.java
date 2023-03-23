@@ -16,11 +16,11 @@ public interface Weighted {
      */
     int priority();
 
-    public static class WeightedComparator implements Comparator<Weighted> {
+    class WeightedComparator implements Comparator<Weighted> {
 
         @Override
         public int compare(Weighted left, Weighted right) {
-            return Integer.valueOf(left.priority()).compareTo(Integer.valueOf(right.priority()));
+            return Integer.compare(left.priority(), right.priority());
         }
 
     }

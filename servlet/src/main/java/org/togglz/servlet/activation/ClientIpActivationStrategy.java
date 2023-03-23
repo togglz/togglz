@@ -1,28 +1,28 @@
 package org.togglz.servlet.activation;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.activation.Parameter;
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Strings;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Activation strategy that will use the IP address of the client to decide if a feature is active or not.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class ClientIpActivationStrategy implements ActivationStrategy
 {
-   private final Log log = LogFactory.getLog(ClientIpActivationStrategy.class);
+   private final Logger log = LoggerFactory.getLogger(ClientIpActivationStrategy.class);
 
    public static final String ID = "client-ip";
 
@@ -41,7 +41,7 @@ public class ClientIpActivationStrategy implements ActivationStrategy
    }
 
     @Override
-    public boolean isActive(FeatureState featureState, FeatureUser user) 
+    public boolean isActive(FeatureState featureState, FeatureUser user)
     {
         HttpServletRequest request = HttpServletRequestHolder.get();
         if (request != null) {
@@ -116,7 +116,7 @@ public class ClientIpActivationStrategy implements ActivationStrategy
          }
 
          List<String> addressList = Strings.splitAndTrim(addresses, ",");
-         
+
          for(String address : addressList) {
              if (address.contains("/")) {
                  try {
@@ -132,10 +132,10 @@ public class ClientIpActivationStrategy implements ActivationStrategy
                  }
               }
          }
-                                    
+
          return true;
       }
-      
+
    }
 
 }

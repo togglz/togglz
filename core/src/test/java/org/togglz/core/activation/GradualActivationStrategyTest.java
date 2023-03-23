@@ -1,25 +1,24 @@
 package org.togglz.core.activation;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 
-public class GradualActivationStrategyTest {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class GradualActivationStrategyTest {
 
     private final ActivationStrategy strategy = new TestingGradualActivationStrategy();
 
     @Test
-    public void shouldAlwaysReturnFalseForZeroPercent() {
-
+    void shouldAlwaysReturnFalseForZeroPercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "0");
@@ -36,8 +35,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldAlwaysReturnTrueForOneHundredPercent() {
-
+    void shouldAlwaysReturnTrueForOneHundredPercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "100");
@@ -54,8 +52,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldWorkCorrectlyForOnePercent() {
-
+    void shouldWorkCorrectlyForOnePercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "1");
@@ -74,8 +71,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldWorkCorrectlyForNinetyNinePercent() {
-
+    void shouldWorkCorrectlyForNinetyNinePercent() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "99");
@@ -95,8 +91,7 @@ public class GradualActivationStrategyTest {
     }
 
     @Test
-    public void shouldFindCorrectDecisionForIntermediateValues() {
-
+    void shouldFindCorrectDecisionForIntermediateValues() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "50");
@@ -106,15 +101,14 @@ public class GradualActivationStrategyTest {
         assertTrue(strategy.isActive(state, aUserWithHash(25)));
         assertTrue(strategy.isActive(state, aUserWithHash(49)));
 
-        // for hash values 50-99 the feaute is active
+        // for hash values 50-99 the feature is active
         assertFalse(strategy.isActive(state, aUserWithHash(50)));
         assertFalse(strategy.isActive(state, aUserWithHash(99)));
 
     }
 
     @Test
-    public void shouldReturnFalseForInvalidPercentage() {
-
+    void shouldReturnFalseForInvalidPercentage() {
         FeatureState state = new FeatureState(GradualFeature.FEATURE);
         state.setEnabled(true);
         state.setParameter(GradualActivationStrategy.PARAM_PERCENTAGE, "100x");
@@ -129,18 +123,18 @@ public class GradualActivationStrategyTest {
     }
 
     private enum GradualFeature implements Feature {
-        FEATURE;
+        FEATURE
     }
 
-    private class TestingGradualActivationStrategy extends GradualActivationStrategy {
+    private static class TestingGradualActivationStrategy extends GradualActivationStrategy {
 
-        private final Pattern HASH_PATTERN = Pattern.compile("^hash\\-(\\d+)$");;
+        private final Pattern HASH_PATTERN = Pattern.compile("^hash-(\\d+)$");
 
         @Override
         protected int calculateHashCode(FeatureUser user, Feature feature) {
             Matcher matcher = HASH_PATTERN.matcher(user.getName());
             if (matcher.matches()) {
-                return Integer.valueOf(matcher.group(1));
+                return Integer.parseInt(matcher.group(1));
             }
             return super.calculateHashCode(user, feature);
         }

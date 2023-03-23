@@ -5,13 +5,12 @@ import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Value;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
+import jakarta.inject.Inject;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
+import org.togglz.core.util.Preconditions;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,14 +66,16 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
             return null;
         }
 
-        final Boolean enabled = featureEntity.getBoolean(ENABLED);
+        final boolean enabled = featureEntity.getBoolean(ENABLED);
         final FeatureState state = new FeatureState(feature, enabled);
 
-        state.setStrategyId(getStrategyId(featureEntity));
+        String strategyId = getStrategyId(featureEntity);
+        state.setStrategyId(strategyId);
 
         List<Value<String>> names = valuesList(featureEntity, STRATEGY_PARAMS_NAMES);
         List<Value<String>> values = valuesList(featureEntity, STRATEGY_PARAMS_VALUES);
         Preconditions.checkState(names.size() == values.size());
+
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i).get();
             String value = values.get(i).get();
@@ -92,7 +93,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     private String getStrategyId(Entity featureEntity) {
         if (featureEntity.contains(STRATEGY_ID)) {
             final String strategyId = featureEntity.getString(STRATEGY_ID);
-            if (!Strings.isNullOrEmpty(strategyId)) {
+            if (strategyId != null && !strategyId.isEmpty()) {
                 return strategyId.trim();
             }
         }

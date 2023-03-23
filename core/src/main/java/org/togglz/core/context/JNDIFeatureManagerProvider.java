@@ -3,24 +3,24 @@ package org.togglz.core.context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 
 /**
- * 
+ *
  * Implementation of {@link FeatureManagerProvider} that tries to look up a {@link FeatureManager} from JNDI using the name
- * <code>java:/comp/env/FeatureManager</code>.
- * 
+ * {@code java:/comp/env/FeatureManager}.
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
 
     public final static String JNDI_NAME = "java:/comp/env/FeatureManager";
 
-    private final Log log = LogFactory.getLog(JNDIFeatureManagerProvider.class);
+    private final Logger log = LoggerFactory.getLogger(JNDIFeatureManagerProvider.class);
 
     @Override
     public int priority() {
@@ -39,7 +39,7 @@ public class JNDIFeatureManagerProvider implements FeatureManagerProvider {
                 return (FeatureManager) initialContext.lookup(JNDI_NAME);
 
             } catch (NamingException e) {
-                log.debug("FeatureMananger not found: " + e.getMessage());
+                log.debug("FeatureManager not found: " + e.getMessage());
             }
 
         }

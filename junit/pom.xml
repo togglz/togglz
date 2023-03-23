@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>2.7.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-junit</artifactId>
@@ -13,7 +13,6 @@
   <description>Togglz - JUnit integration</description>
 
   <dependencies>
-
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-testing</artifactId>
@@ -22,31 +21,25 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <version>4.13.2</version>
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <useDefaultManifestFile>true</useDefaultManifestFile>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.virgo.bundlor</groupId>
-        <artifactId>org.eclipse.virgo.bundlor.maven</artifactId>
-        <executions>
-          <execution>
-            <id>bundlor</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>

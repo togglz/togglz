@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.togglz.spring.listener;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,67 +33,75 @@ import static org.mockito.Mockito.when;
  *
  * @author Marcel Overdijk
  */
-public class TogglzApplicationContextBinderApplicationListenerTest {
+class TogglzApplicationContextBinderApplicationListenerTest {
 
     private TogglzApplicationContextBinderApplicationListener applicationListener;
     private TogglzApplicationContextBinderApplicationListener ignoringApplicationListener;
     private ApplicationContext applicationContext;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         applicationListener = new TogglzApplicationContextBinderApplicationListener();
         ignoringApplicationListener = new TogglzApplicationContextBinderApplicationListener(t -> false);
         applicationContext = mock(ApplicationContext.class);
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         ContextClassLoaderApplicationContextHolder.release();
     }
 
     @Test
-    public void contextRefreshed() {
+    void contextRefreshed() {
         ContextRefreshedEvent contextRefreshedEvent = mock(ContextRefreshedEvent.class);
         when(contextRefreshedEvent.getApplicationContext()).thenReturn(applicationContext);
+
         // Invoke context refreshed event
         applicationListener.onApplicationEvent(contextRefreshedEvent);
+
         // Assert application context bound
         assertSame(applicationContext, ContextClassLoaderApplicationContextHolder.get());
     }
 
     @Test
-    public void contextRefreshedWhileContextAlreadyBound() {
+    void contextRefreshedWhileContextAlreadyBound() {
         // Bind application context before context refreshed event invoked
         ContextClassLoaderApplicationContextHolder.bind(mock(ApplicationContext.class));
         applicationContext = mock(ApplicationContext.class);
         ContextRefreshedEvent contextRefreshedEvent = mock(ContextRefreshedEvent.class);
         when(contextRefreshedEvent.getApplicationContext()).thenReturn(applicationContext);
+
         // Invoke context refreshed application event
         applicationListener.onApplicationEvent(contextRefreshedEvent);
+
         // Assert application context bound
         assertSame(applicationContext, ContextClassLoaderApplicationContextHolder.get());
     }
 
     @Test
-    public void contextRefreshedIgnored() {
+    void contextRefreshedIgnored() {
         // Release any application context before context refreshed event invoked
         ContextClassLoaderApplicationContextHolder.release();
         applicationContext = mock(ApplicationContext.class);
         ContextRefreshedEvent contextRefreshedEvent = mock(ContextRefreshedEvent.class);
         when(contextRefreshedEvent.getApplicationContext()).thenReturn(applicationContext);
+
         // Invoke context refreshed application event
         ignoringApplicationListener.onApplicationEvent(contextRefreshedEvent);
+
         // Assert that no application context was bound
         assertSame(null, ContextClassLoaderApplicationContextHolder.get());
     }
 
     @Test
-    public void contextClosed() {
+    void contextClosed() {
         // Bind application context before context closed event invoked
         ContextClassLoaderApplicationContextHolder.bind(applicationContext);
         ContextClosedEvent contextClosedEvent = mock(ContextClosedEvent.class);
+
         // Invoke context closed event
         applicationListener.onApplicationEvent(contextClosedEvent);
+
         // Assert application context released
         assertNull(ContextClassLoaderApplicationContextHolder.get());
     }

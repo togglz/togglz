@@ -2,13 +2,14 @@ package org.togglz.appengine.activation;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.user.SimpleFeatureUser;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ApplicationVersionActivationStrategyTest {
 
@@ -16,8 +17,8 @@ public class ApplicationVersionActivationStrategyTest {
     private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
     private static final String CURRENT_VERSION = "beta.141242134213";
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    public void setUp() {
         SystemProperty.applicationVersion.set(CURRENT_VERSION);
         helper.setUp();
     }
@@ -27,7 +28,7 @@ public class ApplicationVersionActivationStrategyTest {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
         FeatureState state = aVersionState("");
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
-        Assert.assertFalse(active);
+        assertFalse(active);
     }
 
     @Test
@@ -35,7 +36,7 @@ public class ApplicationVersionActivationStrategyTest {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
         FeatureState state = aVersionState(null);
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
-        Assert.assertFalse(active);
+        assertFalse(active);
     }
 
     @Test
@@ -44,7 +45,7 @@ public class ApplicationVersionActivationStrategyTest {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
         FeatureState state = aVersionState(CURRENT_VERSION);
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
-        Assert.assertFalse(active);
+        assertFalse(active);
     }
 
     @Test
@@ -52,7 +53,7 @@ public class ApplicationVersionActivationStrategyTest {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
         FeatureState state = aVersionState(CURRENT_VERSION);
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
-        Assert.assertTrue(active);
+        assertTrue(active);
     }
 
     @Test
@@ -60,7 +61,7 @@ public class ApplicationVersionActivationStrategyTest {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
         FeatureState state = aVersionState(CURRENT_VERSION + ",alpha,dev,uat");
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
-        Assert.assertTrue(active);
+        assertTrue(active);
     }
 
     @Test
@@ -68,7 +69,7 @@ public class ApplicationVersionActivationStrategyTest {
         ApplicationVersionActivationStrategy strategy = new ApplicationVersionActivationStrategy();
         FeatureState state = aVersionState("test,alpha,dev,uat,rc1");
         boolean active = strategy.isActive(state, aFeatureUser(JOHN));
-        Assert.assertFalse(active);
+        assertFalse(active);
     }
 
     private FeatureState aVersionState(String lang) {

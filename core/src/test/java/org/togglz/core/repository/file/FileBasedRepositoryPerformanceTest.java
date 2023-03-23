@@ -2,19 +2,22 @@ package org.togglz.core.repository.file;
 
 import java.io.File;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 
-public class FileBasedRepositoryPerformanceTest {
+class FileBasedRepositoryPerformanceTest {
 
     private File file;
     private FileBasedStateRepository repository;
+    private static final Logger log = LoggerFactory.getLogger(FileBasedRepositoryPerformanceTest.class);
 
-    @Before
-    public void before() throws Exception {
+    @BeforeEach
+    void before() throws Exception {
 
         // create repository
         file = File.createTempFile(this.getClass().getSimpleName(), null);
@@ -28,18 +31,18 @@ public class FileBasedRepositoryPerformanceTest {
 
     }
 
-    @After
-    public void after() throws Exception {
+    @AfterEach
+    void after() {
         file.delete();
     }
 
     @Test
-    public void readingExistingFeature() {
+    void readingExistingFeature() {
         runPerformanceTest(PerformanceFeatures.EXISTING);
     }
 
     @Test
-    public void readingMissingFeature() {
+    void readingMissingFeature() {
         runPerformanceTest(PerformanceFeatures.MISSING);
     }
 
@@ -53,14 +56,12 @@ public class FileBasedRepositoryPerformanceTest {
             }
             long time = System.currentTimeMillis() - start;
 
-            System.out.println("Time for " + feature.name() + ": " + time);
+            log.info("Time for " + feature.name() + ": " + time);
         }
-
     }
 
-    private static enum PerformanceFeatures implements Feature {
+    private enum PerformanceFeatures implements Feature {
         EXISTING,
         MISSING;
     }
-
 }

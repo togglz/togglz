@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-project</artifactId>
-        <version>2.7.0-SNAPSHOT</version>
+        <version>2.9.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>togglz-microprofile-config</artifactId>
@@ -14,7 +14,7 @@
     <description>Togglz - MicroProfile Config integration</description>
 
     <properties>
-        <microprofile.config.version>1.1</microprofile.config.version>
+        <microprofile.config.version>1.4</microprofile.config.version>
     </properties>
 
     <dependencies>
@@ -33,13 +33,19 @@
         <dependency>
             <groupId>org.apache.geronimo.config</groupId>
             <artifactId>geronimo-config-impl</artifactId>
-            <version>1.0</version>
+            <version>1.2.2</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

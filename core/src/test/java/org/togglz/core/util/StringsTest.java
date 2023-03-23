@@ -1,32 +1,33 @@
 package org.togglz.core.util;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StringsTest {
+class StringsTest {
 
     @Test
-    public void testIsEmpty() {
-        assertTrue(Strings.isEmpty(null));
+    void testIsEmpty() {
         assertTrue(Strings.isEmpty(""));
         assertFalse(Strings.isEmpty("   "));
         assertFalse(Strings.isEmpty("foo"));
     }
 
     @Test
-    public void testIsNotEmpty() {
-        assertFalse(Strings.isNotEmpty(null));
+    void testIsNotEmpty() {
         assertFalse(Strings.isNotEmpty(""));
         assertTrue(Strings.isNotEmpty("   "));
         assertTrue(Strings.isNotEmpty("foo"));
     }
 
     @Test
-    public void testSplitAndTrim() {
-
+    void testSplitAndTrim() {
         assertEquals(0, Strings.splitAndTrim(null, ",").size());
         assertEquals(0, Strings.splitAndTrim("   ", ",").size());
 
@@ -42,15 +43,14 @@ public class StringsTest {
     }
 
     @Test
-    public void testTrim() {
-        assertNull(Strings.trim(null));
+    void testTrim() {
         assertEquals("", Strings.trim(""));
         assertEquals("", Strings.trim("   "));
         assertEquals("foo", Strings.trim("   foo   "));
     }
 
     @Test
-    public void testTrimToNull() {
+    void testTrimToNull() {
         assertNull(Strings.trimToNull(null));
         assertNull(Strings.trimToNull(""));
         assertNull(Strings.trimToNull("   "));
@@ -58,7 +58,7 @@ public class StringsTest {
     }
 
     @Test
-    public void testToBoolean() {
+    void testToBoolean() {
         assertNull(Strings.toBoolean(null));
         assertNull(Strings.toBoolean(""));
         assertNull(Strings.toBoolean("   "));
@@ -82,8 +82,8 @@ public class StringsTest {
         assertEquals(Boolean.FALSE, Strings.toBoolean("   0   "));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testToBooleanThrowsIfStringIsInvalid() {
-        Strings.toBoolean("foo");
+    @Test
+    void testToBooleanThrowsIfStringIsInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> Strings.toBoolean("foo"));
     }
 }

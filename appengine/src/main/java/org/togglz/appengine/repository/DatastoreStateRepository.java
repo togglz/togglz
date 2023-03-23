@@ -14,7 +14,6 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Transaction;
-import com.google.common.base.Strings;
 
 /**
  * <p>
@@ -68,7 +67,7 @@ public class DatastoreStateRepository implements StateRepository {
         final FeatureState state = new FeatureState(feature, enabled);
 
         final String strategyId = (String) featureEntity.getProperty(STRATEGY_ID);
-        if (!Strings.isNullOrEmpty(strategyId)) {
+        if (strategyId != null && !strategyId.isEmpty()) {
             state.setStrategyId(strategyId.trim());
         }
 

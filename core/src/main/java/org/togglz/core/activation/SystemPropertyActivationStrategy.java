@@ -7,7 +7,7 @@ import org.togglz.core.user.FeatureUser;
 
 /**
  * ActivationStrategy based on a key value pair system property. To activate, the value of the property must match
- * the string value, not case sensitve.
+ * the string value, not case sensitive.
  * <p>
  * Created by Chris Kelley on 5/26/16.
  */
@@ -15,7 +15,6 @@ public class SystemPropertyActivationStrategy extends AbstractPropertyDrivenActi
 
     public static final String ID = "property";
     public static final String PARAM_PROPERTY_NAME = "system-property";
-
 
     @Override
     public String getId() {

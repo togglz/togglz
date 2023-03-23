@@ -1,22 +1,16 @@
 package org.togglz.microprofile.activation;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoints;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.AbstractPropertyDrivenActivationStrategy;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.microprofile.TestConfigSourceProvider;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * <p>
@@ -25,36 +19,33 @@ import static org.junit.Assert.assertTrue;
  *
  * @author John D. Ament, Alasdair Mercer
  */
-@RunWith(Theories.class)
-public class MicroProfileConfigActivationStrategyTest {
-
-    @DataPoints
-    public static final boolean[] DATA_POINTS = { true, false };
+class MicroProfileConfigActivationStrategyTest {
 
     private MicroProfileConfigActivationStrategy strategy;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         strategy = new MicroProfileConfigActivationStrategy();
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         TestConfigSourceProvider.TestConfigSource.INSTANCE.clearProperties();
     }
 
     @Test
-    public void testGetId() {
+    void shouldHaveSameActivationStrategyId() {
         assertEquals(MicroProfileConfigActivationStrategy.ID, strategy.getId());
     }
 
     @Test
-    public void testGetName() {
+    void strategyNameShouldNotBeBlankByDefault() {
         assertTrue(Strings.isNotBlank(strategy.getName()));
     }
 
-    @Theory
-    public void testIsActiveWithNoParam(boolean enabled) {
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void isActiveWithNoParam(boolean enabled) {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
 
         TestConfigSourceProvider.TestConfigSource.INSTANCE.putProperty("togglz.FEATURE_ONE", String.valueOf(enabled));
@@ -62,8 +53,9 @@ public class MicroProfileConfigActivationStrategyTest {
         assertEquals(enabled, strategy.isActive(featureState, null));
     }
 
-    @Theory
-    public void testIsActiveWithParam(boolean enabled) {
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void isActiveWithParam(boolean enabled) {
         String paramValue = "foo";
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
         featureState.setParameter(MicroProfileConfigActivationStrategy.PARAM_NAME, paramValue);
@@ -74,7 +66,7 @@ public class MicroProfileConfigActivationStrategyTest {
     }
 
     @Test
-    public void testGetParameters() {
+    void getParameters() {
         Parameter[] parameters = strategy.getParameters();
 
         assertEquals(2, parameters.length);
@@ -96,8 +88,7 @@ public class MicroProfileConfigActivationStrategyTest {
         assertTrue(Strings.isNotBlank(parameter.getDescription()));
     }
 
-    public enum TestFeatures implements Feature {
-
+    enum TestFeatures implements Feature {
         FEATURE_ONE
     }
 }

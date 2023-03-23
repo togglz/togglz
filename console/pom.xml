@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>2.7.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-console</artifactId>
@@ -18,7 +18,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.6</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -32,7 +32,7 @@
                   <include>asm:asm</include>
                 </includes>
               </artifactSet>
-              <!-- <filters> <filter> <artifact>*:*</artifact> <includes> <include>org/ocpsoft/rewrite/**</include> <include>com/yahoo/**</include> 
+              <!-- <filters> <filter> <artifact>*:*</artifact> <includes> <include>org/ocpsoft/rewrite/**</include> <include>com/yahoo/**</include>
                 <include>jargs/**</include> <include>org/mozilla/**</include> </includes> </filter> </filters> -->
               <relocations>
                 <relocation>
@@ -55,21 +55,52 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.owasp.encoder</groupId>
+      <artifactId>encoder</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-servlet</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.spec.javax.servlet</groupId>
-      <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.floreysoft</groupId>
       <artifactId>jmte</artifactId>
-      <version>3.0</version>
+      <version>7.0.2</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+      <artifactId>owasp-java-html-sanitizer</artifactId>
+      <version>20220608.1</version>
+    </dependency>
   </dependencies>
 </project>

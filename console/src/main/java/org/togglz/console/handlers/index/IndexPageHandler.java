@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.Cookie;
+
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
 import org.togglz.core.Feature;
@@ -36,6 +38,16 @@ public class IndexPageHandler extends RequestHandlerBase {
 
         FeatureManager featureManager = event.getFeatureManager();
 
+        Integer activeTabIndex = null;
+        if(event.getRequest().getCookies() != null ){
+            for(Cookie cookie : event.getRequest().getCookies()) {
+                if(cookie.getName().compareTo("t") == 0 && cookie.getValue() != null && cookie.getValue().length() != 0) {
+                    activeTabIndex = Integer.parseInt(cookie.getValue());
+                }
+            }
+        }
+        event.getResponse().addCookie(new Cookie("t", null));
+
         List<ActivationStrategy> strategies = featureManager.getActivationStrategies();
 
         IndexPageTabView tabView = new IndexPageTabView(strategies);
@@ -46,7 +58,23 @@ public class IndexPageHandler extends RequestHandlerBase {
             tabView.add(feature, metadata, featureState);
         }
 
-        List<CSRFToken> tokens = new ArrayList<CSRFToken>();
+        for (IndexPageTab tab : tabView.getTabs()) {
+            if(activeTabIndex != null){
+                if(tab.getIndex() == activeTabIndex){
+                    tab.setIsActive(true);
+                } else {
+                    tab.setIsActive(false);
+                }
+            } else {
+                if(tab.isAllTab()) {
+                    tab.setIsActive(true);
+                } else {
+                    tab.setIsActive(false);
+                }
+            }
+        }
+
+        List<CSRFToken> tokens = new ArrayList<>();
         for (CSRFTokenProvider provider : Services.get(CSRFTokenProvider.class)) {
             CSRFToken token = provider.getToken(event.getRequest());
             if (token != null) {
@@ -54,13 +82,14 @@ public class IndexPageHandler extends RequestHandlerBase {
             }
         }
 
-        Map<String, Object> model = new HashMap<String, Object>();
+        Map<String, Object> model = new HashMap<>();
         model.put("tokens", tokens);
         model.put("tabView", tabView);
 
         String template = getResourceAsString("index.html");
-        String content = new Engine().transform(template, model);
+        Engine engine = new Engine();
+        engine.registerNamedRenderer(new SanitizeHtmlRenderer());
+        String content = engine.transform(template, model);
         writeResponse(event, content);
-
     }
 }

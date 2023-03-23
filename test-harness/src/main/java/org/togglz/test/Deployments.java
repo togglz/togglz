@@ -12,12 +12,12 @@ public class Deployments {
             .create(WebArchive.class, "test.war")
             .addAsLibraries(
                 getTogglzCoreArchive(),
-                getTogglzSerlvetArchive())
+                getTogglzServletArchive())
             .addClass(FeatureServlet.class)
             .addClass(UserServlet.class);
     }
 
-    public static JavaArchive getTogglzSerlvetArchive() {
+    public static JavaArchive getTogglzServletArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-servlet.jar")
             .importDirectory("../servlet/target/classes")
             .as(JavaArchive.class);
@@ -36,27 +36,9 @@ public class Deployments {
             .as(JavaArchive.class);
     }
 
-    public static JavaArchive getTogglzGuiceArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-guice.jar")
-            .importDirectory("../guice/target/classes")
-            .as(JavaArchive.class);
-    }
-
     public static JavaArchive getTogglzCDIArchive() {
         return ShrinkWrap.create(ExplodedImporter.class, "togglz-cdi.jar")
             .importDirectory("../cdi/target/classes")
-            .as(JavaArchive.class);
-    }
-
-    public static JavaArchive getTogglzJSFArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsf.jar")
-            .importDirectory("../jsf/target/classes")
-            .as(JavaArchive.class);
-    }
-
-    public static JavaArchive getTogglzSeamSecurityArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-seam-security.jar")
-            .importDirectory("../seam-security/target/classes")
             .as(JavaArchive.class);
     }
 
@@ -65,11 +47,4 @@ public class Deployments {
             .importDirectory("../shiro/target/classes")
             .as(JavaArchive.class);
     }
-
-    public static JavaArchive getTogglzJSPArchive() {
-        return ShrinkWrap.create(ExplodedImporter.class, "togglz-jsp.jar")
-            .importDirectory("../jsp/target/classes")
-            .as(JavaArchive.class);
-    }
-
 }

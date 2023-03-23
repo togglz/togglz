@@ -139,6 +139,16 @@ public class DefaultFeatureManager implements FeatureManager {
     }
 
     @Override
+    public void enable(Feature feature) {
+        stateRepository.setFeatureState(new FeatureState(feature, true));
+    }
+
+    @Override
+    public void disable(Feature feature) {
+        stateRepository.setFeatureState(new FeatureState(feature, false));
+    }
+
+    @Override
     public FeatureUser getCurrentFeatureUser() {
         return userProvider.getCurrentUser();
     }

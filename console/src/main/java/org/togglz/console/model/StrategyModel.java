@@ -13,7 +13,7 @@ public class StrategyModel {
 
     private final FeatureModel featureModel;
 
-    private final List<ParameterModel> parameters = new ArrayList<ParameterModel>();
+    private final List<ParameterModel> parameters = new ArrayList<>();
 
     public StrategyModel(int index, ActivationStrategy strategy, FeatureModel featureModel) {
         this.index = index;

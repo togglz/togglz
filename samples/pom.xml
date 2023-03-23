@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <parent>
+        <artifactId>togglz-project</artifactId>
+        <groupId>org.togglz</groupId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>samples</artifactId>
+
+    <name>Togglz Samples</name>
+    <description>Togglz Samples</description>
+    <packaging>pom</packaging>
+
+    <properties>
+        <togglz.version>4.0.0-SNAPSHOT</togglz.version>
+        <spring-boot.version>3.0.4</spring-boot.version>
+        <logback.version>${togglz.logback.version}</logback.version>
+    </properties>
+
+    <modules>
+        <module>spring-boot-hello-world</module>
+        <module>spring-boot-hello-world-feature-enum</module>
+        <module>spring-boot-no-feature-provider-or-feature-enums</module>
+        <module>spring-boot-security</module>
+        <module>spring-boot-thymeleaf</module>
+        <module>spring-boot-war</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-core</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-console</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-web</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-junit</artifactId>
+                <version>${togglz.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-servlet</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-core</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-security</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-boot-starter</artifactId>
+                <version>${togglz.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                </plugin>
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+              </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <includes>
+                            <include>**/*Tests.java</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/Abstract*.java</exclude>
+                        </excludes>
+                        <systemPropertyVariables>
+                            <java.security.egd>file:/dev/./urandom</java.security.egd>
+                            <java.awt.headless>true</java.awt.headless>
+                        </systemPropertyVariables>
+                        <argLine>-Xmx1024m</argLine>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

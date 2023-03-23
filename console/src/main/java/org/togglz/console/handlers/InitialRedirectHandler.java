@@ -19,7 +19,6 @@ public class InitialRedirectHandler implements RequestHandler {
 
     @Override
     public void process(RequestEvent event) throws IOException {
-
         StringBuilder url = new StringBuilder();
         url.append(event.getRequest().getRequestURI());
         if (!url.toString().endsWith("/")) {

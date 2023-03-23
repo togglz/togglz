@@ -1,11 +1,7 @@
 package org.togglz.core.repository.composite;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -13,45 +9,44 @@ import org.togglz.core.repository.composite.CompositeStateRepository.IterationOr
 import org.togglz.core.repository.composite.CompositeStateRepository.SetterSelection;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 
-public class CompositeStateRepositoryTest {
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class CompositeStateRepositoryTest {
 
     private StateRepository repo1 = new InMemoryStateRepository();
     private StateRepository repo2 = new InMemoryStateRepository();
     private CompositeStateRepository crepo = new CompositeStateRepository(repo1, repo2);
 
-    @Before
-    public void setup() {
-        
+    @BeforeEach
+    void setup() {
         repo1 = new InMemoryStateRepository();
         repo2 = new InMemoryStateRepository();
         crepo = new CompositeStateRepository(repo1, repo2);
     }
 
     @Test
-    public void testFeatureNotFound() {
-        
+    void testFeatureNotFound() {
         assertNull(crepo.getFeatureState(TestFeature.F1));
     }
 
     @Test
-    public void testGetFeatureInFirstBackingRepo() {
-        
+    void testGetFeatureInFirstBackingRepo() {
         repo1.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(crepo.getFeatureState(TestFeature.F1).isEnabled());
     }
 
     @Test
-    public void testGetFeatureInSecondBackingRepo() {
-        
+    void testGetFeatureInSecondBackingRepo() {
         repo2.setFeatureState(new FeatureState(TestFeature.F1, true));
-        
+
         assertTrue(crepo.getFeatureState(TestFeature.F1).isEnabled());
     }
 
     @Test
-    public void testGetFeatureFIFO() {
-
+    void testGetFeatureFIFO() {
         repo1.setFeatureState(new FeatureState(TestFeature.F1, false));
         repo2.setFeatureState(new FeatureState(TestFeature.F1, true));
 
@@ -59,8 +54,7 @@ public class CompositeStateRepositoryTest {
     }
 
     @Test
-    public void testGetFeatureLIFO() {
-
+    void testGetFeatureLIFO() {
         repo1.setFeatureState(new FeatureState(TestFeature.F1, false));
         repo2.setFeatureState(new FeatureState(TestFeature.F1, true));
         crepo.setIterationOrder(IterationOrder.LIFO);
@@ -69,8 +63,7 @@ public class CompositeStateRepositoryTest {
     }
 
     @Test
-    public void testSetFeatureLAST() {
-        
+    void testSetFeatureLAST() {
         crepo.setFeatureState(new FeatureState(TestFeature.F1, true));
 
         assertNull(repo1.getFeatureState(TestFeature.F1));
@@ -78,8 +71,7 @@ public class CompositeStateRepositoryTest {
     }
 
     @Test
-    public void testSetFeatureFIRST() {
-        
+    void testSetFeatureFIRST() {
         crepo.setSetterSelection(SetterSelection.FIRST);
         crepo.setFeatureState(new FeatureState(TestFeature.F1, true));
 
@@ -88,8 +80,6 @@ public class CompositeStateRepositoryTest {
     }
 
     enum TestFeature implements Feature {
-        
-        F1,
-        ;
+        F1
     }
 }

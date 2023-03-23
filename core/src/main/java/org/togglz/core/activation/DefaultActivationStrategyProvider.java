@@ -14,7 +14,7 @@ import org.togglz.core.spi.ActivationStrategy;
  */
 public class DefaultActivationStrategyProvider implements ActivationStrategyProvider {
 
-    private final List<ActivationStrategy> strategies = new ArrayList<ActivationStrategy>();
+    private final List<ActivationStrategy> strategies = new ArrayList<>();
 
     public DefaultActivationStrategyProvider() {
         for (ActivationStrategy activationStrategy : ServiceLoader.load(ActivationStrategy.class)) {

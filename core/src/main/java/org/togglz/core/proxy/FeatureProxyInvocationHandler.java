@@ -16,7 +16,7 @@ import org.togglz.core.manager.LazyResolvingFeatureManager;
  */
 public class FeatureProxyInvocationHandler implements InvocationHandler {
 
-    private Feature feature;
+    private final Feature feature;
 
     private final Object active;
 

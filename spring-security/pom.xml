@@ -5,20 +5,14 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>2.7.0-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-spring-security</artifactId>
   <name>Togglz - Spring Security integration</name>
   <description>Togglz - Spring Security integration</description>
 
-  <properties>
-      <!-- unit testing dependencies -->
-      <powermock.version>1.5.3</powermock.version>
-  </properties>
-
   <dependencies>
-
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-servlet</artifactId>
@@ -27,32 +21,35 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-web</artifactId>
-      <version>3.2.5.RELEASE</version>
+      <version>6.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-core</artifactId>
+          <version>${spring.version}</version>
+          <scope>provided</scope>
+      </dependency>
+
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.spec.javax.servlet</groupId>
-      <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-inline</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
-        <version>${powermock.version}</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
         <scope>test</scope>
     </dependency>
-    <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-module-junit4</artifactId>
-        <version>${powermock.version}</version>
-        <scope>test</scope>
-    </dependency>
-
   </dependencies>
 </project>

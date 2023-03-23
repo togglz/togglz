@@ -14,7 +14,7 @@ import java.util.Properties;
 
 /**
  * This converter is able to convert string maps to simple strings and vice versa.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class DefaultMapSerializer implements MapSerializer {
@@ -59,15 +59,14 @@ public class DefaultMapSerializer implements MapSerializer {
         return new DefaultMapSerializer(true, lineSeparator);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.togglz.core.util.MapSerializer#convertToString(java.util.Map)
-     */
     @Override
     public String serialize(Map<String, String> map) {
 
         try {
+
+            if (map.isEmpty()) {
+                return "";
+            }
 
             // the format is based on the properties output format
             Properties props = new Properties();
@@ -113,11 +112,6 @@ public class DefaultMapSerializer implements MapSerializer {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.togglz.core.util.MapSerializer#convertFromString(java.lang.String)
-     */
     @Override
     public Map<String, String> deserialize(String s) {
 
@@ -125,12 +119,14 @@ public class DefaultMapSerializer implements MapSerializer {
 
             String input = multiline ? s : s.replace('&', '\n');
 
-            Properties props = new Properties();
-            if (s != null) {
-                props.load(new StringReader(input));
+            if (input == null || input.isEmpty()) {
+                return Collections.emptyMap();
             }
 
-            LinkedHashMap<String, String> result = new LinkedHashMap<String, String>();
+            Properties props = new Properties();
+            props.load(new StringReader(input));
+
+            LinkedHashMap<String, String> result = new LinkedHashMap<>();
             for (Entry<Object, Object> entry : props.entrySet()) {
                 result.put(entry.getKey().toString(), entry.getValue().toString());
             }

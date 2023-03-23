@@ -1,23 +1,24 @@
 package org.togglz.core.metadata.enums;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
+import org.togglz.core.Feature;
+import org.togglz.core.annotation.Label;
+import org.togglz.core.metadata.FeatureGroup;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.junit.Test;
-import org.togglz.core.Feature;
-import org.togglz.core.annotation.Label;
-import org.togglz.core.metadata.FeatureGroup;
 
-public class AnnotationFeatureGroupTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    public static final String FIELD_LEVEL_GROUP_LABEL = "Field Level Group Label";
-    public static final String CLASS_LEVEL_GROUP_LABEL = "Class Level Group Label";
+class AnnotationFeatureGroupTest {
+
+    private static final String FIELD_LEVEL_GROUP_LABEL = "Field Level Group Label";
+    private static final String CLASS_LEVEL_GROUP_LABEL = "Class Level Group Label";
 
     @org.togglz.core.annotation.FeatureGroup
     @Label(FIELD_LEVEL_GROUP_LABEL)
@@ -33,7 +34,14 @@ public class AnnotationFeatureGroupTest {
     private @interface ClassLevelGroup {
     }
 
+    @org.togglz.core.annotation.FeatureGroup
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    private @interface ClassLevelUnlabeledGroup {
+    }
+
     @ClassLevelGroup
+    @ClassLevelUnlabeledGroup
     private enum TestFeatures implements Feature {
 
         @FieldLevelGroup
@@ -41,27 +49,36 @@ public class AnnotationFeatureGroupTest {
     }
 
     @Test
-    public void buildWillReturnNullWhenFeatureGroupAnnotationIsNotPresent() throws Exception {
+    void buildWillReturnNullWhenFeatureGroupAnnotationIsNotPresent() {
         FeatureGroup result = AnnotationFeatureGroup.build(Label.class);
 
-        assertThat(result, nullValue());
+        assertNull(result);
     }
 
     @Test
-    public void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForFieldLevelGroup() throws Exception {
+    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForFieldLevelGroup() {
         FeatureGroup result = AnnotationFeatureGroup.build(FieldLevelGroup.class);
 
-        assertThat(result, notNullValue());
-        assertThat(result.getLabel(), is(FIELD_LEVEL_GROUP_LABEL));
-        assertThat(result.contains(TestFeatures.FEATURE), is(true));
+        assertNotNull(result);
+        assertEquals(FIELD_LEVEL_GROUP_LABEL, result.getLabel());
+        assertTrue(result.contains(TestFeatures.FEATURE));
     }
 
     @Test
-    public void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForClassLevelGroup() throws Exception {
+    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsPresentForClassLevelGroup() {
         FeatureGroup result = AnnotationFeatureGroup.build(ClassLevelGroup.class);
 
-        assertThat(result, notNullValue());
-        assertThat(result.getLabel(), is(CLASS_LEVEL_GROUP_LABEL));
-        assertThat(result.contains(TestFeatures.FEATURE), is(true));
+        assertNotNull(result);
+        assertEquals(CLASS_LEVEL_GROUP_LABEL, result.getLabel());
+        assertTrue(result.contains(TestFeatures.FEATURE));
+    }
+
+    @Test
+    void buildWillReturnFeatureGroupWhenFeatureGroupAnnotationIsMissingLabelAnnotation() {
+        FeatureGroup result = AnnotationFeatureGroup.build(ClassLevelUnlabeledGroup.class);
+
+        assertNotNull(result);
+        assertEquals("ClassLevelUnlabeledGroup", result.getLabel());
+        assertTrue(result.contains(TestFeatures.FEATURE));
     }
 }

@@ -1,8 +1,7 @@
 package org.togglz.console.model;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
-import org.togglz.console.util.HtmlUtils;
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
@@ -29,6 +28,7 @@ public class ParameterModel {
 
     public void readValueFrom(HttpServletRequest request) {
         this.value = request.getParameter(getInputId());
+
     }
 
     public String getValidationError() {
@@ -58,11 +58,7 @@ public class ParameterModel {
     }
 
     public String getValue() {
-        return value;
-    }
-
-    public String getValueEscaped() {
-        return HtmlUtils.escape(value);
+        return value == null ? "" : value;
     }
 
     public void setValue(String value) {

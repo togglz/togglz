@@ -2,28 +2,28 @@ package org.togglz.core.repository.file;
 
 import java.io.File;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.property.PropertyBasedStateRepository;
 
 /**
- * 
+ *
  * <p>
  * A {@link PropertyBasedStateRepository} that stores the state of features using a standard Java properties file.
  * This class is able to detect changes made to the properties file and will automatically reload it in this
  * case.
  * </p>
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class FileBasedStateRepository extends PropertyBasedStateRepository {
 
-    private static final Log log = LogFactory.getLog(FileBasedStateRepository.class);
+    private final Logger log = LoggerFactory.getLogger(FileBasedStateRepository.class);
 
     /**
      * Constructor for {@link FileBasedStateRepository}.
-     * 
+     *
      * @param file A {@link File} representing the Java properties file to use.
      */
     public FileBasedStateRepository(File file) {
@@ -32,7 +32,7 @@ public class FileBasedStateRepository extends PropertyBasedStateRepository {
 
     /**
      * Constructor for {@link FileBasedStateRepository}.
-     * 
+     *
      * @param file A {@link File} representing the Java properties file to use.
      * @param minCheckInterval the minimum amount of time in milliseconds to wait between checks of the file's modification
      *        date.

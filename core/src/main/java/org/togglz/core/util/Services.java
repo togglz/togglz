@@ -1,20 +1,19 @@
 package org.togglz.core.util;
 
+import org.togglz.core.util.Weighted.WeightedComparator;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import org.togglz.core.util.Weighted.WeightedComparator;
-
 /**
- * 
+ *
  * Helper class to lookup SPI implementations using the {@link ServiceLoader}.
- * 
+ *
  * @author Christian Kaltepoth
- * 
+ *
  */
 public class Services {
 
@@ -25,7 +24,6 @@ public class Services {
      * collection is not specified.
      */
     public static <E> Collection<E> get(Class<? extends E> service) {
-
         Iterator<? extends E> implementations = ServiceLoader.load(service).iterator();
 
         Collection<E> result = new ArrayList<E>();
@@ -42,7 +40,7 @@ public class Services {
      */
     public static <E extends Weighted> List<E> getSorted(Class<? extends E> service) {
         List<E> result = new ArrayList<E>(get(service));
-        Collections.sort(result, WEIGHTED_COMPARATOR);
+        result.sort(WEIGHTED_COMPARATOR);
         return result;
     }
 

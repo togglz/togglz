@@ -1,8 +1,8 @@
 package org.togglz.console;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.core.manager.FeatureManager;
 
@@ -13,13 +13,15 @@ public class RequestEvent {
     private final HttpServletResponse response;
     private final String path;
     private final FeatureManager featureManager;
+    private final RequestContext requestContext;
 
     public RequestEvent(FeatureManager featureManager, ServletContext context, HttpServletRequest request,
-        HttpServletResponse response) {
+                        HttpServletResponse response, RequestContext requestContext) {
         this.featureManager = featureManager;
         this.context = context;
         this.request = request;
         this.response = response;
+        this.requestContext = requestContext;
 
         // /contextPath/togglz/index -> /index
         String prefix = request.getContextPath() + request.getServletPath();
@@ -27,6 +29,10 @@ public class RequestEvent {
             .substring(prefix.length())
             .replaceAll("(?i);jsessionid=[\\w\\.\\-]+", "");
 
+    }
+
+    public RequestContext getRequestContext() {
+        return requestContext;
     }
 
     public ServletContext getContext() {

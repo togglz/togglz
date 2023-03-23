@@ -1,7 +1,6 @@
 package org.togglz.slack.config;
 
 import org.togglz.core.repository.FeatureState;
-import org.togglz.slack.notification.NotificationComposer;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +12,8 @@ import static org.togglz.core.util.Preconditions.checkArgument;
 import static org.togglz.core.util.Strings.isNotBlank;
 
 public class NotificationConfiguration {
+
+    private static final String DEFAULT_MESSAGE_FORMAT = "$stateIcon *$feature* was $changed by $user $link";
 
     private static final List<String> DEFAULT_CHANNELS = Collections.singletonList("toggles");
     private static final List<String> DEFAULT_STATE_ICONS = Arrays.asList("large_blue_circle", "white_circle");
@@ -50,7 +51,7 @@ public class NotificationConfiguration {
         this.channels = channels != null ? new LinkedList<>(channels) : DEFAULT_CHANNELS;
         this.togglzAdminConsoleUrl = firstNonNull(togglzAdminConsoleUrl, "");
         this.appName = firstNonNull(appName, "");
-        this.messageFormat = firstNonNull(messageFormat, NotificationComposer.DEFAULT_MESSAGE_FORMAT);
+        this.messageFormat = firstNonNull(messageFormat, DEFAULT_MESSAGE_FORMAT);
         this.appIcon = firstNonNull(appIcon, DEFAULT_APP_ICON);
         this.stateIcons = stateIcons != null ? new LinkedList<>(stateIcons) : DEFAULT_STATE_ICONS;
         this.changeVerbs = changeVerbs != null ? new LinkedList<>(changeVerbs) : DEFAULT_CHANGE_VERBS;

@@ -1,24 +1,26 @@
 package org.togglz.core.util;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
-import static junit.framework.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.togglz.core.Feature;
+import org.togglz.core.annotation.EnabledByDefault;
+import org.togglz.core.annotation.FeatureGroup;
+import org.togglz.core.annotation.Label;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Set;
-import org.junit.Test;
-import org.togglz.core.Feature;
-import org.togglz.core.annotation.EnabledByDefault;
-import org.togglz.core.annotation.FeatureGroup;
-import org.togglz.core.annotation.Label;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import java.util.function.Predicate;
+
+import static java.util.stream.Collectors.toList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FeatureAnnotationsTest {
 
@@ -30,7 +32,7 @@ public class FeatureAnnotationsTest {
     }
 
     @ClassLevelGroup
-    private static enum MyFeature implements Feature {
+    private enum MyFeature implements Feature {
 
         @Label("Some feature with a label")
         FEATURE_WITH_LABEL,
@@ -39,77 +41,68 @@ public class FeatureAnnotationsTest {
         FEATURE_WITHOUT_LABEL,
 
         @EnabledByDefault
-        FEATURE_ENABLED_BY_DEFAULT;
-
+        FEATURE_ENABLED_BY_DEFAULT
     }
 
-    private static enum MyFeature2 implements Feature {
-
+    private enum MyFeature2 implements Feature {
         FEATURE_WITH_NO_ANNOTATIONS
-
     }
 
     @Test
-    public void testGetLabel() {
-
+    void testGetLabel() {
         assertEquals("Some feature with a label", FeatureAnnotations.getLabel(MyFeature.FEATURE_WITH_LABEL));
         assertEquals("FEATURE_WITHOUT_LABEL", FeatureAnnotations.getLabel(MyFeature.FEATURE_WITHOUT_LABEL));
-
     }
 
     @Test
-    public void testIsEnabledByDefault() {
-
-        assertEquals(false, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITH_LABEL));
-        assertEquals(false, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITHOUT_LABEL));
-        assertEquals(true, FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_ENABLED_BY_DEFAULT));
-
+    void testIsEnabledByDefault() {
+        assertFalse(FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITH_LABEL));
+        assertFalse(FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_WITHOUT_LABEL));
+        assertTrue(FeatureAnnotations.isEnabledByDefault(MyFeature.FEATURE_ENABLED_BY_DEFAULT));
     }
 
     @Test
-    public void getAnnotationsWillReturnBothFieldAndClassLevelAnnotations() throws Exception {
+    void getAnnotationsWillReturnBothFieldAndClassLevelAnnotations() {
         Set<Annotation> result = FeatureAnnotations.getAnnotations(MyFeature.FEATURE_ENABLED_BY_DEFAULT);
 
-        assertThat(result, notNullValue());
-        assertThat(result.size(), is(2));
+        assertNotNull(result);
+        assertEquals(2, result.size());
 
         // verify both EnabledByDefault and ClassLevelGroup are there
-        Iterables.find(result, createAnnotationTypePredicate(EnabledByDefault.class));
-        Iterables.find(result, createAnnotationTypePredicate(ClassLevelGroup.class));
+        List<Annotation> enabledByDefault = result.stream().filter(createAnnotationTypePredicate(EnabledByDefault.class)).collect(toList());
+        assertFalse(enabledByDefault.isEmpty());
+
+        List<Annotation> classLevelGroup = result.stream().filter(createAnnotationTypePredicate(ClassLevelGroup.class)).collect(toList());
+        assertFalse(classLevelGroup.isEmpty());
     }
 
     @Test
-    public void getAnnotationsWillReturnEmptySetWhenThereAreNoAnnotations() throws Exception {
+    void getAnnotationsWillReturnEmptySetWhenThereAreNoAnnotations() {
         Set<Annotation> result = FeatureAnnotations.getAnnotations(MyFeature2.FEATURE_WITH_NO_ANNOTATIONS);
 
-        assertThat(result, notNullValue());
-        assertThat(result.size(), is(0));
+        assertNotNull(result);
+        assertEquals(0, result.size());
     }
 
     private Predicate<Annotation> createAnnotationTypePredicate(final Class<? extends Annotation> annotationType) {
-        return new Predicate<Annotation>() {
-            @Override
-            public boolean apply(Annotation annotation) {
-                return annotation.annotationType().equals(annotationType);
-            }
-        };
+        return annotation -> annotation.annotationType().equals(annotationType);
     }
 
     @Test
-    public void getAnnotationWillReturnFieldLevelAnnotation() throws Exception {
+    void getAnnotationWillReturnFieldLevelAnnotation() {
         EnabledByDefault result = FeatureAnnotations.getAnnotation(MyFeature.FEATURE_ENABLED_BY_DEFAULT, EnabledByDefault.class);
-        assertThat(result, notNullValue());
+        assertNotNull(result);
     }
 
     @Test
-    public void getAnnotationWillReturnClassLevelAnnotation() throws Exception {
+    void getAnnotationWillReturnClassLevelAnnotation() {
         ClassLevelGroup result = FeatureAnnotations.getAnnotation(MyFeature.FEATURE_ENABLED_BY_DEFAULT, ClassLevelGroup.class);
-        assertThat(result, notNullValue());
+        assertNotNull(result);
     }
 
     @Test
-    public void getAnnotationWillReturnNullWhenAnnotationDoesNotExist() throws Exception {
+    void getAnnotationWillReturnNullWhenAnnotationDoesNotExist() {
         Label result = FeatureAnnotations.getAnnotation(MyFeature.FEATURE_ENABLED_BY_DEFAULT, Label.class);
-        assertThat(result, nullValue());
+        assertNull(result);
     }
 }

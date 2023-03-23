@@ -1,20 +1,19 @@
 package org.togglz.core.user;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SingleUserProviderTest {
+class SingleUserProviderTest {
 
     @Test
-    public void canProvideNamedUser() {
+    void canProvideNamedUser() {
         String username = "named-user";
         boolean featureAdmin = true;
         UserProvider userProvider = new SingleUserProvider(username, featureAdmin);
         FeatureUser user = userProvider.getCurrentUser();
-        assertThat(user.getName(), equalTo(username));
-        assertThat(user.isFeatureAdmin(), equalTo(featureAdmin));
+        assertEquals(username, user.getName());
+        assertEquals(featureAdmin, user.isFeatureAdmin());
     }
 
 }

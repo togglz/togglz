@@ -102,6 +102,19 @@ class SchemaUpdater {
 
     }
 
+    protected boolean isPostgres() throws SQLException {
+        String dbName = connection.getMetaData().getDatabaseProductName();
+        return "PostgreSQL".equals(dbName);
+    }
+
+    protected void migrateToTextColumns() throws SQLException {
+        execute(substitute("ALTER TABLE %TABLE% "
+                + "ALTER COLUMN FEATURE_NAME TYPE TEXT,"
+                + "ALTER COLUMN STRATEGY_ID TYPE TEXT,"
+                + "ALTER COLUMN STRATEGY_PARAMS TYPE TEXT"
+        ));
+    }
+
     /**
      * Returns <code>true</code> if the given column exists in the features table.
      * 

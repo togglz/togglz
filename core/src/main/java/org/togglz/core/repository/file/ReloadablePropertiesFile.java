@@ -7,13 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.togglz.core.logging.Log;
-import org.togglz.core.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.property.PropertySource;
 import org.togglz.core.util.IOUtils;
 
@@ -22,7 +20,7 @@ import org.togglz.core.util.IOUtils;
  */
 class ReloadablePropertiesFile implements PropertySource {
 
-    private static final Log log = LogFactory.getLog(ReloadablePropertiesFile.class);
+    private final Logger log = LoggerFactory.getLogger(ReloadablePropertiesFile.class);
 
     private final File file;
 
@@ -34,16 +32,21 @@ class ReloadablePropertiesFile implements PropertySource {
 
     private long lastCheck = 0;
 
-    public ReloadablePropertiesFile(File file) {
-        this(file, 1000);
-    }
-
     public ReloadablePropertiesFile(File file, int minCheckInterval) {
         this.file = file;
         this.minCheckInterval = minCheckInterval;
     }
 
     public synchronized void reloadIfUpdated() {
+        if (!this.file.exists()) {
+            try {
+                if (this.file.createNewFile()) {
+                    log.debug("Created non-existent file.");
+                }
+            } catch (IOException e) {
+                log.error("Error creating missing file " + this.file.getName(), e);
+            }
+        }
 
         long now = System.currentTimeMillis();
         if (now - lastCheck > minCheckInterval) {
@@ -85,8 +88,7 @@ class ReloadablePropertiesFile implements PropertySource {
     }
 
     public Set<String> getKeysStartingWith(String prefix) {
-
-        Set<String> result = new HashSet<String>();
+        Set<String> result = new HashSet<>();
 
         Enumeration<?> keys = values.propertyNames();
         while (keys.hasMoreElements()) {
@@ -95,9 +97,7 @@ class ReloadablePropertiesFile implements PropertySource {
                 result.add(key);
             }
         }
-
         return result;
-
     }
 
     public PropertySource.Editor getEditor() {
@@ -105,7 +105,6 @@ class ReloadablePropertiesFile implements PropertySource {
     }
 
     private void write(Properties newValues) {
-
         try {
 
             FileOutputStream fos = new FileOutputStream(file);
@@ -118,12 +117,11 @@ class ReloadablePropertiesFile implements PropertySource {
         }
         lastRead = 0;
         lastCheck = 0;
-
     }
 
     private class PropertyFileEditor implements PropertySource.Editor {
 
-        private Properties newValues;
+        private final Properties newValues;
 
         private PropertyFileEditor(Properties props) {
             newValues = new Properties();
@@ -133,26 +131,17 @@ class ReloadablePropertiesFile implements PropertySource {
         public void setValue(String key, String value) {
             if (value != null) {
                 newValues.setProperty(key, value);
-            }
-            else {
+            } else {
                 newValues.remove(key);
             }
         }
 
         public void removeKeysStartingWith(String prefix) {
-            Iterator<Entry<Object, Object>> iterator = newValues.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<Object, Object> entry = iterator.next();
-                if (entry.getKey().toString().startsWith(prefix)) {
-                    iterator.remove();
-                }
-            }
+            newValues.entrySet().removeIf(entry -> entry.getKey().toString().startsWith(prefix));
         }
 
         public void commit() {
             write(newValues);
         }
-
     }
-
 }

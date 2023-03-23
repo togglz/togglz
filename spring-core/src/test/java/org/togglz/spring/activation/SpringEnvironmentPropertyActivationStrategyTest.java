@@ -1,12 +1,10 @@
 package org.togglz.spring.activation;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.theories.DataPoints;
-import org.junit.experimental.theories.Theories;
-import org.junit.experimental.theories.Theory;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationContext;
@@ -18,9 +16,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.Strings;
 import org.togglz.spring.util.ContextClassLoaderApplicationContextHolder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,21 +29,18 @@ import static org.mockito.Mockito.when;
  *
  * @author Alasdair Mercer
  */
-@RunWith(Theories.class)
-public class SpringEnvironmentPropertyActivationStrategyTest {
-
-    @DataPoints
-    public static final boolean[] DATA_POINTS = { true, false };
+class SpringEnvironmentPropertyActivationStrategyTest {
 
     @Mock
     private ApplicationContext mockApplicationContext;
+
     @Mock
     private Environment mockEnvironment;
 
     private SpringEnvironmentPropertyActivationStrategy strategy;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.initMocks(this);
 
         when(mockApplicationContext.getEnvironment()).thenReturn(mockEnvironment);
@@ -52,23 +48,24 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
         strategy = new SpringEnvironmentPropertyActivationStrategy();
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         ContextClassLoaderApplicationContextHolder.release();
     }
 
     @Test
-    public void testGetId() {
+    void testGetId() {
         assertEquals(SpringEnvironmentPropertyActivationStrategy.ID, strategy.getId());
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         assertTrue(Strings.isNotBlank(strategy.getName()));
     }
 
-    @Theory
-    public void testIsActiveWithNoParam(boolean enabled) {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testIsActiveWithNoParam(boolean enabled) {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
 
         ContextClassLoaderApplicationContextHolder.bind(mockApplicationContext);
@@ -78,8 +75,9 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
         assertEquals(enabled, strategy.isActive(featureState, null));
     }
 
-    @Theory
-    public void testIsActiveWithParam(boolean enabled) {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testIsActiveWithParam(boolean enabled) {
         String paramValue = "foo";
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, !enabled);
         featureState.setParameter(SpringEnvironmentPropertyActivationStrategy.PARAM_NAME, paramValue);
@@ -91,15 +89,15 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
         assertEquals(enabled, strategy.isActive(featureState, null));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void testIsActiveThrowsWhenNoApplicationContext() {
+    @Test
+    void testIsActiveThrowsWhenNoApplicationContext() {
         FeatureState featureState = new FeatureState(TestFeatures.FEATURE_ONE, true);
 
-        strategy.isActive(featureState, null);
+        assertThrows(IllegalStateException.class, () -> strategy.isActive(featureState, null));
     }
 
     @Test
-    public void testGetParameters() {
+    void testGetParameters() {
         Parameter[] parameters = strategy.getParameters();
 
         assertEquals(2, parameters.length);
@@ -122,7 +120,6 @@ public class SpringEnvironmentPropertyActivationStrategyTest {
     }
 
     public enum TestFeatures implements Feature {
-
         FEATURE_ONE
     }
 }

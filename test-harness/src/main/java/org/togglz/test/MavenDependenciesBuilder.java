@@ -10,7 +10,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 public class MavenDependenciesBuilder {
 
     private final List<String> artifacts = new ArrayList<>();
-    private String filesystemPomPath = Paths.get("").toAbsolutePath().resolve("pom.xml").toString();
+    private final String filesystemPomPath = Paths.get("").toAbsolutePath().resolve("pom.xml").toString();
 
     public MavenDependenciesBuilder artifact(String artifact) {
         artifacts.add(artifact);

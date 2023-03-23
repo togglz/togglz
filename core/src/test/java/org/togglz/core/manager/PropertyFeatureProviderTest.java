@@ -1,22 +1,23 @@
 package org.togglz.core.manager;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Properties;
 import java.util.Set;
 
 import org.assertj.core.api.Condition;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.metadata.FeatureGroup;
 import org.togglz.core.metadata.FeatureMetaData;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.util.NamedFeature;
 
-public class PropertyFeatureProviderTest {
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+class PropertyFeatureProviderTest {
 
     @Test
-    public void shouldSupportDefinitionWithoutLabel() {
+    void shouldSupportDefinitionWithoutLabel() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "");
@@ -38,7 +39,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithOnlyLabel() {
+    void shouldSupportDefinitionWithOnlyLabel() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature");
@@ -60,7 +61,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithLabelAndDefault() {
+    void shouldSupportDefinitionWithLabelAndDefault() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature;true");
@@ -82,7 +83,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithLabelAndDefaultAndTrailingSemicolon() {
+    void shouldSupportDefinitionWithLabelAndDefaultAndTrailingSemicolon() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature;true;");
@@ -104,7 +105,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldSupportDefinitionWithSingleGroup() {
+    void shouldSupportDefinitionWithSingleGroup() {
 
         Properties properties = new Properties();
         properties.setProperty("F1", "My Feature;true;Group1");
@@ -128,7 +129,7 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void canInitializeFromProperties() {
+    void canInitializeFromProperties() {
 
         Properties properties = new Properties();
         properties.setProperty("ID_1", "ID 1;true;Group 1,Group Other");
@@ -165,17 +166,17 @@ public class PropertyFeatureProviderTest {
     }
 
     @Test
-    public void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
+    void shouldNotAllowTheDefaultFeatureStateToBeChangedByExternalClasses() {
         Properties properties = new Properties();
         properties.setProperty("F1", "");
 
         PropertyFeatureProvider provider = new PropertyFeatureProvider(properties);
 
         FeatureMetaData metadata = provider.getMetaData(new NamedFeature("F1"));
-        assertThat(metadata.getDefaultFeatureState().isEnabled()).isFalse();
+        assertFalse(metadata.getDefaultFeatureState().isEnabled());
         metadata.getDefaultFeatureState().setEnabled(true);
 
-        assertThat(provider.getMetaData(new NamedFeature("F1")).getDefaultFeatureState().isEnabled()).isFalse();
+        assertFalse(provider.getMetaData(new NamedFeature("F1")).getDefaultFeatureState().isEnabled());
     }
 
         private Condition<FeatureGroup> groupNamed(final String name) {

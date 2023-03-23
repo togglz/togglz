@@ -1,11 +1,5 @@
 package org.togglz.testing;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.metadata.FeatureMetaData;
@@ -16,20 +10,23 @@ import org.togglz.core.spi.ActivationStrategyContexts;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.util.Validate;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static java.util.Collections.emptyList;
 
 /**
- * 
  * A {@link FeatureManager} implementation that allows easy manipulation of features in testing environments.
- * 
+ *
  * @author Christian Kaltepoth
- * 
  */
 public class TestFeatureManager implements FeatureManager {
 
     private final Class<? extends Feature> featureEnum;
 
-    private final Set<String> activeFeatures = new HashSet<String>();
+    private final Set<String> activeFeatures = new HashSet<>();
 
     public TestFeatureManager(Class<? extends Feature> featureEnum) {
         Validate.notNull(featureEnum, "The featureEnum argument is required");
@@ -44,7 +41,7 @@ public class TestFeatureManager implements FeatureManager {
 
     @Override
     public Set<Feature> getFeatures() {
-        return new HashSet<Feature>(Arrays.asList(featureEnum.getEnumConstants()));
+        return new HashSet<>(Arrays.asList(featureEnum.getEnumConstants()));
     }
 
     @Override
@@ -86,26 +83,24 @@ public class TestFeatureManager implements FeatureManager {
         return emptyList();
     }
 
-    public TestFeatureManager enable(Feature feature) {
+    @Override
+    public void enable(Feature feature) {
         activeFeatures.add(feature.name());
-        return this;
     }
 
-    public TestFeatureManager disable(Feature feature) {
+    @Override
+    public void disable(Feature feature) {
         activeFeatures.remove(feature.name());
-        return this;
     }
 
-    public TestFeatureManager enableAll() {
+    public void enableAll() {
         for (Feature feature : featureEnum.getEnumConstants()) {
             enable(feature);
         }
-        return this;
     }
 
-    public TestFeatureManager disableAll() {
+    public void disableAll() {
         activeFeatures.clear();
-        return this;
     }
 
 }

@@ -25,7 +25,6 @@ public class CDIBasicOperationTest {
     public static WebArchive createDeployment() {
         return Deployments.getBasicWebArchive()
                 .addAsLibrary(Deployments.getTogglzCDIArchive())
-                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addClass(CDIFeatureConfiguration.class)
                 .addClass(Features.class);
     }
@@ -36,8 +35,10 @@ public class CDIBasicOperationTest {
     @Test
     public void testCDIBasicFeatures() throws IOException {
 
-        WebClient client = new WebClient();
-        TextPage page = client.getPage(url + "features");
+        TextPage page;
+        try (WebClient client = new WebClient()) {
+            page = client.getPage(url + "features");
+        }
         assertTrue(page.getContent().contains("FEATURE1 = false"));
         assertTrue(page.getContent().contains("FEATURE2 = true"));
 

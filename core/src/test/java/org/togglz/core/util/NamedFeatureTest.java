@@ -1,7 +1,6 @@
 package org.togglz.core.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,12 +10,13 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class NamedFeatureTest {
+class NamedFeatureTest {
 
     @Test
-    public void serializable() throws IOException, ClassNotFoundException {
+    void serializable() throws IOException, ClassNotFoundException {
         NamedFeature feature = new NamedFeature("SERIALIZABLE");
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(os);
@@ -27,8 +27,7 @@ public class NamedFeatureTest {
                 ObjectInputStream ois = new ObjectInputStream(is);
                 try {
                     Object deserializedFeature = ois.readObject();
-                    assertEquals("NamedFeature was not correctly serialized/deserialized",
-                        feature, deserializedFeature);
+                    assertEquals(feature, deserializedFeature, "NamedFeature was not correctly serialized/deserialized");
                 } finally {
                     is.close();
                     ois.close();
@@ -41,5 +40,4 @@ public class NamedFeatureTest {
             oos.close();
         }
     }
-
 }

@@ -20,6 +20,7 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfi
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,9 +31,9 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.spi.ActivationStrategy;
 import org.togglz.core.spi.FeatureProvider;
 import org.togglz.core.user.FeatureUser;
+import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzManagementContextConfiguration;
-import org.togglz.spring.boot.autoconfigure.TogglzAutoConfiguration;
 
 public class BaseTest {
 
@@ -75,6 +76,14 @@ public class BaseTest {
     }
 
     @Configuration
+    protected static class DispatcherServletPathConfig {
+        @Bean
+        public DispatcherServletPath dispatcherServletPath() {
+            return () -> "";
+        }
+    }
+
+    @Configuration
     protected static class FeatureProviderConfig {
 
         @SuppressWarnings("unchecked")
@@ -98,7 +107,8 @@ public class BaseTest {
             .withPropertyValues(
                     "togglz.console.enabled: true",
                     "togglz.console.use-management-port: true")
-            .withUserConfiguration(FeatureProviderConfig.class);
+            .withUserConfiguration(FeatureProviderConfig.class)
+            .withUserConfiguration(DispatcherServletPathConfig.class);
     }
 
 }
