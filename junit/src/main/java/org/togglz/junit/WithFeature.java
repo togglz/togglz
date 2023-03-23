@@ -1,12 +1,10 @@
 package org.togglz.junit;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import org.togglz.core.Feature;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Used together with the {@link TogglzRule} on test methods.
@@ -15,13 +13,6 @@ import org.togglz.core.Feature;
 @Retention(RUNTIME)
 public @interface WithFeature
 {
-
-    /**
-     * @deprecated Removed without replacement
-     */
-    @Deprecated
-    Class<? extends Feature> type() default Feature.class;
-
     /**
      * The features to enable
      */
@@ -31,5 +22,4 @@ public @interface WithFeature
      * disable the features instead of enabling them
      */
     boolean disable() default false;
-
 }
