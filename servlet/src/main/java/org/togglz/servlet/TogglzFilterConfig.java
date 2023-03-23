@@ -20,21 +20,11 @@ class TogglzFilterConfig {
      * didn't specify what to do.
      */
     public Boolean isPerformBootstrap() {
-
-        // configuration for Togglz >= 2.0.0
         String managerProvided = servletContext.getInitParameter("org.togglz.FEATURE_MANAGER_PROVIDED");
         if (managerProvided != null) {
             return !toBool(managerProvided);
         }
-
-        // deprecated configuration
-        String localManager = servletContext.getInitParameter("org.togglz.LOCAL_FEATURE_MANAGER");
-        if (localManager != null) {
-            return toBool(localManager);
-        }
-
         return null;
-
     }
 
     private static boolean toBool(String value) {

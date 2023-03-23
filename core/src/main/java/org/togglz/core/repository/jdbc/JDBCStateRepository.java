@@ -95,50 +95,6 @@ public class JDBCStateRepository implements StateRepository {
     }
 
     /**
-     * Constructor of {@link JDBCStateRepository}.
-     *
-     * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
-     * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
-     * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
-     *             aspects of the repository in a fluent way
-     */
-    @Deprecated
-    public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable) {
-        this(new Builder(dataSource).tableName(tableName).createTable(createTable));
-    }
-
-    /**
-     * Constructor of {@link JDBCStateRepository}.
-     *
-     * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
-     * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
-     * @param serializer The {@link MapSerializer} for storing parameters
-     * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
-     *             aspects of the repository in a fluent way
-     */
-    @Deprecated
-    public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer) {
-        this(new Builder(dataSource).tableName(tableName).createTable(createTable).serializer(serializer));
-    }
-
-    /**
-     * Constructor of {@link JDBCStateRepository}.
-     *
-     * @param dataSource The JDBC {@link DataSource} to obtain connections from
-     * @param tableName The name of the database table to use
-     * @param createTable If set to <code>true</code>, the table will be automatically created if it is missing
-     * @param serializer The {@link MapSerializer} for storing parameters
-     * @deprecated use {@link JDBCStateRepository#newBuilder(DataSource)} to create a builder that can be used to configure all
-     *             aspects of the repository in a fluent way
-     */
-    public JDBCStateRepository(DataSource dataSource, String tableName, boolean createTable, MapSerializer serializer,
-        boolean noCommit) {
-        this(new Builder(dataSource).tableName(tableName).createTable(createTable).serializer(serializer).noCommit(noCommit));
-    }
-
-    /**
      * Private constructor initializing the class from a builder
      */
     private JDBCStateRepository(Builder builder) {
@@ -424,7 +380,5 @@ public class JDBCStateRepository implements StateRepository {
         public JDBCStateRepository build() {
             return new JDBCStateRepository(this);
         }
-
     }
-
 }

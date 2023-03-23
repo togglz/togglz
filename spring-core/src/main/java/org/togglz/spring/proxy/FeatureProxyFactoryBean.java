@@ -1,16 +1,15 @@
 package org.togglz.spring.proxy;
 
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.HashSet;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.beans.factory.InitializingBean;
 import org.togglz.core.Feature;
 import org.togglz.core.proxy.FeatureProxyInvocationHandler;
-import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
+
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * <p>
@@ -122,14 +121,6 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
 
     public String getFeature() {
         return feature.name();
-    }
-
-    /**
-     * @deprecated use {@link org.togglz.spring.proxy.FeatureProxyFactoryBean#setFeature(Feature)} instead
-     */
-    @Deprecated
-    public void setFeature(String feature) {
-        this.feature = new NamedFeature(feature);
     }
 
     public void setFeature(Feature feature) {

@@ -49,11 +49,5 @@ public @interface FeaturesAreActive {
 
     String[] features();
 
-    /**
-     * @deprecated use {{@link #errorResponseStatus()} instead}.
-     */
-    @Deprecated
-    int responseStatus() default 404;
-
     HttpStatus errorResponseStatus() default HttpStatus.NOT_FOUND;
 }

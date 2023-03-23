@@ -15,7 +15,7 @@ import org.togglz.core.util.Validate;
 
 /**
  * Builder of {@link DefaultFeatureManager}.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class FeatureManagerBuilder {
@@ -42,14 +42,6 @@ public class FeatureManagerBuilder {
     }
 
     /**
-     * Use {@link #featureEnum(Class)} instead.
-     */
-    @Deprecated
-    public FeatureManagerBuilder featureClass(Class<? extends Feature> featureClass) {
-        return this.featureEnum(featureClass);
-    }
-
-    /**
      * Use the supplied feature enum class for the feature manager. Same as calling {@link #featureProvider(FeatureProvider)}
      * with {@link EnumBasedFeatureProvider}. Please note calling this method also set the name of the feature manager to the
      * simple name of the feature enum's type.
@@ -63,7 +55,8 @@ public class FeatureManagerBuilder {
      * with {@link EnumBasedFeatureProvider}. Please note calling this method also set the name of the feature manager to the
      * simple name of the first feature enum's type.
      */
-    public FeatureManagerBuilder featureEnums(Class<? extends Feature>... featureEnum) {
+    @SafeVarargs
+    public final FeatureManagerBuilder featureEnums(Class<? extends Feature>... featureEnum) {
         this.featureProvider = new EnumBasedFeatureProvider(featureEnum);
         this.name = "FeatureManager[" + featureEnum[0].getSimpleName() + "]";
         return this;
