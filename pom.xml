@@ -410,6 +410,12 @@
             </dependency>
 
             <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-core-spring-boot-starter</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-shiro</artifactId>
                 <version>${project.version}</version>

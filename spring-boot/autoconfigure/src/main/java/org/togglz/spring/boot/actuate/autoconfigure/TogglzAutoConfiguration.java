@@ -36,6 +36,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.thymeleaf.dialect.IProcessorDialect;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.togglz.console.TogglzConsoleServlet;
@@ -251,7 +252,7 @@ public class TogglzAutoConfiguration {
     }
 
     @Configuration
-    @ConditionalOnClass(TogglzDialect.class)
+    @ConditionalOnClass(IProcessorDialect.class)
     protected static class ThymeleafTogglzDialectConfiguration {
 
         @Bean

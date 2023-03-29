@@ -16,10 +16,21 @@
 
     <properties>
         <logback.version>${togglz.logback.version}</logback.version>
+        <spring-boot.version>3.0.5</spring-boot.version>
+
+        <!-- We skip tests here since all starters do not have any tests -->
+        <skipTests>true</skipTests>
     </properties>
 
     <modules>
+        <module>autoconfigure</module>
         <module>starter</module>
+        <module>starter-actuator</module>
+        <module>starter-console</module>
+        <module>starter-core</module>
+        <module>starter-security</module>
+        <module>starter-thymeleaf</module>
+        <module>starter-webmvc</module>
     </modules>
 
     <dependencyManagement>
@@ -33,6 +44,15 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
