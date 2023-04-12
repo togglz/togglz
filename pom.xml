@@ -168,6 +168,7 @@
         <module>console</module>
         <module>cdi</module>
         <module>spring-core</module>
+		<module>spring-test</module>
         <module>spring-web</module>
         <module>spring-security</module>
         <module>spring-boot</module>
