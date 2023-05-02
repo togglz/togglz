@@ -138,7 +138,7 @@
                         <dynamodb.port>${dynamodblocal.port}</dynamodb.port>
                     </systemPropertyVariables>
                 </configuration>
-                <version>2.22.2</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <goals>
