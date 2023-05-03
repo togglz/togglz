@@ -118,6 +118,22 @@ public class S3StateRepository implements StateRepository {
         }
     }
 
+    String getSseCustomerAlgorithm() {
+        return sseCustomerAlgorithm;
+    }
+
+    String getSseCustomerKey() {
+        return sseCustomerKey;
+    }
+
+    String getSseCustomerKeyMD5() {
+        return sseCustomerKeyMD5;
+    }
+
+    String getKeyPrefix() {
+        return keyPrefix;
+    }
+
     /**
      * Creates a new builder for creating a {@link S3StateRepository}.
      *
