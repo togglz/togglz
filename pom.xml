@@ -500,7 +500,7 @@
                 <!-- Used by proxy generation -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.14.2</version>
+                <version>1.14.4</version>
             </dependency>
 
             <dependency>
