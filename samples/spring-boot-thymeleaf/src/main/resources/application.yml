@@ -11,8 +11,6 @@ togglz:
   console:
     secured: false
     use-management-port: false
-  web:
-    request-holder-filter: true
 management:
   endpoints:
     web:
