@@ -30,7 +30,7 @@ jobs:
 
       - name: Publish package
         # all modules without samples/*
-        run: mvn --batch-mode clean deploy -P central-deploy -DskipTests=true -pl .,core,servlet,console,cdi,spring-core,spring-web,spring-security,spring-boot,spring-boot/starter,shiro,appengine,cloud-datastore,cloud-storage,mongodb,testing,junit,spock,amazon-s3,slack,redis,kotlin,test-harness,benchmarks
+        run: mvn --batch-mode clean deploy -P central-deploy -DskipTests=true -pl .,core,servlet,console,cdi,spring-core,spring-web,spring-security,spring-test,spring-boot,spring-boot/starter,shiro,appengine,cloud-datastore,cloud-storage,mongodb,testing,junit,spock,amazon-s3,slack,redis,kotlin,test-harness,benchmarks
         env:
           MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}

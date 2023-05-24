@@ -46,6 +46,11 @@
             <groupId>org.togglz</groupId>
             <artifactId>togglz-console</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-spring-test</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

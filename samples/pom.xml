@@ -85,6 +85,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-spring-test</artifactId>
+                <version>${togglz.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>

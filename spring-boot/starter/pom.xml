@@ -132,6 +132,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-spring-test</artifactId>
+        </dependency>
+
+        <dependency>
             <artifactId>spring-boot-starter-test</artifactId>
             <groupId>org.springframework.boot</groupId>
             <scope>test</scope>
