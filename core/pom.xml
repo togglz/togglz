@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>togglz-core</artifactId>
@@ -26,20 +26,21 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-
-      <version>3.19.0</version>
+      <version>3.24.2</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.graalvm.js</groupId>
       <artifactId>js</artifactId>
-      <version>22.0.0</version>
+      <version>${graalvm.version}</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.graalvm.js</groupId>
       <artifactId>js-scriptengine</artifactId>
-      <version>22.0.0</version>
+      <version>${graalvm.version}</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -82,7 +83,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>42.5.0</version>
+      <version>42.6.0</version>
       <scope>test</scope>
     </dependency>
 

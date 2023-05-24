@@ -2,12 +2,10 @@ package org.togglz.core.repository;
 
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
-import org.togglz.core.activation.UsernameActivationStrategy;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FeatureStateTest {
@@ -35,24 +33,32 @@ class FeatureStateTest {
     }
 
     @Test
-    void testOldUsersApiHandling() {
+    void testEquals() {
 
-        // initial state
-        FeatureState state = new FeatureState(Features.FEATURE1, true, Arrays.asList("ck", "admin"));
-        assertTrue(state.isEnabled());
-        assertTrue(state.getParameterNames().contains(UsernameActivationStrategy.PARAM_USERS));
-        assertEquals("ck,admin", state.getParameter(UsernameActivationStrategy.PARAM_USERS));
-        assertTrue(state.getUsers().containsAll(Arrays.asList("ck", "admin")));
+        FeatureState state = new FeatureState(Features.FEATURE1);
+        FeatureState copy = state.copy();
+        assertEquals(state, copy);
 
-        // add some other user
-        state.addUser("tester");
-        assertEquals("ck,admin,tester", state.getParameter(UsernameActivationStrategy.PARAM_USERS));
-        assertEquals(state.getUsers().get(0), "ck");
-        assertEquals(state.getUsers().get(1), "admin");
-        assertEquals(state.getUsers().get(2), "tester");
+        // Different feature
+        assertNotEquals(state, new FeatureState(Features.FEATURE2));
+
+        // Different enabled state
+        state.setEnabled(true);
+        assertNotEquals(state, copy);
+
+        // Different strategy
+        copy = state.copy();
+        state.setStrategyId("Strategy");
+        assertNotEquals(state, copy);
+
+        // Different parameters
+        copy = state.copy();
+        state.setParameter("key", "value");
+        assertNotEquals(state, copy);
     }
 
     private enum Features implements Feature {
-        FEATURE1
+        FEATURE1,
+        FEATURE2
     }
 }

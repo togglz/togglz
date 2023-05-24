@@ -14,9 +14,7 @@ import org.togglz.core.util.Validate;
 /**
  * Activation strategy that enables features for a given percentage of users. This strategy is typically used to implement
  * gradual rollouts. The implementation is based on a hashcode created from the name of the acting user which is calculated by
- * {@link #calculateHashCode(FeatureUser)}.
- *
- * @author Christian Kaltepoth
+ * {@link #calculateHashCode(FeatureUser, Feature)}.
  */
 public class GradualActivationStrategy implements ActivationStrategy {
 
@@ -37,36 +35,21 @@ public class GradualActivationStrategy implements ActivationStrategy {
 
     @Override
     public boolean isActive(FeatureState state, FeatureUser user) {
-
         if (user != null && Strings.isNotBlank(user.getName())) {
-
             String percentageAsString = state.getParameter(PARAM_PERCENTAGE);
             try {
-
                 int percentage = Integer.parseInt(percentageAsString);
 
                 if (percentage > 0) {
                     int hashCode = Math.abs(calculateHashCode(user, state.getFeature()));
                     return (hashCode % 100) < percentage;
                 }
-
             } catch (NumberFormatException e) {
                 log.error("Invalid gradual rollout percentage for feature " + state.getFeature().name() + ": "
                     + percentageAsString);
             }
-
         }
-
         return false;
-
-    }
-
-    /**
-     * @deprecated Use {@link #calculateHashCode(FeatureUser, Feature)} instead
-     */
-    @Deprecated
-    protected int calculateHashCode(FeatureUser user) {
-        return calculateHashCode(user, null);
     }
 
     protected int calculateHashCode(FeatureUser user, Feature feature) {

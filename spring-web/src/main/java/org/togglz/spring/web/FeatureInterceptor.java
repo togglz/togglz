@@ -1,15 +1,14 @@
 package org.togglz.spring.web;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.togglz.core.Feature;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.core.manager.FeatureManager;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -86,36 +85,13 @@ public class FeatureInterceptor implements HandlerInterceptor {
                         .allMatch(featureManager::isActive);
 
                 if (!allFeaturesOfAnnotationMatch) {
-                    final int errorStatusCode = getErrorStatus(featuresAreActiveAnnotation).value();
+                    final int errorStatusCode = featuresAreActiveAnnotation.errorResponseStatus().value();
                     response.sendError(errorStatusCode);
                     return false;
                 }
             }
         }
         return HandlerInterceptor.super.preHandle(request, response, handler);
-    }
-
-    // TODO: When deprecated field FeaturesAreActive#responseStatus is removed, this method could be removed as well and
-    //       be replaced by inline call to FeaturesAreActive#errorResponseStatus.
-    private HttpStatus getErrorStatus(final FeaturesAreActive annotation) {
-        final HttpStatus responseHttpStatus = HttpStatus.valueOf(annotation.responseStatus());
-
-        final HttpStatus errorResponseStatus = annotation.errorResponseStatus();
-
-        if (errorResponseStatus == responseHttpStatus) {
-            return errorResponseStatus;
-        } else {
-            // errorResponseStatus != responseHttpStatus
-            if (errorResponseStatus == FeaturesAreActive.DEFAULT_ERROR_RESPONSE_STATUS) {
-                // return the non-default value
-                return responseHttpStatus;
-            } else if (responseHttpStatus == FeaturesAreActive.DEFAULT_ERROR_RESPONSE_STATUS) {
-                // return the non-default value
-                return errorResponseStatus;
-            } else {
-                throw new IllegalArgumentException("'responseStatus' and 'errorResponseStatus' cannot be both non-default and different!");
-            }
-        }
     }
 
     protected static <A extends Annotation> A handlerAnnotation(final HandlerMethod handlerMethod, final Class<A> annotationClass) {

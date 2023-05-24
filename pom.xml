@@ -11,7 +11,7 @@
 
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Togglz</name>
@@ -27,19 +27,42 @@
 
     <properties>
         <!-- Minimal Java version -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Wildfly version used for integration tests -->
-        <wildfly.version>22.0.1.Final</wildfly.version>
+        <wildfly.version>27.0.1.Final</wildfly.version>
 
-        <spring.version>5.3.23</spring.version>
-        <junit.version>5.8.2</junit.version>
-        <mockito.version>4.8.1</mockito.version>
-        <testcontainers.version>1.17.5</testcontainers.version>
+        <spring.version>6.0.8</spring.version>
+        <junit.version>5.9.3</junit.version>
+        <mockito.version>5.2.0</mockito.version>
+        <testcontainers.version>1.18.1</testcontainers.version>
 
-        <spockframework.version>2.1-groovy-3.0</spockframework.version>
+        <!-- slf4j and logback need to be kept in compatible versions at all times -->
+        <!-- togglz uses logback for test logging only and does NOT bring it as a dependency to the users -->
+        <togglz.slf4j.version>2.0.7</togglz.slf4j.version>
+        <togglz.logback.version>1.4.6</togglz.logback.version>
+
+        <spockframework.version>2.3-groovy-4.0</spockframework.version>
+        <graalvm.version>22.3.2</graalvm.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <snapshots><enabled>false</enabled></snapshots>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <!-- JBoss repo needed for test-harness dependencies -->
+        <repository>
+            <id>jboss</id>
+            <name>JBoss public</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -48,7 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>3.0.0</version>
                 <configuration>
                     <pushChanges>false</pushChanges>
                     <localCheckout>true</localCheckout>
@@ -61,7 +84,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.12.0</version>
+                <version>3.12.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -93,7 +116,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.8</version>
+                <version>0.8.10</version>
                 <executions>
                     <execution>
                         <goals>
@@ -118,13 +141,19 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.1</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>2.22.2</version>
+                    <version>3.1.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.0.0</version>
                 </plugin>
 
             </plugins>
@@ -150,7 +179,7 @@
         <module>testing</module>
         <module>junit</module>
         <module>spock</module>
-        <module>cassandra</module>
+        <module>hazelcast</module>
         <module>dynamodb</module>
         <module>amazon-s3</module>
         <module>benchmarks</module>
@@ -198,7 +227,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>versions-maven-plugin</artifactId>
-                        <version>2.11.0</version>
+                        <version>2.15.0</version>
                         <configuration>
                             <generateBackupPoms>false</generateBackupPoms>
                         </configuration>
@@ -272,7 +301,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <!-- some mudules don't find the existing tests, we should break the build in that case -->
+                            <!-- some modules don't find the existing tests, we should break the build in that case -->
                             <failIfNoTests>true</failIfNoTests>
                             <systemPropertyVariables>
                                 <arquillian.launch>wildfly-managed</arquillian.launch>
@@ -282,7 +311,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.3.0</version>
+                        <version>3.5.0</version>
                         <executions>
                             <execution>
                                 <id>unpack-wildfly</id>
@@ -312,7 +341,7 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>3.0.1.Final</version>
+                    <version>5.0.0.Alpha6</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -329,7 +358,7 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-remote</artifactId>
-                    <version>2.2.0.Final</version>
+                    <version>5.0.0.Alpha6</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -424,7 +453,7 @@
 
             <dependency>
                 <groupId>org.togglz</groupId>
-                <artifactId>togglz-cassandra</artifactId>
+                <artifactId>togglz-hazelcast</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -467,9 +496,9 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>4.0.1</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>6.0.0</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -477,7 +506,7 @@
                 <!-- Used by proxy generation -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.12.18</version>
+                <version>1.14.4</version>
             </dependency>
 
             <dependency>
@@ -502,7 +531,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
-                <version>4.8.0</version>
+                <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -514,16 +543,16 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>2.0</version>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>4.0.1</version>
                 <scope>provided</scope>
             </dependency>
 
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.22.0</version>
+                <version>3.24.2</version>
                 <scope>test</scope>
             </dependency>
 
@@ -546,14 +575,14 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>2.0.3</version>
+                <version>${togglz.slf4j.version}</version>
             </dependency>
 
             <!-- provide an slf4j binding to have logs for togglz's tests -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>1.2.11</version>
+                <version>${togglz.logback.version}</version>
                 <scope>test</scope>
             </dependency>
 

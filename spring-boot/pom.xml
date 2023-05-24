@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>org.togglz</groupId>
-    <artifactId>togglz-project</artifactId>
-    <version>3.2.1-SNAPSHOT</version>
-  </parent>
+    <parent>
+        <groupId>org.togglz</groupId>
+        <artifactId>togglz-project</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>togglz-spring-boot</artifactId>
-  <name>Togglz - Spring Boot POM</name>
-  <description>Togglz - Spring Boot POM</description>
-  <packaging>pom</packaging>
+    <artifactId>togglz-spring-boot</artifactId>
+    <name>Togglz - Spring Boot POM</name>
+    <description>Togglz - Spring Boot POM</description>
+    <packaging>pom</packaging>
 
-  <modules>
-    <module>autoconfigure</module>
+    <properties>
+        <logback.version>${togglz.logback.version}</logback.version>
+    </properties>
+
+    <modules>
+        <module>autoconfigure</module>
     <module>starter</module>
     <module>starter-actuator</module>
     <module>starter-console</module>
@@ -22,7 +27,7 @@
     <module>starter-security</module>
     <module>starter-thymeleaf</module>
     <module>starter-webmvc</module>
-  </modules>
+    </modules>
 
   <properties>
     <spring-boot.version>2.7.5</spring-boot.version>
@@ -32,20 +37,32 @@
     <skipTests>true</skipTests>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>5.3.23</version>
-        <exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${togglz.logback.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${togglz.logback.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

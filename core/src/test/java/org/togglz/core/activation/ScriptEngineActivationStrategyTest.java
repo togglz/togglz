@@ -128,7 +128,7 @@ class ScriptEngineActivationStrategyTest {
     void shouldContainDescription() {
         ScriptEngineActivationStrategy strategy = new ScriptEngineActivationStrategy();
 
-        assertEquals("The script language to use. Your system seems to support the following languages: ECMAScript, ECMAScript", strategy.getParameters()[0].getDescription());
+        assertEquals("The script language to use. Your system seems to support the following languages: ECMAScript", strategy.getParameters()[0].getDescription());
         assertEquals("The script to check if the feature is active. The script context provides access to some default objects. The variable 'user' refers to the current acting FeatureUser and 'date' to the current time represented as a java.util.Date.", strategy.getParameters()[1].getDescription());
     }
 

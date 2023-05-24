@@ -15,8 +15,7 @@ ij_java_class_count_to_use_import_on_demand = 9999
 ij_java_names_count_to_use_import_on_demand = 9999
 ij_java_packages_to_use_import_on_demand = 9999
 
-[*.{yml, js,ts,tsx,scss,json}]
-indent_size = 2
+[*.{yml,js,ts,tsx,scss,json,xml}]
 ij_continuation_indent_size = 2
 
 [pom.xml]

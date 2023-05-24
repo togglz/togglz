@@ -18,6 +18,7 @@ package org.togglz.spring.boot.actuate.autoconfigure;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -34,6 +35,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -72,7 +74,7 @@ import java.util.Map;
  *
  * @author Marcel Overdijk
  */
-@Configuration
+@AutoConfiguration // TODO check if this is merged correctly
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(TogglzProperties.class)
 public class TogglzAutoConfiguration {

@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.togglz.console.RequestEvent;
 import org.togglz.console.RequestHandlerBase;
@@ -82,6 +83,9 @@ public class EditPageHandler extends RequestHandlerBase {
 
                 FeatureState state = featureModel.toFeatureState();
                 featureManager.setFeatureState(state);
+
+                String tabIndexAsString = request.getParameter("t");
+                response.addCookie(new Cookie("t", tabIndexAsString));
                 response.sendRedirect("index");
 
             }

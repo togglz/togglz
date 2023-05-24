@@ -15,16 +15,16 @@ import org.togglz.core.util.Validate;
 
 /**
  * Builder of {@link DefaultFeatureManager}.
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class FeatureManagerBuilder {
 
-    private String name = UUID.randomUUID().toString();
+    private String name = null;
     private FeatureProvider featureProvider = null;
-    private StateRepository stateRepository = new InMemoryStateRepository();
-    private UserProvider userProvider = new NoOpUserProvider();
-    private ActivationStrategyProvider strategyProvider = new DefaultActivationStrategyProvider();
+    private StateRepository stateRepository = null;
+    private UserProvider userProvider = null;
+    private ActivationStrategyProvider strategyProvider = null;
 
     /**
      * Create a new builder
@@ -42,14 +42,6 @@ public class FeatureManagerBuilder {
     }
 
     /**
-     * Use {@link #featureEnum(Class)} instead.
-     */
-    @Deprecated
-    public FeatureManagerBuilder featureClass(Class<? extends Feature> featureClass) {
-        return this.featureEnum(featureClass);
-    }
-
-    /**
      * Use the supplied feature enum class for the feature manager. Same as calling {@link #featureProvider(FeatureProvider)}
      * with {@link EnumBasedFeatureProvider}. Please note calling this method also set the name of the feature manager to the
      * simple name of the feature enum's type.
@@ -63,7 +55,8 @@ public class FeatureManagerBuilder {
      * with {@link EnumBasedFeatureProvider}. Please note calling this method also set the name of the feature manager to the
      * simple name of the first feature enum's type.
      */
-    public FeatureManagerBuilder featureEnums(Class<? extends Feature>... featureEnum) {
+    @SafeVarargs
+    public final FeatureManagerBuilder featureEnums(Class<? extends Feature>... featureEnum) {
         this.featureProvider = new EnumBasedFeatureProvider(featureEnum);
         this.name = "FeatureManager[" + featureEnum[0].getSimpleName() + "]";
         return this;
@@ -106,6 +99,9 @@ public class FeatureManagerBuilder {
      * works if you are using the {@link DefaultActivationStrategyProvider}.
      */
     public FeatureManagerBuilder activationStrategy(ActivationStrategy strategy) {
+        if (strategy == null) {
+            activationStrategyProvider(new DefaultActivationStrategyProvider());
+        }
         if (strategyProvider instanceof DefaultActivationStrategyProvider) {
             ((DefaultActivationStrategyProvider) strategyProvider).addActivationStrategy(strategy);
             return this;
@@ -128,11 +124,14 @@ public class FeatureManagerBuilder {
      * Create the {@link FeatureManager} using the current configuration of the builder
      */
     public FeatureManager build() {
+        String name = (this.name != null) ? this.name : UUID.randomUUID().toString();
+        FeatureProvider featureProvider = this.featureProvider; // no default
+        StateRepository stateRepository = (this.stateRepository != null) ? this.stateRepository : new InMemoryStateRepository();
+        UserProvider userProvider = (this.userProvider != null) ? this.userProvider : new NoOpUserProvider();
+        ActivationStrategyProvider strategyProvider = (this.strategyProvider != null) ? this.strategyProvider : new DefaultActivationStrategyProvider();
+
         Validate.notBlank(name, "No name specified");
         Validate.notNull(featureProvider, "No feature provider specified");
-        Validate.notNull(stateRepository, "No state repository specified");
-        Validate.notNull(userProvider, "No user provider specified");
-        Validate.notNull(strategyProvider, "No activation strategy provider specified");
         return new DefaultFeatureManager(name, featureProvider, stateRepository, userProvider, strategyProvider);
     }
 

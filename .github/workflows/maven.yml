@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [8, 11]
+        jdk: [17]
     env:
       JDK_VERSION:  ${{ matrix.jdk }}
     runs-on: ubuntu-latest

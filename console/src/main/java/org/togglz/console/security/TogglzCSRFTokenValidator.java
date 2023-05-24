@@ -1,6 +1,6 @@
 package org.togglz.console.security;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.togglz.servlet.spi.CSRFToken;
 import org.togglz.servlet.spi.CSRFTokenValidator;

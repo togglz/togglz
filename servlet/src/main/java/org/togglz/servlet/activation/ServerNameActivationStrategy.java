@@ -2,7 +2,7 @@ package org.togglz.servlet.activation;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.togglz.core.activation.Parameter;
 import org.togglz.core.activation.ParameterBuilder;
@@ -14,10 +14,10 @@ import org.togglz.servlet.util.HttpServletRequestHolder;
 
 /**
  * Activation strategy that will use the server name used in the request to decide if the feature is active or not.
- * 
+ *
  * This strategy can be useful when given service instance is available through two different virtual host names (like
  * www.example.com and beta.example.com) each with different features enabled.
- * 
+ *
  * @author Marcin Zajączkowski, 2014-04-28
  */
 public class ServerNameActivationStrategy implements ActivationStrategy {

@@ -1,18 +1,14 @@
 package org.togglz.core.repository;
 
+import org.togglz.core.Feature;
+
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
-
-import org.togglz.core.Feature;
-import org.togglz.core.activation.UsernameActivationStrategy;
-import org.togglz.core.util.Strings;
 
 /**
  * This class represents the state of a feature that is persisted by {@link StateRepository} implementations.
@@ -47,25 +43,6 @@ public class FeatureState implements Serializable {
     public FeatureState(Feature feature, boolean enabled) {
         this.feature = feature;
         this.enabled = enabled;
-    }
-
-    /**
-     * This constructor creates a new feature state for the given feature. Please not that using this constructor will
-     * automatically set strategyId to match the {@link UsernameActivationStrategy}.
-     *
-     * @param feature The feature that is represented by this state.
-     * @param enabled boolean indicating whether this feature should be enabled or not.
-     * @param users A list of users
-     *
-     * @deprecated This constructor will be removed soon. You should use {@link #FeatureState(Feature, boolean)} and
-     *             {@link #setParameter(String, String)} instead.
-     */
-    @Deprecated
-    public FeatureState(Feature feature, boolean enabled, List<String> users) {
-        this.feature = feature;
-        this.enabled = enabled;
-        this.strategyId = UsernameActivationStrategy.ID;
-        this.addUsers(users);
     }
 
     /**
@@ -120,50 +97,6 @@ public class FeatureState implements Serializable {
     }
 
     /**
-     * The list of users associated with the feature state.
-     *
-     * @return The user list, never <code>null</code>
-     *
-     * @deprecated This method will be removed soon. Use {@link #getParameter(String)} instead to read the corresponding
-     *             strategy parameter.
-     */
-    @Deprecated
-    public List<String> getUsers() {
-        String value = getParameter(UsernameActivationStrategy.PARAM_USERS);
-        if (Strings.isNotBlank(value)) {
-            return Strings.splitAndTrim(value, ",");
-        }
-        return Collections.emptyList();
-    }
-
-    /**
-     * Adds a single user to the list of users
-     *
-     * @deprecated This method will be removed soon. Use {@link #setParameter(String, String)} instead to modify the
-     *             corresponding strategy parameter.
-     */
-    @Deprecated
-    public FeatureState addUser(String user) {
-        return this.addUsers(Collections.singletonList(user));
-    }
-
-    /**
-     * Adds a single user to the list of users
-     *
-     * @deprecated This method will be removed soon. Use {@link #setParameter(String, String)} instead to modify the
-     *             corresponding strategy parameter.
-     */
-    @Deprecated
-    public FeatureState addUsers(Collection<String> users) {
-        Set<String> set = new LinkedHashSet<>();
-        set.addAll(this.getUsers());
-        set.addAll(users);
-        String setAsString = Strings.trimToNull(Strings.join(set, ","));
-        setParameter(UsernameActivationStrategy.PARAM_USERS, setAsString);
-        return this;
-    }
-
-    /**
      * Returns the ID of the selected activation strategy.
      */
     public String getStrategyId() {
@@ -210,6 +143,41 @@ public class FeatureState implements Serializable {
      */
     public Map<String, String> getParameterMap() {
         return Collections.unmodifiableMap(this.parameters);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        FeatureState that = (FeatureState) o;
+
+        if (this.enabled != that.enabled) {
+            return false;
+        }
+        if (!this.feature.equals(that.feature)) {
+            return false;
+        }
+        if (!Objects.equals(this.strategyId, that.strategyId)) {
+            return false;
+        }
+        if (this.parameters.size() != that.parameters.size()) {
+            return false;
+        }
+        return this.parameters.equals(that.parameters);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = this.feature.hashCode();
+        result = 31 * result + Boolean.hashCode(this.enabled);
+        result = 31 * result + (this.strategyId != null ? this.strategyId.hashCode() : 0);
+        result = 31 * result + this.parameters.hashCode();
+        return result;
     }
 
     /**

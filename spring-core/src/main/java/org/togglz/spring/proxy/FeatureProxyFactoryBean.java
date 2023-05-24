@@ -1,52 +1,52 @@
 package org.togglz.spring.proxy;
 
-import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.HashSet;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanNotInitializedException;
 import org.springframework.beans.factory.InitializingBean;
 import org.togglz.core.Feature;
 import org.togglz.core.proxy.FeatureProxyInvocationHandler;
-import org.togglz.core.util.NamedFeature;
 import org.togglz.core.util.Validate;
+
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * <p>
  * Implementation of {@link FactoryBean} that creates a proxy that delegates invocation to one of two target beans depending on
  * that state of a given feature.
  * </p>
- * 
+ *
  * <p>
  * You can use the factory like this:
  * </p>
- * 
+ *
  * <pre>
  * &lt;bean id="someService" class="org.togglz.spring.proxy.FeatureProxyFactoryBean"&gt;
- *   &lt;property name="feature" value="FEATURE_ONE" /&gt;
+ *   &lt;property name="feature" value=FEATURE_ONE /&gt;
  *   &lt;property name="active" ref="newServiceImpl" /&gt;
  *   &lt;property name="inactive" ref="oldServiceImpl" /&gt;
  * &lt;/bean&gt;
  * </pre>
- * 
+ *
  * @author Christian Kaltepoth
  */
 public class FeatureProxyFactoryBean implements FactoryBean<Object>, InitializingBean {
 
-    private String feature;
+    private Feature feature;
 
     private Object active;
 
     private Object inactive;
 
     private Class<?> proxyType;
-    
+
     private boolean initialized = false;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        Validate.notBlank(feature, "The 'feature' property is required");
+    public void afterPropertiesSet() {
+        Validate.notNull(feature, "The 'feature' property is required");
+        Validate.notBlank(feature.name(), "The 'feature.name' property is required");
         Validate.notNull(active, "The 'active' property is required");
         Validate.notNull(inactive, "The 'inactive' property is required");
         if (proxyType != null && !proxyType.isInterface()) {
@@ -56,7 +56,7 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
     }
 
     @Override
-    public Object getObject() throws Exception {
+    public Object getObject() {
 
         // make sure the factory is fully initialized
         if (!initialized) {
@@ -64,8 +64,7 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
         }
 
         // create the invocation handler that switches between implementations
-        Feature namedFeature = new NamedFeature(feature);
-        FeatureProxyInvocationHandler proxy = new FeatureProxyInvocationHandler(namedFeature, active, inactive);
+        FeatureProxyInvocationHandler proxy = new FeatureProxyInvocationHandler(feature, active, inactive);
 
         // obtain the interface for which to create the proxy
         Class<?> proxyType = getEffectiveProxyType();
@@ -121,10 +120,10 @@ public class FeatureProxyFactoryBean implements FactoryBean<Object>, Initializin
     }
 
     public String getFeature() {
-        return feature;
+        return feature.name();
     }
 
-    public void setFeature(String feature) {
+    public void setFeature(Feature feature) {
         this.feature = feature;
     }
 
