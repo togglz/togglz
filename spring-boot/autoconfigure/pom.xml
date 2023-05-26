@@ -9,29 +9,49 @@
     <version>4.0.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>togglz-spring-boot-starter</artifactId>
-  <name>Togglz - Spring Boot Starter</name>
-  <description>Togglz - Spring Boot Starter</description>
+  <artifactId>togglz-spring-boot-autoconfigure</artifactId>
+  <name>Togglz - Spring Boot Auto Configuration</name>
+  <description>Togglz - Spring Boot Auto Configuration</description>
+
+  <properties>
+    <!-- Reactivate tests here since this is the only starters module containing tests -->
+    <skipTests>false</skipTests>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.togglz</groupId>
-      <artifactId>togglz-spring-boot-autoconfigure</artifactId>
+      <artifactId>togglz-console</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
-      <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-actuator-autoconfigure</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
-      <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf-spring6</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring6</artifactId>
       <optional>true</optional>
     </dependency>
 
@@ -86,6 +106,7 @@
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-web</artifactId>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -128,6 +149,7 @@
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
