@@ -21,16 +21,6 @@
     <!-- We skip tests here since all starters do not have any tests -->
     <skipTests>true</skipTests>
   </properties>
-
-<<<<<<< HEAD
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-=======
   <modules>
     <module>autoconfigure</module>
     <module>starter</module>
@@ -41,7 +31,6 @@
     <module>starter-thymeleaf</module>
     <module>starter-webmvc</module>
   </modules>
->>>>>>> upstream/master
 
   <dependencyManagement>
     <dependencies>

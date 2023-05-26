@@ -118,20 +118,14 @@
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.togglz</groupId>
       <artifactId>togglz-spring-test</artifactId>
     </dependency>
-
     <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-commons</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -139,21 +133,6 @@
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
-  </dependencies> ======= <dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-commons</artifactId>
-    <scope>test</scope>
-  </dependency>
-    <dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-api</artifactId>
-    <scope>test</scope>
-  </dependency>
-    <dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-classic</artifactId>
-    <scope>test</scope>
-  </dependency>
   </dependencies>
 
 </project>
