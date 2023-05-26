@@ -107,7 +107,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
+                <version>3.11.0</version>
                 <configuration>
                     <parameters>true</parameters>
                 </configuration>
@@ -408,6 +408,12 @@
                 <groupId>org.togglz</groupId>
                 <artifactId>togglz-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+              <groupId>org.togglz</groupId>
+              <artifactId>togglz-core-spring-boot-starter</artifactId>
+              <version>${project.version}</version>
             </dependency>
 
             <dependency>
