@@ -74,7 +74,7 @@ import java.util.Map;
  *
  * @author Marcel Overdijk
  */
-@AutoConfiguration // TODO check if this is merged correctly
+@AutoConfiguration
 @ConditionalOnProperty(prefix = "togglz", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(TogglzProperties.class)
 public class TogglzAutoConfiguration {
