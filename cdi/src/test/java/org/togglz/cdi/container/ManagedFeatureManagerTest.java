@@ -1,10 +1,7 @@
 package org.togglz.cdi.container;
 
-import static org.junit.Assert.assertEquals;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +9,8 @@ import org.togglz.cdi.Features;
 import org.togglz.core.context.FeatureContext;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
 public class ManagedFeatureManagerTest {
