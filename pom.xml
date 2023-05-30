@@ -303,7 +303,7 @@
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <!-- some modules don't find the existing tests, we should break the build in that case -->
-                            <!-- <failIfNoTests>true</failIfNoTests> -->
+                          <failIfNoTests>true</failIfNoTests>
                             <systemPropertyVariables>
                                 <arquillian.launch>wildfly-managed</arquillian.launch>
                             </systemPropertyVariables>
