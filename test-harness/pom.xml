@@ -44,14 +44,14 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.7.0.Alpha14</version>
+            <version>1.7.0.Final</version>
         </dependency>
 
         <!-- JEE APIs -->
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-spec-api</artifactId>
-            <version>28.0.0.Final</version>
+            <version>28.0.1.Final</version>
             <type>pom</type>
         </dependency>
 
