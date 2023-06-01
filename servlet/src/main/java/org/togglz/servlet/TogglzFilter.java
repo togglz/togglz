@@ -40,7 +40,7 @@ public class TogglzFilter implements Filter {
 
     private CompositeRequestListener requestListener;
 
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
         // build the configuration object
         TogglzFilterConfig config = new TogglzFilterConfig(filterConfig.getServletContext());

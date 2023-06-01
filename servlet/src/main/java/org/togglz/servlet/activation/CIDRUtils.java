@@ -1,27 +1,27 @@
 /*
-* The MIT License
-*
-* Copyright (c) 2013 Edin Dazdarevic (edin.dazdarevic@gmail.com)
+ * The MIT License
+ *
+ * Copyright (c) 2013 Edin Dazdarevic (edin.dazdarevic@gmail.com)
 
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
 
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
 
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*
-* */
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * */
 
 package org.togglz.servlet.activation;
 
@@ -46,29 +46,24 @@ public class CIDRUtils {
     private InetAddress endAddress;
     private final int prefixLength;
 
-
     public CIDRUtils(String cidr) throws UnknownHostException {
-
         this.cidr = cidr;
 
         /* split CIDR to address and prefix part */
-        if (this.cidr.contains("/")) {
-            int index = this.cidr.indexOf("/");
-            String addressPart = this.cidr.substring(0, index);
-            String networkPart = this.cidr.substring(index + 1);
-
-            inetAddress = InetAddress.getByName(addressPart);
-            prefixLength = Integer.parseInt(networkPart);
-
-            calculate();
-        } else {
+        if (!this.cidr.contains("/")) {
             throw new IllegalArgumentException("not an valid CIDR format!");
         }
+        int index = this.cidr.indexOf("/");
+        String addressPart = this.cidr.substring(0, index);
+        String networkPart = this.cidr.substring(index + 1);
+
+        inetAddress = InetAddress.getByName(addressPart);
+        prefixLength = Integer.parseInt(networkPart);
+
+        calculate();
     }
 
-
     private void calculate() throws UnknownHostException {
-
         ByteBuffer maskBuffer;
         int targetSize;
         if (inetAddress.getAddress().length == 4) {
@@ -97,7 +92,6 @@ public class CIDRUtils {
 
         this.startAddress = InetAddress.getByAddress(startIpArr);
         this.endAddress = InetAddress.getByAddress(endIpArr);
-
     }
 
     private byte[] toBytes(byte[] array, int targetSize) {
@@ -110,7 +104,6 @@ public class CIDRUtils {
 
         int size = newArr.size();
         for (int i = 0; i < (targetSize - size); i++) {
-
             newArr.add(0, (byte) 0);
         }
 
@@ -121,15 +114,6 @@ public class CIDRUtils {
         return ret;
     }
 
-    public String getNetworkAddress() {
-
-        return this.startAddress.getHostAddress();
-    }
-
-    public String getBroadcastAddress() {
-        return this.endAddress.getHostAddress();
-    }
-
     public boolean isInRange(InetAddress address) throws UnknownHostException {
         BigInteger start = new BigInteger(1, this.startAddress.getAddress());
         BigInteger end = new BigInteger(1, this.endAddress.getAddress());
@@ -138,10 +122,6 @@ public class CIDRUtils {
         int st = start.compareTo(target);
         int te = target.compareTo(end);
 
-        return (st == -1 || st == 0) && (te == -1 || te == 0);
-    }
-
-    public boolean isInRange(String ipAddress) throws UnknownHostException {
-       return isInRange(InetAddress.getByName(ipAddress));
+        return (st < 0 || st == 0) && (te < 0 || te == 0);
     }
 }

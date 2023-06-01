@@ -3,16 +3,14 @@ package org.togglz.servlet.util;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- *
  * This class can be used to bind the {@link HttpServletRequest} to a thread local. Please take special care to ALWAYS remove
  * the request from the thread local by calling {@link #release()}.
  *
  * @author Christian Kaltepoth
- *
  */
 public class HttpServletRequestHolder {
 
-    private static final ThreadLocal<HttpServletRequest> threadLocal = new ThreadLocal<HttpServletRequest>();
+    private static final ThreadLocal<HttpServletRequest> threadLocal = new ThreadLocal<>();
 
     /**
      * Associate the request with the current thread.
