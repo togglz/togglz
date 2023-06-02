@@ -1,20 +1,17 @@
 package org.togglz.servlet.user;
 
-import java.security.Principal;
-
 import jakarta.servlet.http.HttpServletRequest;
-
 import org.togglz.core.user.FeatureUser;
-import org.togglz.core.user.UserProvider;
 import org.togglz.core.user.SimpleFeatureUser;
+import org.togglz.core.user.UserProvider;
 import org.togglz.servlet.util.HttpServletRequestHolder;
 
+import java.security.Principal;
+
 /**
- *
  * Implementation of {@link UserProvider} that uses {@link HttpServletRequest#getUserPrincipal()} to obtain the user.
  *
  * @author Christian Kaltepoth
- *
  */
 public class ServletUserProvider implements UserProvider {
 
@@ -31,25 +28,18 @@ public class ServletUserProvider implements UserProvider {
 
     @Override
     public FeatureUser getCurrentUser() {
-
         HttpServletRequest request = HttpServletRequestHolder.get();
 
         if (request == null) {
             throw new IllegalStateException(
                     "Could not get request from HttpServletRequestHolder. Did you configure the TogglzFilter correctly?");
         }
-
         Principal principal = request.getUserPrincipal();
-
-        if (principal != null) {
-
-            boolean featureAdmin = request.isUserInRole(featureAdminRole);
-
-            return new SimpleFeatureUser(principal.getName(), featureAdmin);
-
+        if (principal == null) {
+            return null;
         }
-
-        return null;
-
+        
+        boolean featureAdmin = request.isUserInRole(featureAdminRole);
+        return new SimpleFeatureUser(principal.getName(), featureAdmin);
     }
 }
