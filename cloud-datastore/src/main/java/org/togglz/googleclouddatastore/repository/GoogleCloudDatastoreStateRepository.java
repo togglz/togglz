@@ -86,8 +86,7 @@ public class GoogleCloudDatastoreStateRepository implements StateRepository {
     }
 
     private List<Value<String>> valuesList(Entity entity, String propertyName) {
-        return entity.contains(propertyName) ?
-                entity.<Value<String>>getList(propertyName) : Collections.<Value<String>>emptyList();
+        return entity.contains(propertyName) ? entity.getList(propertyName) : Collections.emptyList();
     }
 
     private String getStrategyId(Entity featureEntity) {

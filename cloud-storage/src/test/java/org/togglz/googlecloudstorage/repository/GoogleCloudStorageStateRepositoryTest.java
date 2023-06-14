@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class GoogleCloudStorageStateRepositToryTest {
+class GoogleCloudStorageStateRepositoryTest {
 
     private static final String BUCKET_NAME = "some-bucket";
 
