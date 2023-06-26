@@ -53,7 +53,7 @@
             <!-- download the dynamo local version -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <id>unpack-dynamodb-local</id>
