@@ -173,6 +173,7 @@
         <module>spring-boot</module>
         <module>shiro</module>
         <module>appengine</module>
+        <module>cloud-spanner</module>
         <module>cloud-datastore</module>
         <module>cloud-storage</module>
         <module>mongodb</module>
@@ -507,6 +508,13 @@
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
                 <version>1.14.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.fusesource.jansi</groupId>
+                <artifactId>jansi</artifactId>
+                <version>2.4.0</version>
+                <optional>true</optional>
             </dependency>
 
             <dependency>
