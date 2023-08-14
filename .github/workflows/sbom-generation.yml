@@ -9,7 +9,7 @@ on:
 permissions: read-all
 
 jobs:
-    build:
+    sbom-generation:
         runs-on: ubuntu-latest
 
         steps:
