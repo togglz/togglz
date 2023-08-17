@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.URL;
 
+import org.htmlunit.TextPage;
+import org.htmlunit.WebClient;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -14,9 +16,6 @@ import org.junit.runner.RunWith;
 import org.togglz.core.manager.TogglzConfig;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
-
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.WebClient;
 
 @RunWith(Arquillian.class)
 public class CacheRepositoryTest {
@@ -37,13 +36,13 @@ public class CacheRepositoryTest {
 
     @Test
     public void testCachingOfFeatureState() throws IOException {
-
-        WebClient client = new WebClient();
-
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 10; i++) {
-            TextPage page = client.getPage(url + "features?user=ck");
-            assertTrue(page.getContent().contains("F1 = false"));
+        long start;
+        try (WebClient client = new WebClient()) {
+            start = System.currentTimeMillis();
+            for (int i = 0; i < 10; i++) {
+                TextPage page = client.getPage(url + "features?user=ck");
+                assertTrue(page.getContent().contains("F1 = false"));
+            }
         }
         long duration = System.currentTimeMillis() - start;
 

@@ -16,8 +16,8 @@ import org.togglz.core.manager.TogglzConfig;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
 
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.WebClient;
+import org.htmlunit.TextPage;
+import org.htmlunit.WebClient;
 
 @RunWith(Arquillian.class)
 public class ShiroUsersTest {
