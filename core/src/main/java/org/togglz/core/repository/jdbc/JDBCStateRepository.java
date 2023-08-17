@@ -97,7 +97,7 @@ public class JDBCStateRepository implements StateRepository {
     /**
      * Private constructor initializing the class from a builder
      */
-    private JDBCStateRepository(Builder builder) {
+    public JDBCStateRepository(Builder builder) {
         this.dataSource = builder.dataSource;
         this.tableName = builder.tableName;
         this.serializer = builder.serializer;
