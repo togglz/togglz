@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.1.0</version>
   </parent>
 
   <artifactId>togglz-cloud-datastore</artifactId>
