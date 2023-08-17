@@ -286,7 +286,7 @@ public class JDBCStateRepository implements StateRepository {
 
     }
 
-    private String insertTableName(String s) {
+    protected String insertTableName(String s) {
         return s.replace("%TABLE%", tableName);
     }
 
