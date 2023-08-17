@@ -8,7 +8,7 @@
   <parent>
     <artifactId>togglz-project</artifactId>
     <groupId>org.togglz</groupId>
-    <version>4.1.0</version>
+    <version>4.1.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>samples</artifactId>
@@ -18,7 +18,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <togglz.version>4.1.0</togglz.version>
+    <togglz.version>4.1.1-SNAPSHOT</togglz.version>
     <spring-boot.version>3.1.2</spring-boot.version>
   </properties>
 
