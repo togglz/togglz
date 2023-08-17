@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.net.URL;
 
+import org.htmlunit.TextPage;
+import org.htmlunit.WebClient;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -14,9 +16,6 @@ import org.junit.runner.RunWith;
 import org.togglz.servlet.TogglzFilter;
 import org.togglz.test.Deployments;
 import org.togglz.test.Packaging;
-
-import com.gargoylesoftware.htmlunit.TextPage;
-import com.gargoylesoftware.htmlunit.WebClient;
 
 @RunWith(Arquillian.class)
 public class HttpServletRequestHolderTest {
@@ -40,16 +39,16 @@ public class HttpServletRequestHolderTest {
 
     @Test
     public void testRequestIsBoundToHolder() throws IOException {
-
         // send a request to the servlet with a query string part
         String url = baseUrl + HttpServletRequestHolderServlet.URL_PATTERN + "?number=42";
-        TextPage page = new WebClient().getPage(url);
+        TextPage page;
+        try (WebClient webClient = new WebClient()) {
+            page = webClient.getPage(url);
+        }
 
         // verify the servlet sends back the query string
         assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
         assertThat(page.getContent()).contains("Query: number=42");
         assertThat(page.getContent()).contains("Executed: true");
-
     }
-
 }
