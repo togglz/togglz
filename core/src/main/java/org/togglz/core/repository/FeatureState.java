@@ -122,10 +122,9 @@ public class FeatureState implements Serializable {
      * Sets a new value for the given parameter.
      */
     public FeatureState setParameter(String name, String value) {
-        if (value != null) {
+        if (value != null && !value.isEmpty()) {
             this.parameters.put(name, value);
-        }
-        else {
+        } else {
             this.parameters.remove(name);
         }
         return this;
