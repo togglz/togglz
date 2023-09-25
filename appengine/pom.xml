@@ -14,7 +14,7 @@
   <description>Togglz - Google App Engine Integration</description>
 
   <properties>
-    <appengine.target.version>2.0.17</appengine.target.version>
+    <appengine.target.version>2.0.19</appengine.target.version>
   </properties>
 
   <dependencies>
