@@ -1,5 +1,6 @@
 package org.togglz.dynamodb;
 
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,10 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 import java.net.URI;
+import software.amazon.awssdk.services.dynamodb.model.AttributeAction;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
+import software.amazon.awssdk.services.dynamodb.model.UpdateItemRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -88,8 +93,49 @@ class DynamoDBStateRepositoryIT {
         client.close();
     }
 
+    @Test
+    void canGetFeatureStateInLegacyFormat() {
+        DynamoDbClient client = setupAmazonDbClient();
+        DynamoDBStateRepository repository = new DynamoDBStateRepository.DynamoDBStateRepositoryBuilder(client)
+                .withStateStoredInTable("preexistingTable")
+                .build();
+
+        assertNull(repository.getFeatureState(TestFeature.YET_ANOTHER_FEATURE));
+
+        // the format used to store feature state before togglz version 4
+        AttributeValue featureStateValue = AttributeValue.builder()
+                .m(Map.of(
+                        "enabled", AttributeValue.builder().bool(true).build(),
+                        "strategyId", AttributeValue.builder().s("SomeStrategyId").build(),
+                        "parameters", AttributeValue.builder().m(Map.of("SomeParameter", AttributeValue.builder().s("SomeValue").build())).build()
+                ))
+                .build();
+        storeFeature(client, "preexistingTable", TestFeature.YET_ANOTHER_FEATURE, featureStateValue);
+
+        FeatureState state = repository.getFeatureState(TestFeature.YET_ANOTHER_FEATURE);
+        assertTrue(state.isEnabled());
+        assertEquals("SomeStrategyId", state.getStrategyId());
+        assertEquals("SomeValue", state.getParameter("SomeParameter"));
+        client.close();
+    }
+
+    private static void storeFeature(DynamoDbClient client, String tableName, Feature feature, AttributeValue featureStateValue) {
+        UpdateItemRequest request = UpdateItemRequest.builder()
+                .tableName(tableName)
+                .key(Map.of("featureName", AttributeValue.builder()
+                        .s(feature.name())
+                        .build()))
+                .attributeUpdates(Map.of("featureState", AttributeValueUpdate.builder()
+                        .action(AttributeAction.PUT)
+                        .value(featureStateValue)
+                        .build()))
+                .build();
+        client.updateItem(request);
+    }
+
     private enum TestFeature implements Feature {
         FEATURE,
-        ANOTHER_FEATURE
+        ANOTHER_FEATURE,
+        YET_ANOTHER_FEATURE
     }
 }

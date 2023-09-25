@@ -56,13 +56,24 @@ public class DynamoDBStateRepository implements StateRepository {
         if (documentItem.isEmpty()) {
             return null;
         }
-        try {
-            FeatureStateStorageWrapper wrapper = objectMapper.reader()
-                    .forType(FeatureStateStorageWrapper.class)
-                    .readValue(documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).s());
+        if (documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).s() != null) {
+            try {
+                FeatureStateStorageWrapper wrapper = objectMapper.reader()
+                        .forType(FeatureStateStorageWrapper.class)
+                        .readValue(documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).s());
+                return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+            } catch (IOException e) {
+                throw new RuntimeException("Couldn't parse the feature state", e);
+            }
+        } else {
+            // before togglz version 4, feature state was stored as a map
+            Map<String, AttributeValue> featureStateMap = documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).m();
+            FeatureStateStorageWrapper wrapper = new FeatureStateStorageWrapper();
+            wrapper.setEnabled(featureStateMap.get("enabled").bool());
+            wrapper.setStrategyId(featureStateMap.get("strategyId").s());
+            featureStateMap.get("parameters").m()
+                    .forEach((key, value) -> wrapper.getParameters().put(key, value.s()));
             return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
-        } catch (IOException e) {
-            throw new RuntimeException("Couldn't parse the feature state", e);
         }
     }
 
