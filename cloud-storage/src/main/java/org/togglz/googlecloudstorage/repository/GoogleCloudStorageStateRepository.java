@@ -6,6 +6,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageException;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -45,10 +46,15 @@ public final class GoogleCloudStorageStateRepository implements StateRepository 
 
     @Override
     public FeatureState getFeatureState(final Feature feature) {
+        Blob blob;
         try {
-            Blob blob = storageClient.get(BlobId.of(bucketName, prefix + feature.name()));
+            blob = storageClient.get(BlobId.of(bucketName, prefix + feature.name()));
+        } catch (StorageException e) {
+            throw new GoogleCloudStorageStateRepositoryException("Failed to get the blob", e);
+        }
 
-            if (blob != null) {
+        try {
+            if (blob != null && blob.exists()) {
                 byte[] content = blob.getContent();
 
                 if (content != null && content.length > 0) {
@@ -58,6 +64,8 @@ public final class GoogleCloudStorageStateRepository implements StateRepository 
                     return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
                 }
             }
+        } catch (StorageException e) {
+            throw new GoogleCloudStorageStateRepositoryException("Blob is null or does not exist", e);
         } catch (IOException e) {
             throw new GoogleCloudStorageStateRepositoryException("Failed to get the feature state", e);
         }
