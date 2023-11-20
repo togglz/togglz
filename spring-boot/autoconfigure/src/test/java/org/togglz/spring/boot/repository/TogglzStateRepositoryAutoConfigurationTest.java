@@ -5,7 +5,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.togglz.core.repository.cache.CachingStateRepository;
 import org.togglz.core.repository.mem.InMemoryStateRepository;
 import org.togglz.s3.S3StateRepository;
-import org.togglz.spring.boot.actuate.BaseTest;
+import org.togglz.spring.boot.BaseTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

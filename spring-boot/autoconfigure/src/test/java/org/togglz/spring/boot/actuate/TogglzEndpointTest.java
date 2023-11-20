@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.togglz.core.Feature;
 import org.togglz.core.annotation.*;
+import org.togglz.spring.boot.BaseTest;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzFeature;

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.test.context.assertj.AssertableWebApplicationContext;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.togglz.spring.boot.actuate.BaseTest;
+import org.togglz.spring.boot.BaseTest;
 
 /**
  * Tests for Spring Boot 2 compatible {@link TogglzAutoConfiguration}.
