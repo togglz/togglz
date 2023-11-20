@@ -34,6 +34,7 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzManagementContextConfiguration;
+import org.togglz.spring.boot.repository.TogglzStateRepositoryAutoConfiguration;
 
 public class BaseTest {
 
@@ -44,7 +45,8 @@ public class BaseTest {
                     WebEndpointAutoConfiguration.class,
                     TogglzAutoConfiguration.class,
                     TogglzEndpointAutoConfiguration.class,
-                    TogglzManagementContextConfiguration.class
+                    TogglzManagementContextConfiguration.class,
+                    TogglzStateRepositoryAutoConfiguration.class
                     ));
 
     protected enum MyFeatures implements Feature {

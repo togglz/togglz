@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.togglz</groupId>
+    <artifactId>togglz-spring-boot</artifactId>
+    <version>4.4.0</version>
+  </parent>
+
+  <artifactId>togglz-repository-spring-boot-starter</artifactId>
+  <name>Togglz Repository - Spring Boot Starter</name>
+  <description>Togglz Repository - Spring Boot Starter</description>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <!-- Import dependency management from Spring Boot -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-core-spring-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-amazon-s3</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+</project>
