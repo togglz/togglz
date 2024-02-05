@@ -12,7 +12,7 @@ internal class EnumClassFeatureProviderTest {
     internal fun `should return wrapped features`() {
         val features = featureProvider.features
 
-        features shouldContainAll setOf(FeatureEnum(KotlinTestFeatures.BAR), FeatureEnum(KotlinTestFeatures.FOO))
+        features shouldBe  linkedSetOf(FeatureEnum(KotlinTestFeatures.BAR), FeatureEnum(KotlinTestFeatures.FOO))
     }
 
     @Test
