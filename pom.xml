@@ -41,7 +41,7 @@
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
         <!-- togglz uses logback for test logging only and does NOT bring it as a dependency to the users -->
         <togglz.slf4j.version>2.0.7</togglz.slf4j.version>
-        <togglz.logback.version>1.4.11</togglz.logback.version>
+        <togglz.logback.version>1.4.12</togglz.logback.version>
 
         <spockframework.version>2.3-groovy-4.0</spockframework.version>
         <graalvm.version>23.0.1</graalvm.version>
