@@ -179,6 +179,18 @@ public class FeatureState implements Serializable {
         return result;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClass().getSimpleName());
+        sb.append(": ");
+        sb.append("feature=");
+        sb.append((this.feature == null) ? "null" : this.feature.name());
+        sb.append(", enabled=");
+        sb.append(this.isEnabled());
+        return sb.toString();
+    }
+
     /**
      * Returns a copy of a featureState, or <code>null</code> if the featureState is
      * <code>null</code>.
