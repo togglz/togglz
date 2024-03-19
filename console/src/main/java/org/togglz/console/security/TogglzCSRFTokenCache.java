@@ -3,13 +3,14 @@ package org.togglz.console.security;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
+import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.togglz.servlet.spi.CSRFToken;
 
 public class TogglzCSRFTokenCache {
 
 	private static final PassiveExpiringMap<String, CSRFToken> expiringMap;
-	private static final Object lock = new Object();
+    private static final ReentrantLock lock = new ReentrantLock();
 
 	static {
 		PassiveExpiringMap.ConstantTimeToLiveExpirationPolicy<String, CSRFToken>
@@ -19,15 +20,20 @@ public class TogglzCSRFTokenCache {
 	}
 
 	static void cacheToken(CSRFToken token) {
-		synchronized (lock) {
-			expiringMap.put(token.getValue(), token);
-		}
+        lock.lock();
+        try {
+            expiringMap.put(token.getValue(), token);
+        } finally {
+            lock.unlock();
+        }
 	}
 
 	static boolean isTokenInCache(CSRFToken token) {
-		synchronized (lock) {
+        lock.lock();
+		try {
 			return expiringMap.containsKey(token.getValue());
-		}
+		} finally {
+            lock.unlock();
+        }
 	}
-	
 }
