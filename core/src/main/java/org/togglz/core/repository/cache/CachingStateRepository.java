@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -23,7 +24,7 @@ public class CachingStateRepository implements StateRepository {
 
     private final long ttl;
 
-    private final ReentrantLock lock = new ReentrantLock();
+    private final Map<Feature, Lock> locks = new ConcurrentHashMap<>();
 
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
@@ -77,7 +78,8 @@ public class CachingStateRepository implements StateRepository {
     }
 
     private FeatureState reloadFeatureState(Feature feature) {
-        lock.lock();
+        locks.computeIfAbsent(feature, it -> new ReentrantLock())
+             .lock();
         try {
             CacheEntry cachedState = cache.get(feature.name());
             if (isValidEntry(cachedState)) {
@@ -87,7 +89,7 @@ public class CachingStateRepository implements StateRepository {
             storeFeatureState(feature, featureState);
             return featureState;
         } finally {
-            lock.unlock();
+            locks.get(feature).unlock();
         }
     }
 
