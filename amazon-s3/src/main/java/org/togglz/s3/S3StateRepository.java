@@ -7,10 +7,12 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.FeatureStateStorageWrapper;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.utils.IoUtils;
@@ -69,14 +71,13 @@ public class S3StateRepository implements StateRepository {
 
             GetObjectRequest getObjectRequest = requestBuilder.build();
 
-            InputStream object = client.getObject(getObjectRequest);
-            if (object != null) {
-                String content = IoUtils.toUtf8String(object);
-                if (!content.isEmpty()) {
-                    FeatureStateStorageWrapper wrapper = objectMapper.reader()
-                            .forType(FeatureStateStorageWrapper.class)
-                            .readValue(content);
-                    return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+            try (ResponseInputStream<GetObjectResponse> object = client.getObject(getObjectRequest)) {
+                if (object != null) {
+                    String content = IoUtils.toUtf8String(object);
+                    if (!content.isEmpty()) {
+                        FeatureStateStorageWrapper wrapper = objectMapper.reader().forType(FeatureStateStorageWrapper.class).readValue(content);
+                        return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
+                    }
                 }
             }
         } catch (NoSuchKeyException e) {
