@@ -1,7 +1,9 @@
 package org.togglz.core.repository.cache;
 
+import java.time.Clock;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import java.util.concurrent.locks.Lock;
@@ -26,6 +28,11 @@ public class CachingStateRepository implements StateRepository {
 
     private final Map<Feature, Lock> locks = new ConcurrentHashMap<>();
 
+    private final ExecutorService executorService;
+
+    //visible for tests
+    static Clock clock = Clock.systemUTC();
+
     /**
      * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will only expire if
      * {@link #setFeatureState(FeatureState)} is invoked. You should therefore never use this constructor if the feature state
@@ -46,12 +53,7 @@ public class CachingStateRepository implements StateRepository {
      * @throws IllegalArgumentException if the specified ttl is negative
      */
     public CachingStateRepository(StateRepository delegate, long ttl) {
-        if (ttl < 0) {
-            throw new IllegalArgumentException("Negative TTL value: " + ttl);
-        }
-
-        this.delegate = delegate;
-        this.ttl = ttl;
+        this(delegate, ttl, (ExecutorService) null);
     }
 
     /**
@@ -66,15 +68,60 @@ public class CachingStateRepository implements StateRepository {
         this(delegate, ttlTimeUnit.toMillis(ttl));
     }
 
+    /**
+     * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
+     * supplied TTL rounded down to milliseconds or if {@link #setFeatureState(FeatureState)} is invoked.
+     *
+     * @param delegate        The repository to delegate invocations to
+     * @param ttl             The time in milliseconds after which a cache entry will expire
+     * @param executorService The thread pool for scheduling async refreshes of cache entries, if not provided entries would be reloaded synchronously, when
+     *                        item is not in cache null will be returned
+     * @throws IllegalArgumentException if the specified ttl is negative
+     */
+    public CachingStateRepository(StateRepository delegate, long ttl, ExecutorService executorService) {
+        if (ttl < 0) {
+            throw new IllegalArgumentException("Negative TTL value: " + ttl);
+        }
+
+        this.delegate = delegate;
+        this.ttl = ttl;
+        this.executorService = executorService;
+    }
+
+    /**
+     * Creates a caching facade for the supplied {@link StateRepository}. The cached state of a feature will expire after the
+     * supplied TTL rounded down to milliseconds or if {@link #setFeatureState(FeatureState)} is invoked.
+     *
+     * @param delegate        The repository to delegate invocations to
+     * @param ttl             The time in a given {@code ttlTimeUnit} after which a cache entry will expire
+     * @param ttlTimeUnit     The unit that {@code ttl} is expressed in
+     * @param executorService The thread pool for scheduling async refreshes of cache entries, if not provided entries would be reloaded synchronously, when
+     *                        item is not in cache null will be returned
+     */
+    public CachingStateRepository(StateRepository delegate, long ttl, TimeUnit ttlTimeUnit, ExecutorService executorService) {
+        this(delegate, ttlTimeUnit.toMillis(ttl), executorService);
+    }
+
     @Override
     public FeatureState getFeatureState(Feature feature) {
         // first try to find it from the cache
         CacheEntry entry = cache.get(feature.name());
-        if (isValidEntry(entry)) {
-            return entry.getState();
+        if (asyncReload()) {
+            if (entry == null || entry.isExpired()) {
+                executorService.execute(() -> reloadFeatureState(feature));
+            }
+            return entry == null ? null : entry.getState();
+        } else {
+            if (isValidEntry(entry)) {
+                return entry.getState();
+            }
+            // no cache hit
+            return reloadFeatureState(feature);
         }
-        // no cache hit
-        return reloadFeatureState(feature);
+    }
+
+    private boolean asyncReload() {
+        return executorService != null;
     }
 
     private FeatureState reloadFeatureState(Feature feature) {
@@ -127,7 +174,7 @@ public class CachingStateRepository implements StateRepository {
 
         public CacheEntry(FeatureState state, final long ttl) {
             this.state = state;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = clock.millis();
             this.ttl = ttl;
         }
 
@@ -139,7 +186,7 @@ public class CachingStateRepository implements StateRepository {
             if (ttl == 0) {
                 return false;
             }
-            return timestamp + ttl < System.currentTimeMillis();
+            return timestamp + ttl < clock.millis();
         }
     }
 
