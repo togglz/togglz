@@ -1,7 +1,10 @@
 package org.togglz.s3;
 
+import com.adobe.testing.s3mock.junit5.S3MockExtension;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -9,24 +12,36 @@ import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 
 import java.util.HashSet;
 
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.togglz.s3.S3StateRepository.newBuilder;
 
+@Testcontainers
 class S3StateRepositoryTest {
+    @RegisterExtension
+    public static final S3MockExtension S3_MOCK = S3MockExtension.builder().build();
 
     private S3StateRepository repository;
 
     private FeatureState initState;
+    private String bucket;
+    private S3Client client;
+
+    private static S3Client createS3Client() {
+        return S3_MOCK.createS3ClientV2();
+    }
 
     @BeforeEach
     public void setup() {
-        S3Client client = new AmazonS3ClientMOCK();
-        client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
+        bucket = "testbucket" + UUID.randomUUID().toString();
+        client = createS3Client();
+        client.createBucket(CreateBucketRequest.builder().bucket(bucket).build());
 
-        repository = newBuilder(client, "testbucket").build();
+        repository = newBuilder(client, bucket).build();
 
         initState = new FeatureState(TestFeature.FEATURE_1)
                 .setEnabled(true)
@@ -55,28 +70,19 @@ class S3StateRepositoryTest {
 
     @Test
     void shouldSetPrefixToEmptyStringWhenNull() {
-        S3Client client = new AmazonS3ClientMOCK();
-        client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
-
-        repository = newBuilder(client, "testbucket").prefix(null).build();
+        repository = newBuilder(client, bucket).prefix(null).build();
         assertEquals("", repository.getKeyPrefix());
     }
 
     @Test
     void shouldSetPrefixToEmptyStringWhenEmpty() {
-        S3Client client = new AmazonS3ClientMOCK();
-        client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
-
-        repository = newBuilder(client, "testbucket").prefix("").build();
+        repository = newBuilder(client, bucket).prefix("").build();
         assertEquals("", repository.getKeyPrefix());
     }
 
     @Test
     void shouldSetPrefix() {
-        S3Client client = new AmazonS3ClientMOCK();
-        client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
-
-        repository = newBuilder(client, "testbucket").prefix("some-prefix").build();
+        repository = newBuilder(client, bucket).prefix("some-prefix").build();
         assertEquals("some-prefix", repository.getKeyPrefix());
     }
 
@@ -84,9 +90,7 @@ class S3StateRepositoryTest {
     void shouldSetFeatureStateWithOptionalFields() {
         assertNull(repository.getFeatureState(TestFeature.FEATURE_1));
 
-        S3Client client = new AmazonS3ClientMOCK();
-        client.createBucket(CreateBucketRequest.builder().bucket("testbucket").build());
-        repository = newBuilder(client, "testbucket").sseCustomerAlgorithm("someSseCustomerAlgorithm").sseCustomerKey("someSseCustomerKey").sseCustomerKeyMD5("someCustomerKeyMd5").build();
+        repository = newBuilder(client, bucket).sseCustomerAlgorithm("someSseCustomerAlgorithm").sseCustomerKey("someSseCustomerKey").sseCustomerKeyMD5("someCustomerKeyMd5").build();
 
         repository.setFeatureState(initState);
 
