@@ -28,7 +28,6 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.21.37</version>
         </dependency>
 
         <dependency>
