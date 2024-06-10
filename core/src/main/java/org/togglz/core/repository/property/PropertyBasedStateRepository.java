@@ -3,6 +3,7 @@ package org.togglz.core.repository.property;
 import java.util.List;
 import java.util.Properties;
 
+import java.util.concurrent.locks.ReentrantLock;
 import org.togglz.core.Feature;
 import org.togglz.core.activation.UsernameActivationStrategy;
 import org.togglz.core.repository.FeatureState;
@@ -34,94 +35,102 @@ public class PropertyBasedStateRepository implements StateRepository {
 
     private final PropertySource propertySource;
 
+    private final ReentrantLock lock = new ReentrantLock();
+
     public PropertyBasedStateRepository(PropertySource propertySource) {
 
         this.propertySource = propertySource;
     }
 
-    public synchronized FeatureState getFeatureState(Feature feature) {
+    public FeatureState getFeatureState(Feature feature) {
+        lock.lock();
+        try {
+            // update file if changed
+            propertySource.reloadIfUpdated();
 
-        // update file if changed
-        propertySource.reloadIfUpdated();
+            // if we got this one, the feature is present in the repository
+            String enabledAsStr = propertySource.getValue(getEnabledPropertyName(feature), null);
 
-        // if we got this one, the feature is present in the repository
-        String enabledAsStr = propertySource.getValue(getEnabledPropertyName(feature), null);
+            if (enabledAsStr != null) {
 
-        if (enabledAsStr != null) {
+                // new state instance
+                FeatureState state = new FeatureState(feature);
+                state.setEnabled(isTrue(enabledAsStr));
 
-            // new state instance
-            FeatureState state = new FeatureState(feature);
-            state.setEnabled(isTrue(enabledAsStr));
+                // active strategy (may be null)
+                String strategy = propertySource.getValue(getStrategyPropertyName(feature), null);
+                state.setStrategyId(strategy);
 
-            // active strategy (may be null)
-            String strategy = propertySource.getValue(getStrategyPropertyName(feature), null);
-            state.setStrategyId(strategy);
-
-            // all parameters
-            String paramPrefix = getParameterPropertyName(feature, "");
-            for (String key : propertySource.getKeysStartingWith(paramPrefix)) {
-                String id = key.substring(paramPrefix.length());
-                String value = propertySource.getValue(key, null);
-                state.setParameter(id, value);
-            }
-
-            /*
-             * Backwards compatibility: if there are users stored in the old format, add them to the corresponding property
-             */
-            List<String> additionalUsers = toList(propertySource.getValue(getUsersPropertyName(feature), null));
-            if (!additionalUsers.isEmpty()) {
-
-                // join the users to one list and update the property
-                List<String> currentUsers = toList(state.getParameter(UsernameActivationStrategy.PARAM_USERS));
-                currentUsers.addAll(additionalUsers);
-                state.setParameter(UsernameActivationStrategy.PARAM_USERS, Strings.join(currentUsers, ","));
-
-                // we should set strategy id if it is not yet set
-                if (state.getStrategyId() == null) {
-                    state.setStrategyId(UsernameActivationStrategy.ID);
+                // all parameters
+                String paramPrefix = getParameterPropertyName(feature, "");
+                for (String key : propertySource.getKeysStartingWith(paramPrefix)) {
+                    String id = key.substring(paramPrefix.length());
+                    String value = propertySource.getValue(key, null);
+                    state.setParameter(id, value);
                 }
 
+                /*
+                 * Backwards compatibility: if there are users stored in the old format, add them to the corresponding property
+                 */
+                List<String> additionalUsers = toList(propertySource.getValue(getUsersPropertyName(feature), null));
+                if (!additionalUsers.isEmpty()) {
+
+                    // join the users to one list and update the property
+                    List<String> currentUsers = toList(state.getParameter(UsernameActivationStrategy.PARAM_USERS));
+                    currentUsers.addAll(additionalUsers);
+                    state.setParameter(UsernameActivationStrategy.PARAM_USERS, Strings.join(currentUsers, ","));
+
+                    // we should set strategy id if it is not yet set
+                    if (state.getStrategyId() == null) {
+                        state.setStrategyId(UsernameActivationStrategy.ID);
+                    }
+
+                }
+
+                return state;
+
             }
 
-            return state;
-
+            // the feature is not configured in the repository
+            return null;
+        } finally {
+            lock.unlock();
         }
-
-        // the feature is not configured in the repository
-        return null;
-
     }
 
-    public synchronized void setFeatureState(FeatureState featureState) {
+    public void setFeatureState(FeatureState featureState) {
+        lock.lock();
+        try {
+            // update file if changed
+            propertySource.reloadIfUpdated();
 
-        // update file if changed
-        propertySource.reloadIfUpdated();
+            Feature feature = featureState.getFeature();
+            PropertySource.Editor editor = propertySource.getEditor();
 
-        Feature feature = featureState.getFeature();
-        PropertySource.Editor editor = propertySource.getEditor();
+            // enabled
+            String enabledKey = getEnabledPropertyName(feature);
+            String enabledValue = featureState.isEnabled() ? "true" : "false";
+            editor.setValue(enabledKey, enabledValue);
 
-        // enabled
-        String enabledKey = getEnabledPropertyName(feature);
-        String enabledValue = featureState.isEnabled() ? "true" : "false";
-        editor.setValue(enabledKey, enabledValue);
+            // write strategy id, will be removed if it is null
+            editor.setValue(getStrategyPropertyName(feature), featureState.getStrategyId());
 
-        // write strategy id, will be removed if it is null
-        editor.setValue(getStrategyPropertyName(feature), featureState.getStrategyId());
+            // parameters
+            String paramPrefix = getParameterPropertyName(feature, "");
+            editor.removeKeysStartingWith(paramPrefix);
+            for (String id : featureState.getParameterNames()) {
+                String key = getParameterPropertyName(feature, id);
+                editor.setValue(key, featureState.getParameter(id));
+            }
 
-        // parameters
-        String paramPrefix = getParameterPropertyName(feature, "");
-        editor.removeKeysStartingWith(paramPrefix);
-        for (String id : featureState.getParameterNames()) {
-            String key = getParameterPropertyName(feature, id);
-            editor.setValue(key, featureState.getParameter(id));
+            // remove the old users property if it still exists from the old format
+            editor.setValue(getUsersPropertyName(feature), null);
+
+            // write
+            editor.commit();
+        } finally {
+            lock.unlock();
         }
-
-        // remove the old users property if it still exists from the old format
-        editor.setValue(getUsersPropertyName(feature), null);
-
-        // write
-        editor.commit();
-
     }
 
     private static String getEnabledPropertyName(Feature feature) {

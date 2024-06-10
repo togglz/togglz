@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.togglz.core.repository.property.PropertySource;
@@ -32,55 +33,61 @@ class ReloadablePropertiesFile implements PropertySource {
 
     private long lastCheck = 0;
 
+    private final ReentrantLock lock = new ReentrantLock();
+
     public ReloadablePropertiesFile(File file, int minCheckInterval) {
         this.file = file;
         this.minCheckInterval = minCheckInterval;
     }
 
-    public synchronized void reloadIfUpdated() {
-        if (!this.file.exists()) {
-            try {
-                if (this.file.createNewFile()) {
-                    log.debug("Created non-existent file.");
-                }
-            } catch (IOException e) {
-                log.error("Error creating missing file " + this.file.getName(), e);
-            }
-        }
-
-        long now = System.currentTimeMillis();
-        if (now - lastCheck > minCheckInterval) {
-
-            lastCheck = now;
-
-            if (file.lastModified() > lastRead) {
-
-                FileInputStream stream = null;
-
+    public void reloadIfUpdated() {
+        lock.lock();
+        try {
+            if (!this.file.exists()) {
                 try {
-
-                    // read new values
-                    stream = new FileInputStream(file);
-                    Properties newValues = new Properties();
-                    newValues.load(stream);
-
-                    // update state
-                    values = newValues;
-                    lastRead = System.currentTimeMillis();
-
-                    log.info("Reloaded file: " + file.getCanonicalPath());
-
-                } catch (FileNotFoundException e) {
-                    log.debug("File not found: " + file);
+                    if (this.file.createNewFile()) {
+                        log.debug("Created non-existent file.");
+                    }
                 } catch (IOException e) {
-                    log.error("Failed to read file", e);
-                } finally {
-                    IOUtils.close(stream);
+                    log.error("Error creating missing file " + this.file.getName(), e);
                 }
-
             }
-        }
 
+            long now = System.currentTimeMillis();
+            if (now - lastCheck > minCheckInterval) {
+
+                lastCheck = now;
+
+                if (file.lastModified() > lastRead) {
+
+                    FileInputStream stream = null;
+
+                    try {
+
+                        // read new values
+                        stream = new FileInputStream(file);
+                        Properties newValues = new Properties();
+                        newValues.load(stream);
+
+                        // update state
+                        values = newValues;
+                        lastRead = System.currentTimeMillis();
+
+                        log.info("Reloaded file: " + file.getCanonicalPath());
+
+                    } catch (FileNotFoundException e) {
+                        log.debug("File not found: " + file);
+                    } catch (IOException e) {
+                        log.error("Failed to read file", e);
+                    } finally {
+                        IOUtils.close(stream);
+                    }
+
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
     }
 
     public String getValue(String key, String defaultValue) {
