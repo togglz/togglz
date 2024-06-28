@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.togglz.core.context.FeatureContext;
-import org.togglz.core.repository.FeatureState;
 
 class DefaultFeatureStateTest {
 
@@ -20,8 +19,10 @@ class DefaultFeatureStateTest {
   void testFeatureDynamic() {
 
     assertTrue(MyFeatures.FEATURE_ONE.isActive());
-    FeatureContext.getFeatureManager().setFeatureState(new FeatureState(MyFeatures.FEATURE_ONE, false));
+    FeatureContext.getFeatureManager().disable(MyFeatures.FEATURE_ONE);
     assertFalse(MyFeatures.FEATURE_ONE.isActive());
+    FeatureContext.getFeatureManager().enable(MyFeatures.FEATURE_ONE);
+    assertTrue(MyFeatures.FEATURE_ONE.isActive());
   }
 
 }

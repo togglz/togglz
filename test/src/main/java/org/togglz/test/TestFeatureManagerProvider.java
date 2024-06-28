@@ -1,5 +1,6 @@
 package org.togglz.test;
 
+import org.togglz.core.Feature;
 import org.togglz.core.manager.FeatureManager;
 import org.togglz.core.spi.FeatureManagerProvider;
 
@@ -10,7 +11,7 @@ import org.togglz.core.spi.FeatureManagerProvider;
  */
 public class TestFeatureManagerProvider implements FeatureManagerProvider {
 
-  private final FeatureManager featureManager;
+  private static final TestFeatureManager FEATURE_MANAGER = new TestFeatureManager();
 
   /**
    * The constructor.
@@ -18,7 +19,6 @@ public class TestFeatureManagerProvider implements FeatureManagerProvider {
   public TestFeatureManagerProvider() {
 
     super();
-    this.featureManager = new TestFeatureManager();
   }
 
   @Override
@@ -31,7 +31,15 @@ public class TestFeatureManagerProvider implements FeatureManagerProvider {
   @Override
   public FeatureManager getFeatureManager() {
 
-    return this.featureManager;
+    return FEATURE_MANAGER;
+  }
+
+  /**
+   * @param featureEnum the {@link Class} reflecting the {@link Feature} {@link Enum}.
+   */
+  public static void register(Class<? extends Feature> featureEnum) {
+
+    FEATURE_MANAGER.addFeatureEnum(featureEnum);
   }
 
 }
