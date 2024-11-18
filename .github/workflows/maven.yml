@@ -30,4 +30,4 @@ jobs:
       - name: Build with Maven
         run: mvn -P wildfly-managed --batch-mode --no-transfer-progress verify
       - name: upload code coverage to codecov.io
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
