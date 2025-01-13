@@ -14,7 +14,7 @@
   <description>Togglz - Google Cloud Spanner Integration</description>
 
   <properties>
-    <gcloud.version>6.43.1</gcloud.version>
+    <gcloud.version>6.85.0</gcloud.version>
   </properties>
 
   <build>
