@@ -99,7 +99,7 @@ public class FeatureManagerBuilder {
      * works if you are using the {@link DefaultActivationStrategyProvider}.
      */
     public FeatureManagerBuilder activationStrategy(ActivationStrategy strategy) {
-        if (strategy == null) {
+        if (strategyProvider == null) {
             activationStrategyProvider(new DefaultActivationStrategyProvider());
         }
         if (strategyProvider instanceof DefaultActivationStrategyProvider) {
