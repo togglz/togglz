@@ -47,6 +47,19 @@ class FeatureManagerBuilderTest {
         });
     }
 
+    @Test
+    void shouldAddStrategyIfNoProviderSpecified() {
+
+        CustomActivationStrategy strategy = new CustomActivationStrategy();
+
+        FeatureManager featureManager = FeatureManagerBuilder.begin()
+                .featureEnum(Features.class)
+                .activationStrategy(strategy)
+                .build();
+
+        assertThat(featureManager.getActivationStrategies()).contains(strategy);
+    }
+
     private enum Features implements Feature {
         SOME_FEATURE
     }
