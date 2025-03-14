@@ -103,6 +103,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.togglz</groupId>
+      <artifactId>togglz-amazon-s3</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
