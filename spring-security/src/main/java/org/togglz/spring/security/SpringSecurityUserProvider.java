@@ -4,7 +4,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.togglz.core.user.FeatureUser;
 import org.togglz.core.user.SimpleFeatureUser;
 import org.togglz.core.user.UserProvider;
@@ -31,7 +30,7 @@ public class SpringSecurityUserProvider implements UserProvider {
         }
 
         // try to obtain the name of this user
-        String name = getUserName(authentication);
+        String name = authentication.getName();
 
         // check for the authority for feature admins
         Set<String> authorities = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
@@ -49,14 +48,5 @@ public class SpringSecurityUserProvider implements UserProvider {
 
     protected boolean isFeatureAdmin(Set<String> authorities) {
         return featureAdminAuthority != null && authorities.contains(featureAdminAuthority);
-    }
-
-    private String getUserName(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        if (!(principal instanceof UserDetails)) {
-            return principal.toString();
-        }
-        UserDetails userDetails = (UserDetails) principal;
-        return userDetails.getUsername();
     }
 }
