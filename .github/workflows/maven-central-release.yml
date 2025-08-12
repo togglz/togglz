@@ -12,7 +12,7 @@ jobs:
     steps:
       - run: echo "Will start a Maven Central upload with version ${{ github.event.inputs.releaseversion }}"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v5
