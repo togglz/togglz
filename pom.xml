@@ -33,14 +33,14 @@
         <!-- Wildfly version used for integration tests -->
         <wildfly.version>27.0.1.Final</wildfly.version>
 
-        <spring.version>6.2.3</spring.version>
+        <spring.version>6.2.8</spring.version>
         <junit.version>5.9.3</junit.version>
         <mockito.version>5.2.0</mockito.version>
 
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
         <!-- togglz uses logback for test logging only and does NOT bring it as a dependency to the users -->
         <togglz.slf4j.version>2.0.12</togglz.slf4j.version>
-        <togglz.logback.version>1.4.12</togglz.logback.version>
+        <togglz.logback.version>1.5.18</togglz.logback.version>
 
         <spockframework.version>2.3-groovy-4.0</spockframework.version>
         <graalvm.version>23.0.3</graalvm.version>
