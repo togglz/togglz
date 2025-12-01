@@ -56,13 +56,16 @@ class HazelcastStateRepositoryTest {
         final StateRepository stateRepository2 = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
         final Feature feature = new NamedFeature("SAMPLE_FEATURE");
         final FeatureState featureState = new FeatureState(feature, false);
+
         stateRepository1.setFeatureState(featureState);
+        stateRepository2.setFeatureState(featureState);
 
         assertFalse(stateRepository1.getFeatureState(feature).isEnabled());
         assertFalse(stateRepository2.getFeatureState(feature).isEnabled());
 
         featureState.setEnabled(true);
         stateRepository1.setFeatureState(featureState);
+        stateRepository2.setFeatureState(featureState);
 
         assertTrue(stateRepository1.getFeatureState(feature).isEnabled());
         assertTrue(stateRepository2.getFeatureState(feature).isEnabled());
