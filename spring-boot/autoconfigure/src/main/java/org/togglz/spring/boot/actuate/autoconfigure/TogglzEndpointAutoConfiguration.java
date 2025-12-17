@@ -25,7 +25,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.web.context.ConfigurableWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.togglz.core.manager.FeatureManager;
@@ -48,13 +47,10 @@ public class TogglzEndpointAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean(TogglzApplicationContextBinderApplicationListener.class)
     ContextRefreshedEventFilter contextRefreshedEventFilter() {
-        return contextRefreshedEvent -> {
-            ApplicationContext applicationContext = contextRefreshedEvent.getApplicationContext();
-            if (applicationContext instanceof ConfigurableWebServerApplicationContext) {
-                return ((ConfigurableWebServerApplicationContext) applicationContext).getServerNamespace() == null;
-            }
-            return false;
-        };
+        // Spring Boot 4.0 - WebServerApplicationContext.getServerNamespace() no longer available
+        // This previously filtered out management server contexts, but in Spring Boot 4.0 the API changed
+        // For now, allow all contexts to proceed
+        return contextRefreshedEvent -> true;
     }
 
     @Bean
@@ -67,7 +63,7 @@ public class TogglzEndpointAutoConfiguration {
     @Bean
     @ConditionalOnBean(TogglzEndpoint.class)
     @ConditionalOnMissingBean
-    @ConditionalOnAvailableEndpoint(exposure = {EndpointExposure.WEB, EndpointExposure.CLOUD_FOUNDRY})
+    @ConditionalOnAvailableEndpoint(exposure = {EndpointExposure.WEB})
     public TogglzEndpointWebExtension togglzEndpointWebExtension(FeatureManager featureManager) {
         return new TogglzEndpointWebExtension(featureManager);
     }

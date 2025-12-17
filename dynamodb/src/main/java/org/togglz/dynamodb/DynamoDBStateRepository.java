@@ -1,7 +1,7 @@
 package org.togglz.dynamodb;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -16,7 +16,6 @@ import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.TableDescription;
 import software.amazon.awssdk.services.dynamodb.model.UpdateItemRequest;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -62,7 +61,7 @@ public class DynamoDBStateRepository implements StateRepository {
                         .forType(FeatureStateStorageWrapper.class)
                         .readValue(documentItem.get(FEATURE_STATE_ATTRIBUTE_NAME).s());
                 return FeatureStateStorageWrapper.featureStateForWrapper(feature, wrapper);
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 throw new RuntimeException("Couldn't parse the feature state", e);
             }
         } else {
@@ -94,7 +93,7 @@ public class DynamoDBStateRepository implements StateRepository {
                             .build()))
                     .build();
             dynamoDbClient.updateItem(request);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException("Unable to serialize the feature state", e);
         }
     }
