@@ -527,7 +527,7 @@
                 <!-- Used by proxy generation -->
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.14.4</version>
+                <version>1.18.3</version>
             </dependency>
 
             <dependency>
