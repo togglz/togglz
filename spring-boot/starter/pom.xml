@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-spring-boot</artifactId>
-    <version>4.4.0</version>
+    <version>${revision}</version>
   </parent>
 
   <artifactId>togglz-spring-boot-starter</artifactId>
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-test</artifactId>
-      <version>6.1.1</version>
+      <version>6.5.7</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>

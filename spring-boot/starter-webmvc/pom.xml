@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-spring-boot</artifactId>
-    <version>4.4.0</version>
+    <version>${revision}</version>
   </parent>
 
   <artifactId>togglz-webmvc-spring-boot-starter</artifactId>

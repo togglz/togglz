@@ -11,7 +11,7 @@
 
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>4.5.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>Togglz</name>
@@ -26,12 +26,15 @@
     </licenses>
 
     <properties>
+
+        <revision>4.5.0-SNAPSHOT</revision>
+
         <!-- Minimal Java version -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Wildfly version used for integration tests -->
-        <wildfly.version>27.0.1.Final</wildfly.version>
+        <wildfly.version>38.0.1.Final</wildfly.version>
 
         <spring.version>6.2.15</spring.version>
 
@@ -45,7 +48,7 @@
         <togglz.logback.version>1.5.24</togglz.logback.version>
 
         <spockframework.version>2.3-groovy-4.0</spockframework.version>
-        <graalvm.version>23.0.3</graalvm.version>
+        <graalvm.version>25.0.1</graalvm.version>
     </properties>
 
     <repositories>
