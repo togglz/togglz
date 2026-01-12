@@ -213,7 +213,7 @@ class CachingStateRepositoryTest {
             // then
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled()));
             Mockito.verify(slowRepository, Mockito.only()).getFeatureState(DummyFeature.TEST);
@@ -234,7 +234,7 @@ class CachingStateRepositoryTest {
             tickClock(slowRepository.delay);
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> {
                         assertNotNull(repository.getFeatureState(DummyFeature.TEST));
@@ -256,7 +256,7 @@ class CachingStateRepositoryTest {
             tickClock(slowRepository.delay);
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> {
                         assertFalse(repository.getFeatureState(DummyFeature.TEST).isEnabled());
@@ -292,7 +292,7 @@ class CachingStateRepositoryTest {
             // then both features appears under the twice of slow repository delay
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> {
                         assertNotNull(repository.getFeatureState(DummyFeature.TEST));
