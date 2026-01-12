@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
+            <version>2.19.4</version>
         </dependency>
 
         <dependency>
@@ -39,7 +39,7 @@
       <dependency>
         <groupId>com.adobe.testing</groupId>
         <artifactId>s3mock-junit5</artifactId>
-        <version>3.5.2</version>
+        <version>4.11.0</version>
         <scope>test</scope>
       </dependency>
 
