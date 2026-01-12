@@ -11,7 +11,7 @@
 
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>4.4.0</version>
+    <version>4.5.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Togglz</name>
@@ -515,7 +515,7 @@
           <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers-bom</artifactId>
-            <version>1.19.7</version>
+            <version>1.21.4</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
@@ -577,7 +577,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.26.3</version>
+                <version>3.27.6</version>
                 <scope>test</scope>
             </dependency>
 
