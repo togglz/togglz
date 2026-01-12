@@ -13,7 +13,7 @@
   <description>Togglz - Kotlin wrapper</description>
 
   <properties>
-    <kotlin.version>2.3.0</kotlin.version>
+    <kotlin.version>2.2.21</kotlin.version>
     <kotlin.dokka.version>2.1.0</kotlin.dokka.version>
   </properties>
 
