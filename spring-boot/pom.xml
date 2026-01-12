@@ -16,7 +16,7 @@
 
   <properties>
     <logback.version>${togglz.logback.version}</logback.version>
-    <spring-boot.version>3.3.1</spring-boot.version>
+    <spring-boot.version>3.5.9</spring-boot.version>
 
     <!-- We skip tests here since all starters do not have any tests -->
     <skipTests>true</skipTests>

@@ -33,14 +33,16 @@
         <!-- Wildfly version used for integration tests -->
         <wildfly.version>27.0.1.Final</wildfly.version>
 
-        <spring.version>6.2.3</spring.version>
-        <junit.version>5.9.3</junit.version>
-        <mockito.version>5.2.0</mockito.version>
+        <spring.version>6.2.15</spring.version>
+
+        <!-- This is aligned with Spring Boot 3.5.x, see https://docs.spring.io/spring-boot/3.5/appendix/dependency-versions/coordinates.html -->
+        <junit.version>5.12.2</junit.version>
+        <mockito.version>5.21.0</mockito.version>
 
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
         <!-- togglz uses logback for test logging only and does NOT bring it as a dependency to the users -->
-        <togglz.slf4j.version>2.0.12</togglz.slf4j.version>
-        <togglz.logback.version>1.4.12</togglz.logback.version>
+        <togglz.slf4j.version>2.0.17</togglz.slf4j.version>
+        <togglz.logback.version>1.5.24</togglz.logback.version>
 
         <spockframework.version>2.3-groovy-4.0</spockframework.version>
         <graalvm.version>23.0.3</graalvm.version>
@@ -582,13 +584,6 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-inline</artifactId>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>

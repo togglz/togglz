@@ -13,8 +13,8 @@
   <description>Togglz - Kotlin wrapper</description>
 
   <properties>
-    <kotlin.version>1.9.23</kotlin.version>
-    <kotlin.dokka.version>1.8.20</kotlin.dokka.version>
+    <kotlin.version>2.3.0</kotlin.version>
+    <kotlin.dokka.version>2.1.0</kotlin.dokka.version>
   </properties>
 
   <dependencies>
@@ -30,12 +30,17 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.kotlintest</groupId>
-      <artifactId>kotlintest-runner-junit5</artifactId>
-      <version>3.4.2</version>
+      <groupId>io.kotest</groupId>
+      <artifactId>kotest-runner-junit5</artifactId>
+      <version>6.0.7</version>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
+      <version>1.12.2</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
