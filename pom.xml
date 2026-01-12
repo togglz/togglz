@@ -346,7 +346,7 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-managed</artifactId>
-                    <version>5.0.1.Final</version>
+                    <version>5.1.0.Final</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -363,7 +363,7 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-remote</artifactId>
-                    <version>5.0.0.Alpha6</version>
+                    <version>5.1.0.Final</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
