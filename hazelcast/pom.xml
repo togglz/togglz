@@ -13,7 +13,7 @@
 	<description>Togglz - Hazelcast integration</description>
 
 	<properties>
-        <hazelcast.version>4.2.8</hazelcast.version>
+        <hazelcast.version>5.2.5</hazelcast.version>
 	</properties>
 
 	<dependencies>
