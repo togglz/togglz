@@ -52,7 +52,7 @@
             <!-- download the dynamo local version -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.9.0</version>
                 <executions>
                     <execution>
                         <id>unpack-dynamodb-local</id>
@@ -64,7 +64,7 @@
                                 <artifactItem>
                                     <groupId>com.jcabi</groupId>
                                     <artifactId>DynamoDBLocal</artifactId>
-                                    <version>2015-07-16</version>
+                                    <version>2023-05-26</version>
                                     <type>zip</type>
                                     <outputDirectory>${project.build.directory}/dynamodb-dist</outputDirectory>
                                     <overWrite>false</overWrite>
@@ -78,7 +78,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.4.0</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <id>reserve-dynamodb-port</id>
