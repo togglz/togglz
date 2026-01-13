@@ -14,16 +14,16 @@ import org.togglz.core.repository.StateRepository;
  * <p>
  * A state repository which stores the feature state in a Hazelcast distributed map.
  * </p>
- * 
+ *
  * <p>
  * The class provides a builder which can be used to configure the Hazelcast instance and map to be used:
  * </p>
- * 
+ *
  * <pre>
  * StateRepository repository = HazelcastStateRepository.newBuilder().mapName(&quot;my_map&quot;)
  * 		.config(hazelcastConfig).build();
  * </pre>
- * 
+ *
  * @author Camiel de Vleeschauwer
  */
 public class HazelcastStateRepository implements StateRepository {
@@ -53,7 +53,7 @@ public class HazelcastStateRepository implements StateRepository {
 		this.hazelcastClientConfig = null;
 		this.hazelcastInstance = hazelcastInstance;
 	}
-	
+
 	private HazelcastStateRepository(Builder builder) {
 		mapName = builder.mapName;
 		hazelcastConfig = builder.hazelcastConfig;
@@ -84,11 +84,12 @@ public class HazelcastStateRepository implements StateRepository {
 	public void setFeatureState(final FeatureState featureState) {
 		final IMap<Feature, FeatureState> map = hazelcastInstance.getMap(mapName);
 		map.set(featureState.getFeature(), featureState);
+
 	}
 
 	/**
 	 * Creates a new builder for creating a {@link HazelcastStateRepository}.
-	 * 
+	 *
 	 */
 	public static Builder newBuilder() {
 		return new Builder();
@@ -96,7 +97,7 @@ public class HazelcastStateRepository implements StateRepository {
 
 	/**
 	 * Creates a new builder for creating a {@link HazelcastStateRepository}.
-	 * 
+	 *
 	 * @param mapName
 	 *            the Hazelcast map name
 	 */
@@ -116,14 +117,14 @@ public class HazelcastStateRepository implements StateRepository {
 
 		/**
 		 * Creates a new builder for a {@link HazelcastStateRepository}.
-		 * 
+		 *
 		 */
 		public Builder() {
 		}
 
 		/**
 		 * Creates a new builder for a {@link HazelcastStateRepository}.
-		 * 
+		 *
 		 * @param mapName
 		 *            the Hazelcast map name to use for feature state store
 		 */
@@ -133,7 +134,7 @@ public class HazelcastStateRepository implements StateRepository {
 
 		/**
 		 * Creates a new builder for a {@link HazelcastStateRepository}.
-		 * 
+		 *
 		 * @param hazelcastConfig
 		 *            the Hazelcast configuration {@link Config}
 		 */
@@ -143,7 +144,7 @@ public class HazelcastStateRepository implements StateRepository {
 
 		/**
 		 * Sets the Hazelcast map name to use.
-		 * 
+		 *
 		 * @param mapName
 		 *            the Hazelcast map name to use for feature state store
 		 */
@@ -154,7 +155,7 @@ public class HazelcastStateRepository implements StateRepository {
 
 		/**
 		 * Sets the Hazelcast configuration.
-		 * 
+		 *
 		 * @param hazelcastConfig
 		 *            the Hazelcast configuration {@link Config}
 		 */

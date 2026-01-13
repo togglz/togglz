@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
@@ -15,6 +16,8 @@ import org.togglz.core.util.NamedFeature;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
+
+import java.time.Duration;
 
 class HazelcastStateRepositoryTest {
 
@@ -59,13 +62,16 @@ class HazelcastStateRepositoryTest {
         stateRepository1.setFeatureState(featureState);
 
         assertFalse(stateRepository1.getFeatureState(feature).isEnabled());
+        //Wait until the second node has received the update
+        Awaitility.waitAtMost(Duration.ofSeconds(1)).until(() -> stateRepository2.getFeatureState(feature) != null);
         assertFalse(stateRepository2.getFeatureState(feature).isEnabled());
 
         featureState.setEnabled(true);
         stateRepository1.setFeatureState(featureState);
 
         assertTrue(stateRepository1.getFeatureState(feature).isEnabled());
-        assertTrue(stateRepository2.getFeatureState(feature).isEnabled());
+        //Wait until the second node has received the update
+        Awaitility.waitAtMost(Duration.ofSeconds(1)).until(() -> stateRepository2.getFeatureState(feature).isEnabled());
     }
 
     @Test
