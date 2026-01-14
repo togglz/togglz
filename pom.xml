@@ -36,7 +36,7 @@
         <!-- Wildfly version used for integration tests -->
         <wildfly.version>38.0.1.Final</wildfly.version>
 
-        <spring.version>6.2.15</spring.version>
+        <spring.version>7.0.2</spring.version>
 
         <!-- This is aligned with Spring Boot 3.5.x, see https://docs.spring.io/spring-boot/3.5/appendix/dependency-versions/coordinates.html -->
         <junit.version>5.12.2</junit.version>
