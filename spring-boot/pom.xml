@@ -28,6 +28,7 @@
     <module>starter-actuator</module>
     <module>starter-console</module>
     <module>starter-core</module>
+    <module>starter-repository</module>
     <module>starter-security</module>
     <module>starter-thymeleaf</module>
     <module>starter-webmvc</module>

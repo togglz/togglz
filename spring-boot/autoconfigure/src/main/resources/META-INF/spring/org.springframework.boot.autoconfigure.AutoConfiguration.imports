@@ -1,2 +1,3 @@
 org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration
 org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration
+org.togglz.spring.boot.repository.TogglzStateRepositoryAutoConfiguration

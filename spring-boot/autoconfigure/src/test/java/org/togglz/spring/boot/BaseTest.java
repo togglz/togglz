@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.togglz.spring.boot.actuate;
+package org.togglz.spring.boot;
 
 import org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointAutoConfiguration;
@@ -34,6 +34,10 @@ import org.togglz.core.user.FeatureUser;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzEndpointAutoConfiguration;
 import org.togglz.spring.boot.actuate.autoconfigure.TogglzManagementContextConfiguration;
+import org.togglz.spring.boot.repository.TogglzStateRepositoryAutoConfiguration;
+import software.amazon.awssdk.auth.credentials.AnonymousCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 
 public class BaseTest {
 
@@ -44,7 +48,8 @@ public class BaseTest {
                     WebEndpointAutoConfiguration.class,
                     TogglzAutoConfiguration.class,
                     TogglzEndpointAutoConfiguration.class,
-                    TogglzManagementContextConfiguration.class
+                    TogglzManagementContextConfiguration.class,
+                    TogglzStateRepositoryAutoConfiguration.class
                     ));
 
     protected enum MyFeatures implements Feature {
@@ -108,7 +113,12 @@ public class BaseTest {
                     "togglz.console.enabled: true",
                     "togglz.console.use-management-port: true")
             .withUserConfiguration(FeatureProviderConfig.class)
-            .withUserConfiguration(DispatcherServletPathConfig.class);
+            .withUserConfiguration(DispatcherServletPathConfig.class)
+            .withBean(S3Client.class, () -> S3Client.builder()
+                    .credentialsProvider(AnonymousCredentialsProvider.create())
+                    .region(Region.EU_CENTRAL_1)
+                    .build()
+            );
     }
 
 }
