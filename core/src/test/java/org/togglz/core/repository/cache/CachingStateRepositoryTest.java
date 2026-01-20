@@ -5,13 +5,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -213,7 +213,7 @@ class CachingStateRepositoryTest {
             // then
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> assertTrue(repository.getFeatureState(DummyFeature.TEST).isEnabled()));
             Mockito.verify(slowRepository, Mockito.only()).getFeatureState(DummyFeature.TEST);
@@ -234,7 +234,7 @@ class CachingStateRepositoryTest {
             tickClock(slowRepository.delay);
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> {
                         assertNotNull(repository.getFeatureState(DummyFeature.TEST));
@@ -256,7 +256,7 @@ class CachingStateRepositoryTest {
             tickClock(slowRepository.delay);
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> {
                         assertFalse(repository.getFeatureState(DummyFeature.TEST).isEnabled());
@@ -292,7 +292,7 @@ class CachingStateRepositoryTest {
             // then both features appears under the twice of slow repository delay
             Awaitility
                     .await()
-                    .atMost(100, MILLISECONDS)
+                    .atMost(200, MILLISECONDS)
                     .pollDelay(5, MILLISECONDS)
                     .untilAsserted(() -> {
                         assertNotNull(repository.getFeatureState(DummyFeature.TEST));

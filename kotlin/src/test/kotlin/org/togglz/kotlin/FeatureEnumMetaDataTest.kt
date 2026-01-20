@@ -1,8 +1,9 @@
 package org.togglz.kotlin
 
-import io.kotlintest.matchers.collections.shouldContainAll
-import io.kotlintest.matchers.collections.shouldHaveSize
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+
 import org.junit.jupiter.api.Test
 
 internal class FeatureEnumMetaDataTest {

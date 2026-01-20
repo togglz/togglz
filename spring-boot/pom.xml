@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>4.4.0</version>
+    <version>${revision}</version>
   </parent>
 
   <artifactId>togglz-spring-boot</artifactId>
@@ -16,7 +16,7 @@
 
   <properties>
     <logback.version>${togglz.logback.version}</logback.version>
-    <spring-boot.version>4.0.0</spring-boot.version>
+    <spring-boot.version>4.0.1</spring-boot.version>
 
     <!-- We skip tests here since all starters do not have any tests -->
     <skipTests>true</skipTests>

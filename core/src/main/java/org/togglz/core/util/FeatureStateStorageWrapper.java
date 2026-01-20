@@ -1,18 +1,17 @@
 package org.togglz.core.util;
 
-import org.togglz.core.Feature;
-import org.togglz.core.repository.FeatureState;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import org.togglz.core.Feature;
+import org.togglz.core.repository.FeatureState;
 
 /**
  * Wraps the state of a feature (minus the feature itself) to make it easier to store
  * the state of a feature in a cache and then recreate the FeatureState later.
- *
+ * <p>
  * This can help assist in the creation of StateRepositories in some circumstances
- *
+ * <p>
  * Created by ddcbdevins on 5/27/16.
  */
 public class FeatureStateStorageWrapper implements Serializable {
@@ -40,6 +39,11 @@ public class FeatureStateStorageWrapper implements Serializable {
 
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters.clear();
+        this.parameters.putAll(parameters);
     }
 
     public static FeatureStateStorageWrapper wrapperForFeatureState(FeatureState featureState) {

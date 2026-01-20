@@ -1,7 +1,8 @@
 package org.togglz.kotlin
 
-import io.kotlintest.matchers.collections.shouldContainAll
-import io.kotlintest.shouldBe
+import io.kotest.matchers.collections.shouldContainAll
+import io.kotest.matchers.shouldBe
+
 import org.junit.jupiter.api.Test
 import org.togglz.core.annotation.Label
 

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.togglz</groupId>
         <artifactId>togglz-project</artifactId>
-        <version>4.4.0</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>togglz-amazon-s3</artifactId>
@@ -38,7 +38,7 @@
       <dependency>
         <groupId>com.adobe.testing</groupId>
         <artifactId>s3mock-junit5</artifactId>
-        <version>3.5.2</version>
+        <version>4.11.0</version>
         <scope>test</scope>
       </dependency>
 

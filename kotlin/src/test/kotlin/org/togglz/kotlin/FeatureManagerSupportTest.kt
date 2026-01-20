@@ -1,6 +1,6 @@
 package org.togglz.kotlin
 
-import io.kotlintest.shouldBe
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.togglz.core.context.StaticFeatureManagerProvider

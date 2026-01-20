@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.togglz</groupId>
     <artifactId>togglz-project</artifactId>
-    <version>4.4.0</version>
+    <version>${revision}</version>
   </parent>
 
     <artifactId>togglz-test-harness</artifactId>
@@ -44,27 +44,27 @@
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.7.0.Final</version>
+            <version>1.10.0.Final</version>
         </dependency>
 
         <!-- JEE APIs -->
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-spec-api</artifactId>
-            <version>28.0.1.Final</version>
+            <version>38.0.1.Final</version>
             <type>pom</type>
         </dependency>
 
         <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-            <version>3.2.1</version>
+            <version>3.3.4</version>
         </dependency>
 
         <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-remoting</artifactId>
-            <version>22.0.1.Final</version>
+            <version>30.0.0.Final</version>
         </dependency>
 
         <dependency>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
 
