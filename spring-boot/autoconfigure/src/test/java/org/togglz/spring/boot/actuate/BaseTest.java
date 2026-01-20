@@ -20,7 +20,8 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.EndpointAutoConfi
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementContextAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath;
+// TODO: Spring Boot 4.0 - DispatcherServletPath was removed
+// import org.springframework.boot.web.servlet.DispatcherServletPath;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -76,14 +77,6 @@ public class BaseTest {
     }
 
     @Configuration
-    protected static class DispatcherServletPathConfig {
-        @Bean
-        public DispatcherServletPath dispatcherServletPath() {
-            return () -> "";
-        }
-    }
-
-    @Configuration
     protected static class FeatureProviderConfig {
 
         @SuppressWarnings("unchecked")
@@ -106,9 +99,8 @@ public class BaseTest {
         return contextRunner
             .withPropertyValues(
                     "togglz.console.enabled: true",
-                    "togglz.console.use-management-port: true")
-            .withUserConfiguration(FeatureProviderConfig.class)
-            .withUserConfiguration(DispatcherServletPathConfig.class);
+                    "togglz.console.use-management-port: false")
+            .withUserConfiguration(FeatureProviderConfig.class);
     }
 
 }

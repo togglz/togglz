@@ -41,13 +41,13 @@ public abstract class TogglzConsoleBaseConfiguration {
     }
 
     @Bean
-    public ServletRegistrationBean togglzConsole() {
+    public ServletRegistrationBean<TogglzConsoleServlet> togglzConsole() {
         String path = getContextPath() + properties.getConsole().getPath();
         String urlMapping = (path.endsWith("/") ? path + "*" : path + "/*");
         TogglzConsoleServlet servlet = new TogglzConsoleServlet();
         servlet.setSecured(properties.getConsole().isSecured());
         servlet.setValidateCSRFToken(properties.getConsole().isValidateCSRFToken());
-        return new ServletRegistrationBean(servlet, urlMapping);
+        return new ServletRegistrationBean<>(servlet, urlMapping);
     }
 
     protected String getContextPath() {

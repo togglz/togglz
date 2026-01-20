@@ -1,32 +1,41 @@
 package org.togglz.slack.sender;
 
-import static org.togglz.slack.notification.NotificationFixture.exampleNotification;
-
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockserver.client.MockServerClient;
-import org.mockserver.junit.jupiter.MockServerExtension;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
 import org.togglz.slack.notification.NotificationFixture;
 
-@ExtendWith(MockServerExtension.class)
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.awaitility.Awaitility.await;
+import static org.togglz.slack.notification.NotificationFixture.exampleNotification;
+
+@WireMockTest
 class AsyncNotifierIntegrationTest {
 
     @Test
-    void shouldSendNotificationToSlack(MockServerClient server) throws InterruptedException {
-        server.when(HttpRequest.request("/slack")
-                .withMethod("POST")
-                .withHeader("Content-Type", "application/json")
-        ).respond(HttpResponse.response().withStatusCode(200));
+    void shouldSendNotificationToSlack(WireMockRuntimeInfo wmRuntimeInfo) {
+        stubFor(post("/slack")
+                .withHeader("Content-Type", containing("application/json"))
+                .willReturn(ok()));
 
-        NotificationSender notifier = new AsyncNotifier("http://localhost:" + server.getPort() + "/slack");
+        String url = "http://localhost:" + wmRuntimeInfo.getHttpPort() + "/slack";
+        NotificationSender notifier = new AsyncNotifier(url);
 
         notifier.send(exampleNotification());
 
-        Thread.sleep(500);
-
-        server.verify(HttpRequest.request("/slack")
-                .withBody(NotificationFixture.exampleNotificationAsJson()));
+        await()
+                .atMost(5, TimeUnit.SECONDS)
+                .untilAsserted(() ->
+                        verify(postRequestedFor(urlEqualTo("/slack"))
+                                .withRequestBody(equalToJson(NotificationFixture.exampleNotificationAsJson())))
+                );
     }
 }

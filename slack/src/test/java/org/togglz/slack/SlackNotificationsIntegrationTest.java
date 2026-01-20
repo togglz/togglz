@@ -1,29 +1,41 @@
 package org.togglz.slack;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockserver.client.MockServerClient;
-import org.mockserver.junit.jupiter.MockServerExtension;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
 import org.togglz.core.user.SingleUserProvider;
 import org.togglz.slack.config.NotificationConfiguration;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.togglz.FeatureFixture.ENABLE_F1;
 
-@ExtendWith(MockServerExtension.class)
+@WireMockTest
 class SlackNotificationsIntegrationTest {
 
     @Test
-    void shouldSendJsonToSlack(MockServerClient server) {
-        server.when(HttpRequest.request("/slack"))
-                .respond(HttpResponse.response().withStatusCode(200));
+    void shouldSendJsonToSlack(WireMockRuntimeInfo wmRuntimeInfo) {
+        stubFor(post("/slack")
+                .willReturn(ok()));
 
-        NotificationConfiguration config = NotificationConfigurationFixture.configureNonAsync("http://localhost:" + server.getPort() + "/slack");
-        SlackNotifications slackStateRepository = new SlackNotifications(config, new SingleUserProvider("someName"));
+        String url = "http://localhost:" + wmRuntimeInfo.getHttpPort() + "/slack";
+        NotificationConfiguration config = NotificationConfigurationFixture.configureNonAsync(url);
 
-        slackStateRepository.notify(ENABLE_F1);
+        SlackNotifications slackNotifications = new SlackNotifications(
+                config,
+                new SingleUserProvider("someName")
+        );
 
-        server.verify(HttpRequest.request("/slack"));
+        slackNotifications.notify(ENABLE_F1);
+
+        verify(postRequestedFor(urlEqualTo("/slack"))
+                .withRequestBody(matchingJsonPath("$.text"))
+                .withHeader("Content-Type", containing("application/json")));
     }
 }

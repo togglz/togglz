@@ -1,7 +1,7 @@
 package org.togglz.s3;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import org.togglz.core.Feature;
 import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
@@ -114,7 +114,7 @@ public class S3StateRepository implements StateRepository {
 
             RequestBody requestBody = RequestBody.fromString(json);
             client.putObject(putObjectRequest, requestBody);
-        } catch (AwsServiceException | SdkClientException | JsonProcessingException e) {
+        } catch (AwsServiceException | SdkClientException | JacksonException e) {
             throw new RuntimeException("Failed to set the feature state", e);
         }
     }

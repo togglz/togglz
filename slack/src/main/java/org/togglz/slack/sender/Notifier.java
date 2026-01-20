@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.togglz.core.util.Strings;
 import org.togglz.slack.notification.Notification;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * For documentation see https://api.slack.com/incoming-webhooks
@@ -38,7 +38,7 @@ public class Notifier implements NotificationSender {
     private byte[] toJsonAsBytes(Notification notification) {
         try {
             return mapper.writeValueAsBytes(notification);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error(e.toString(), e);
             return null;
         }

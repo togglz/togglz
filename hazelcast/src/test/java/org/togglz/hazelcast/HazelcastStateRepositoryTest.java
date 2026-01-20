@@ -1,10 +1,10 @@
 package org.togglz.hazelcast;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.config.Config;
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import java.time.Duration;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,10 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.NamedFeature;
 
-import com.hazelcast.client.config.ClientConfig;
-import com.hazelcast.config.Config;
-import com.hazelcast.core.Hazelcast;
-
-import java.time.Duration;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HazelcastStateRepositoryTest {
 
@@ -53,10 +52,12 @@ class HazelcastStateRepositoryTest {
     }
 
     @Test
-    // may fail if you are connected to a VPN
+        // may fail if you are connected to a VPN
     void test2nodeSetup() {
-        final StateRepository stateRepository1 = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
-        final StateRepository stateRepository2 = HazelcastStateRepository.newBuilder().mapName("togglzMap").build();
+        final Config config = new Config();
+        final HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(config);
+        final StateRepository stateRepository1 = HazelcastStateRepository.newBuilder().mapName("togglzMap").hazelcastInstance(hazelcastInstance).build();
+        final StateRepository stateRepository2 = HazelcastStateRepository.newBuilder().mapName("togglzMap").hazelcastInstance(hazelcastInstance).build();
         final Feature feature = new NamedFeature("SAMPLE_FEATURE");
         final FeatureState featureState = new FeatureState(feature, false);
         stateRepository1.setFeatureState(featureState);
@@ -77,8 +78,8 @@ class HazelcastStateRepositoryTest {
     @Test
     void onlyConfigSetBuildsSuccessfully() {
         HazelcastStateRepository stateRepository = HazelcastStateRepository.newBuilder()
-          .config(new Config())
-          .build();
+                .config(new Config())
+                .build();
 
         assertNotNull(stateRepository);
     }
@@ -86,8 +87,8 @@ class HazelcastStateRepositoryTest {
     @Test
     void onlyClientConfigSetBuildsSuccessfully() {
         HazelcastStateRepository stateRepository = HazelcastStateRepository.newBuilder()
-          .clientConfig(new ClientConfig())
-          .build();
+                .clientConfig(new ClientConfig())
+                .build();
 
         assertNotNull(stateRepository);
     }
@@ -95,8 +96,8 @@ class HazelcastStateRepositoryTest {
     @Test
     void onlyHazelcastInstanceSetBuildsSuccessfully() {
         HazelcastStateRepository stateRepository = HazelcastStateRepository.newBuilder()
-          .hazelcastInstance(Hazelcast.newHazelcastInstance())
-          .build();
+                .hazelcastInstance(Hazelcast.newHazelcastInstance())
+                .build();
 
         assertNotNull(stateRepository);
     }
@@ -104,8 +105,8 @@ class HazelcastStateRepositoryTest {
     @Test
     void multipleConfiguredPiecesThrowsIllegalStateException() {
         assertThrows(IllegalStateException.class, () -> HazelcastStateRepository.newBuilder()
-          .clientConfig(new ClientConfig())
-          .config(new Config())
-          .build());
+                .clientConfig(new ClientConfig())
+                .config(new Config())
+                .build());
     }
 }
