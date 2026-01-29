@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
-            <version>6.5.7</version>
+            <version>7.0.2</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
