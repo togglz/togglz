@@ -60,7 +60,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void getAllFeatures() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
             .withPropertyValues(
@@ -104,7 +103,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void getEnumFeatureMetaData() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
             .withPropertyValues(
@@ -147,7 +145,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void getFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
             .withPropertyValues(
@@ -181,7 +178,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldEnableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
@@ -210,7 +206,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldChangeStrategy() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
             .withPropertyValues(
@@ -233,7 +228,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldChangeStrategyParameters() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                        DispatcherServletPathConfig.class,
                         TogglzAutoConfiguration.class,
                         TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
@@ -260,7 +254,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldDisableAFeature() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(
@@ -282,7 +275,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldThrowAnIllegalArgumentExceptionIfTheFeatureDoesNotExist() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues("management.endpoints.web.exposure.include=*")
@@ -301,7 +293,6 @@ public class TogglzEndpointTest extends BaseTest {
     @Test
     public void shouldThrowAnIllegalArgumentExceptionIfFormatOfParameterIsIncorrect() {
         contextRunner.withConfiguration(AutoConfigurations.of(
-                DispatcherServletPathConfig.class,
                 TogglzAutoConfiguration.class,
                 TogglzEndpointAutoConfiguration.class))
                 .withPropertyValues(

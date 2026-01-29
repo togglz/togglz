@@ -1,7 +1,7 @@
 package org.togglz.googlecloudstorage.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -12,7 +12,6 @@ import org.togglz.core.repository.FeatureState;
 import org.togglz.core.repository.StateRepository;
 import org.togglz.core.util.FeatureStateStorageWrapper;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -66,7 +65,7 @@ public final class GoogleCloudStorageStateRepository implements StateRepository 
             }
         } catch (StorageException e) {
             throw new GoogleCloudStorageStateRepositoryException("Blob is null or does not exist", e);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             throw new GoogleCloudStorageStateRepositoryException("Failed to get the feature state", e);
         }
         return null;
@@ -80,7 +79,7 @@ public final class GoogleCloudStorageStateRepository implements StateRepository 
 
             BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(bucketName, prefix + featureState.getFeature().name())).build();
             storageClient.create(blobInfo, json.getBytes(StandardCharsets.UTF_8));
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new GoogleCloudStorageStateRepositoryException("Failed to set the feature state", e);
         }
     }

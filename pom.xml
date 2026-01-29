@@ -36,10 +36,10 @@
         <!-- Wildfly version used for integration tests -->
         <wildfly.version>38.0.1.Final</wildfly.version>
 
-        <spring.version>6.2.15</spring.version>
-
-        <!-- This is aligned with Spring Boot 3.5.x, see https://docs.spring.io/spring-boot/3.5/appendix/dependency-versions/coordinates.html -->
-        <junit.version>5.12.2</junit.version>
+        <spring.version>7.0.2</spring.version>
+        <junit.version>6.0.1</junit.version>
+        <junit-platform.version>${junit.version}</junit-platform.version>
+        <junit-jupiter.version>${junit.version}</junit-jupiter.version>
         <mockito.version>5.21.0</mockito.version>
 
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
@@ -53,7 +53,9 @@
 
     <repositories>
         <repository>
-            <snapshots><enabled>false</enabled></snapshots>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
             <id>central</id>
             <name>Maven Central</name>
             <url>https://repo1.maven.org/maven2</url>
@@ -63,8 +65,12 @@
             <id>jboss</id>
             <name>JBoss public</name>
             <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>false</enabled></snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
@@ -152,6 +158,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.5.4</version>
+                    <configuration>
+                        <argLine>-XX:+EnableDynamicAgentLoading --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+                    </configuration>
                 </plugin>
 
                 <plugin>
@@ -415,9 +424,9 @@
             </dependency>
 
             <dependency>
-              <groupId>org.togglz</groupId>
-              <artifactId>togglz-core-spring-boot-starter</artifactId>
-              <version>${project.version}</version>
+                <groupId>org.togglz</groupId>
+                <artifactId>togglz-core-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -508,6 +517,15 @@
             </dependency>
 
             <dependency>
+                <groupId>tools.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>3.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+
+            <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
                 <version>2.41.5</version>
@@ -515,13 +533,13 @@
                 <scope>import</scope>
             </dependency>
 
-          <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers-bom</artifactId>
-            <version>1.21.4</version>
-            <type>pom</type>
-            <scope>import</scope>
-          </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-bom</artifactId>
+                <version>1.21.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <dependency>
                 <!-- Used by proxy generation -->
@@ -610,4 +628,12 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

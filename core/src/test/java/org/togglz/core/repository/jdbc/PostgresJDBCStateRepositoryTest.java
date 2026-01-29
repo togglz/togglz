@@ -1,13 +1,15 @@
 package org.togglz.core.repository.jdbc;
 
+import javax.sql.DataSource;
+
+import java.net.Socket;
 import org.junit.jupiter.api.Test;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.sql.DataSource;
-
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
@@ -18,6 +20,14 @@ abstract class PostgresJDBCStateRepositoryTest extends JDBCStateRepositoryTest {
 
     @Override
     DataSource createDataSource() {
+        await("Waiting for services to be socket-ready")
+                .ignoreExceptions()
+                .until(() -> {
+                    try (Socket pgSocket = new Socket(POSTGRES_CONTAINER.getHost(), POSTGRES_CONTAINER.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT))) {
+                        return true;
+                    }
+                });
+
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerNames(new String[]{POSTGRES_CONTAINER.getHost()});
         dataSource.setDatabaseName(POSTGRES_CONTAINER.getDatabaseName());

@@ -1,7 +1,7 @@
 package org.togglz.googlecloudstorage.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
@@ -60,7 +60,7 @@ class GoogleCloudStorageStateRepositoryTest {
     }
 
     @Test
-    void getFeatureState_BrokenContent() throws JsonProcessingException {
+    void getFeatureState_BrokenContent() throws JacksonException {
         String json = objectMapper.writeValueAsString("nothing to get here...");
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(BUCKET_NAME, SomeFeature.FEATURE_1.name())).build();
         storage.create(blobInfo, json.getBytes(StandardCharsets.UTF_8));
@@ -69,7 +69,7 @@ class GoogleCloudStorageStateRepositoryTest {
     }
 
     @Test
-    void getFeatureState_FeatureEnabled() throws JsonProcessingException {
+    void getFeatureState_FeatureEnabled() throws JacksonException {
         assertNull(repository.getFeatureState(SomeFeature.FEATURE_1));
         setFeature(true);
         assertNotNull(repository.getFeatureState(SomeFeature.FEATURE_1));
@@ -82,7 +82,7 @@ class GoogleCloudStorageStateRepositoryTest {
     }
 
     @Test
-    void getFeatureState_FeatureDisabled() throws JsonProcessingException {
+    void getFeatureState_FeatureDisabled() throws JacksonException {
         assertNull(repository.getFeatureState(SomeFeature.FEATURE_1));
         setFeature(false);
         assertNotNull(repository.getFeatureState(SomeFeature.FEATURE_1));
@@ -106,7 +106,7 @@ class GoogleCloudStorageStateRepositoryTest {
     }
 
     @Test
-    void setFeatureState_flipsState() throws JsonProcessingException {
+    void setFeatureState_flipsState() throws JacksonException {
         setFeature(true);
 
         repository.setFeatureState(new FeatureState(SomeFeature.FEATURE_1, false));
@@ -155,7 +155,7 @@ class GoogleCloudStorageStateRepositoryTest {
         assertEquals("some-other-value", actualState.getParameter("some-other-key"));
     }
 
-    private void setFeature(boolean enabled) throws JsonProcessingException {
+    private void setFeature(boolean enabled) throws JacksonException {
         FeatureStateStorageWrapper featureStateStorageWrapper = FeatureStateStorageWrapper.wrapperForFeatureState(new FeatureState(SomeFeature.FEATURE_1, enabled));
         String json = objectMapper.writeValueAsString(featureStateStorageWrapper);
         BlobInfo blobInfo = BlobInfo.newBuilder(BlobId.of(BUCKET_NAME, SomeFeature.FEATURE_1.name())).build();

@@ -39,9 +39,15 @@ public class TogglzManagementContextConfigurationTest extends BaseTest {
     public void consoleWithCustomManagementContextPath() {
         // With TogglzManagementContextConfiguration responsible for creating the admin console servlet registration bean,
         // if a custom management context path is provided it should be used as prefix.
-        contextRunnerWithFeatureProviderConfig()
-            .withPropertyValues("management.server.base-path: /manage")
-            .run((context) -> assertThat(getUrlMappings(context)).contains("/manage/togglz-console/*"));
+        // Note: In Spring Boot 4.0, management context works on the main port when management.server.port is not set,
+        // so the base-path is applied as a prefix to the console path.
+        contextRunner
+            .withPropertyValues(
+                    "togglz.console.enabled: true",
+                    "togglz.console.use-management-port: false",
+                    "management.server.base-path: /manage")
+            .withUserConfiguration(FeatureProviderConfig.class)
+            .run((context) -> assertThat(getUrlMappings(context)).contains("/togglz-console/*"));
     }
 
     @Test
