@@ -201,6 +201,7 @@
         <module>redis</module>
         <module>kotlin</module>
         <module>samples</module>
+        <module>test</module>
     </modules>
 
     <developers>
