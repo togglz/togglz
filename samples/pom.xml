@@ -19,7 +19,7 @@
 
   <properties>
     <togglz.version>${revision}</togglz.version>
-    <spring-boot.version>3.5.9</spring-boot.version>
+    <spring-boot.version>3.5.10</spring-boot.version>
   </properties>
 
   <modules>
