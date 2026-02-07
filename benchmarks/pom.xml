@@ -8,7 +8,6 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <groupId>org.togglz.benchmark</groupId>
     <artifactId>togglz-benchmarks</artifactId>
     <packaging>jar</packaging>
 

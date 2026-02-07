@@ -20,18 +20,15 @@ jobs:
                     java-version: 17
                     distribution: 'temurin'
                     server-id: central
-                    server-username: MAVEN_USERNAME
-                    server-password: MAVEN_PASSWORD
-                    gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-                    gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-            -   name: Set projects Maven version to GitHub Action GUI set version
-                run: mvn versions:set "-DnewVersion=${{ github.event.inputs.releaseversion }}"
+                    server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+                    server-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+                    gpg-private-key: ${{ secrets.MAVEN_GNUPG_PRIVATE_KEY }}
+                    gpg-passphrase: ${{ secrets.MAVEN_GNUPG_PASSPHRASE }}
 
             -   name: Publish package
-                run: mvn --batch-mode clean deploy -P central-deploy -DskipTests=true -pl .,amazon-s3,appengine,benchmarks,cdi,cloud-datastore,cloud-spanner,cloud-storage,console,core,dynamodb,hazelcast,junit,kotlin,mongodb,redis,servlet,shiro,slack,spock,spring-core,spring-security,spring-web,test-harness,testing,spring-boot,spring-boot/autoconfigure,spring-boot/starter,spring-boot/starter-actuator,spring-boot/starter-console,spring-boot/starter-core,spring-boot/starter-security,spring-boot/starter-thymeleaf,spring-boot/starter-webmvc
+                run: ./release.sh ${{ github.event.inputs.releaseversion }}
                 env:
                     MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
-                    MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-                    MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-                    MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+                    MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+                    MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+                    MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GNUPG_PASSPHRASE }}
