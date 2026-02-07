@@ -210,6 +210,11 @@
             <name>Bennet Schulz</name>
             <timezone>CET</timezone>
         </developer>
+        <developer>
+            <id>ewoelfel</id>
+            <name>Erik Wölfel</name>
+            <timezone>CET</timezone>
+        </developer>
     </developers>
 
     <profiles>
