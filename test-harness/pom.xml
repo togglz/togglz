@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-remoting</artifactId>
-            <version>30.0.0.Final</version>
+            <version>31.0.2.Final</version>
         </dependency>
 
         <dependency>
