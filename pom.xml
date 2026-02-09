@@ -34,7 +34,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Wildfly version used for integration tests -->
-        <wildfly.version>38.0.1.Final</wildfly.version>
+        <wildfly.version>39.0.0.Final</wildfly.version>
 
         <spring.version>7.0.2</spring.version>
         <junit.version>6.0.1</junit.version>
