@@ -20,15 +20,15 @@ jobs:
                     java-version: 17
                     distribution: 'temurin'
                     server-id: central
-                    server-username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-                    server-password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+                    server-username: MAVEN_USERNAME
+                    server-password: MAVEN_PASSWORD
                     gpg-private-key: ${{ secrets.MAVEN_GNUPG_PRIVATE_KEY }}
-                    gpg-passphrase: ${{ secrets.MAVEN_GNUPG_PASSPHRASE }}
+                    gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
             -   name: Publish package
                 run: ./release.sh ${{ github.event.inputs.releaseversion }}
                 env:
                     MAVEN_OPTS: "--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.text=ALL-UNNAMED --add-opens=java.desktop/java.awt.font=ALL-UNNAMED"
-                    MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-                    MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+                    MAVEN_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+                    MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
                     MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GNUPG_PASSPHRASE }}
