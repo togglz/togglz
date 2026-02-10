@@ -25,7 +25,6 @@ public class Application {
                     .authorizeHttpRequests(auth -> auth
                             .anyRequest().authenticated()
                     )
-                    .csrf(AbstractHttpConfigurer::disable)
                     .formLogin(Customizer.withDefaults())
                     .logout(Customizer.withDefaults());
 
