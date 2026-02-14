@@ -13,7 +13,7 @@
   <description>Togglz - MongoDB integration</description>
 
   <properties>
-    <mongo.version>4.10.2</mongo.version>
+    <mongo.version>5.6.3</mongo.version>
   </properties>
 
 
