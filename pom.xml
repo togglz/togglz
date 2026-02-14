@@ -49,6 +49,7 @@
 
         <spockframework.version>2.3-groovy-4.0</spockframework.version>
         <graalvm.version>25.0.2</graalvm.version>
+        <shiro.version>2.1.0</shiro.version>
     </properties>
 
     <repositories>
