@@ -43,6 +43,7 @@
             <artifactId>js</artifactId>
             <version>${graalvm.version}</version>
             <type>pom</type>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
