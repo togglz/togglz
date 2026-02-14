@@ -44,10 +44,38 @@ public abstract class RequestHandlerBase implements RequestHandler {
         return new String(bos.toByteArray(), UTF_8);
     }
 
+    /**
+     * Load a classpath resource relative to the {@link RequestHandler} package.
+     * <p>
+     * The {@code name} parameter is validated to ensure it does not contain any
+     * path separators or parent directory references, so that callers cannot
+     * accidentally perform path traversal when this method is used with
+     * untrusted input.
+     */
     protected InputStream loadResource(String name) {
+        if (!isSafeResourceName(name)) {
+            return null;
+        }
         String templateName = RequestHandler.class.getPackage().getName().replace('.', '/') + "/" + name;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         return classLoader.getResourceAsStream(templateName);
+    }
+
+    /**
+     * Returns {@code true} if the given resource name is a single, simple name
+     * without any path separators or parent directory segments.
+     */
+    private boolean isSafeResourceName(String name) {
+        if (name == null || name.isEmpty()) {
+            return false;
+        }
+        if (name.contains("..")) {
+            return false;
+        }
+        if (name.indexOf('/') >= 0 || name.indexOf('\\') >= 0) {
+            return false;
+        }
+        return true;
     }
 
     protected void copy(InputStream input, OutputStream output) throws IOException {
