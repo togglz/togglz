@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-spec-api</artifactId>
-            <version>38.0.1.Final</version>
+            <version>39.0.0.Final</version>
             <type>pom</type>
         </dependency>
 
