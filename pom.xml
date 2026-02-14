@@ -27,7 +27,7 @@
 
     <properties>
 
-        <revision>4.5.0-SNAPSHOT</revision>
+        <revision>4.7.0-SNAPSHOT</revision>
 
         <!-- Minimal Java version -->
         <maven.compiler.source>17</maven.compiler.source>
