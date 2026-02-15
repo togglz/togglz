@@ -47,13 +47,7 @@ public class EditPageHandler extends RequestHandlerBase {
 			return;
 		}
         // identify the feature
-        Feature feature = null;
-        String featureAsString = request.getParameter("f");
-        for (Feature f : featureManager.getFeatures()) {
-            if (f.name().equals(featureAsString)) {
-                feature = f;
-            }
-        }
+        Feature feature = getFeatureFromRequest(request, featureManager);
         if (feature == null) {
             response.sendError(400);
             return;
@@ -65,37 +59,50 @@ public class EditPageHandler extends RequestHandlerBase {
 
         // GET requests for this feature
         if ("GET".equals(request.getMethod())) {
-
-            FeatureState state = featureManager.getFeatureState(feature);
-            featureModel.populateFromFeatureState(state);
-
-            renderEditPage(event, featureModel);
-
+            handleGetRequest(event, featureManager, feature, featureModel);
         }
 
         // POST requests for this feature
         if ("POST".equals(request.getMethod())) {
-
-            featureModel.restoreFromRequest(request);
-
-            // no validation errors
-            if (featureModel.isValid()) {
-
-                FeatureState state = featureModel.toFeatureState();
-                featureManager.setFeatureState(state);
-
-                String tabIndexAsString = request.getParameter("t");
-                response.addCookie(new Cookie("t", tabIndexAsString));
-                response.sendRedirect("index");
-
-            }
-            // got validation errors
-            else {
-                renderEditPage(event, featureModel);
-            }
-
+            handlePostRequest(event, featureModel, request, featureManager, response);
         }
 
+    }
+
+    private static Feature getFeatureFromRequest(HttpServletRequest request, FeatureManager featureManager) {
+        String featureAsString = request.getParameter("f");
+        for (Feature f : featureManager.getFeatures()) {
+            if (f.name().equals(featureAsString)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
+    private void handlePostRequest(RequestEvent event, FeatureModel featureModel, HttpServletRequest request, FeatureManager featureManager, HttpServletResponse response) throws IOException {
+        featureModel.restoreFromRequest(request);
+
+        // no validation errors
+        if (featureModel.isValid()) {
+
+            FeatureState state = featureModel.toFeatureState();
+            featureManager.setFeatureState(state);
+
+            String tabIndexAsString = request.getParameter("t");
+            response.addCookie(new Cookie("t", tabIndexAsString));
+            response.sendRedirect("index");
+        }
+        // got validation errors
+        else {
+            renderEditPage(event, featureModel);
+        }
+    }
+
+    private void handleGetRequest(RequestEvent event, FeatureManager featureManager, Feature feature, FeatureModel featureModel) throws IOException {
+        FeatureState state = featureManager.getFeatureState(feature);
+        featureModel.populateFromFeatureState(state);
+
+        renderEditPage(event, featureModel);
     }
 
     private boolean validateCSRFToken(RequestEvent event) {
