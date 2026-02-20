@@ -39,7 +39,7 @@ public class ThreadLocalFeatureManagerProvider implements FeatureManagerProvider
      * call this method before a thread is put back to a thread pool.
      */
     public static void release() {
-        threadLocal.set(null);
+        threadLocal.remove();
     }
 
     @Override
