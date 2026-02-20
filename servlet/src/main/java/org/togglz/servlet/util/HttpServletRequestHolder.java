@@ -28,7 +28,7 @@ public class HttpServletRequestHolder {
      * Remove the request that is currently associated with the current thread.
      */
     public static void release() {
-        threadLocal.set(null);
+        threadLocal.remove();
     }
 
     public static HttpServletRequest get() {
