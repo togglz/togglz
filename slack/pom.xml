@@ -14,7 +14,6 @@
 
     <properties>
         <mockserver.version>5.15.0</mockserver.version>
-        <jackson.version>2.21.1</jackson.version>
     </properties>
 
     <dependencies>
@@ -24,14 +23,12 @@
             <artifactId>togglz-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
