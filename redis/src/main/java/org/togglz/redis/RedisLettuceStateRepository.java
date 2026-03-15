@@ -47,7 +47,9 @@ public class RedisLettuceStateRepository implements StateRepository {
 
     @Override
     public FeatureState getFeatureState(final Feature feature) {
-        try (final StatefulConnection<String, String> connection = pool.borrowObject()) {
+        StatefulConnection<String, String> connection = null;
+        try {
+            connection = pool.borrowObject();
             final RedisHashCommands<String, String> commands = getCommands(connection);
             final Map<String, String> redisMap = commands.hgetall(keyPrefix + feature.name());
             if (redisMap.isEmpty()) {
@@ -65,12 +67,18 @@ public class RedisLettuceStateRepository implements StateRepository {
             return featureState;
         } catch (Exception e) {
             throw new RedisLettuceStateRepositoryException("Error while getting feature state", e);
+        } finally {
+            if (connection != null) {
+                pool.returnObject(connection);
+            }
         }
     }
 
     @Override
     public void setFeatureState(final FeatureState featureState) {
-        try (final StatefulConnection<String, String> connection = pool.borrowObject()) {
+        StatefulConnection<String, String> connection = null;
+        try {
+            connection = pool.borrowObject();
             final RedisHashCommands<String, String> commands = getCommands(connection);
             final String featureKey = keyPrefix + featureState.getFeature().name();
             commands.hset(featureKey, ENABLED_FIELD, Boolean.toString(featureState.isEnabled()));
@@ -86,6 +94,10 @@ public class RedisLettuceStateRepository implements StateRepository {
             }
         } catch (Exception e) {
             throw new RedisLettuceStateRepositoryException("Error while setting feature state", e);
+        } finally {
+            if (connection != null) {
+                pool.returnObject(connection);
+            }
         }
     }
 
