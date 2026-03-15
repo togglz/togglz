@@ -41,6 +41,22 @@ public class RedisLettuceStateRepositoryTest {
     }
 
     @Test
+    public void testConnectionIsReturnedToPool() {
+        final GenericObjectPool<StatefulConnection<String, String>> pool = createPool();
+        final StateRepository stateRepository = new RedisLettuceStateRepository.Builder()
+            .keyPrefix("feature-toggles:")
+            .lettucePool(pool)
+            .build();
+        final Feature feature = new NamedFeature("A_FEATURE");
+
+        stateRepository.getFeatureState(feature);
+        stateRepository.setFeatureState(new FeatureState(feature, true));
+        stateRepository.getFeatureState(feature);
+
+        assertTrue(pool.getNumActive() == 0, "All connections should be returned to the pool after each operation");
+    }
+
+    @Test
     public void testGetFeatureStateNotExisting() {
         final StateRepository stateRepository = aRedisStateRepository();
         final Feature feature = new NamedFeature("A_FEATURE");
@@ -89,11 +105,14 @@ public class RedisLettuceStateRepositoryTest {
 
         // set contents in Redis directly, without using the RedisStateRepository API
         final GenericObjectPool<StatefulConnection<String, String>> lettucePool = createPool();
-        try (final StatefulRedisConnection<String, String> connection = (StatefulRedisConnection<String, String>) lettucePool.borrowObject()) {
+        final StatefulRedisConnection<String, String> connection = (StatefulRedisConnection<String, String>) lettucePool.borrowObject();
+        try {
             final String key = "feature-toggles:A_FEATURE";
             connection.sync().hset(key, "enabled", "true");
             connection.sync().hset(key, "strategy", "TIT_FOR_TAT");
             connection.sync().hset(key, "parameter:MEANING_OF_LIFE", "42");
+        } finally {
+            lettucePool.returnObject(connection);
         }
 
         final Feature feature = new NamedFeature("A_FEATURE");
