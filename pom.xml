@@ -160,7 +160,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.5.4</version>
                     <configuration>
-                        <argLine>-XX:+EnableDynamicAgentLoading --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
+                        <argLine>@{argLine} -XX:+EnableDynamicAgentLoading --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED</argLine>
                     </configuration>
                 </plugin>
 
