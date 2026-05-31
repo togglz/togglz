@@ -97,7 +97,7 @@ public class TogglzAutoConfiguration {
             PropertyFeatureProvider provider = new PropertyFeatureProvider(properties.getFeatureProperties());
             Class<? extends Feature>[] featureEnums = properties.getFeatureEnums();
             if (featureEnums != null && featureEnums.length > 0) {
-                return new CompositeFeatureProvider(new EnumBasedFeatureProvider(featureEnums), provider);
+                return new CompositeFeatureProvider(provider, new EnumBasedFeatureProvider(featureEnums));
             }
             return provider;
         }
