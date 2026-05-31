@@ -31,3 +31,5 @@ jobs:
         run: mvn -P wildfly-managed --batch-mode --no-transfer-progress verify
       - name: upload code coverage to codecov.io
         uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
