@@ -65,7 +65,7 @@
         <dependency>
             <groupId>io.swagger.parser.v3</groupId>
             <artifactId>swagger-parser-v3</artifactId>
-            <version>2.1.37</version>
+            <version>2.1.43</version>
             <scope>test</scope>
         </dependency>
 
@@ -73,7 +73,7 @@
       <dependency>
           <groupId>io.swagger.parser.v3</groupId>
           <artifactId>swagger-parser-v3</artifactId>
-          <version>2.1.37</version>
+          <version>2.1.43</version>
           <scope>test</scope>
       </dependency>
 
