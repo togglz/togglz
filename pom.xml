@@ -48,7 +48,7 @@
         <togglz.logback.version>1.5.34</togglz.logback.version>
 
         <spockframework.version>2.4-groovy-5.0</spockframework.version>
-        <graalvm.version>25.0.2</graalvm.version>
+        <graalvm.version>25.0.3</graalvm.version>
         <shiro.version>2.2.1</shiro.version>
     </properties>
 
