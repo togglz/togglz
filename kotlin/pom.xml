@@ -14,7 +14,7 @@
 
     <properties>
         <kotlin.version>2.2.21</kotlin.version>
-        <kotlin.dokka.version>2.1.0</kotlin.dokka.version>
+        <kotlin.dokka.version>2.2.0</kotlin.dokka.version>
     </properties>
 
     <dependencies>
