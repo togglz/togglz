@@ -38,18 +38,18 @@
 
         <spring.version>7.0.5</spring.version>
         <junit.version>6.0.3</junit.version>
-        <junit-platform.version>${junit.version}</junit-platform.version>
+        <junit-platform.version>6.1.1</junit-platform.version>
         <junit-jupiter.version>${junit.version}</junit-jupiter.version>
         <mockito.version>5.23.0</mockito.version>
 
         <!-- slf4j and logback need to be kept in compatible versions at all times -->
         <!-- togglz uses logback for test logging only and does NOT bring it as a dependency to the users -->
         <togglz.slf4j.version>2.0.18</togglz.slf4j.version>
-        <togglz.logback.version>1.5.34</togglz.logback.version>
+        <togglz.logback.version>1.5.37</togglz.logback.version>
 
         <spockframework.version>2.4-groovy-5.0</spockframework.version>
-        <graalvm.version>25.0.2</graalvm.version>
-        <shiro.version>2.2.0</shiro.version>
+        <graalvm.version>25.0.3</graalvm.version>
+        <shiro.version>2.2.1</shiro.version>
     </properties>
 
     <repositories>
@@ -95,7 +95,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.21.0</version>
+                <version>3.22.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -127,7 +127,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.14</version>
+                <version>0.8.15</version>
                 <executions>
                     <execution>
                         <goals>
@@ -297,7 +297,7 @@
                     <plugin>
                       <groupId>org.sonatype.central</groupId>
                       <artifactId>central-publishing-maven-plugin</artifactId>
-                      <version>0.10.0</version>
+                      <version>0.11.0</version>
                       <extensions>true</extensions>
                       <configuration>
                         <publishingServerId>central</publishingServerId>
@@ -525,7 +525,7 @@
             <dependency>
                 <groupId>tools.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>3.0.4</version>
+                <version>3.2.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -534,7 +534,7 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>2.41.29</version>
+                <version>2.46.13</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

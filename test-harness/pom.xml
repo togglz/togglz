@@ -19,7 +19,7 @@
         <dependency>
           <groupId>org.htmlunit</groupId>
           <artifactId>htmlunit</artifactId>
-          <version>5.1.0</version>
+          <version>5.2.0</version>
         </dependency>
 
         <!-- JUnit -->
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-remoting</artifactId>
-            <version>32.0.0.Final</version>
+            <version>32.0.2.Final</version>
         </dependency>
 
         <dependency>
