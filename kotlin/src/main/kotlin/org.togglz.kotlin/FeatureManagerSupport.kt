@@ -35,12 +35,22 @@ object FeatureManagerSupport {
         clearCache()
     }
 
+    @Deprecated("Use enable(Enum<*>) instead")
     fun enable(feature: Feature) {
         getFeatureManager().enable(feature)
     }
 
+    @Deprecated("Use disable(Enum<*>) instead")
     fun disable(feature: Feature) {
         getFeatureManager().disable(feature)
+    }
+
+    fun enable(feature: Enum<*>) {
+        getFeatureManager().enable(FeatureEnum(feature))
+    }
+
+    fun disable(feature: Enum<*>) {
+        getFeatureManager().disable(FeatureEnum(feature))
     }
 
     private fun shouldRunInTests(feature: Feature, featureManager: FeatureManager): Boolean {
