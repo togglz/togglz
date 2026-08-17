@@ -243,7 +243,7 @@ public class TogglzAutoConfiguration {
 
     @Configuration
     @ConditionalOnWebApplication
-    @ConditionalOnClass(HandlerInterceptor.class)
+    @ConditionalOnClass({HandlerInterceptor.class, FeatureInterceptor.class})
     @ConditionalOnProperty(prefix = "togglz.web", name = "register-feature-interceptor", havingValue = "true", matchIfMissing = true)
     protected static class TogglzFeatureInterceptorConfiguration implements WebMvcConfigurer {
         @Override
